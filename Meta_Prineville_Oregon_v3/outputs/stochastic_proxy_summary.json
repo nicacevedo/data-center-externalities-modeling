@@ -1,0 +1,58 @@
+{
+  "purpose": "conditional generative fit; not telemetry recovery or prediction",
+  "seed": 20260812,
+  "n_simulations_per_year": 32,
+  "workload_scenario": "mixed_cox",
+  "continuous_workload_horizon": "2011-2024 with queue state carried across year boundaries",
+  "selected_year": 2024,
+  "train_end_year": 2022,
+  "water_model": {
+    "model": "energy_null",
+    "features": [
+      "electricity_mwh_reported"
+    ],
+    "coefficients": {
+      "electricity_mwh_reported": 0.3643056183103121
+    },
+    "train_start_year": 2014,
+    "train_end_year": 2022,
+    "selection_metric": "expanding-window one-step MAPE on training years only; pre-registered nonnegative no-intercept candidates",
+    "selection_score_pct": 34.2483644988005
+  },
+  "water_holdout_mape_pct": 100.10919343114969,
+  "weather_diagnostics": {
+    "weather_rows": 122736,
+    "hours_with_any_required_field_missing_before_fill": 160,
+    "missing_required_cells_before_fill": 521,
+    "fraction_hours_proxy_filled": 0.0013036110024768608
+  },
+  "selected_year_water_shape_priors": {
+    "water_shape_evap_share": 0.5331737595588822,
+    "water_shape_it_proportional_share": 0.43682624044111773,
+    "water_shape_time_constant_share": 0.03
+  },
+  "selected_year_annual_closures": {
+    "facility_electricity_mwh": 1728290.9999999998,
+    "water_withdrawal_m3": 328000.0,
+    "location_scope2_tco2e": 498192.0
+  },
+  "interpretation": {
+    "annual_electricity": "calibration closure in every simulation",
+    "annual_water_retrospective": "closure where Meta reported withdrawal",
+    "annual_water_train_only": "predictive diagnostic; holdout not used for fitting or selection",
+    "hourly_outputs": "conditional stochastic scenarios with explicit provenance",
+    "carbon_allocation": "annual location Scope 2 allocated over facility energy"
+  },
+  "outputs": [
+    "outputs/stochastic_proxy_annual_summary.csv",
+    "outputs/stochastic_proxy_ensemble_runs.csv",
+    "outputs/stochastic_proxy_hourly_2024.csv",
+    "outputs/stochastic_proxy_scenarios_2024.csv",
+    "outputs/stochastic_proxy_monthly_uncertainty_2024.csv",
+    "outputs/stochastic_proxy_water_model_diagnostics.csv",
+    "outputs/stochastic_proxy_checks.csv",
+    "outputs/stochastic_proxy_annual_summary.png",
+    "outputs/stochastic_proxy_week_2024.png",
+    "outputs/stochastic_proxy_scenarios_2024.png"
+  ]
+}

@@ -1,0 +1,5 @@
+metric,label,unit,feasible_minimum,feasible_maximum,feasible_range,schedule_sensitive,normalization_formula
+electricity_cost_usd,Electricity cost,USD,29413.982156251397,37829.87528834966,8415.893132098267,True,(value - feasible_minimum) / feasible_range
+grid_co2e_metric_tons,Operational grid CO2e,metric tons CO2e,346.83691709521173,383.54301572704276,36.706098631831026,True,(value - feasible_minimum) / feasible_range
+total_water_footprint_m3,Operational water footprint,m^3,5135.369745002205,5135.369745002204,0.0,False,0 (metric is constant across feasible schedules)
+delay_mwh_hours,Delay burden,MWh_IT-hour,0.6780248317124637,3366.7166189840914,3366.038594152379,True,(value - feasible_minimum) / feasible_range

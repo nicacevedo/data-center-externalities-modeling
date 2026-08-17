@@ -1,0 +1,581 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=0.72in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,longtable,tabularx,array,multirow}
+\usepackage{pdflscape}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{ragged2e}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{siunitx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{etoolbox}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  citecolor=blue!55!black,
+  urlcolor=blue!65!black,
+  pdftitle={Unified Glossary for Data Center Energy, Cooling, Water, Carbon, Grid, and Groundwater Modeling},
+  pdfauthor={Project synthesis}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.42em}
+\setlist[itemize]{leftmargin=1.3em,itemsep=0.12em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.5em,itemsep=0.12em,topsep=0.2em}
+\renewcommand{\arraystretch}{1.15}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+\newcolumntype{P}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\mthree}{\mathrm{m}^3}
+\newcommand{\MWh}{\mathrm{MWh}}
+\newcommand{\MW}{\mathrm{MW}}
+\newcommand{\COtwo}{\mathrm{CO}_2}
+\newcommand{\status}[1]{\textsc{#1}}
+\newcommand{\Measured}{\status{Measured}}
+\newcommand{\Derived}{\status{Derived}}
+\newcommand{\Fitted}{\status{Fitted}}
+\newcommand{\Simulated}{\status{Simulated}}
+\newcommand{\Scenario}{\status{Scenario}}
+\newcommand{\Proxy}{\status{Proxy}}
+\newcommand{\NA}{--}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Unified Data Center Modeling Glossary}
+\rhead{Final reviewed version}
+\cfoot{\thepage}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.65em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.55em}{}
+
+\title{\textbf{Glossary for Data Center Energy, Cooling, Water, Carbon, Grid, and Groundwater Modeling}}
+\author{}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+
+
+\section{Literature, modeling, etc.}
+
+\subsection{General setting}
+
+The general flow of the different quantities should look something like this:
+\[
+\begin{aligned}
+\text{workload}
+&\rightarrow \text{IT power}
+\rightarrow \text{heat and cooling}
+\rightarrow \text{facility power},\\
+\text{facility power}
+&\rightarrow
+\begin{cases}
+\text{direct site water},\\
+\text{grid electricity},
+\end{cases}
+\rightarrow
+\begin{cases}
+\text{generator water},\\
+\text{emissions},\\
+\text{cost},
+\end{cases}\\
+&\rightarrow \text{scarcity and groundwater dynamics}.
+\end{aligned}
+\]
+There is not literature in all of this, but I think is mainly because there is no sufficient data on water usage, nor exact energy usage, workloads, etc. Either we get data from a \underline{collaborator} (Los Alamos can serve this purpose? Would it be enough if so?), or we do not have reliable numbers nor behaviors. 
+
+\textbf{Possibilities \underline{if no reliable data} is available:}
+\begin{itemize}
+    \item Just create a \emph{calculator-like} suite, where one (DC) can input it's workloads, energy consumption, water usage, etc., and see in first-person the tradeoffs, suggestions of other Pareto-optimal solutions, sensitivity analysis, etc.
+    \item Assume the behavior, and just play with physics-informed models, with models that match the expected behaviors. Try to match the aggregated public numbers that do exists, using these models.
+    \item 
+\end{itemize}
+
+
+\textbf{Main literature sources:}
+\begin{itemize}
+    \item Main accounting filter of what can be useful an what not when measuring impact: Li et al.\ \cite{li2023thirsty}. \emph{Making AI Less Thirsty: \ldots}
+    \item (Water info.) The public hourly cooling-water model (main model is still assumed): Gupta et al.\ \cite{gupta2024dataset}. \emph{A Dataset for Research on Water Sustainability}.
+    \item (Water info.) peak public-water capacity: Han et al. \cite{han2026pipe}. \emph{Small Bottle, Big Pipe: quantifying an Addressing the Impact of DC on Public Water Sys.}
+    \item (IT Workload) workload scheduling: Islam et al., Google, Li et al., and Hall et al.\ \cite{islam2018wace,radovanovic2021carbon,li2024equitable,hall2024probabilistic}. \emph{Exploiting Spatio-Temporal Diversity for Water Saving in Geo-Distr... DC} // \emph{Carbon-Aware Computing for DC} // \emph{Towards Env. Equitable AI via Geo. Load Balancing // Carbon-Aware Computing for DC w. Prob. Guarantees} 
+    \item (Heat \& Power) Thermal and power constraints: TAPAS, Marconi100 telemetry, and recent reduced-order cooling work \cite{stojkovic2025tapas,borghesi2023m100,ngwerume2026thermal}. 
+    \item (DC siting) Static water siting and equity of the PSCC conference from Saurabh \& undergrads \cite{chen2026pscc}.
+    \item (Groundwater) Dynamic groundwater coupling from the project proposal and standard groundwater software \cite{amin2026jwafs,modflow670}.
+    \item 
+\end{itemize}
+
+  
+\subsection{Some important (NEW) considerations}
+
+\begin{enumerate}
+\item \textbf{PUE and cooling power (or related) cannot be independent inputs.} 
+\begin{itemize}
+    \item bottom-up: cooling and other facility power are modeled bottom-up, so PUE is a derived KPI from the energy usage, not another input. 
+    \item top-down: If PUE is imposed, then the cooling power cannot be added again into the model and we only focus on IT energy.
+\end{itemize}
+
+\item \textbf{We need to specify a direct WUE denominator.} 
+\begin{itemize}
+    \item  Facility WUE is \underline{water consumption} per \underline{IT energy} under ISO/IEC 30134-9 \cite{isoWUE} (L/kWh). 
+    \item The a2 paper cooling-tower curves are water per heat removed (okay if $E^{IT}\approx H^{out}$): the cooling tower "WUE" enters facility accounting only after the stated approximation or model linking cooling load to IT energy (strict realtionship or assuming they are almost the same).
+\end{itemize}
+
+\item \textbf{Withdrawal, consumption, evaporation, blowdown, drift, discharge, and reuse remain distinct.} The groundwater model receives the groundwater-supplied share of direct withdrawal, not total water footprint.
+\item \textbf{Indirect water is physically located at generators.} Average EWIF is useful for attribution; generator-resolved accounting or dispatch perturbation is required for physical or marginal analysis.
+\item \textbf{Average and marginal emissions remain separate outputs.} Average factors support inventories; marginal factors support workload-shifting counterfactuals.
+\item \textbf{Water-scarcity footprint is not a groundwater state.} AWARE, Aqueduct, and PSCC-style factors are screening or impact metrics. Head, recharge, storage, pumping, and inter-node propagation require a dynamic groundwater model.
+\item \textbf{Time scales are layered.} Server and cooling telemetry may be seconds to minutes; operations are typically modeled hourly; groundwater and competing-sector water balances are naturally monthly or seasonal; siting is annual or multi-year.
+\item \textbf{Every symbol must be classified as measured, derived, fitted, simulated, scenario, or proxy.} Silent constants are not acceptable.
+\end{enumerate}
+
+\subsection{Quantities intentionally excluded from the core glossary}
+
+The following are important research extensions but are not required for the first unified operational--groundwater model: embodied chip and building impacts, full computational fluid dynamics, semiconductor junction-level physics, full AC optimal power flow, detailed air-pollutant dispersion, endogenous crop choice, complete desalination chemistry, heat-network design, and strategic network games. They should be separate modules only after the core mass, energy, timing, and groundwater balances are validated. The coupled-activity network-game paper is retained in the bibliography as a later policy reference, not as a physical data-center model \cite{parasnis2024games}.
+
+\section{Conventions, units, and provenance}
+
+\subsection{Required provenance status}
+Every data series or parameter must carry exactly one primary status:
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Status & Meaning \\
+\midrule
+\Measured & Directly observed from a meter, sensor, trace, permit, or official dataset. \\
+\Derived & Computed from measured or already validated quantities using an accounting identity. \\
+\Fitted & Estimated from data using a documented physical, statistical, or machine-learning model. \\
+\Simulated & Generated by a documented physical, dispatch, thermal, or hydrologic simulator. \\
+\Scenario & Explicitly assumed for sensitivity or planning when measurement is unavailable. \\
+\Proxy & Structurally useful substitute that is not claimed to reproduce the target system numerically. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Canonical units and indexing}
+Use SI-compatible units and UTC internally. Recommended conventions are: power in MW, interval energy in MWh, water in m$^3$, water intensity in m$^3$/MWh (numerically equal to L/kWh), emissions in tCO$_2$e or pollutant-specific mass, prices in currency/MWh or currency/m$^3$, hydraulic head in m, and time-indexed groundwater flows in m$^3$ per groundwater period. Let $i$ index data-center sites, $c$ workload classes, $t$ operational intervals, $g$ generators, $n$ groundwater or basin nodes, $s$ water sources, $k$ cooling/source technologies, and $\tau$ groundwater or planning periods.
+
+\subsection{Mandatory spatial crosswalk}
+A complete empirical model requires a versioned crosswalk
+\[
+\begin{aligned}
+\text{data-center site}
+&\rightarrow \text{grid node/region}
+\rightarrow \text{generators and generator watersheds},\\
+\text{data-center site}
+&\rightarrow \text{water utility/source}
+\rightarrow \text{groundwater node/basin},\\
+\text{data-center site}
+&\rightarrow \text{agricultural, municipal, and socioeconomic regions}.
+\end{aligned}
+\]
+Geographic proximity alone is insufficient when utility service territories, electricity contracts, pseudo-ties, or multiple water sources are present.
+
+
+
+
+\clearpage
+\begin{landscape}
+\section{Glossary}
+\scriptsize
+
+\subsection{Workload, compute, and service}
+\begin{longtable}{@{}P{0.12\linewidth}P{0.27\linewidth}P{0.25\linewidth}P{0.30\linewidth}@{}}
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+Workload arrivals $A_{c,t}$ & New work of class $c$ arriving in interval $t$, measured in requests, tokens, GPU-seconds, GPU-hours, CPU-hours, or another workload-native unit. Preserve arrival time, service requirement, hardware class, flexibility, deadline, and site eligibility. & More arrivals increase IT power, heat, water, and queueing. The unit must not be converted to energy until a calibrated workload--power model is specified. & (1) \Measured scheduler trace; (2) event-driven sampling from empirical arrival, size, and duration distributions; (3) normalized aggregate profile scaled to a stated scenario capacity. Best public options include the NLR generative-AI power-profile dataset \cite{nlr2026genai}, Google ClusterData2019 and power traces \cite{google2019trace}, and Marconi100 workload/facility telemetry \cite{borghesi2023m100}. \\
+
+Executed workload $x_{i,c,\tau,t}$ & Work of class $c$, submitted at $\tau$, executed at site $i$ in $t$. Conservation: $\sum_i\sum_t x_{i,c,\tau,t}=A_{c,\tau}$ over allowed execution times. & $x\ge0$; zero before arrival, after deadline, or at an ineligible site. Spatial movement changes latency, electricity, local water, and regional burden. Temporal movement changes delay and exposure to time-varying signals. & (1) Continuous fractional LP for aggregated work; (2) integer, non-preemptive job assignment; (3) online queue or VCC control. Representative models: WACE \cite{islam2018wace}, Google VCCs \cite{radovanovic2021carbon}, equity-aware geographical load balancing \cite{li2024equitable}, and distributionally robust scheduling \cite{hall2024probabilistic}. \\
+
+Compute capacity $K^{\mathrm{comp}}_{i,t}$ & Available service, CPU, or GPU capacity at site $i$ in interval $t$. Utilization is $u_{i,t}=x_{i,t}/K^{\mathrm{comp}}_{i,t}$ after consistent unit conversion. & $0\le u\le1$ and executed demand cannot exceed usable capacity. Power caps, failures, network limits, maintenance, and thermal throttling may reduce usable capacity below nameplate. & (1) \Measured hardware inventory plus scheduler availability; (2) nameplate capacity times observed availability; (3) \Fitted effective capacity from throughput and power/temperature telemetry. TAPAS explicitly models placement under cooling and power constraints \cite{stojkovic2025tapas}. \\
+
+Utilization $u_{i,t}$ & Share of usable compute capacity that is active. When possible, retain separate GPU, CPU, memory, and network utilization rather than one scalar. & Higher utilization generally raises absolute power and heat but can lower idle energy per unit of work. Similar nominal GPU utilization may yield different power across models, batch sizes, precision, or communication patterns. & (1) Direct telemetry; (2) $u=x/K$; (3) inverse of a calibrated power model. Public AI datasets jointly report power, utilization, temperature, and workload metadata \cite{nlr2026genai,elsayed2026ai}. \\
+
+Backlog $J_{c,t}$ & Unfinished work. Standard update: $J_{c,t+1}=[J_{c,t}-x_{c,t}]^+ + A_{c,t}$. & Queue stability requires long-run service at least arrivals. Backlog is a work quantity, not hours of delay. Terminal backlog must be zero when the horizon represents a completion deadline. & (1) Direct scheduler queue; (2) simulated queue recursion; (3) reconstruction from arrivals and completions. WACE uses Lyapunov drift-plus-penalty control \cite{islam2018wace}. \\
+
+Delay and SLA $D_j,\Delta_c$ & Job delay is $D_j=t_j^{\mathrm{completion}}-t_j^{\mathrm{arrival}}$; $\Delta_c$ is the permitted delay for class $c$. & Enforce $D_j\le\Delta_c$, due-by-time cumulative service, latency eligibility, and terminal completion. More flexibility can lower cost or impact but raises delay risk. & (1) Job timestamps; (2) explicit deadline-indexed assignment constraints; (3) Little's law $\mathbb E[D]=\mathbb E[J]/\mathbb E[A]$ only for stable, unit-consistent aggregate queues. Google and Hall et al. provide daily and probabilistic completion frameworks \cite{radovanovic2021carbon,hall2024probabilistic}. \\
+
+IT power $P^{IT}_{i,t}$ [MW] & Electricity used by servers, storage, and internal networking, excluding cooling and building electrical losses. & $0\le P^{IT}\le\bar P^{IT}$, with optional ramps or power caps. At operational time scales it becomes heat nearly one-for-one. & (1) \Measured server/PDU telemetry; (2) affine model $P^{idle}+u(P^{peak}-P^{idle})$; (3) hardware/workload-specific nonlinear model; (4) event-driven superposition of measured job power traces. Sources: NLR GenAI \cite{nlr2026genai}, WACE's DVFS model \cite{islam2018wace}, TAPAS \cite{stojkovic2025tapas}, and Google power traces \cite{google2019trace}. \\
+
+IT energy $E^{IT}_{i,t}$ [MWh] & $E^{IT}_{i,t}=\int_t^{t+\Delta t}P^{IT}_i(s)\,\dd s$; for piecewise-constant power, $E^{IT}=P^{IT}\Delta t$. & Nonnegative and consistent with workload completion. It is the denominator for standard PUE and WUE accounting. & (1) Integrate measured IT power; (2) workload times calibrated energy per work unit; (3) event-driven aggregation of job profiles. Workload-level water variation is strongly driven by server efficiency and utilization \cite{lei2025waterreview}. \\
+\end{longtable}
+
+\subsection{Weather, heat, cooling, and facility electricity}
+\begin{longtable}{@{}P{0.12\linewidth}P{0.27\linewidth}P{0.25\linewidth}P{0.30\linewidth}@{}}
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+Weather state $T^{db},RH,p,T^{wb}$ & Dry-bulb temperature, relative humidity, air pressure, and wet-bulb temperature. Wet bulb captures evaporative-cooling potential; dry bulb is central to dry cooling and economizers. & Weather is exogenous but affects cooling mode, cooling power, direct WUE, thermal margin, and renewable production. Preserve local time only for interpretation; compute in UTC. & (1) On-site sensors; (2) official weather station; (3) NSRDB or reanalysis/NWP; compute $T^{wb}$ psychrometrically or with the documented approximation used by a2. NSRDB is serially complete and includes irradiance and meteorology \cite{nsrdb}. \\
+
+IT heat $Q^{IT}_{i,t}$ [MW$_{th}$] & At operational time scales, $Q^{IT}_{i,t}\approx P^{IT}_{i,t}$. More generally $Q^{IT}=P^{IT}-\dd U^{equipment}/\dd t-P^{exported}$. & More IT power raises cooling load. Thermal inertia can shift removal in time but does not eliminate ultimate heat rejection. & (1) First-order energy equivalence; (2) calorimetry or loop heat measurement; (3) detailed equipment energy balance. The near-total conversion assumption is used in the water-accounting literature \cite{li2023thirsty} and is consistent with facility telemetry descriptions \cite{borghesi2023m100}. \\
+
+Cooling load $Q^{cool}_{i,t}$ & $Q^{cool}=Q^{IT}+Q^{building}-\dd U^{thermal}/\dd t$. At coarse hourly resolution in an IT-dominated hall, $Q^{cool}\approx Q^{IT}$ is a transparent baseline. & Cooling removal must keep all critical temperatures within limits. Thermal storage permits short-term flexibility and creates a difference between instantaneous IT heat and cooling power. & (1) Approximate by IT heat; (2) measure $\dot m c_p(T^{return}-T^{supply})$; (3) derive from a calibrated RC or Modelica thermal model \cite{ngwerume2026thermal,modelicaBuildings}. \\
+
+Thermal state $\mathbf T_{i,t}$ [degC] & Vector of rack, inlet-air, room-mass, liquid-loop, GPU, or rejection-loop temperatures. Generic discrete model: $\mathbf T_{t+1}=A_T\mathbf T_t+B_QQ^{IT}_t-B_CP^{cool}_t+B_AT^{amb}_t$. & Safety: $\underline T\le\mathbf T\le\overline T$. Higher supply temperatures can reduce cooling electricity but reduce thermal margin. Rack/server heterogeneity can make one facility-wide temperature inadequate. & (1) Direct telemetry; (2) one- or multi-state RC model; (3) TAPAS-style fitted regressions; (4) detailed Modelica/digital twin. TAPAS models server-specific inlet/GPU temperature and airflow constraints \cite{stojkovic2025tapas}; Marconi100 supplies public telemetry \cite{borghesi2023m100}; the 2026 reduced-order model is an advanced, very recent preprint \cite{ngwerume2026thermal}. \\
+
+Cooling technology/mode $m_{i,t}$ & Technology or active mode: air or liquid cooling, dry cooler, chiller, direct/indirect evaporative cooling, airside/waterside economizer, or hybrid operation. & Technology creates the main energy--water tradeoff. Dry modes reduce direct water but can raise electricity in hot weather; evaporative modes can reduce cooling power while consuming water. Mode changes may have minimum-duration or equipment constraints. & (1) Fixed known facility technology; (2) rule-based weather/temperature mode selection; (3) MILP or MPC mode optimization; (4) detailed Modelica equipment simulation. Use DOE FEMP for cooling-tower structure and efficiency practices \cite{fempCooling} and Modelica Buildings for component models \cite{modelicaBuildings}. \\
+
+Cooling control $u^{cool}_{i,t}$ & Supply-water temperature, airflow, fan speed, pump flow, tower approach, chiller setpoint, or economizer fraction. & Bounds, ramps, minimum durations, temperature safety, water-quality limits, and equipment capacity. Controls jointly determine cooling electricity, direct water, and thermal margin. & (1) Fixed setpoints; (2) deadband/weather rules; (3) MPC/digital-twin optimization; (4) facility-specific historical control policy learned from telemetry. \\
+
+Cooling power $P^{cool}_{i,t}$ [MW] & Sum of chillers, fans, pumps, cooling towers, and coolant-distribution units. & $0\le P^{cool}\le\bar P^{cool}$ plus ramps and thermal feasibility. Lower cooling power may increase temperature or require more evaporative water. & (1) Direct meter; (2) $Q^{cool}/COP(T,PLR)$; (3) component model $P^{chiller}+P^{fan}+P^{pump}+P^{tower}+P^{CDU}$; (4) calibrated thermal-dynamic simulation. A constant COP is only a baseline; recent work shows it misses much intraday cooling variability \cite{ngwerume2026thermal}. \\
+
+Facility power/energy $P^{fac},E^{fac}$ & $P^{fac}=P^{IT}+P^{cool}+P^{electrical}+P^{other}$ and $E^{fac}=P^{fac}\Delta t$. & Facility and interconnection limits: $P^{fac}\le\bar P^{interconnection}$. Every auxiliary component must be counted once. & (1) Utility/facility meter; (2) sum component meters/models; (3) $PUE\,P^{IT}$ when PUE is independently measured or imposed. LBNL's national accounting separates IT equipment and infrastructure energy \cite{shehabi2024report}. \\
+
+PUE$_{i,t}$ [unitless] & $PUE=P^{fac}/P^{IT}=1+(P^{cool}+P^{electrical}+P^{other})/P^{IT}$ with consistent boundaries and interval. & $PUE\ge1$ and is unstable when IT load approaches zero. Lower PUE reduces facility electricity, grid emissions, indirect water, and energy cost, but does not by itself indicate direct water performance. & (1) Simultaneous IT and facility metering; (2) bottom-up derivation from component power; (3) weather/load/technology regression; (4) fixed or reported scenario only when necessary. Follow ISO/IEC 30134-2:2026 for measurement and reporting \cite{isoPUE}. Most project papers assume rather than physically predict PUE \cite{islam2018wace,li2024equitable,hall2024probabilistic,chen2026pscc}. \\
+
+Ambient heat rejection $Q^{rej}$ and reuse $Q^{reuse}$ & Without material storage, $Q^{rej}\approx Q^{IT}+P^{cool}-Q^{reuse}$. If only aggregate facility energy is available and reuse is absent, $Q^{rej}\approx P^{fac}$ is a coarse balance. & Heat must ultimately leave the facility. Reuse requires coincident heat demand, sufficient temperature quality, and a transport network; otherwise it should remain an output, not an assumed benefit. & (1) Approximate by facility power; (2) cooling-loop energy balance; (3) meter recovered heat and compute an energy-reuse factor. Detailed heat-network design is outside the core model. \\
+\end{longtable}
+
+\subsection{Direct site water}
+\begin{longtable}{@{}P{0.12\linewidth}P{0.27\linewidth}P{0.25\linewidth}P{0.30\linewidth}@{}}
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+Direct WUE $WUE^{dir}_{i,t}$ [m$^3$/MWh$_{IT}$] & Standard facility KPI: $WUE^{dir}=W^{dir,cons}/E^{IT}$. A cooling-tower model may instead report $W^{evap}/H^{cool}$; that denominator must be recorded and converted through the cooling-load model. & $WUE\ge0$. Weather, cooling mode, load, approach, water chemistry, and controls affect WUE. Low direct WUE does not imply low PUE, indirect water, or scarcity impact. & (1) Metered consumption divided by IT energy; (2) a2 wet-bulb model with calibration; (3) technology-specific hourly cooling-system simulation or tower mass/energy balance. Follow ISO/IEC 30134-9:2022 for KPI boundaries \cite{isoWUE}; use a1 for operational water accounting \cite{li2023thirsty}; use a2 for public weather response \cite{gupta2024dataset}. \\
+
+a2 fixed-approach model & For wet-bulb temperature $T^{wb}$ in degF, $f_{FA}(T^{wb})=-0.0001896(T^{wb})^2+0.03095T^{wb}+0.4442$ L/kWh of heat removed under the paper's fixed-approach assumptions. & Use only within the paper's stated operating range. It is a fitted generic tower response, not measured site WUE. The fixed-approach and fixed-cold-water curves are alternative control policies, not statistical confidence bounds. & (1) \Scenario generic baseline; (2) $WUE^{actual}=\lambda_i f_{FA}$ with $\lambda_i$ fitted to site water and cooling data; (3) replace with a manufacturer/Modelica model when flow, range, approach, and tower specifications are available \cite{gupta2024dataset}. \\
+
+a2 fixed-cold-water model & $f_{FCW}(T^{wb})=0.0005112(T^{wb})^2-0.04982T^{wb}+2.387$ L/kWh of heat removed, with the paper's temperature range and control assumptions. & Holding cold-water temperature fixed changes approach as weather changes and can imply different water/energy behavior from the fixed-approach policy. The paper does not quantify the corresponding chiller-energy penalty. & Same three options as the fixed-approach model. Use only as a documented generic response or calibrated facility model \cite{gupta2024dataset}. \\
+
+Cooling-tower evaporation $W^{evap}$ & Water converted to vapor. It is usually the dominant consumptive flow for evaporative heat rejection. & Nonnegative and linked to rejected heat, latent heat, weather, and tower control. Evaporation is not the same as total makeup or withdrawal. & (1) Dedicated meter or mass balance; (2) $WUE^{tower}H^{cool}$; (3) tower performance/manufacturer model; (4) Modelica or other component simulation. DOE FEMP describes the tower heat and water-flow structure \cite{fempCooling}. \\
+
+Makeup, blowdown, drift, and leakage & Tower mass balance: $W^{makeup}=W^{evap}+W^{bd}+W^{drift}+W^{leak}-W^{recovered}$. & Exact mass conservation. Blowdown limits dissolved solids; drift is equipment-limited; leakage should not be hidden in consumption. & (1) Individual meters; (2) mass-balance reconstruction; (3) estimate blowdown from evaporation and cycles of concentration; (4) equipment specification for drift. DOE FEMP provides operational guidance and typical cycle relationships \cite{fempCooling}. \\
+
+Cycles of concentration $CoC$ & Ratio of dissolved-solids concentration in recirculating water to makeup water; conductivity is a common proxy. & Higher $CoC$ reduces blowdown and makeup but increases scaling, corrosion, and biological risk. It is bounded by water quality and treatment. & (1) Conductivity measurements; (2) makeup/blowdown ratio under a consistent convention; (3) water-quality scenario constrained by treatment specifications \cite{fempCooling}. \\
+
+Direct consumption $W^{dir,cons}_{i,t}$ [m$^3$] & Water not returned to the local hydrologic system. Accounting identity: $W^{dir,cons}=WUE^{dir}E^{IT}$ when the WUE denominator is IT energy. & Nonnegative. The numerator boundary must match WUE. Consumption is often evaporation but may include other irrecoverable losses. & (1) Withdrawal minus measured discharge; (2) evaporation and other loss meters/models; (3) WUE times IT energy. a1 and c distinguish consumption from withdrawal \cite{li2023thirsty,han2026pipe}. \\
+
+Direct withdrawal $W^{dir,with}_{i,t}$ [m$^3$] & Total water taken from utility, surface water, groundwater, reclaimed-water supply, or another source. For a tower, withdrawal is generally makeup water. & $W^{with}\ge W^{cons}$ under ordinary accounting. Source, well, treatment, pipe, permit, and utility-capacity limits apply. This is the quantity coupled to the local water system. & (1) Makeup/utility/well meter; (2) cooling-system mass balance; (3) $W^{cons}/\chi$ with a documented consumptive fraction. Paper c provides the planning conversion and peak-capacity framework \cite{han2026pipe}. \\
+
+Consumptive fraction $\chi_i$ & $\chi=W^{cons}/W^{with}$, with $0<\chi\le1$ under standard definitions. & Lower $\chi$ means more water is returned, but return-flow location and quality still matter. One universal value is not justified across facility types and cooling systems. & (1) Metered withdrawal and discharge; (2) mass balance; (3) type-level planning values from c with sensitivity ranges; replace with site data when available \cite{han2026pipe}. \\
+
+Water-source share $\theta_{i,s,t}$ & Fraction of withdrawal supplied by source $s$: $W^{with}_{i,s,t}=\theta_{i,s,t}W^{with}_{i,t}$ and $\sum_s\theta_{i,s,t}=1$. Sources include potable, surface, groundwater, reclaimed, rainwater, and desalinated water. & $0\le\theta\le1$ and $W_{i,s,t}\le\bar W_{i,s,t}$. Source switching changes groundwater impact, energy, cost, reliability, and discharge. & (1) Utility/operator records; (2) permits and source-capacity data; (3) decision variables over explicit source options. The J-WAFS project distinguishes groundwater, wastewater, and desalination pathways \cite{amin2026jwafs}. \\
+
+Water reuse $W^{reuse}_{i,t}$ & Recovered blowdown, on-site wastewater, or reclaimed municipal water used to offset freshwater makeup. & $W^{reuse}\le\eta^{reuse}W^{available}$ plus treatment, quality, storage, and conveyance constraints. Reuse can reduce fresh withdrawal while increasing treatment energy and cost. & (1) Metered reclaimed supply; (2) fixed reuse fraction; (3) treatment/storage optimization with explicit energy and cost; (4) municipal reclaimed-water availability from utility data. \\
+
+Average-day demand $ADD_i$ & Annual direct withdrawal divided by 365, or the mean of daily direct withdrawal. & Useful for annual supply planning but insufficient for pipe, treatment, and source capacity. & (1) Aggregate hourly/daily withdrawal; (2) annual withdrawal/365; (3) type-level IT energy $\times$ WUE $/\chi$. Paper c is the principal source \cite{han2026pipe}. \\
+
+Maximum-day demand and peaking factor $MDD_i,PF_i$ & $MDD_i=\max_d\sum_{t\in d}W^{with}_{i,t}$ and $PF_i=MDD_i/ADD_i$. If only annual data exist, $MDD=PF\,ADD$. & Utility and aquifer infrastructure may be governed by peak withdrawal. $PF$ applies to direct site withdrawal, not electricity-generation water. Aggregation across facilities can reduce peaks. & (1) Observed daily maximum; (2) hourly weather/cooling simulation; (3) documented empirical/scenario $PF$ from c. Treat the paper's planning factor as a scenario rather than a universal law \cite{han2026pipe}. \\
+\end{longtable}
+
+\subsection{Electricity supply, generator water, emissions, and cost}
+\begin{longtable}{@{}P{0.12\linewidth}P{0.27\linewidth}P{0.25\linewidth}P{0.30\linewidth}@{}}
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+Renewable availability $CF^{solar/wind}_{i,t}$ & Production per unit installed capacity. $P^{solar}=K^{solar}CF^{solar}$ and $P^{wind}=K^{wind}CF^{wind}$. In the PSCC paper, annual renewable energy variables multiply normalized hourly shares that sum to one. & $0\le CF\le1$ with capacity and curtailment limits. Solar/wind complementarity may reduce grid use but can induce overbuilding or transmission dependence. & (1) Measured generation; (2) NSRDB/WIND Toolkit plus conversion model; (3) paper-normalized profiles for exact replication. Use NSRDB \cite{nsrdb}, WIND Toolkit \cite{windtoolkit}, and the PSCC paper's precise variable convention \cite{chen2026pscc}. \\
+
+Facility energy balance & $P^{grid}+P^{solar}+P^{wind}+P^{backup}+P^{dis}=P^{fac}+P^{charge}+P^{curtail}+P^{export}$. & Interconnection, generator, storage, ramp, state-of-charge, and export limits. Every MWh must be balanced exactly once. & (1) Metered supply streams; (2) simple residual $P^{grid}=[P^{fac}-P^{ren}]^+$ when no storage/export/backup is modeled; (3) dispatch/storage optimization. \\
+
+Grid generation $G_{g,t}$ [MWh] & Net output of generator $g$ in $t$. & System demand balance, generator capacity, ramping, minimum output, commitment, reserves, transmission, and outages as model detail increases. & (1) Observed EIA-930 balancing-authority mix \cite{eia930}; (2) plant-level EIA/EPA/PJM observations; (3) economic dispatch, unit commitment, or linear power flow. Use an explicit power-system model only when network or marginal impacts are research questions. \\
+
+Generator heat rate and fuel $HR_g,Fuel_{g,t}$ & $FuelEnergy_{g,t}=HR_gG_{g,t}$; efficiency is its inverse after unit conversion. & Technology, load, startup, and auxiliary power affect heat rate. Higher heat rate raises fuel, direct emissions, and often heat rejection and cooling water. & (1) Generator/operator data; (2) EIA/EPA plant statistics; (3) one internally consistent NETL case. Do not mix heat rate, water, and emissions from different plant configurations or report revisions \cite{netl2025}. \\
+
+Generator water intensity $WI_g^{cons},WI_g^{with}$ & Water consumption or withdrawal divided by net electricity generation. & Keep withdrawal and consumption separate. Cooling technology, plant design, climate, and operating regime can matter more than fuel category alone. & (1) Plant-reported water and generation; (2) fuel--cooling-technology factors from Macknick et al.\ \cite{macknick2012}; (3) NETL case-specific engineering balances \cite{netl2025}; (4) broad fuel averages only as a benchmark. \\
+
+Average EWIF $EWIF^{avg}_{r,t}$ & Attributional grid-water intensity: $EWIF^{avg}_{r,t}=\sum_gG_{g,t}WI_g^{cons}/\sum_gG_{g,t}$. & Nonnegative. Every positive generation category must map to a documented factor. Imports, exports, and hydropower-reservoir boundaries must be explicit. & (1) a2 fuel-mix average; (2) plant-output-weighted factor; (3) consumption-based accounting including interchange; (4) network flow tracing. a1 and a2 provide the project baseline \cite{li2023thirsty,gupta2024dataset}; EIA-930 provides hourly generation/interchange \cite{eia930}. \\
+
+Marginal water factor $MWF_{i,t}$ & $MWF_{i,t}=\partial W^{power}/\partial E^{load}_{i,t}$, the change in generator-side water caused by an incremental load. & Depends on dispatch, commitment, transmission, generator cooling, and operating constraints. It is not equal to average EWIF and is generally not directly observed. & (1) Perturb load in a dispatch model; (2) identify marginal generators and water factors; (3) statistical load--generation--water model. Treat this as an advanced simulated quantity with uncertainty, not an official measured feed. \\
+
+Indirect water $W^{ind}$ & Attributional site formula: $W^{ind}_{i,t}=EWIF_{r,t}E^{grid}_{i,t}$. Physical generator accounting: $W^{ind}_{g,t}=WI_gG_{g,t}$ in generator watersheds. & Do not add generator-side water to the data center's local groundwater balance unless physically co-located in the same source system. Report average and marginal versions separately. & (1) Average regional attribution; (2) generator-resolved physical accounting; (3) marginal counterfactual accounting. a1 supplies the PUE placement and boundary \cite{li2023thirsty}. \\
+
+Total operational water footprint $W^{oper}$ & $W^{oper}=W^{dir,cons}+W^{ind}$. With full grid supply and compatible denominators, $W^{oper}=E^{IT}(WUE^{dir}+PUE\cdot EWIF)$. & This is a multi-location footprint, not local withdrawal. Always report direct and indirect components and their locations separately. & (1) Site direct plus average grid indirect; (2) site direct plus generator-resolved indirect; (3) separate attributional and marginal totals. Core sources: a1 and geographical balancing \cite{li2023thirsty,li2024equitable}. \\
+
+Average carbon intensity $CI^{avg}_{r,t}$ & $CI^{avg}=\sum_gG_{g,t}EF_g/\sum_gG_{g,t}$ and attributed emissions are $CI^{avg}E^{grid}$. & Appropriate for inventories and average attribution, not necessarily for load-shifting consequences. Imports/exports and accounting boundary matter. & (1) EIA-930 hourly estimates \cite{eia930}; (2) generator-weighted EPA/eGRID data \cite{egrid}; (3) annual eGRID factor where hourly data are unavailable. \\
+
+Marginal emissions factor $MEF_{i,t}$ & $MEF_{i,t}=\partial \COtwo/\partial E^{load}_{i,t}$. & Use for incremental load and operational scheduling. It can differ substantially from average intensity. & (1) PJM hourly or five-minute nodal marginal-emissions data for PJM studies \cite{pjm}; (2) marginal generator from dispatch; (3) statistical estimation. Keep average and marginal outcomes as separate metrics. \\
+
+Local backup generation and emissions & For local unit $b$, $Fuel_{b,t}=P^{backup}_{b,t}\Delta t/(\eta_bLHV_b)$ and emissions equal fuel times pollutant-specific factors, or permit-specific output rates. & $0\le P^{backup}\le\bar P^{backup}$ plus fuel, testing, outage, permit, and runtime limits. Permitted capacity is not IT capacity or normal operating generation. & (1) Fuel meter and engine factor; (2) permit-specific emission rates; (3) technology-specific engineering model. Use this as an event/testing module unless evidence supports routine operation. \\
+
+Operational electricity cost & Basic market proxy: $\sum_t p_tE^{grid}_t$. Retail bill may include energy, demand, fixed, minimum, and interconnection charges. & Price minimization may worsen water, carbon, or peak demand. Wholesale LMP is not a complete retail tariff. & (1) PJM day-ahead/real-time LMP proxy \cite{pjm}; (2) actual utility tariff; (3) PPA or special large-load contract; (4) demand-charge model with $\max_tP^{grid}_t$. \\
+
+Direct water and wastewater cost & $\sum_{s,t}p^{water}_{s,t}W^{with}_{s,t}+\sum_t p^{waste}_tW^{discharge}_t$ plus treatment, pumping, conveyance, and capacity charges where applicable. & Tiered rates, scarcity surcharges, source-specific energy, and connection capacity may apply. Private pumping cost can rise as groundwater head falls. & (1) Utility tariff; (2) contract price; (3) engineering cost model for groundwater, reclaimed water, desalination, treatment, and conveyance. \\
+
+Investment and annualized capacity cost & $C^{ann}=CRF\cdot CAPEX\cdot K+FOM\cdot K+VOM\cdot E$, where $CRF=r(1+r)^N/[(1+r)^N-1]$. & Capacity interacts with utilization, overbuilding, reliability, renewables, water source, and equity. LCOE alone cannot represent hourly feasibility. & (1) Project-specific costs; (2) technology benchmark plus capital-recovery factor; (3) endogenous capacity-expansion model. The PSCC formulation provides the core siting structure \cite{chen2026pscc}. \\
+\end{longtable}
+
+\subsection{Water stress, groundwater, siting, equity, and uncertainty}
+\begin{longtable}{@{}P{0.12\linewidth}P{0.27\linewidth}P{0.25\linewidth}P{0.30\linewidth}@{}}
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Quantity} & \textbf{Canonical definition and direct relationships} & \textbf{Constraints and consequences} & \textbf{Construction options, data, and key sources} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\emph{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+Physical water footprint $WF_{n,\tau}$ [m$^3$] & Physical water consumption occurring in basin/node $n$ during $\tau$. Direct site and generator-side water remain separate physical records. & Assign water to the location where consumption occurs. Do not relocate generator water to the data center solely for convenience. & (1) Metered consumption; (2) modeled direct and generator consumption; (3) scenario ranges with explicit provenance. \\
+
+Scarcity characterization factor $CF_{n,\tau}$ & Relative potential scarcity impact of consuming one unit of water in node/basin $n$ and period $\tau$. & It is an impact factor, not physical storage, recharge, depletion, or a pumping constraint. Temporal and spatial resolution should match the water flow as closely as possible. & (1) Static HUC8 factor from Siddik/PSCC \cite{siddik2021,chen2026pscc}; (2) monthly AWARE-US county factor \cite{awareUS}; (3) monthly basin AWARE2.0 factor and public dataset \cite{aware20,aware20data}; (4) Aqueduct 4.0 for screening/future risk, followed by local analysis \cite{aqueduct40}; (5) locally recalculated factor using regional data. \\
+
+Water-scarcity footprint $WSF_{n,\tau}$ [m$^3$-eq] & $WSF_{n,\tau}=CF_{n,\tau}WF_{n,\tau}$. & Keep both physical m$^3$ and m$^3$-eq. WSF can rank locations or enter an objective but cannot enforce groundwater safety. & (1) Static annual CF; (2) monthly CF; (3) climate/demand scenario-specific CF. PSCC uses this structure as a planning abstraction \cite{chen2026pscc}. \\
+
+Spatial crosswalk $M$ & Mapping among data-center sites, grid nodes, generators, generator watersheds, water utilities/sources, groundwater nodes, agriculture, municipalities, and socioeconomic units. & Mappings must obey physical service and source relationships; rows/weights must sum consistently. Geographic nearest-neighbor mapping is only a provisional proxy. & (1) Known service-territory/source records; (2) GIS overlay plus manual validation; (3) weighted allocation for multi-source utilities or multiple generators. Version and audit this as a first-class dataset. \\
+
+Data-center groundwater extraction $q^{dc}_{n,\tau}$ & $q^{dc}_{n,\tau}=\sum_{i,k,t\in\tau}M_{ni}\theta^{gw}_{i,k,t}W^{dir,with}_{i,k,t}$. & Nonnegative and bounded by wells, permits, source availability, and pumping capacity. Only the groundwater-supplied share of direct withdrawal enters this equation. & (1) Well/pump meters; (2) direct withdrawal times reported groundwater share; (3) endogenous source-choice variable. This is the central operations-to-aquifer coupling in the project proposal \cite{amin2026jwafs}. \\
+
+Other-sector withdrawals $q^{ag},q^{mun},q^{other}$ & Agricultural, municipal, industrial, and other pumping sharing the groundwater system. Total extraction is $q=q^{dc}+q^{ag}+q^{mun}+q^{other}$. & Existing users cannot be omitted when evaluating available water or distributional impacts. Hard deliveries or shortfall variables can represent sector reliability. & (1) Agency withdrawal records; (2) crop and municipal demand models; (3) exogenous scenarios initially, endogenous allocations later. The J-WAFS proposal requires explicit multi-sector competition \cite{amin2026jwafs}. \\
+
+Recharge $R_{n,\tau}$ & Water entering the groundwater system from precipitation, irrigation return flow, streams, or managed recharge. & $R\ge0$, seasonal, spatially heterogeneous, and uncertain. Plans robust to mean recharge may fail under drought. & (1) Agency/model estimates; (2) soil-water-balance or integrated hydrologic model; (3) state estimation using wells, precipitation, ET, pumping, and GRACE; (4) scenario ensembles. Project data families include CGWB, GRACE, and MODIS \cite{cgwb,grace,modis}. \\
+
+Groundwater head/state $h_{n,\tau}$ [m] & Hydraulic head or an equivalent reduced-order storage state. Generic continuous model: $S\dot h=-Lh+R-q$; discrete model: $h_{\tau+1}=Ah_\tau+B_RR_\tau-B_Qq_\tau+\varepsilon_\tau$. & Safety constraints $h_{n,\tau}\ge h_n^{min}$; pumping lowers head; recharge/inflow raises head; impacts persist and propagate. & (1) Calibrated MODFLOW 6 high-fidelity model \cite{modflow670}; (2) linear network/state-space model for optimization; (3) data-driven state-space model constrained by physical signs and conservation; (4) reduced model fitted to MODFLOW impulse responses. \\
+
+Groundwater storage $S_n$ & Change in stored groundwater per unit head change, or the corresponding coefficient in a reduced state model. & Positive. It controls persistence and drawdown response and must be consistent with units and node volume. & (1) Aquifer tests/hydrogeology; (2) calibrated MODFLOW parameters; (3) joint estimation from pumping and well responses; (4) uncertainty range when data are sparse. \\
+
+Hydraulic conductance/network $c_{nm},L,A$ & Conductance $c_{nm}$ drives flow from high to low head; the weighted graph Laplacian $L$ conserves internal flows. $A$ is the discrete transition matrix. & $c_{nm}\ge0$ under standard potential-flow interpretation; internal flows conserve water. Topology and parameters may be uncertain. & (1) Hydrogeological structure/MODFLOW reduction; (2) fit multi-well impulse responses; (3) sparse topology learning with physical constraints. The proposal motivates a reduced-order potential-driven network \cite{amin2026jwafs}. \\
+
+Groundwater observations & Piezometer head, storage anomaly, pumping, ET, streamflow, and recharge-related observations used to estimate or validate the state. & Different datasets have different scales and errors; GRACE is coarse and cannot identify local wells without downscaling/assimilation. & (1) Local well networks/CGWB \cite{cgwb}; (2) GRACE/GRACE-FO monthly storage anomalies \cite{grace}; (3) MODIS evapotranspiration \cite{modis}; (4) regional land/water products such as Bhuvan \cite{bhuvan}; (5) assimilation with uncertainty. \\
+
+Siting/capacity decision $z_{i,k}$ [MW] & New data-center capacity at location $i$ using cooling/source option $k$; $x_i=\sum_kz_{i,k}$. Operational assignment must satisfy demand, energy, capacity, and environmental constraints. & Land, grid interconnection, cooling/source, water availability, groundwater safety, and investment constraints. Continuous capacity gives an LP; discrete projects or modes require MILP. & (1) PSCC-style continuous planning LP \cite{chen2026pscc}; (2) discrete project-size MILP; (3) two-stage stochastic/robust expansion; (4) coupled groundwater-source choice from the project proposal \cite{amin2026jwafs}. \\
+
+Regional burden $B_n$ & A clearly declared object such as physical withdrawal, WSF, cumulative head deficit $\sum_\tau[h_n^{target}-h_{n,\tau}]_+$, agricultural shortfall, municipal shortfall, or emissions exposure. & The burden must be selected before the equity metric. Different harms cannot be silently collapsed into one number, and benefits may accrue to different groups. & (1) Cumulative physical flow; (2) dynamic groundwater stress; (3) service shortfall; (4) population/vulnerability-weighted burden reported separately from the physical metric. \\
+
+Minimax burden $I_{max}$ & $I_{max}=\max_n B_n$, linearized by $Z\ge B_n$ for all $n$. & Reduces the worst regional burden; may increase total cost, aggregate impact, or capacity in some regimes. It is interpretable and computationally tractable. & (1) Objective term $\delta Z$; (2) hard burden limit; (3) policy threshold sensitivity. Used in geographical balancing and PSCC \cite{li2024equitable,chen2026pscc}. \\
+
+Inequality diagnostics & Mean absolute difference, Gini, Theil, Atkinson, coefficient of variation, and top-$k$ burden shares. & Metrics respond differently to zeros, scale, and tails. Raw weights are not comparable across metrics without normalization. Nonlinear metrics are often better as post-solve diagnostics. & (1) Ex-post diagnostics; (2) mean-absolute-difference LP term; (3) sensitivity across burden definitions and normalizations. PSCC demonstrates materially different minimax and MAD behavior \cite{chen2026pscc}. \\
+
+Uncertain state $\xi_\omega$ & Joint realization of workload, weather, price, grid mix, outages, recharge, competing demand, and technology parameters. & Preserve cross-variable dependence; independently shuffling weather, solar, cooling, and demand destroys physical behavior. Reliability constraints must be explicit. & (1) Historical-year/sample simulation; (2) multivariate scenario generator; (3) rolling forecast and MPC; (4) chance constraints/CVaR; (5) Wasserstein distributionally robust optimization after deterministic validation \cite{hall2024probabilistic}. \\
+\end{longtable}
+\end{landscape}
+
+\section{Canonical dependency equations}
+The minimum defensible coupled spine is:
+\begin{align}
+E^{IT}_{i,t}
+&=\mathcal P_i(x_{i,t},u_{i,t},\text{hardware},\text{workload})\Delta t,\\
+\mathbf T_{i,t+1}
+&=\mathcal F_i(\mathbf T_{i,t},Q^{IT}_{i,t},T^{amb}_{i,t},u^{cool}_{i,t}),\\
+E^{fac}_{i,t}
+&=E^{IT}_{i,t}+E^{cool}_{i,t}+E^{other}_{i,t},\\
+W^{dir,cons}_{i,t}
+&=\mathcal W_i(Q^{cool}_{i,t},T^{wb}_{i,t},m_{i,t},u^{cool}_{i,t}),\\
+W^{dir,with}_{i,t}
+&=W^{evap}_{i,t}+W^{bd}_{i,t}+W^{drift}_{i,t}+W^{leak}_{i,t}-W^{reuse}_{i,t},\\
+P^{grid}_{i,t}+P^{ren}_{i,t}+P^{backup}_{i,t}+P^{dis}_{i,t}
+&=P^{fac}_{i,t}+P^{charge}_{i,t}+P^{curtail}_{i,t}+P^{export}_{i,t},\\
+W^{gen}_{g,t}&=WI_gG_{g,t},\qquad
+CO_{2,g,t}=EF_gG_{g,t},\\
+WSF_{n,\tau}&=CF_{n,\tau}WF_{n,\tau},\\
+q^{dc}_{n,\tau}
+&=\sum_{i,k,t\in\tau}M_{ni}\theta^{gw}_{i,k,t}W^{dir,with}_{i,k,t},\\
+h_{\tau+1}
+&=Ah_\tau+B_RR_\tau-B_Q(q^{dc}_\tau+q^{ag}_\tau+q^{mun}_\tau+q^{other}_\tau)+\varepsilon_\tau.
+\end{align}
+
+\section{Implementation order and validation contract}
+
+\begin{enumerate}
+\item Validate workload $\rightarrow$ IT power using measured traces.
+\item Validate IT power $\rightarrow$ cooling power, temperatures, and derived PUE.
+\item Validate weather/cooling $\rightarrow$ direct consumption and withdrawal.
+\item Validate grid generation/dispatch $\rightarrow$ indirect water and average/marginal emissions.
+\item Validate daily and peak direct-water behavior.
+\item Add scheduling with exact conservation, deadline, capacity, and terminal-completion constraints.
+\item Reproduce the PSCC static siting model literally before extending it.
+\item Build and validate the spatial crosswalk from sites to grids, generators, utilities, sources, and aquifers.
+\item Couple direct groundwater withdrawal to a reduced-order groundwater model validated against MODFLOW or observations.
+\item Compare static WSF rankings with dynamic groundwater consequences.
+\item Add equity only after the burden object is fixed.
+\item Add uncertainty and policy only after deterministic mass, energy, timing, dimensional, and state validations pass.
+\end{enumerate}
+
+At minimum, automated tests should verify energy balance, water mass balance, unit consistency, unique site--time keys, complete fuel mappings, nonnegative flows, PUE $\ge1$, source shares summing to one, job conservation, zero terminal backlog where required, groundwater state recursion, and agreement with selected paper tables or figures within declared tolerances.
+
+\section{Source hierarchy}
+
+For each quantity, use the highest available level:
+\[
+\begin{aligned}
+\text{site measurement}
+&\succ \text{site-calibrated physical/statistical model}\\
+&\succ \text{technology-specific public model}
+\succ \text{regional average}\\
+&\succ \text{documented scenario}
+\succ \text{proxy}.
+\end{aligned}
+\]
+A lower-level source may be retained for sensitivity or benchmarking but must not silently replace a higher-quality source.
+
+\begin{thebibliography}{99}
+\small
+
+\bibitem{isoPUE}
+ISO/IEC, ``ISO/IEC 30134-2:2026---Information technology---Data centres key performance indicators---Part 2: Power usage effectiveness (PUE),'' 2026. \href{https://www.iso.org/standard/30134-2}{ISO record}.
+
+\bibitem{isoWUE}
+ISO/IEC, ``ISO/IEC 30134-9:2022---Information technology---Data centres key performance indicators---Part 9: Water usage effectiveness (WUE),'' 2022. \href{https://www.iso.org/standard/77692.html}{ISO record}. A second edition is under development as of 2026.
+
+\bibitem{li2023thirsty}
+P. Li, J. Yang, M. A. Islam, and S. Ren, ``Making AI Less `Thirsty': Uncovering and Addressing the Secret Water Footprint of AI Models,'' 2023/2024. \href{https://arxiv.org/abs/2304.03271}{arXiv:2304.03271}.
+
+\bibitem{gupta2024dataset}
+P. Sen Gupta, M. R. Hossen, P. Li, S. Ren, and M. A. Islam, ``A Dataset for Research on Water Sustainability,'' 2024. \href{https://arxiv.org/abs/2405.17469}{arXiv:2405.17469}. The paper links the public OSF data and code repository.
+
+\bibitem{han2026pipe}
+Y. Han, P. Li, A. Wierman, and S. Ren, ``Small Bottle, Big Pipe: Quantifying and Addressing the Impact of Data Centers on Public Water Systems,'' 2026. \href{https://arxiv.org/abs/2603.02705}{arXiv:2603.02705}.
+
+\bibitem{islam2018wace}
+M. A. Islam, K. Ahmed, H. Xu, N. H. Tran, G. Quan, and S. Ren, ``Exploiting Spatio-Temporal Diversity for Water Saving in Geo-Distributed Data Centers,'' \emph{IEEE Transactions on Cloud Computing}, vol. 6, no. 3, pp. 734--746, 2018. \href{https://doi.org/10.1109/TCC.2016.2535201}{doi:10.1109/TCC.2016.2535201}.
+
+\bibitem{radovanovic2021carbon}
+A. Radovanovic et al., ``Carbon-Aware Computing for Datacenters,'' 2021. \href{https://arxiv.org/abs/2106.11750}{arXiv:2106.11750}.
+
+\bibitem{li2024equitable}
+P. Li, J. Yang, A. Wierman, and S. Ren, ``Towards Environmentally Equitable AI via Geographical Load Balancing,'' 2023/2024. \href{https://arxiv.org/abs/2307.05494}{arXiv:2307.05494}; published at ACM e-Energy 2024.
+
+\bibitem{hall2024probabilistic}
+S. Hall, F. Micheli, G. Belgioioso, A. Radovanovic, and F. D\"orfler, ``Carbon-Aware Computing for Data Centers with Probabilistic Performance Guarantees,'' 2024. \href{https://arxiv.org/abs/2410.21510}{arXiv:2410.21510}.
+
+\bibitem{stojkovic2025tapas}
+J. Stojkovic et al., ``TAPAS: Thermal- and Power-Aware Scheduling for LLM Inference in Cloud Platforms,'' in \emph{ASPLOS}, 2025. \href{https://doi.org/10.1145/3676641.3716025}{doi:10.1145/3676641.3716025}; \href{https://arxiv.org/abs/2501.02600}{preprint}.
+
+\bibitem{parasnis2024games}
+R. Parasnis and S. Amin, ``Optimal Interventions in Coupled-Activity Network Games: Application to Sustainable Forestry,'' 2024. \href{https://arxiv.org/abs/2404.13662}{arXiv:2404.13662}. This is a later policy-method reference, not a physical data-center model.
+
+\bibitem{lei2025waterreview}
+N. Lei, J. Lu, A. Shehabi, and E. R. Masanet, ``The Water Use of Data Center Workloads: A Review and Assessment of Key Determinants,'' \emph{Resources, Conservation and Recycling}, vol. 219, 108310, 2025. \href{https://doi.org/10.1016/j.resconrec.2025.108310}{doi:10.1016/j.resconrec.2025.108310}.
+
+\bibitem{shehabi2024report}
+A. Shehabi et al., ``2024 United States Data Center Energy Usage Report,'' Lawrence Berkeley National Laboratory, 2024. \href{https://eta-publications.lbl.gov/publications/2024-united-states-data-center-energy-usage-report}{LBNL publication page}.
+
+\bibitem{nlr2026genai}
+R. Vercellino et al., ``Dataset of Generative AI Workload Power Profiles,'' National Laboratory of the Rockies Data Catalog, 2026. \href{https://doi.org/10.7799/3025227}{doi:10.7799/3025227}; \href{https://data.nlr.gov/submissions/312}{dataset page}.
+
+\bibitem{elsayed2026ai}
+A. A. E. Elsayed, A. A. Al-Obaidi, and H. E. Z. Farag, ``Characterization of High-Resolution AI Data Center Training Workloads on Single and Multiple GPU Nodes,'' \emph{Scientific Data}, 2026. \href{https://www.nature.com/articles/s41597-026-07496-6}{article and data links}.
+
+\bibitem{google2019trace}
+Google, ``ClusterData2019 and Power Traces,'' 2019. \href{https://github.com/google/cluster-data}{official repository}; \href{https://github.com/google/cluster-data/blob/master/ClusterData2019.md}{trace documentation}.
+
+\bibitem{borghesi2023m100}
+A. Borghesi et al., ``M100 ExaData: A Data Collection Campaign on the CINECA's Marconi100 Tier-0 Supercomputer,'' \emph{Scientific Data}, vol. 10, 288, 2023. \href{https://doi.org/10.1038/s41597-023-02174-3}{doi:10.1038/s41597-023-02174-3}.
+
+\bibitem{ngwerume2026thermal}
+C. Ngwerume, L. Tong, C.-W. Ten, and Y. Hu, ``A Configurable Thermal-Dynamic Model for AI Data Center Cooling Load Simulation,'' 2026. \href{https://arxiv.org/abs/2607.28962}{arXiv:2607.28962}. Very recent preprint; use as an advanced benchmark and validate independently.
+
+\bibitem{modelicaBuildings}
+Lawrence Berkeley National Laboratory, ``Modelica Buildings Library,'' current software and documentation. \href{https://simulationresearch.lbl.gov/modelica/}{project page}; \href{https://github.com/lbl-srg/modelica-buildings}{source repository}.
+
+\bibitem{fempCooling}
+U.S. Department of Energy, Federal Energy Management Program, ``Cooling Water Efficiency Opportunities for Federal Data Centers.'' \href{https://www.energy.gov/cmei/femp/cooling-water-efficiency-opportunities-federal-data-centers}{DOE FEMP guidance}.
+
+\bibitem{macknick2012}
+J. Macknick, R. Newmark, G. Heath, and K. C. Hallett, ``Operational Water Consumption and Withdrawal Factors for Electricity Generating Technologies: A Review of Existing Literature,'' \emph{Environmental Research Letters}, vol. 7, 045802, 2012. \href{https://doi.org/10.1088/1748-9326/7/4/045802}{doi:10.1088/1748-9326/7/4/045802}.
+
+\bibitem{netl2025}
+M. Turner et al., ``Cost and Performance Baseline for Fossil Energy Plants, Volume 1: Bituminous Coal and Natural Gas to Electricity,'' NETL, DOE/NETL-2025/5313, 2025. \href{https://doi.org/10.2172/2580491}{doi:10.2172/2580491}; \href{https://www.osti.gov/biblio/2580491}{OSTI record}.
+
+\bibitem{eia930}
+U.S. Energy Information Administration, ``Form EIA-930: Hourly Electric Grid Monitor.'' \href{https://www.eia.gov/electricity/gridmonitor/about}{data description and downloads}.
+
+\bibitem{egrid}
+U.S. Environmental Protection Agency, ``Emissions \& Generation Resource Integrated Database (eGRID), Detailed Data.'' \href{https://www.epa.gov/egrid/detailed-data}{official data page}.
+
+\bibitem{pjm}
+PJM Interconnection, ``Data Miner 2,'' including LMP, generation, total emissions, and marginal-emissions feeds. \href{https://dataminer2.pjm.com/}{official data portal}; \href{https://www.pjm.com/markets-and-operations/etools/data-miner-2}{documentation}.
+
+\bibitem{nsrdb}
+National Laboratory of the Rockies, ``National Solar Radiation Database Data Downloads.'' \href{https://developer.nrel.gov/docs/solar/nsrdb/}{official API documentation}.
+
+\bibitem{windtoolkit}
+National Laboratory of the Rockies, ``WIND Toolkit Data Downloads.'' \href{https://developer.nrel.gov/docs/wind/wind-toolkit/}{official API documentation}.
+
+\bibitem{siddik2021}
+M. A. B. Siddik, A. Shehabi, and L. T. Marston, ``The Environmental Footprint of Data Centers in the United States,'' \emph{Environmental Research Letters}, vol. 16, 064017, 2021. \href{https://doi.org/10.1088/1748-9326/abfba1}{doi:10.1088/1748-9326/abfba1}.
+
+\bibitem{awareUS}
+U. Lee et al., ``Balancing Water Sustainability and Productivity Objectives in Microalgae Cultivation: Siting Open Ponds by Considering Seasonal Water-Stress Impact Using AWARE-US,'' \emph{Environmental Science \& Technology}, vol. 54, pp. 2091--2102, 2020. \href{https://doi.org/10.1021/acs.est.9b05347}{doi:10.1021/acs.est.9b05347}.
+
+\bibitem{aware20}
+G. Seitfudem, M. Berger, H. M. Schmied, and A.-M. Boulay, ``The Updated and Improved Method for Water Scarcity Impact Assessment in LCA, AWARE2.0,'' \emph{Journal of Industrial Ecology}, vol. 29, pp. 891--907, 2025. \href{https://doi.org/10.1111/jiec.70023}{doi:10.1111/jiec.70023}.
+
+\bibitem{aware20data}
+G. Seitfudem et al., ``AWARE2.0 Characterization Factors and Input Data,'' Zenodo, 2025. \href{https://doi.org/10.5281/zenodo.15133241}{doi:10.5281/zenodo.15133241}.
+
+\bibitem{aqueduct40}
+World Resources Institute, ``Aqueduct 4.0 Current and Future Global Maps Data,'' 2023. \href{https://www.wri.org/data/aqueduct-global-maps-40-data}{data and methodology}. WRI describes Aqueduct as a prioritization tool that should be complemented by local analysis.
+
+\bibitem{modflow670}
+C. D. Langevin et al., ``MODFLOW 6 Modular Hydrologic Model, Version 6.7.0,'' U.S. Geological Survey Software Release, 2026. \href{https://doi.org/10.5066/P1IJAXDZ}{doi:10.5066/P1IJAXDZ}; \href{https://www.usgs.gov/software/modflow-version-670}{release page}.
+
+\bibitem{grace}
+NASA Jet Propulsion Laboratory, ``GRACE and GRACE Follow-On Data.'' \href{https://grace.jpl.nasa.gov/data/get-data/}{official data portal}.
+
+\bibitem{cgwb}
+Central Ground Water Board, Ministry of Jal Shakti, Government of India, ``Ground Water Resources and Monitoring Data.'' \href{https://cgwb.gov.in/}{official portal}.
+
+\bibitem{modis}
+NASA LP DAAC, ``MOD16A2 MODIS Global Evapotranspiration Product.'' \href{https://lpdaac.usgs.gov/products/mod16a2v061/}{official product page}.
+
+\bibitem{bhuvan}
+Indian Space Research Organisation and National Remote Sensing Centre, ``Bhuvan Geospatial Platform.'' \href{https://bhuvan.nrsc.gov.in/}{official portal}.
+
+\bibitem{chen2026pscc}
+R. Chen, D. Chauhan, N. Engelman Lado, and S. Amin, ``A Multi-Objective Linear Programming Framework for Sustainable and Equitable Data Center Siting,'' submitted to PSCC 2026, project manuscript supplied by the authors. No public URL was available at the time of this glossary.
+
+\bibitem{amin2026jwafs}
+S. Amin and D. Deka, ``Protecting Community Groundwater Security: Network-Based Planning for Data Centers in Water-Stressed India,'' MIT J-WAFS proposal, 2026, project document supplied by the authors. No public URL was available at the time of this glossary.
+
+\end{thebibliography}
+
+\end{document}

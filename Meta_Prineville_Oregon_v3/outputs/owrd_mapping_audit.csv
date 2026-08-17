@@ -1,0 +1,29 @@
+oha_facility_id,canonical_source_name,mapping_status,confidence,accepted_owrd_report_ids,accepted_ids_present,candidate_owrd_report_ids,candidate_ids_present,related_or_conflicting_report_ids,conflict_ids_present,owrd_wl_id_known,production_handling
+SRC-AA,Stearns Well,VERIFIED,0.99,12037,True,,False,,False,,Use Report 12037 once. Treat Stearns as the primary physical-well match; do not duplicate this series under Barney.
+SRC-BB,4th St Deep Well #2,UNRESOLVED_CURRENT,0.0,,False,,False,12941,True,581130.0,Do not map Report 12941 to the current #2. Keep 12941 only as a historical predecessor/legacy 4th St Deep series.
+SRC-CB,Lamonta Well #2,VERIFIED_STRONG,0.98,68626,True,,False,12937,True,560060.0,"Use Report 68626 for current Lamonta #2. Keep 12937 as legacy Lamonta (inactive SRC-CA), not part of current-source series unless modeling historical system production."
+SRC-DB,Yancey Well #2,VERIFIED,0.99,68194;68233,True,,False,12938,True,,For 2019-2020 aggregate monthly values across 68194 and 68233; from 2021 onward 68233 is the continuing series. Do not double-count legacy Yancey Report 12938.
+SRC-DC,Yancey Well #3,UNRESOLVED_CURRENT,0.0,,False,,False,,False,593188.0,Leave production unmapped. Do not fold into Yancey Well #2 without an explicit OWRD POD/report link.
+SRC-FA,Stadium Well,VERIFIED,1.0,26843,True,,False,,False,,Direct one-to-one production series.
+SRC-GA,Airport Well #1,VERIFIED_COMBINED,1.0,62423,True,,False,,False,,Report 62423 is combined Airport Wells #1 + #2. Count it once at the combined-airport group level; it cannot be split by well from this report.
+SRC-GB,Airport Well #2,VERIFIED_COMBINED,1.0,62423,True,,False,,False,,Same combined series as SRC-GA. Do not sum 62423 twice.
+SRC-GC,Heliport Well (Airport Well #4),VERIFIED,1.0,65409,True,,False,,False,,Direct one-to-one production series.
+SRC-HA,Barney Well,AMBIGUOUS_COMBINED_ALIAS,0.45,,False,,False,12037,True,51131.0,"Do not assign 12037 as Barney-only production. If system-level totals are used, 12037 is counted once under Stearns/combined reporting, not again for Barney."
+SRC-JA,Millican Well (Airport Well #3),VERIFIED,1.0,65408,True,,False,,False,,"Direct production series; retain CROO54149 as an alternate OHA well-log association, not a second production report."
+SRC-KA,Crooked River Park Well #24,UNRESOLVED_INACTIVE,0.0,,False,,False,,False,,Leave unmapped; no normal-production series should be assumed.
+SRC-KB,Crooked River Park Well #3 DT1,VERIFIED_WITH_ID_CONFLICT,0.97,67980,True,,False,66795,True,,Use 67980 for DT1 based on CROO54593 + D1 + wellfield location. Treat L127082 as an identifier-quality conflict; do not use 66795 as DT1.
+SRC-KC,Crooked River Park Well #6 DT4,HIGH_CONFIDENCE_CANDIDATE,0.89,,False,67985,True,,False,550005.0,"Candidate only. Accept after confirming the well-detail location for wl_id 550005 matches Report 67985 (601 ft S / 509 ft E, Sec. 8)."
+SRC-KD,Crooked River Park Well #7 DT5,HIGH_CONFIDENCE_CANDIDATE,0.86,,False,67987,True,,False,198019.0,Candidate only; verify well-log location before final acceptance.
+SRC-KE,Crooked River Park Well #8 DT2,VERIFIED,1.0,67982,True,,False,,False,,Direct one-to-one production series.
+SRC-KF,Crooked River Park Well #9 DT6,HIGH_CONFIDENCE_CANDIDATE,0.89,,False,67989,True,,False,554991.0,Candidate only; verify well-log location before final acceptance.
+SRC-KG,Crooked River Park Well #10 DT7,HIGH_CONFIDENCE_CANDIDATE,0.89,,False,67991,True,,False,554646.0,Candidate only; verify well-log location before final acceptance.
+SRC-KH,Crooked River Park Well #11 DT8,HIGH_CONFIDENCE_CANDIDATE,0.89,,False,67993,True,,False,554652.0,Candidate only; verify well-log location before final acceptance.
+SRC-KI,Crooked River Park Well #13 DT9,HIGH_CONFIDENCE_CANDIDATE,0.89,,False,67995,True,,False,554621.0,Candidate only; verify well-log location before final acceptance.
+SRC-KJ,Crooked River Park Well #15 DT10,HIGH_CONFIDENCE_CANDIDATE,0.89,,False,67997,True,,False,554622.0,Candidate only; verify well-log location before final acceptance.
+SRC-KK,Crooked River Park Well #16 DT11,HIGH_CONFIDENCE_CANDIDATE,0.89,,False,67999,True,,False,554620.0,Candidate only; verify well-log location before final acceptance.
+SRC-KL,Crooked River Park Well #17 DT12,HIGH_CONFIDENCE_CANDIDATE,0.89,,False,68001,True,,False,551567.0,Candidate only; verify well-log location before final acceptance.
+SRC-KM,Crooked River Park Well #18 DT13,CONFLICT_DO_NOT_MAP,0.0,,False,,False,68003,True,550378.0,Do not map D13/68003 to SRC-KM. Leave current DT13 production unresolved until an exact POD/report link is found.
+SRC-KN,Crooked River Park Well #19 DT14,UNRESOLVED_CURRENT,0.0,,False,,False,,False,559699.0,Do not impute zero. Leave water-use Report ID unmapped until a company-only/exact-identifier OWRD search finds a POD/report link or OWRD confirms that use is reported under another POD.
+SRC-KO,Crooked River Park Well #22 DT15,VERIFIED_ALIAS,1.0,68004,True,,False,,False,,Use Report 68004. The OWRD alias S12 is authoritative for this reporting record despite the different label.
+SRC-KP,Crooked River Park Well #26 DT18,UNRESOLVED_CURRENT,0.0,,False,,False,,False,565113.0,Do not impute zero. Leave water-use Report ID unmapped until a company-only/exact-identifier OWRD search finds a POD/report link or OWRD confirms that use is reported under another POD.
+SRC-KQ,Crooked River Park Well #5 DT-3A,NO_2010_2025_MATCH_EXPECTED,0.0,,False,,False,,False,,Do not map legacy OWRD D3/67983 to DT-3A. Treat DT-3A as a new source outside the supplied 2010-2025 reporting window.

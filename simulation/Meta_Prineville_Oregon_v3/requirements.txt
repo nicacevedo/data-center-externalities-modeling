@@ -1,0 +1,7 @@
+pandas
+numpy
+scipy
+requests
+PyYAML
+psychrolib
+matplotlib

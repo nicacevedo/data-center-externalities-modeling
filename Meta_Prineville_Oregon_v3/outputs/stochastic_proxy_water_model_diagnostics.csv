@@ -1,0 +1,4 @@
+model,features,n_coefficients,rolling_one_step_mape_pct,coefficients,selected
+energy_null,electricity_mwh_reported,1,34.2483644988005,"{""electricity_mwh_reported"": 0.3643056183103121}",True
+two_component,electricity_mwh_reported;raw_evap_m3_median,2,43.15939342280375,"{""electricity_mwh_reported"": 0.3643056183103121, ""raw_evap_m3_median"": 0.0}",False
+evap_physics,raw_evap_m3_median,1,45.4677249063316,"{""raw_evap_m3_median"": 5.847440762862596}",False

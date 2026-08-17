@@ -1,0 +1,56 @@
+project:
+  name: Meta Prineville public-data gray-box reconstruction
+  start_year: 2011
+  end_year: 2024
+  holdout_years: [2023, 2024]
+
+site:
+  city: Prineville
+  state: Oregon
+  timezone: America/Los_Angeles
+
+weather:
+  primary_station_name: Redmond Roberts Field
+  icao: KRDM
+  noaa_global_hourly_file_id: '72692024230'
+  noaa_url_template: 'https://www.ncei.noaa.gov/data/global-hourly/access/{year}/{station_id}.csv'
+  station_lat_deg: 44.2559
+  station_lon_deg: -121.1406
+  station_elevation_m: 929.0
+  note: 'NCEI directory confirms 72692024230 exists in 2011 and 2024; use the same file ID for 2011-2024 and fail loudly if a year is absent.'
+
+grid:
+  utility_context: PacifiCorp
+  balancing_authority: PACW
+  eia_route_root: 'https://api.eia.gov/v2/electricity/rto'
+  note: 'PACW is a regional physical-grid proxy, not the campus meter or a marginal-emissions oracle.'
+
+initial_design_prior_2011:
+  pue_full_load: 1.07
+  wue_L_per_kWh: 0.31
+  cooling: '100% outside-air evaporative cooling and humidification; winter return-air recirculation; no chiller plant'
+  electrical_loss_fraction_documented: 0.075
+  note: 'Use as epoch-1 engineering prior/benchmark, not as a site-wide annual truth for later buildings.'
+
+units:
+  us_gallon_to_m3: 0.003785411784
+  megaliter_to_m3: 1000.0
+  acre_foot_to_m3: 1233.48183754752
+
+modeling_rules:
+  - 'Reported annual site totals are hard observations.'
+  - 'Meta fleet PUE/WUE are weak priors/external envelopes only.'
+  - 'Never infer exact hourly IT workload from annual facility electricity.'
+  - 'Never use market-based Scope 2/REC accounting as physical grid emissions.'
+  - 'If a value is calibrated to annual closure, label it calibration closure rather than validation.'
+  - 'Keep measured/reported/derived/fitted/proxy/scenario provenance tags.'
+
+
+owrd_water_use:
+  city_entity_export: data/raw/owrd/wateruse_entity_report.csv
+  meta_vitesse_entity_export: data/raw/owrd/wateruse_entity_report_facebook.txt
+  source_crosswalk: data/canonical/prineville_owrd_source_crosswalk.csv
+  meta_direct_source_registry: data/canonical/meta_owrd_direct_sources.csv
+  default_model_mapping: accepted_only
+  candidate_policy: separate_output_not_used_by_default
+  note: 'OWRD Water Use Query converts reported amounts to acre-feet. Zero means reported zero; blank remains missing. City production and Meta/Vitesse direct POD use are separate boundaries and are never summed automatically.'

@@ -1,0 +1,10 @@
+check,status,detail
+all_ensemble_electricity_closures,PASS,max_abs_mwh=4.657e-10
+nonnegative_power_and_water,PASS,selected_year=2024
+nonnegative_queue,PASS,min_backlog=0.000e+00
+queue_conservation,PASS,max_abs_work_units=0.000e+00
+queue_state_carried_across_years,PASS,max_abs_work_units=0.000e+00
+representative_water_closure,PASS,abs_m3=0.000e+00
+representative_carbon_closure,PASS,abs_tco2e=0.000e+00
+required_provenance_columns,PASS,"arrival, IT, water, and carbon provenance present"
+water_holdout_mutation_invariance,PASS,100x mutation of holdout water leaves selected model unchanged

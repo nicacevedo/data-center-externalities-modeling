@@ -1,0 +1,477 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{todonotes}
+
+
+\title{Network-Based Data Center Modeling}
+\author{}
+\date{}
+
+% Commands
+\renewcommand{\L}{\mathcal{L}}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Sorting Terms\ldots}
+
+\begin{itemize}
+    \item \textbf{Jobs flow:} If we explicitly model jobs, then
+    \begin{align*}
+        Q_{t+1}=Q_t + A_t - S_t,
+    \end{align*}
+    where $A_t:=$ job arrivals, $S_t:=$ finished jobs, and $Q_t:=$ queued jobs.
+    \begin{itemize}
+        \item From the DC perspective, we may choose $S_t$ if we are modeling scheduling or temporal shifting.
+        \item We cannot process more than capacity or current jobs:
+        \begin{align*}
+            0\leq S_t \leq \min\{K_t^{job}, Q_t + A_t\},
+        \end{align*}
+        where $K_t^{job}$ is the service capacity in jobs per period.
+        \item For the first implementation, the jobs layer can be skipped and replaced by a utilization profile $u_t$ maybe (?). 
+    \end{itemize}
+
+    \item \textbf{Energy consumption:} The first implementation can connect computing demand to IT electricity through utilization:
+    \begin{align*}
+        0\leq P_t^{IT}\leq K^{IT},
+        \qquad
+        P_t^{IT}=u_tK^{IT},
+        \qquad
+        E_t^{IT}=P_t^{IT}\Delta t.
+    \end{align*}
+    \todo{$E$ is like an instantaneous amount of energy, and $P$ is like the rate of the usage (distance vs speed-like(?)}
+    If we explicitly model the jobs, we can instead use a computing-to-energy factor:
+    \begin{align*}
+        E_t^{IT}=e_t^c S_t,
+    \end{align*}
+    where $e_t^c$ is the energy per unit of "served" computation.  \todo{optional because we don't know job arrivals(?)
+    simulate/ predict/ try to get data(?).}
+
+    \begin{itemize}
+        \item The electricity flow to the DC is electricity from the grid and electricity from backup/local/other sources:
+        \begin{align*}
+            E_t^{grid}+E_t^{local} \geq E_t^{DC}.
+        \end{align*}
+        In a first model, we could assume equality and no local generation (?):
+        \begin{align*}
+            E_t^{grid}=E_t^{DC},
+            \qquad
+            E_t^{local}=0.
+        \end{align*}
+        % Backup/local generation should be treated as a separate event module, not as normal operation.
+
+        \item Total DC electricity consumption is computation + other sources (aux):
+        \begin{align*}
+            E_t^{DC}:=E_t^{IT}+E_t^{aux}.
+        \end{align*}
+        If we want to decompose auxiliary electricity later, we could also account for cooling explicitly (specially for water usage):
+        \begin{align*}
+            E_t^{aux}=E_t^{cool}+E_t^{others},
+        \end{align*}
+        where $E_t^{cool}$ is cooling electricity and $E_t^{others}$ includes lighting, pumps, \todo{I don't understand all these yet. Keep review papers}  UPS/PDU losses, etc. In the first model, the PUE equation already includes these auxiliary loads (?). Still, we need to estimate/use a constant/simulate this rate.
+
+        \item \textit{Power Usage Effectiveness}: defined as
+        \begin{align*}
+            PUE_t=\frac{E_t^{DC}}{E_t^{IT}}\geq 1.
+        \end{align*}
+        We can assume it is constant in the simplest model, or depend on conditions that change with $t$ \todo{simulation may also add further insights(?). Virginia seems to suggest cap of PUE rate in $1.2-1.3$} in a more realistic version. Something like:
+        \begin{align*}
+            PUE_t=f(\text{cooling tech.},\text{temperature},\text{humidity},\text{facility design},\ldots),
+        \end{align*}
+        where $f$ is some explicit behavior or a predictive model outcome.
+        Then the $DC$ energy is:
+        \begin{align*}
+            E_t^{DC}=PUE_tE_t^{IT},
+            \qquad \text{ and } \qquad
+            E_t^{aux}=(PUE_t-1)E_t^{IT}.
+        \end{align*}
+    \end{itemize}
+
+    \item \textbf{Heat produced:} Almost all electricity consumed inside the facility eventually becomes heat ($\sim 99.9\% \Rightarrow H\approx E$). For the simple model, the role of heat is to help me explain why cooling and water needs increase with IT electricity and weather, and how does it do exactly.
+    \begin{itemize}
+        \item \todo{I need to give more thoughts to this. I am not sure what energy source is actually producing heat and what not. The IT makes sense, but I need to read more about the rest} A simple heat accounting is then just the energy itself.
+        \begin{align*}
+            H_t^{internal}\approx E_t^{DC}.
+        \end{align*}
+        If we focus only on IT equipment, then the same:
+        \begin{align*}
+            H_t^{IT}\approx E_t^{IT}.
+        \end{align*}
+        \item \textit{Coefficient of Performance (COP):} COP can be used if we explicitly decompose cooling energy:
+        \begin{align*}
+            COP_t=\frac{H_t^{removed}}{E_t^{cool}}.
+        \end{align*}
+        We expect that $COP>1$ for the cooling to be worth. COP is optional for the first model (?). If we use PUE rate modeling directly, then we may skip the heat analysis to make it simpler. 
+        % we should not also add $E_t^{cool}$ again, because cooling is already inside $E_t^{aux}$.
+        \item Heat rejected outside can be written as
+        \begin{align*}
+            H_t^{ambient}=H_t^{removed}+E_t^{cool}.
+        \end{align*}
+        \todo{Some assume some reu-use of the heating for farming and others, but I don't understand it yet [PENDING]}
+        % We can just assume $H^{resu}$In the first model, heat reuse can be set to zero.
+    \end{itemize}
+
+    \item \textbf{Water usage:} There is direct/site water used by the DC and indirect/off-site water associated with electricity generation. Let's split them for clarity.
+    \begin{itemize}
+        \item Direct WUE is defined as
+        \begin{align*}
+            WUE_t=\frac{W_t^{direct}}{E_t^{IT}},
+        \end{align*}
+        with units $\mathrm{m^3/MWh_{IT}}$.
+        Hence,
+        \begin{align*}
+            W_t^{direct}=WUE_t E_t^{IT}.
+        \end{align*}
+        \item Similar to PUE, WUE could be constant (average, literature, etc.) in the simplest model or depend on weather, cooling technology, etc., with some behavior or predictive model:
+        \begin{align*}
+            WUE_t=f(\text{temperature},\text{humidity},\text{cooling tech.},\ldots).
+        \end{align*}
+        \item A distinction that literature makes is that not all site water is necessarily consumed (some is just taken into the system, but never used). We can distinguish withdrawal, consumption, and discharge:
+        \begin{align*}
+            W_t^{withdrawal}=W_t^{consumed}+W_t^{discharged} %+\Delta I_t.
+        \end{align*}
+        In the first model, if the available source only gives a WUE proxy, we should be explicit about whether $W_t^{direct}$ is interpreted as withdrawal, consumption, or modeled site water use.
+        \item Indirect water use is associated with electricity generation outside the data center and other factors. \todo{Different scopes should be properly defined here, in a similar fashion as CO2 emission } For simplicity, let's assume that it only comes from the grid energy generation  for now:
+        \begin{align*}
+            W_t^{indirect}=\beta_tE_t^{grid}.
+        \end{align*}
+        Therefore, the environmental "footprint" proxy of water usage is
+        \begin{align*}
+            W_t^{footprint}=W_t^{direct}+W_t^{indirect}.
+        \end{align*}
+        This is different from the amount of water physically entering the DC site.
+    \end{itemize}
+
+    \item \textbf{CO$_2$ emissions:} Here we have the 3 different scopes. To keep the first model simple, we can account \todo{The chips manufacturing and others are much more complex to understand for me right now} for grid electricity and extra fuel from backup/local generation only:
+    \begin{align*}
+        CO2_t=\varepsilon_tE_t^{grid}+\sum_f EmFa_f F_{f,t}.
+    \end{align*}
+    Here $\varepsilon_t$ is some marginal grid-emissions factor, $F_{f,t}$ is fuel use from fuel type $f$ (diesel, gas, etc.), and $EmFa_f$ is the corresponding emissions factor of that fuel. In the first model, we could just assume no backup generation: \todo{This may be to unrealistic. Data centers need them for outage/other unexpected events...} $F_{f,t}=0$.   % unless we explicitly model a backup testing/outage/event scenario.
+
+    \item \textbf{Electricity cost:} With hourly electricity price data, the first cost quantity is
+    \begin{align*}
+        C_t^E=c_t^E E_t^{grid}.
+    \end{align*}
+    We could get $c_t^E$ from PJM LMP data, as a wholesale hourly price proxy, not the full retail utility bill. 
+    % The full bill could later include demand charges, fixed charges, riders, and contracts.
+\end{itemize}
+
+
+\paragraph{Important note:} Some papers define the PUE/WUE factor as the peak one the system achieved, which does not depend on granular time then. This could serve as the proxy for the constant factor for them, but if we have more granular data, then we can probably keep the $t$ dependence.
+
+
+\section{Baseline Operational Optimization Model (OLD: see Sec. 3)}
+
+\paragraph{Note:} I am assuming we have the data for it, but this has been proven to be harder than expected.
+
+\noindent The previous relationships can be a simple linear optimization model. The goal is not yet to capture all real DC operations, but to define a clean first optimization problem that trades off service, electricity cost, water, CO$_2$, and heat rejected outside the DC.
+
+\paragraph{Sets and time.}
+Let $t=1,\ldots,T$ be discrete time periods, with time step $\Delta t$. For the first implementation, we can simply use $\Delta t=1$ day or hour (taking data as reference for this). Let $f\in\mathcal{F}$ index possible local/backup fuel types (in case we use it).
+
+\paragraph{Main decision variables.}
+\begin{align*}
+    S_t &:= \text{jobs served in period }t,\qquad
+    Q_t := \text{queued jobs at the start of period }t,\\
+    E_t^{IT} &:= \text{IT electricity use},\qquad
+    E_t^{DC} := \text{total DC electricity use},\\
+    E_t^{grid} &:= \text{grid electricity used},\qquad
+    E_t^{local} := \text{local/backup electricity used},\\
+    F_{f,t} &:= \text{fuel use of type }f,\\
+    W_t^{direct} &:= \text{direct/site water use},\qquad
+    W_t^{withdrawal}:=\text{site water withdrawal},\\
+    W_t^{consumed} &:= \text{site water consumed},\qquad
+    W_t^{indirect}:=\text{off-site water from grid electricity},\\
+    CO2_t &:= \text{operational CO$_2$ emissions},\qquad
+    H_t^{ambient}:=\text{heat rejected to the outside}.
+\end{align*}
+
+\paragraph{Parameters.}
+\begin{align*}
+    A_t &: \text{job arrivals},\qquad
+    K_t^{job}: \text{service capacity in jobs/period},\qquad
+    K^{IT}: \text{IT power capacity},\\
+    e_t^c &: \text{IT electricity per served job},\qquad
+    PUE_t: \text{power usage effectiveness},\\
+    WUE_t &: \text{direct water use per MWh of IT electricity},\qquad
+    \beta_t: \text{indirect water per MWh of grid electricity},\\
+    \alpha_t^W &: \text{fraction of direct water withdrawal that is consumed},\\
+    \varepsilon_t &: \text{grid CO$_2$ emissions factor},\qquad
+    EF_f: \text{CO$_2$ emissions factor of fuel }f,\\
+    \eta_f^E &: \text{electricity produced per unit of fuel }f,\qquad
+    \theta_t^H: \text{heat rejected per MWh of DC electricity},\\
+    c_t^E &: \text{grid electricity price},\qquad
+    c_t^W: \text{water price},\qquad
+    c_{f,t}^F: \text{fuel price},\\
+    \lambda^{CO2},\lambda^W,\lambda^H,\lambda^Q &\geq 0:
+    \text{weights/prices for CO$_2$, water externality, heat, and backlog}.
+\end{align*}
+
+\paragraph{Objective.}
+A possible objective is
+\begin{align*}
+\min \quad
+    \sum_{t=1}^T \Bigg[
+        c_t^E E_t^{grid}
+        + c_t^W W_t^{withdrawal}
+        + \sum_{f\in\mathcal{F}} c_{f,t}^F F_{f,t}
+        + \lambda^{CO2} CO2_t
+        + \lambda^W W_t^{consumed}
+        + \lambda^H H_t^{ambient}
+        + \lambda^Q Q_{t+1}
+    \Bigg].
+\end{align*}
+
+\paragraph{Constraints.}
+\begin{align}
+    Q_0 &= 0, \\
+    Q_{t+1} &= Q_t + A_t - S_t, && t=1,\ldots,T, \label{eq:queue_opt}\\
+    0 &\leq S_t \leq K_t^{job}, && t=1,\ldots,T, \\
+    S_t &\leq Q_t + A_t, && t=1,\ldots,T, \\
+    E_t^{IT} &= e_t^c S_t, && t=1,\ldots,T, \\
+    E_t^{IT} &\leq K^{IT}\Delta t, && t=1,\ldots,T, \\
+    E_t^{DC} &= PUE_t E_t^{IT}, && t=1,\ldots,T, \\
+    E_t^{grid}+E_t^{local} &= E_t^{DC}, && t=1,\ldots,T, \\
+    E_t^{local} &= \sum_{f\in\mathcal{F}} \eta_f^E F_{f,t}, && t=1,\ldots,T, \\
+    % W_t^{direct} &= WUE_t E_t^{IT}, && t=1,\ldots,T, \\
+    W_t^{withdrawal} &= WUE_t E_t^{IT}, && t=1,\ldots,T, \\
+    W_t^{consumed} &= \alpha_t^W W_t^{withdrawal}, && t=1,\ldots,T, \\
+    W_t^{indirect} &= \beta_t E_t^{grid}, && t=1,\ldots,T, \\
+    \end{align}
+\begin{align}
+    CO2_t &= \varepsilon_t E_t^{grid} + \sum_{f\in\mathcal{F}} EF_f F_{f,t}, \qquad t=1,\ldots,T,  \\
+    H_t^{ambient} &= \theta_t^H E_t^{DC}, \qquad t=1,\ldots,T, \\
+    Q_{T+1} &\leq \overline{Q}^{end}, \\ E_t^{IT},E_t^{DC},E_t^{grid},E_t^{local},F_{f,t},&W_t^{direct},W_t^{withdrawal},W_t^{consumed},W_t^{indirect},CO2_t,H_t^{ambient},Q_t,S_t \geq 0.
+\end{align}
+
+
+
+\paragraph{Simple operation baseline.}
+For the first baseline, we can set
+\begin{align*}
+    E_t^{local}=0,\qquad F_{f,t}=0,\qquad E_t^{grid}=E_t^{DC}.
+\end{align*}
+Then the model only schedules/serves computation using grid electricity, and evaluates the induced electricity cost, direct water use, indirect water use, CO$_2$ emissions proxy, and heat rejected outside.
+
+
+\newpage
+\section{Simplification: Without jobs, nor some other extra terms}
+
+\begin{itemize}
+    \item \textbf{No jobs/queue:}  Let's assume instead of jobs, that I have a demand for (IT) energy $D^E_t \leq E_t^{IT}$ at each $t \in 1,\ldots, T$ ($T$ being the horizon).
+    Then, we don't need to adjust IT energy to any amount of jobs, and we also get rid of the factor $e^c_t$, the capacity of jobs $K^{jobs}_t$, and keeping track of a queue $Q_t$. 
+    \begin{itemize}
+        \item The other option is to have an aggregated demand $D_{t_1, t_2}^E \leq \sum_{t =t_1}^{t_2} E_t^{IT}$, but I don't think this would be realistic, since the jobs have to be processed quick (or make a split of immediate/urgent energy demand and aggregated one that can wait for a bit). Let's just assume a $\Delta t=1$, and assume the demand is also in this granularity for simplicity. We can split the jobs (or the energy derived from them) in immediate processing and the one that can wait.
+        \item If we change the demand to a non-strict one (I can leave some energy for $t+1$), then we would go back to keeping track of this "queue" and adding penalties for it as an alternative). 
+    \end{itemize}
+\end{itemize}
+
+
+{\color{gray}
+\textbf{Further:}
+
+\begin{itemize}
+    \item Should we consider 2 types of IT demand? (immediate response and the one that comes from jobs that can wait for more time). This would give us more flexibility on the type of solutions, but may require job accounting again. {\color{red} For now, I am using the one that can wait \& as a continuous quantity of energy}
+    \item Server utilization level, or on/off (or idle) should be account, so we can save energy utilization if no job requires it. Although, it can be part of the utilization level of the capacity. Is not equivalent to on/off servers unless we have some discretization of the utilization level that matches the different on/off servers. {\color{red} }
+    \item Let's establish the language: direct usage of water means strictly cooling, while indirect water usage comes mainly from energy generation (outside of the DC). In terms of cooling, let's just consider cooling towers for simplicity; thus, cooling strictly means cooling tower. 
+    \item Let's assume that on-site energy production is strictly necessary: it must exists for emergency, outages, etc. If not considered, it stops being realistic. 
+    \item Let's treat either jobs or energy required for CPU as a constraint for now: no utility for processing, but rather a hard-constrained to satisfy the computation demand.
+    \item One more concept on top of PUE and WUE, that also connects water usage and power efficiency: EWIF (Energy Water Intensity Factor). It has a similar role as WUE, but more granular; it connects the power usage (either direct or indirect) to their respective water usage level.
+    \item \textbf{WUE and T°:} WUE increases significantly for cooling towers when the outside wet bulb temperature increases, and increases for outside air cooling when the outside dry bulb temperature is too hot or the humidity is too low.
+    \item Let's also assume that the local generation of energy does not produce CO2 emissions (solar, wind, etc.) Furthermore, it does not have a cost, but it does have some (random) capacity.
+\end{itemize}
+}
+
+
+\newpage 
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Cleaner model (V2)
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Variables.} Note that all of them are associated with a period $t = 1,\ldots,T$.
+\begin{align*}
+        E^{IT}_t&: \text{IT power needed}, \qquad E^{grid}_t: \text{electricity we get from the grid (not on-site) },\\
+    E^{local}_t&: \text{power generated locally}, \qquad E^{other}_t: \text{power used in the DC, but not for IT (e.g., for the cooling tower)}\\
+    &\textit{- Note: We don't need the  4 of them, since: } E^{other}_t= E^{grid}_t + E^{local}_t -  E^{IT}_t = E_t^{DC} -  E^{IT}_t \\
+    W^{IT}_t&: \text{water used directly for cooling IT}, \qquad W^{ind}_t: \text{water used only for power generation (grid)},\\
+    W^{direct}_t&: \text{water withdrawn form the aquifer/others}, \qquad W^{recycle}:\text{water recycled (assuming no wasted one)}  \\
+        &\textit{- Note: Again, we can simplify by: } W^{direct}=  W^{IT}_t + W^{recycle} \text{ (indirect is inevitable)} \\
+    CO2_t^{grid}&: \text{ CO2 produced by the energy grid (single source for this model)}\\
+    &\textit{Note: Heat is still considered a major problem in the recent literature, for the surrounding environment.}
+\end{align*}
+
+\textbf{Parameters.} Either fixed, estimated, or simulated.
+\begin{align*}
+    % A_t &: \text{job arrivals},\qquad
+    % K_t^{job}: \text{service capacity in jobs/period},\
+    K^{IT}&: \text{maximum IT power capacity}, \qquad \rightarrow 0 \leq 
+    E_t^{IT} \leq K^{IT}\\
+     c_t^E&: \text{IT electricity cost per grid energy usage}, \rightarrow \text{cost: } \sum_t c^E_t E_t^{grid} \\
+    PUE_t&: \text{power usage effectiveness}, \qquad \rightarrow \text{leads to}: E_t^{DC}=E_t^{grid} + E_t^{local} = PUE_t \times E_t^{IT}\\
+    WUE_t &: \text{direct water use per MWh of IT electricity}, \qquad \rightarrow W_t^{direct} = WUE_t\times E_t^{IT}\\
+    WUE_t^{ind}&: \text{indirect water per MWh of grid electricity}, \qquad \rightarrow  W_t^{ind} = WUE_t^{ind}\times E_t^{grid} \\
+    \alpha_t^W &: \text{fraction of direct water withdrawal that is actually consumed (can be a factor)},\\
+    & \rightarrow W_t^{IT} = \alpha_t^W  W_t^{direct}\\
+\beta_t^W &: \text{fraction of direct water withdrawal that is actually consumed (can be a factor)},\\
+    & \rightarrow W_t^{ind} = \beta_t^W  W_t^{grid}\\
+    \varepsilon_t &: \text{grid CO$_2$ emissions factor}, \qquad \rightarrow CO2_t^{grid} =  \varepsilon_t E_t^{grid} \\%\qquad EF_f: \text{CO$_2$ emissions factor of fuel  }f,\\
+    % \eta_f^E &: \text{electricity produced per unit of fuel }f,\qquad
+    % \theta_t^H: \text{heat rejected per MWh of DC electricity},\\
+    % c_t^E &: \text{grid electricity price},\qquad
+    c_t^W&: \text{water price},%\qquad
+    % c_{f,t}^F: \text{fuel price},\\
+    \\ 
+    \lambda^{CO2},\lambda^W &\geq 0:
+     \text{weights/prices for CO$_2$ emissions and water externality}.
+\end{align*}
+
+
+\paragraph{Objective.} Treating the externalities as if they were a DT secondary objective (bilevel as next step)
+\begin{align*}
+\min \quad
+    \sum_{t=1}^T \Bigg[
+        c_t^E E_t^{grid}
+        + c_t^W W_t^{direct}
+        % + \sum_{f\in\mathcal{F}} c_{f,t}^F F_{f,t}
+        + \lambda^{CO2} CO2_t
+        + \lambda^W (W_t^{direct} + W_t^{ind})
+        % + \lambda^H H_t^{ambient}
+        % + \lambda^Q Q_{t+1}
+    \Bigg].
+\end{align*}
+
+% \paragraph{Constraints.}
+\begin{align}
+    % Q_{t+1} &= Q_t + A_t - S_t, && t=1,\ldots,T,  \\ 
+    % \label{eq:queue_opt}\\
+    % 0 &\leq S_t \leq K_t^{job}, && t=1,\ldots,T, \\
+    % S_t &\leq Q_t + A_t, && t=1,\ldots,T, \\
+    % E_t^{IT} &= e_t^c S_t, && t=1,\ldots,T, \\
+    D^{E}_t \leq E_t^{IT} &\leq K^{IT}, && t=1,\ldots,T, \\
+   (E_t^{DC} =)E_t^{grid} + E_t^{local}  &= PUE_t E_t^{IT}, && t=1,\ldots,T, \\
+    % E_t^{grid}+E_t^{local} &= E_t^{DC}, && t=1,\ldots,T, \\
+    % E_t^{local} &= \sum_{f\in\mathcal{F}} \eta_f^E F_{f,t}, && t=1,\ldots,T, \\
+    W_t^{direct} &= WUE_t E_t^{IT}, && t=1,\ldots,T, \\
+    % W_t^{ind} &= WUE_t^{ind} E_t^{IT}, && t=1,\ldots,T, \\
+    % W_t^{withdrawal} &= W_t^{direct}, && t=1,\ldots,T, \\
+    W_t^{IT} &= \alpha_t^W W_t^{direct}, && t=1,\ldots,T, \\
+    W^{recycle}_{t+1} &= W_t^{direct} - W_t^{IT}  \\
+    W_t^{ind} &= \beta_t E_t^{grid}, && t=1,\ldots,T, \\
+%     \end{align}
+% \begin{align}
+    CO2_t^{grid} &= \varepsilon_t E_t^{grid} , && t=1,\ldots,T, \\
+    % H_t^{ambient} = \theta_t^H E_t^{DC}, & t=1,\ldots,T, \\
+    % Q_{T+1} &\leq \overline{Q}^{end}, \\
+E_t^{IT},E_t^{grid},E_t^{local},&W_t^{direct},W_t^{IT},W_t^{ind},CO2_t^{grid} \geq 0.
+\end{align}
+
+\paragraph{Note.} 
+\begin{itemize}
+    \item 
+The cost of direct may be summarized in just 1 cost (?), although one comes from prices and the other one from externality. {\color{red} should we only pay for $W_t^{IT}$, or different prices for direct and IT?}
+\item From this formulation, the decisions are not really relevant. $E_t^{IT}$ is already given, we are going to minimize the grid consumption up to the point $E_t^{IT}-E_t^{local}$, the water is going to be recycled as much as possible. 
+\item {\color{red}Further, the problem is separable in $t$!!!!} The important decision is then when to produce. We could define some demand that is temporarily-global, and decide in which $t$ to process it. If there are some instantaneous demand that needs to be satisfied, we can just account for it with a time-dependent capacity $K^{IT}_t$ (assuming the total one is always at most $K^{IT}$). 
+\end{itemize}
+
+\section{A temporal-decision (queue-like)}
+
+\textbf{Assume.}
+\begin{itemize}
+    \item Computation demand is continuous on each $t$ and can be split continuously (not as sections of jobs), that we can account for it just by using energy terms $E_t^{IT}$
+    \begin{itemize}
+        \item No cost for queuing in this first one, just satisfy the demand by the deadline $T$. 
+    \end{itemize}
+    \item We are not paying any cost for the local generation, but keeping it as an uncertainty capacity generation.
+    
+\end{itemize}
+
+
+\paragraph{Objective.} Treating the externalities as if they were a DT secondary objective (bilevel as next step)
+\begin{align*}
+\min \quad
+    \sum_{t=1}^T \Bigg[
+        c_t^E E_t^{grid}
+        + c_t^W W_t^{direct}
+        % + \sum_{f\in\mathcal{F}} c_{f,t}^F F_{f,t}
+        + \lambda^{CO2} CO2_t^{grid}
+        + \lambda^W (W_t^{direct} + W_t^{ind})
+        {\color{gray}+ \lambda^H H_t^{IT}}
+        % + \lambda^Q Q_{t+1}
+    \Bigg].
+\end{align*}
+
+% \paragraph{Constraints.}
+\begin{align}
+    % Q_{t+1} &= Q_t + A_t - S_t, && t=1,\ldots,T,  \\ 
+    % \label{eq:queue_opt}\\
+    % 0 &\leq S_t \leq K_t^{job}, && t=1,\ldots,T, \\
+    % S_t &\leq Q_t + A_t, && t=1,\ldots,T, \\
+    % E_t^{IT} &= e_t^c S_t, && t=1,\ldots,T, \\
+    {\color{gray}\left(D^{IT}=\right)}\sum_{t}D^{IT}_t &\leq  \sum_t E_t^{IT}\\
+    Q_{t}^{IT} &= Q_{t-1}^{IT} + D_t^{IT} - E_t^{IT}. &&  t=2,\ldots,T+1,\\ 
+    Q_t^{IT} & \leq K^Q  && t=1,\ldots,T,\\
+    Q_{T+1}^{IT} &= 0,\\
+     E_t^{IT}& \leq K^{IT}, && t=1,\ldots,T, \\
+    {\color{gray}\left(E_t^{DC}=\right)}E_t^{grid} + E_t^{local}  &= PUE_t E_t^{IT}, && t=1,\ldots,T, \\
+    E_t^{local} &\leq \color{blue}{\color{blue}\theta_t} {\color{black}K^{local}}  && t=1,\ldots,T,\\
+    % E_t^{}
+    % E_t^{grid}+E_t^{local} &= E_t^{DC}, && t=1,\ldots,T, \\
+    % E_t^{local} &= \sum_{f\in\mathcal{F}} \eta_f^E F_{f,t}, && t=1,\ldots,T, \\
+  \hline {\color{gray}\left(W_t^{DC}=\right)}  W_t^{direct} {\color{gray} + W_{t-1}^{recycle}} &= WUE_t E_t^{IT} {\color{gray} \left(=W_t^{IT}\approx H_t^{IT}\right)}, && t=1,\ldots,T, \\
+        W^{recycle}_{t} &= W_t^{direct} + W_{t-1}^{recycle} - W_t^{IT},  && t=1,\ldots,T,  \\
+        W^{recycle}_{t} &\leq K^{W}\\
+        W_0^{recycle}&=w_0 && \text{(some constant)}\\
+    % W_t^{ind} &= WUE_t^{ind} E_t^{IT}, && t=1,\ldots,T, \\
+    % W_t^{withdrawal} &= W_t^{direct}, && t=1,\ldots,T, \\ 
+    % \color{orange}
+    % W_t^{IT} &= \alpha_t^W W_t^{direct}, && t=1,\ldots,T, \\
+    \hline
+    W_t^{ind} &= \beta_t E_t^{grid}, && t=1,\ldots,T, \\
+%     \end{align}
+% \begin{align}
+    CO2_t^{grid} &= \varepsilon_t E_t^{grid} , && t=1,\ldots,T, \\
+    \hline
+    % H_t^{ambient} = \theta_t^H E_t^{DC}, & t=1,\ldots,T, \\
+    % Q_{T+1} &\leq \overline{Q}^{end}, \\
+E_t^{IT},E_t^{grid},E_t^{local},Q_t^{IT},&W_t^{direct},W_t^{IT},W_t^{ind},W_t^{recycle},CO2_t^{grid} \geq 0, && t=1,\ldots,T, 
+\end{align}
+\paragraph{Note.}
+\begin{itemize}
+    \item Local generation is free right now in every sense, in this model. We cap it in some non-deterministic way $K_t^{local}$ (depends on $t$).
+    \begin{itemize}
+        \item I summarized this uncertainty in $\theta_t$, keeping $K^{local}$ fixed as the max capacity possible.
+        \item Should the capcaity of computation (IT), recycling water, and queuing factor also depend on some uncertainty? 
+    \end{itemize}
+    \item Should we charge for queuing time too(?). Is just setting cap realistic for computational queue? 
+\end{itemize}
+
+
+\section{Simulation}
+
+\paragraph{Notes 2 (following week)}
+% \begin{itemize}
+%     \item Let's assume that certain amount of energy demand comes at the whole horizon $T$: $D^{total}$. We also have an uncertain portion of this total demand every $t$, such that $\sum_{t} D_t = D^{total}$. We don't know how much it is for each day.
+
+%     \item 
+% \end{itemize}
+\begin{itemize}
+    \item Some jobs arrive at a certain rate $\lambda_t = D_t^{IT}/1 $ (quantity/$\Delta t$), which is different for every $t$. Let's assume that is Poisson for the first simulation. 
+
+    \begin{itemize}
+        % \item 
+    \item I can only choose to process this demand now or in the future. The options are from jobs in the queue $Q_{t-1}$ or from $D_t^{IT}$. 
+    \item I can assume some waiting time cost for each period too, or a similar idea. For example, Some fraction of that $D_t^{IT}$ that has some time constraint, and another fraction has other time constraint, etc.
+    \item The all should be processed at the end of the period.
+    \end{itemize}
+
+    \item 
+    
+\end{itemize}
+
+
+\end{document}
