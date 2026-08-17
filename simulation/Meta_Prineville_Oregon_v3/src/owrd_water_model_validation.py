@@ -8,7 +8,8 @@ annual campus withdrawal. It joins three separately bounded series by calendar m
 3. OWRD City of Prineville accepted municipal production (system context).
 
 Missing OWRD values remain missing. Reported zeros remain zeros. City candidate/conflict
-mappings never enter the default City total.
+mappings never enter the default City total. OWRD volumes are reported water-use records
+that may be measured or estimated; the retained measurement method is not assumed.
 """
 from __future__ import annotations
 
@@ -27,15 +28,27 @@ TARGETS = ROOT / "data" / "canonical" / "meta_prineville_annual.csv"
 DIRECT_REGISTRY = ROOT / "data" / "canonical" / "meta_owrd_direct_sources.csv"
 CITY_ACCEPTED = ROOT / "data" / "processed" / "owrd_city_monthly_model_use.csv"
 CITY_CANDIDATE = ROOT / "data" / "processed" / "owrd_city_monthly_candidate_use.csv"
+CITY_REPORT = ROOT / "data" / "processed" / "owrd_city_monthly_report_use.csv"
 DIRECT_MONTHLY = ROOT / "data" / "processed" / "owrd_meta_direct_monthly_use.csv"
 HOURLY = ROOT / "outputs" / "hourly_conditional_reconstruction.csv"
 ANNUAL_COMPARE = ROOT / "outputs" / "conditional_annual_compare.csv"
+WATER_MODEL = ROOT / "outputs" / "conditional_water_model.csv"
 OUT_MONTHLY = ROOT / "outputs" / "owrd_water_model_validation.csv"
 OUT_ANNUAL = ROOT / "outputs" / "owrd_water_model_validation_annual.csv"
 OUT_CHECKS = ROOT / "outputs" / "owrd_water_model_validation_checks.csv"
 OUT_FIG = ROOT / "outputs" / "owrd_water_model_validation.png"
 
 REGISTRY_DIRECT_REPORT_IDS = (64500, 64845, 64846)
+DIRECT_PROVENANCE = (
+    "reported OWRD water-use record (may be measured or estimated); "
+    "Vitesse/Facebook direct groundwater POD use; separate boundary from Meta campus "
+    "withdrawal and City production"
+)
+CITY_PROVENANCE = (
+    "reported OWRD water-use record (may be measured or estimated); "
+    "City accepted municipal POD production; system context only; not Meta campus "
+    "meter data; candidate/conflict mappings excluded"
+)
 BOUNDARY_NOTE = (
     "Distinct accounting boundaries: Meta annual campus withdrawal, reconstructed "
     "monthly campus withdrawal, OWRD Vitesse/Facebook direct POD use, and OWRD City "
@@ -82,22 +95,26 @@ def load_direct_registry() -> pd.DataFrame:
     return registry
 
 
-def ensure_hourly_reconstruction() -> pd.DataFrame:
-    """Load the existing reconstruction; build it only if the hourly file is absent."""
+def rebuild_hourly_reconstruction() -> pd.DataFrame:
+    """Always rebuild the conditional reconstruction before validation.
 
-    if HOURLY.exists():
-        hourly = pd.read_csv(HOURLY)
-    else:
-        if str(SRC) not in sys.path:
-            sys.path.insert(0, str(SRC))
-        from conditional_reconstruction import reconstruct
+    The hourly file is a deterministic generated artifact. Loading a stale copy
+    would silently validate an outdated water series after model/weather/target changes.
+    """
 
-        HOURLY.parent.mkdir(parents=True, exist_ok=True)
-        hourly, annual, model = reconstruct()
-        hourly.to_csv(HOURLY, index=False)
-        annual.to_csv(ANNUAL_COMPARE, index=False)
-        pd.DataFrame([model]).to_csv(ROOT / "outputs" / "conditional_water_model.csv", index=False)
+    if str(SRC) not in sys.path:
+        sys.path.insert(0, str(SRC))
+    from conditional_reconstruction import reconstruct
 
+    HOURLY.parent.mkdir(parents=True, exist_ok=True)
+    hourly, annual, model = reconstruct()
+    hourly.to_csv(HOURLY, index=False)
+    annual.to_csv(ANNUAL_COMPARE, index=False)
+    pd.DataFrame([model]).to_csv(WATER_MODEL, index=False)
+    return _prepare_hourly(hourly)
+
+
+def _prepare_hourly(hourly: pd.DataFrame) -> pd.DataFrame:
     required = {
         "timestamp_utc",
         "water_withdrawal_proxy_m3_per_h",
@@ -110,6 +127,12 @@ def ensure_hourly_reconstruction() -> pd.DataFrame:
     hourly = hourly.copy()
     hourly["timestamp_utc"] = pd.to_datetime(hourly["timestamp_utc"], utc=True)
     return hourly
+
+
+def load_existing_hourly() -> pd.DataFrame:
+    if not HOURLY.exists():
+        raise FileNotFoundError(f"Missing {HOURLY}; rebuild the reconstruction first.")
+    return _prepare_hourly(pd.read_csv(HOURLY))
 
 
 def modeled_monthly_campus_withdrawal(hourly: pd.DataFrame) -> pd.DataFrame:
@@ -139,8 +162,33 @@ def modeled_monthly_campus_withdrawal(hourly: pd.DataFrame) -> pd.DataFrame:
     return out.sort_values("calendar_month").reset_index(drop=True)
 
 
-def aggregate_direct_groundwater(direct: pd.DataFrame, registry: pd.DataFrame) -> pd.DataFrame:
-    """Sum verified Vitesse/Facebook POD reports without converting blanks to zero."""
+def direct_reporting_intervals(direct: pd.DataFrame) -> dict[int, tuple[pd.Timestamp, pd.Timestamp]]:
+    """Active/reporting interval per direct POD report.
+
+    Intervals are the first and last calendar months present in the bundled OWRD
+    entity export for that report_id. A report is not expected before it appears
+    in the export. This is not a well-commissioning record.
+    """
+
+    d = direct.copy()
+    d["report_id"] = pd.to_numeric(d["report_id"], errors="raise").astype(int)
+    d["calendar_month"] = _month_start(d["calendar_month"])
+    out: dict[int, tuple[pd.Timestamp, pd.Timestamp]] = {}
+    for rid, g in d.groupby("report_id"):
+        out[int(rid)] = (g["calendar_month"].min(), g["calendar_month"].max())
+    return out
+
+
+def aggregate_direct_groundwater(
+    direct: pd.DataFrame,
+    registry: pd.DataFrame,
+    months: pd.Series | None = None,
+) -> pd.DataFrame:
+    """Sum verified Vitesse/Facebook POD reports without converting blanks to zero.
+
+    Expected coverage is lifecycle-aware: a report is expected only inside its
+    documented export interval. Months before a report appears are not missing reports.
+    """
 
     d = direct.copy()
     d["report_id"] = pd.to_numeric(d["report_id"], errors="raise").astype(int)
@@ -154,19 +202,45 @@ def aggregate_direct_groundwater(direct: pd.DataFrame, registry: pd.DataFrame) -
     if d.duplicated(["report_id", "calendar_month"]).any():
         raise ValueError("Duplicate report_id/calendar_month rows in direct OWRD monthly use.")
 
+    intervals = direct_reporting_intervals(d)
+    if months is None:
+        month_index = sorted(set(d["calendar_month"]))
+    else:
+        month_index = sorted(set(_month_start(pd.Series(months))))
+
+    lookup = {(int(r.report_id), pd.Timestamp(r.calendar_month)): r for r in d.itertuples(index=False)}
     rows = []
-    expected_n = int(registry["report_id"].nunique())
-    expected_ids = ";".join(str(x) for x in sorted(allowed))
-    for month, g in d.groupby("calendar_month", dropna=False):
-        reported = g[g["reported_flag"].fillna(False)]
-        volume = reported["volume_m3"].sum(min_count=1) if len(reported) else np.nan
-        if reported.empty:
-            volume = np.nan
-        n_reported = int(len(reported))
-        n_zero = int(reported["zero_reported_flag"].fillna(False).sum()) if len(reported) else 0
-        n_positive = int((reported["volume_m3"] > 0).sum()) if len(reported) else 0
+    for month in month_index:
+        month = pd.Timestamp(month)
+        expected_ids = sorted(
+            rid for rid, (first, last) in intervals.items() if first <= month <= last
+        )
+        expected_n = len(expected_ids)
+        not_yet = sorted(rid for rid, (first, last) in intervals.items() if month < first)
+        after = sorted(rid for rid, (first, last) in intervals.items() if month > last)
+
+        reported_rows = []
+        missing_ids = []
+        for rid in expected_ids:
+            rec = lookup.get((rid, month))
+            if rec is not None and bool(getattr(rec, "reported_flag", False)):
+                reported_rows.append(rec)
+            else:
+                missing_ids.append(rid)
+
+        n_reported = len(reported_rows)
+        volumes = [getattr(r, "volume_m3") for r in reported_rows]
+        volume = np.nan
+        if reported_rows:
+            volume = pd.Series(volumes, dtype="float64").sum(min_count=1)
+        n_zero = int(sum(bool(getattr(r, "zero_reported_flag", False)) for r in reported_rows))
+        n_positive = int(sum(pd.notna(v) and float(v) > 0 for v in volumes))
+        methods = _join_text([getattr(r, "measurement_method", None) for r in reported_rows])
         n_missing = expected_n - n_reported
-        if n_reported == 0:
+
+        if expected_n == 0:
+            status = "not_applicable"
+        elif n_reported == 0:
             status = "missing"
         elif n_missing > 0:
             status = "partial_missing"
@@ -174,30 +248,72 @@ def aggregate_direct_groundwater(direct: pd.DataFrame, registry: pd.DataFrame) -
             status = "reported_zero"
         else:
             status = "reported"
+
         rows.append(
             {
                 "calendar_month": month,
-                "calendar_year": int(pd.Timestamp(month).year),
+                "calendar_year": int(month.year),
                 "owrd_meta_direct_groundwater_m3": float(volume) if pd.notna(volume) else np.nan,
                 "owrd_meta_direct_report_count": n_reported,
                 "owrd_meta_direct_expected_report_count": expected_n,
-                "owrd_meta_direct_report_ids": _join_ids(reported["report_id"]),
-                "owrd_meta_direct_expected_report_ids": expected_ids,
-                "owrd_meta_direct_measurement_method": _join_text(g["measurement_method"]),
+                "owrd_meta_direct_report_ids": _join_ids([getattr(r, "report_id") for r in reported_rows]),
+                "owrd_meta_direct_expected_report_ids": ";".join(str(x) for x in expected_ids),
+                "owrd_meta_direct_not_yet_applicable_ids": ";".join(str(x) for x in not_yet),
+                "owrd_meta_direct_after_interval_ids": ";".join(str(x) for x in after),
+                "owrd_meta_direct_missing_report_ids": ";".join(str(x) for x in missing_ids),
+                "owrd_meta_direct_measurement_method": methods,
                 "owrd_meta_direct_reporting_status": status,
                 "owrd_meta_direct_n_missing_reports": n_missing,
+                "owrd_meta_direct_n_not_yet_applicable": len(not_yet),
+                "owrd_meta_direct_n_after_interval": len(after),
                 "owrd_meta_direct_n_zero_reports": n_zero,
                 "owrd_meta_direct_n_positive_reports": n_positive,
-                "owrd_meta_direct_provenance": (
-                    "measured OWRD Vitesse/Facebook direct groundwater POD use; "
-                    "separate boundary from Meta campus withdrawal and City production"
-                ),
+                "owrd_meta_direct_provenance": DIRECT_PROVENANCE,
             }
         )
     return pd.DataFrame(rows).sort_values("calendar_month").reset_index(drop=True)
 
 
-def aggregate_city_production(city: pd.DataFrame, *, tier: str, volume_name: str) -> pd.DataFrame:
+def city_measurement_methods_by_month(
+    city: pd.DataFrame,
+    report_use: pd.DataFrame | None,
+) -> pd.Series:
+    """Retain OWRD measurement_method on the City monthly series."""
+
+    if report_use is None or report_use.empty:
+        if "measurement_method" in city.columns:
+            return city.groupby(_month_start(city["calendar_month"]))["measurement_method"].apply(_join_text)
+        return pd.Series(dtype=object)
+
+    ru = report_use.copy()
+    ru["calendar_month"] = _month_start(ru["calendar_month"])
+    ru["report_id"] = pd.to_numeric(ru["report_id"], errors="coerce")
+    accepted_ids: set[int] = set()
+    if "report_ids" in city.columns:
+        for value in city["report_ids"].dropna():
+            for token in str(value).replace(",", ";").split(";"):
+                token = token.strip()
+                if token:
+                    accepted_ids.add(int(float(token)))
+    if accepted_ids:
+        ru = ru[ru["report_id"].isin(accepted_ids)].copy()
+    tier_col = "model_mapping_tier" if "model_mapping_tier" in ru.columns else (
+        "mapping_tier" if "mapping_tier" in ru.columns else None
+    )
+    if tier_col is not None:
+        ru = ru[ru[tier_col].fillna("").eq("accepted")].copy()
+    if "measurement_method" not in ru.columns:
+        return pd.Series(dtype=object)
+    return ru.groupby("calendar_month")["measurement_method"].apply(_join_text)
+
+
+def aggregate_city_production(
+    city: pd.DataFrame,
+    *,
+    tier: str,
+    volume_name: str,
+    report_use: pd.DataFrame | None = None,
+) -> pd.DataFrame:
     """Aggregate City OWRD groups. Default validation uses accepted mappings only."""
 
     d = city.copy()
@@ -209,6 +325,7 @@ def aggregate_city_production(city: pd.DataFrame, *, tier: str, volume_name: str
     if d.duplicated([key, "calendar_month"]).any():
         raise ValueError(f"Duplicate {key}/calendar_month rows in City {tier} OWRD use.")
 
+    methods = city_measurement_methods_by_month(d, report_use) if tier == "accepted" else pd.Series(dtype=object)
     prefix = "owrd_city" if tier == "accepted" else "owrd_city_candidate"
     rows = []
     for month, g in d.groupby("calendar_month", dropna=False):
@@ -228,6 +345,9 @@ def aggregate_city_production(city: pd.DataFrame, *, tier: str, volume_name: str
             status = "reported_zero"
         else:
             status = "reported"
+        method = methods.get(pd.Timestamp(month), "") if len(methods) else ""
+        if not method and "measurement_method" in g.columns:
+            method = _join_text(g["measurement_method"])
         row = {
             "calendar_month": month,
             "calendar_year": int(pd.Timestamp(month).year),
@@ -244,10 +364,8 @@ def aggregate_city_production(city: pd.DataFrame, *, tier: str, volume_name: str
             row["owrd_city_mapping_confidence_min"] = (
                 float(g["mapping_confidence"].min()) if "mapping_confidence" in g else np.nan
             )
-            row["owrd_city_production_provenance"] = (
-                "measured OWRD City accepted municipal POD production; system context only; "
-                "not Meta campus meter data; candidate/conflict mappings excluded"
-            )
+            row["owrd_city_measurement_method"] = method
+            row["owrd_city_production_provenance"] = CITY_PROVENANCE
         else:
             row["owrd_city_candidate_note"] = (
                 "sensitivity/context only; excluded from owrd_city_production_m3"
@@ -272,10 +390,13 @@ def assign_validation_flags(df: pd.DataFrame) -> pd.DataFrame:
         direct = r.owrd_meta_direct_groundwater_m3
         city = r.owrd_city_production_m3
         n_rep = int(r.owrd_meta_direct_report_count) if pd.notna(r.owrd_meta_direct_report_count) else 0
-        n_exp = int(r.owrd_meta_direct_expected_report_count) if pd.notna(r.owrd_meta_direct_expected_report_count) else 3
+        n_exp = int(r.owrd_meta_direct_expected_report_count) if pd.notna(r.owrd_meta_direct_expected_report_count) else 0
         city_status = getattr(r, "owrd_city_reporting_status", "missing")
 
-        direct_missing = n_rep == 0 or not (pd.notna(direct) and np.isfinite(float(direct)))
+        direct_applicable = n_exp > 0
+        direct_missing = direct_applicable and (
+            n_rep == 0 or not (pd.notna(direct) and np.isfinite(float(direct)))
+        )
         modeled_gt_city = (
             pd.notna(modeled) and pd.notna(city)
             and np.isfinite(float(modeled)) and np.isfinite(float(city))
@@ -294,6 +415,7 @@ def assign_validation_flags(df: pd.DataFrame) -> pd.DataFrame:
             )
         elif (
             (not direct_missing)
+            and pd.notna(direct)
             and np.isfinite(float(direct))
             and np.isfinite(float(modeled))
             and float(direct) > float(modeled) + 1e-9
@@ -306,19 +428,27 @@ def assign_validation_flags(df: pd.DataFrame) -> pd.DataFrame:
         elif direct_missing:
             flag = "missing_owrd"
             note_parts.append(
-                "No reported Vitesse/Facebook direct POD volume this month; blank was not converted to zero."
+                "No reported Vitesse/Facebook direct POD volume this month among reports in their "
+                "documented interval; blank was not converted to zero."
             )
-        elif n_rep < n_exp or city_status == "partial_missing":
+        elif (n_exp > 0 and n_rep < n_exp) or city_status == "partial_missing":
             flag = "partial_owrd_coverage"
-            if n_rep < n_exp:
+            if n_exp > 0 and n_rep < n_exp:
                 note_parts.append(
-                    f"{n_rep} of {n_exp} registry direct POD reports have reported values."
+                    f"{n_rep} of {n_exp} interval-expected direct POD reports have reported values."
                 )
             if city_status == "partial_missing":
                 note_parts.append("Some accepted City source groups are unreported this month.")
         else:
-            flag = "ok"
-            note_parts.append("Overlapping reconstructed campus water and reported OWRD values.")
+            flag = "no_diagnostic_trigger"
+            note_parts.append(
+                "Series overlap and neither simple threshold was triggered. This is not evidence "
+                "that OWRD validates the reconstruction."
+            )
+            if not direct_applicable:
+                note_parts.append(
+                    "No direct POD report is in its documented reporting interval this month."
+                )
 
         if city_status == "missing":
             note_parts.append("Accepted City production is missing this month.")
@@ -346,18 +476,21 @@ def join_monthly_validation(
     z = spine.merge(modeled, on=["calendar_month", "calendar_year"], how="left")
     z = z.merge(direct, on=["calendar_month", "calendar_year"], how="left")
     city_keep = [
-        "calendar_month",
-        "calendar_year",
-        "owrd_city_production_m3",
-        "owrd_city_n_source_groups",
-        "owrd_city_n_reported_groups",
-        "owrd_city_n_missing_groups",
-        "owrd_city_n_zero_groups",
-        "owrd_city_report_ids",
-        "owrd_city_source_groups",
-        "owrd_city_reporting_status",
-        "owrd_city_mapping_confidence_min",
-        "owrd_city_production_provenance",
+        c for c in [
+            "calendar_month",
+            "calendar_year",
+            "owrd_city_production_m3",
+            "owrd_city_n_source_groups",
+            "owrd_city_n_reported_groups",
+            "owrd_city_n_missing_groups",
+            "owrd_city_n_zero_groups",
+            "owrd_city_report_ids",
+            "owrd_city_source_groups",
+            "owrd_city_reporting_status",
+            "owrd_city_mapping_confidence_min",
+            "owrd_city_measurement_method",
+            "owrd_city_production_provenance",
+        ] if c in city.columns
     ]
     z = z.merge(city[city_keep], on=["calendar_month", "calendar_year"], how="left")
     if len(candidate):
@@ -380,18 +513,22 @@ def join_monthly_validation(
     )
     z = z.merge(annual_water, on="calendar_year", how="left")
     z["owrd_meta_direct_report_count"] = z["owrd_meta_direct_report_count"].fillna(0).astype(int)
-    z["owrd_meta_direct_expected_report_count"] = z["owrd_meta_direct_expected_report_count"].fillna(
-        len(REGISTRY_DIRECT_REPORT_IDS)
-    ).astype(int)
+    z["owrd_meta_direct_expected_report_count"] = z["owrd_meta_direct_expected_report_count"].fillna(0).astype(int)
     z["owrd_meta_direct_n_missing_reports"] = z["owrd_meta_direct_n_missing_reports"].fillna(
         z["owrd_meta_direct_expected_report_count"]
     ).astype(int)
+    z["owrd_meta_direct_n_not_yet_applicable"] = z.get(
+        "owrd_meta_direct_n_not_yet_applicable", pd.Series(0, index=z.index)
+    ).fillna(0).astype(int)
+    z["owrd_meta_direct_n_after_interval"] = z.get(
+        "owrd_meta_direct_n_after_interval", pd.Series(0, index=z.index)
+    ).fillna(0).astype(int)
     z["owrd_city_reporting_status"] = z["owrd_city_reporting_status"].fillna("missing")
-    z["owrd_meta_direct_reporting_status"] = z["owrd_meta_direct_reporting_status"].fillna("missing")
-    z["owrd_meta_direct_expected_report_ids"] = z["owrd_meta_direct_expected_report_ids"].fillna(
-        ";".join(str(x) for x in REGISTRY_DIRECT_REPORT_IDS)
-    )
+    z["owrd_meta_direct_reporting_status"] = z["owrd_meta_direct_reporting_status"].fillna("not_applicable")
+    z["owrd_meta_direct_expected_report_ids"] = z["owrd_meta_direct_expected_report_ids"].fillna("")
     z["owrd_meta_direct_report_ids"] = z["owrd_meta_direct_report_ids"].fillna("")
+    z["owrd_meta_direct_provenance"] = z["owrd_meta_direct_provenance"].fillna(DIRECT_PROVENANCE)
+    z["owrd_city_production_provenance"] = z["owrd_city_production_provenance"].fillna(CITY_PROVENANCE)
     z["direct_pod_to_modeled_ratio"] = [
         _ratio(d, m)
         for d, m in zip(z["owrd_meta_direct_groundwater_m3"], z["modeled_campus_withdrawal_m3"])
@@ -410,17 +547,20 @@ def join_monthly_validation(
         "owrd_city_production_m3",
         "meta_annual_reported_withdrawal_m3",
         "owrd_meta_direct_report_count",
+        "owrd_meta_direct_expected_report_count",
         "owrd_meta_direct_report_ids",
+        "owrd_meta_direct_expected_report_ids",
         "owrd_city_reporting_status",
         "validation_flag",
         "validation_note",
         "direct_pod_to_modeled_ratio",
         "modeled_to_city_production_ratio",
-        "owrd_meta_direct_expected_report_count",
-        "owrd_meta_direct_expected_report_ids",
         "owrd_meta_direct_measurement_method",
+        "owrd_city_measurement_method",
         "owrd_meta_direct_reporting_status",
         "owrd_meta_direct_n_missing_reports",
+        "owrd_meta_direct_n_not_yet_applicable",
+        "owrd_meta_direct_n_after_interval",
         "owrd_city_source_groups",
         "owrd_city_report_ids",
         "owrd_city_n_source_groups",
@@ -446,6 +586,12 @@ def annual_validation(monthly: pd.DataFrame, annual_compare: pd.DataFrame | None
         city = g["owrd_city_production_m3"].sum(min_count=1)
         reported = g["meta_annual_reported_withdrawal_m3"].dropna()
         reported_val = float(reported.iloc[0]) if len(reported) else np.nan
+        expected_report_months = int(g["owrd_meta_direct_expected_report_count"].sum())
+        reported_report_months = int(g["owrd_meta_direct_report_count"].sum())
+        coverage = (
+            reported_report_months / expected_report_months if expected_report_months > 0 else np.nan
+        )
+        complete = bool(expected_report_months > 0 and reported_report_months == expected_report_months)
         rows.append(
             {
                 "calendar_year": int(year),
@@ -456,17 +602,23 @@ def annual_validation(monthly: pd.DataFrame, annual_compare: pd.DataFrame | None
                 "n_months": int(len(g)),
                 "n_months_direct_reported": int(g["owrd_meta_direct_groundwater_m3"].notna().sum()),
                 "n_months_city_reported": int(g["owrd_city_production_m3"].notna().sum()),
-                "direct_pod_to_modeled_ratio": _ratio(direct, modeled),
+                "direct_expected_report_months": expected_report_months,
+                "direct_reported_report_months": reported_report_months,
+                "direct_coverage_fraction": coverage,
+                "direct_annual_complete": complete,
+                "direct_pod_to_modeled_ratio": _ratio(direct, modeled) if complete else np.nan,
                 "modeled_to_city_production_ratio": _ratio(modeled, city),
-                "direct_pod_to_meta_reported_ratio": _ratio(direct, reported_val),
+                "direct_pod_to_meta_reported_ratio": _ratio(direct, reported_val) if complete else np.nan,
                 "modeled_to_meta_reported_ratio": _ratio(modeled, reported_val),
                 "n_review_boundary_months": int(g["validation_flag"].eq("review_boundary").sum()),
                 "n_missing_owrd_months": int(g["validation_flag"].eq("missing_owrd").sum()),
                 "n_partial_owrd_months": int(g["validation_flag"].eq("partial_owrd_coverage").sum()),
+                "n_no_diagnostic_trigger_months": int(g["validation_flag"].eq("no_diagnostic_trigger").sum()),
                 "annual_comparison_note": (
                     "Descriptive annual totals. Equality with Meta-reported withdrawal is not "
                     "expected. Direct POD and City production remain separate boundaries. "
-                    "OWRD annual sums use reported months only; missing months are not zero-filled."
+                    "OWRD annual sums use reported months only; missing months are not zero-filled. "
+                    "Direct annual ratios are NaN unless every interval-expected report-month is reported."
                 ),
             }
         )
@@ -483,7 +635,6 @@ def annual_validation(monthly: pd.DataFrame, annual_compare: pd.DataFrame | None
 
 
 def coverage_diagnostics(monthly: pd.DataFrame, modeled: pd.DataFrame, direct: pd.DataFrame, city: pd.DataFrame) -> dict:
-    m = pd.to_datetime(monthly["calendar_month"])
     modeled_months = pd.to_datetime(modeled["calendar_month"])
     direct_months = pd.to_datetime(direct.loc[direct["owrd_meta_direct_groundwater_m3"].notna(), "calendar_month"])
     city_months = pd.to_datetime(city.loc[city["owrd_city_production_m3"].notna(), "calendar_month"])
@@ -504,7 +655,7 @@ def coverage_diagnostics(monthly: pd.DataFrame, modeled: pd.DataFrame, direct: p
         "n_review_boundary": int(monthly["validation_flag"].eq("review_boundary").sum()),
         "n_missing_owrd": int(monthly["validation_flag"].eq("missing_owrd").sum()),
         "n_partial_owrd_coverage": int(monthly["validation_flag"].eq("partial_owrd_coverage").sum()),
-        "n_ok": int(monthly["validation_flag"].eq("ok").sum()),
+        "n_no_diagnostic_trigger": int(monthly["validation_flag"].eq("no_diagnostic_trigger").sum()),
         "direct_exceeds_modeled_months": int(
             (
                 monthly["owrd_meta_direct_groundwater_m3"]
@@ -542,6 +693,17 @@ def run_checks(
         not any("observed_campus" in c or "owrd_plus" in c or "summed_water" in c for c in monthly.columns),
         "three boundaries remain separate columns",
     )
+    add(
+        "no_ok_validation_flag",
+        not monthly["validation_flag"].eq("ok").any(),
+        "ok was renamed so it cannot be read as model validated",
+    )
+    add(
+        "provenance_is_reported_not_measured",
+        monthly["owrd_meta_direct_provenance"].fillna("").str.startswith("reported OWRD").all()
+        and monthly["owrd_city_production_provenance"].fillna("").str.startswith("reported OWRD").all(),
+        "OWRD provenance is reported water-use record",
+    )
 
     ids = set()
     for value in monthly["owrd_meta_direct_report_ids"].dropna():
@@ -556,7 +718,28 @@ def run_checks(
         f"registry={sorted(allowed)}",
     )
 
-    # Known all-missing direct month in the bundled export: 2024-04 through 2024-07.
+    jan2011 = monthly.loc[monthly["calendar_month"].eq("2011-01-01")]
+    if len(jan2011):
+        add(
+            "early_64500_not_expected_before_interval",
+            int(jan2011["owrd_meta_direct_expected_report_count"].iloc[0]) == 2,
+            f"expected={jan2011['owrd_meta_direct_expected_report_count'].iloc[0]}",
+        )
+        add(
+            "early_two_report_month_not_partial_for_inactive_id",
+            jan2011["validation_flag"].iloc[0] != "partial_owrd_coverage"
+            or "64500" in str(jan2011["owrd_meta_direct_expected_report_ids"].iloc[0]),
+            f"flag={jan2011['validation_flag'].iloc[0]}",
+        )
+
+    oct2013 = monthly.loc[monthly["calendar_month"].eq("2013-10-01")]
+    if len(oct2013):
+        add(
+            "64500_expected_once_in_export_interval",
+            int(oct2013["owrd_meta_direct_expected_report_count"].iloc[0]) == 3,
+            f"expected={oct2013['owrd_meta_direct_expected_report_count'].iloc[0]}",
+        )
+
     missing_month = monthly.loc[monthly["calendar_month"].eq("2024-04-01")]
     if len(missing_month):
         val = missing_month["owrd_meta_direct_groundwater_m3"].iloc[0]
@@ -565,6 +748,29 @@ def run_checks(
             pd.isna(val),
             f"2024-04 direct volume={val!r}",
         )
+        add(
+            "in_interval_blank_is_missing_not_not_applicable",
+            missing_month["owrd_meta_direct_reporting_status"].iloc[0] == "missing",
+            f"status={missing_month['owrd_meta_direct_reporting_status'].iloc[0]}",
+        )
+
+    after = monthly.loc[monthly["calendar_month"].eq("2024-10-01")]
+    if len(after):
+        add(
+            "after_export_interval_not_expected",
+            int(after["owrd_meta_direct_expected_report_count"].iloc[0]) == 0,
+            f"expected={after['owrd_meta_direct_expected_report_count'].iloc[0]}",
+        )
+
+    a2024 = annual.loc[annual["calendar_year"].eq(2024)]
+    if len(a2024):
+        add(
+            "incomplete_year_direct_ratios_are_nan",
+            (not bool(a2024["direct_annual_complete"].iloc[0]))
+            and pd.isna(a2024["direct_pod_to_modeled_ratio"].iloc[0])
+            and pd.isna(a2024["direct_pod_to_meta_reported_ratio"].iloc[0]),
+            f"complete={a2024['direct_annual_complete'].iloc[0]} ratio={a2024['direct_pod_to_modeled_ratio'].iloc[0]}",
+        )
 
     accepted_keys = set(city_raw["model_source_key"].dropna())
     candidate_keys = set(candidate_raw["model_source_key"].dropna()) if len(candidate_raw) else set()
@@ -572,7 +778,6 @@ def run_checks(
     if "mapping_tier" in city_raw.columns:
         add("city_default_file_is_accepted_only", set(city_raw["mapping_tier"].unique()) == {"accepted"}, "accepted only")
 
-    # Candidate totals must not equal accepted totals if both exist.
     both = monthly["owrd_city_production_m3"].notna() & monthly["owrd_city_candidate_production_m3"].notna()
     if both.any():
         same = np.allclose(
@@ -606,6 +811,12 @@ def run_checks(
         .all()
     )
     add("ratios_nan_when_denominator_invalid", bool(ratio_ok), "direct/modeled NaN if modeled <= 0")
+    add(
+        "city_measurement_method_retained",
+        "owrd_city_measurement_method" in monthly.columns
+        and monthly["owrd_city_measurement_method"].fillna("").ne("").any(),
+        "City series keeps aggregated measurement_method",
+    )
     return checks
 
 
@@ -652,95 +863,127 @@ def self_test() -> None:
     """Synthetic checks that do not touch Meta annual calibration or raw OWRD files."""
 
     registry = pd.DataFrame({"report_id": list(REGISTRY_DIRECT_REPORT_IDS)})
-    months = pd.to_datetime(["2020-01-01", "2020-02-01", "2020-03-01"])
+    months = pd.to_datetime(["2019-12-01", "2020-01-01", "2020-02-01", "2020-03-01"])
     direct = pd.DataFrame(
         {
-            "report_id": [64500, 64845, 64846] * 3,
-            "calendar_month": np.repeat(months, 3),
-            "volume_m3": [
-                10.0, 5.0, 1.0,   # Jan complete
-                np.nan, np.nan, np.nan,  # Feb missing, must stay missing
-                0.0, 0.0, 0.0,    # Mar reported zeros
+            "report_id": [64845, 64846, 64500, 64845, 64846, 64500, 64845, 64846, 64500, 64845, 64846],
+            "calendar_month": [
+                months[0], months[0],
+                months[1], months[1], months[1],
+                months[2], months[2], months[2],
+                months[3], months[3], months[3],
             ],
-            "reported_flag": [True, True, True, False, False, False, True, True, True],
-            "zero_reported_flag": [False, False, False, False, False, False, True, True, True],
-            "measurement_method": ["Flowmeter"] * 9,
+            "volume_m3": [
+                4.0, 2.0,                 # Dec 2019: 64500 not yet in export
+                10.0, 5.0, 1.0,           # Jan complete
+                np.nan, np.nan, np.nan,   # Feb missing, must stay missing
+                0.0, 0.0, 0.0,            # Mar reported zeros
+            ],
+            "reported_flag": [
+                True, True,
+                True, True, True,
+                False, False, False,
+                True, True, True,
+            ],
+            "zero_reported_flag": [
+                False, False,
+                False, False, False,
+                False, False, False,
+                True, True, True,
+            ],
+            "measurement_method": ["Flowmeter"] * 11,
         }
     )
-    # Duplicate row would double-count if aggregation is wrong.
     city = pd.DataFrame(
         {
-            "model_source_key": ["SRC-AA", "SRC-FA", "SRC-AA", "SRC-FA", "SRC-AA", "SRC-FA"],
+            "model_source_key": ["SRC-AA", "SRC-FA"] * 4,
             "calendar_month": np.repeat(months, 2),
-            "volume_m3": [100.0, 50.0, 80.0, np.nan, 0.0, 0.0],
-            "reported_flag": [True, True, True, False, True, True],
-            "zero_reported_flag": [False, False, False, False, True, True],
-            "mapping_tier": ["accepted"] * 6,
-            "mapping_confidence": [1.0] * 6,
-            "report_ids": ["12037", "26843"] * 3,
+            "volume_m3": [100.0, 50.0, 100.0, 50.0, 80.0, np.nan, 40.0, 20.0],
+            "reported_flag": [True, True, True, True, True, False, True, True],
+            "zero_reported_flag": [False, False, False, False, False, False, False, False],
+            "mapping_tier": ["accepted"] * 8,
+            "mapping_confidence": [1.0] * 8,
+            "report_ids": ["12037", "26843"] * 4,
+            "measurement_method": ["Flowmeter", "Estimate"] * 4,
         }
     )
     candidate = pd.DataFrame(
         {
-            "model_source_key": ["SRC-KC"] * 3,
+            "model_source_key": ["SRC-KC"] * 4,
             "calendar_month": months,
-            "volume_m3": [999.0, 999.0, 999.0],
-            "reported_flag": [True, True, True],
-            "zero_reported_flag": [False, False, False],
-            "mapping_tier": ["candidate"] * 3,
-            "report_ids": ["67985"] * 3,
+            "volume_m3": [999.0, 999.0, 999.0, 999.0],
+            "reported_flag": [True, True, True, True],
+            "zero_reported_flag": [False, False, False, False],
+            "mapping_tier": ["candidate"] * 4,
+            "report_ids": ["67985"] * 4,
         }
     )
     modeled = pd.DataFrame(
         {
             "calendar_month": months,
-            "calendar_year": [2020, 2020, 2020],
-            "modeled_campus_withdrawal_m3": [12.0, 20.0, 5.0],
-            "modeled_hours": [744, 696, 744],
-            "modeled_finite_hours": [744, 696, 744],
-            "modeled_facility_energy_mwh": [1.0, 1.0, 1.0],
+            "calendar_year": [2019, 2020, 2020, 2020],
+            "modeled_campus_withdrawal_m3": [20.0, 12.0, 20.0, 5.0],
+            "modeled_hours": [744, 744, 696, 744],
+            "modeled_finite_hours": [744, 744, 696, 744],
+            "modeled_facility_energy_mwh": [1.0, 1.0, 1.0, 1.0],
             "modeled_water_provenance": "test",
         }
     )
-    targets = pd.DataFrame({"year": [2020], "water_withdrawal_m3_reported": [1000.0]})
-    d = aggregate_direct_groundwater(direct, registry)
+    targets = pd.DataFrame({"year": [2019, 2020], "water_withdrawal_m3_reported": [1000.0, 1000.0]})
+    d = aggregate_direct_groundwater(direct, registry, months=pd.Series(months))
     c = aggregate_city_production(city, tier="accepted", volume_name="owrd_city_production_m3")
     cand = aggregate_city_production(
         candidate, tier="candidate", volume_name="owrd_city_candidate_production_m3"
     )
     joined = join_monthly_validation(modeled, d, c, cand, targets)
+    annual = annual_validation(joined, None)
 
+    dec = joined.loc[joined.calendar_month.eq("2019-12-01")].iloc[0]
     jan = joined.loc[joined.calendar_month.eq("2020-01-01")].iloc[0]
     feb = joined.loc[joined.calendar_month.eq("2020-02-01")].iloc[0]
     mar = joined.loc[joined.calendar_month.eq("2020-03-01")].iloc[0]
+    assert dec.owrd_meta_direct_expected_report_count == 2
+    assert "64500" in str(dec.owrd_meta_direct_not_yet_applicable_ids)
+    assert dec.validation_flag != "partial_owrd_coverage"
     assert jan.owrd_meta_direct_groundwater_m3 == 16.0
+    assert jan.owrd_meta_direct_expected_report_count == 3
     assert pd.isna(feb.owrd_meta_direct_groundwater_m3), "missing OWRD must not become zero"
     assert mar.owrd_meta_direct_groundwater_m3 == 0.0
     assert jan.owrd_city_production_m3 == 150.0
-    assert pd.isna(feb.owrd_city_candidate_production_m3) or feb.owrd_city_candidate_production_m3 == 999.0
+    assert "Flowmeter" in str(jan.owrd_city_measurement_method)
     assert jan.owrd_city_production_m3 != jan.owrd_city_candidate_production_m3
     assert jan.validation_flag == "review_boundary"  # 16 > 12 modeled
     assert feb.validation_flag == "missing_owrd"
-    assert mar.validation_flag in {"ok", "partial_owrd_coverage", "review_boundary"}
+    assert mar.validation_flag == "no_diagnostic_trigger"
+    assert "measured OWRD" not in jan.owrd_meta_direct_provenance
+    assert jan.owrd_meta_direct_provenance.startswith("reported OWRD")
     assert pd.isna(feb.direct_pod_to_modeled_ratio)
     assert joined.calendar_month.is_unique
+    a2020 = annual.loc[annual.calendar_year.eq(2020)].iloc[0]
+    assert a2020.direct_annual_complete is False or a2020.direct_annual_complete == False
+    assert pd.isna(a2020.direct_pod_to_modeled_ratio)
+    a2019 = annual.loc[annual.calendar_year.eq(2019)].iloc[0]
+    assert bool(a2019.direct_annual_complete)
     print("PASS: owrd_water_model_validation self-test")
 
 
-def build() -> tuple[pd.DataFrame, pd.DataFrame, dict, list[dict]]:
+def build(*, rebuild_hourly: bool = True) -> tuple[pd.DataFrame, pd.DataFrame, dict, list[dict]]:
     if not CITY_ACCEPTED.exists() or not DIRECT_MONTHLY.exists():
         raise FileNotFoundError(
             "Processed OWRD files are missing. Run: python run_prineville.py water"
         )
     registry = load_direct_registry()
     targets = pd.read_csv(TARGETS)
-    hourly = ensure_hourly_reconstruction()
+    hourly = rebuild_hourly_reconstruction() if rebuild_hourly else load_existing_hourly()
     modeled = modeled_monthly_campus_withdrawal(hourly)
     direct_raw = pd.read_csv(DIRECT_MONTHLY)
     city_raw = pd.read_csv(CITY_ACCEPTED)
     candidate_raw = pd.read_csv(CITY_CANDIDATE) if CITY_CANDIDATE.exists() else pd.DataFrame()
-    direct = aggregate_direct_groundwater(direct_raw, registry)
-    city = aggregate_city_production(city_raw, tier="accepted", volume_name="owrd_city_production_m3")
+    report_use = pd.read_csv(CITY_REPORT) if CITY_REPORT.exists() else pd.DataFrame()
+    direct = aggregate_direct_groundwater(direct_raw, registry, months=modeled["calendar_month"])
+    city = aggregate_city_production(
+        city_raw, tier="accepted", volume_name="owrd_city_production_m3", report_use=report_use
+    )
     candidate = (
         aggregate_city_production(candidate_raw, tier="candidate", volume_name="owrd_city_candidate_production_m3")
         if len(candidate_raw)
@@ -758,12 +1001,17 @@ def main() -> dict:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--self-test", action="store_true", help="Run synthetic assertions only.")
     parser.add_argument("--skip-plot", action="store_true")
+    parser.add_argument(
+        "--reuse-hourly",
+        action="store_true",
+        help="Load existing hourly reconstruction instead of rebuilding. Default is rebuild.",
+    )
     args = parser.parse_args()
     self_test()
     if args.self_test:
         return {"self_test": "PASS"}
 
-    monthly, annual, diagnostics, checks = build()
+    monthly, annual, diagnostics, checks = build(rebuild_hourly=not args.reuse_hourly)
     OUT_MONTHLY.parent.mkdir(parents=True, exist_ok=True)
     monthly.to_csv(OUT_MONTHLY, index=False)
     annual.to_csv(OUT_ANNUAL, index=False)
@@ -777,6 +1025,7 @@ def main() -> dict:
         "diagnostics": diagnostics,
         "checks_passed": int(sum(c["status"] == "PASS" for c in checks)),
         "accounting_rule": BOUNDARY_NOTE,
+        "hourly_rebuild": not args.reuse_hourly,
     }
     print(json.dumps(summary, indent=2))
     print("\nValidation flag counts:")
@@ -788,7 +1037,8 @@ def main() -> dict:
         "owrd_meta_direct_groundwater_m3",
         "owrd_city_production_m3",
         "meta_annual_reported_withdrawal_m3",
-        "n_months_direct_reported",
+        "direct_coverage_fraction",
+        "direct_annual_complete",
         "direct_pod_to_modeled_ratio",
         "n_review_boundary_months",
     ]

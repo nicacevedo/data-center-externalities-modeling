@@ -2,12 +2,21 @@ check,status,detail
 unique_calendar_month,PASS,n=168
 units_are_m3_column_names,PASS,volume columns use cubic metres
 no_combined_observed_campus_water_column,PASS,three boundaries remain separate columns
+no_ok_validation_flag,PASS,ok was renamed so it cannot be read as model validated
+provenance_is_reported_not_measured,PASS,OWRD provenance is reported water-use record
 direct_report_ids_match_registry,PASS,"observed=[64500, 64845, 64846]"
 registry_contains_verified_pods,PASS,"registry=[64500, 64845, 64846]"
+early_64500_not_expected_before_interval,PASS,expected=2
+early_two_report_month_not_partial_for_inactive_id,PASS,flag=no_diagnostic_trigger
+64500_expected_once_in_export_interval,PASS,expected=3
 missing_owrd_not_converted_to_zero,PASS,2024-04 direct volume=np.float64(nan)
+in_interval_blank_is_missing_not_not_applicable,PASS,status=missing
+after_export_interval_not_expected,PASS,expected=0
+incomplete_year_direct_ratios_are_nan,PASS,complete=False ratio=nan
 accepted_and_candidate_keys_disjoint,PASS,no silent candidate inclusion
 city_default_file_is_accepted_only,PASS,accepted only
 candidate_series_not_copied_into_accepted,PASS,candidate remains a separate field
 electricity_annual_closure_unchanged,PASS,max_abs_mwh=2.328e-10
 monthly_modeled_water_aggregates_to_annual_prediction,PASS,max_abs_m3=1.746e-10
 ratios_nan_when_denominator_invalid,PASS,direct/modeled NaN if modeled <= 0
+city_measurement_method_retained,PASS,City series keeps aggregated measurement_method

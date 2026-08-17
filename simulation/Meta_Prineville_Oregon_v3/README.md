@@ -166,13 +166,13 @@ python run_prineville.py conditional
 
 This does **not** invent hourly IT telemetry. For each year it fits one latent IT-power scale so modeled facility electricity closes exactly to the reported Meta annual MWh, uses hourly weather/psychrometrics to generate PUE/cooling/water shape, fits a parsimonious global or one-break water scale on **2014-2022 training years only**, and predicts 2023-2024 water as holdout. The break, if selected, is statistical evidence only until an independent permit/engineering event explains it. Outputs are:
 
-- `outputs/hourly_conditional_reconstruction.csv`
+- `outputs/hourly_conditional_reconstruction.csv` (generated; not tracked in git)
 - `outputs/conditional_annual_compare.csv`
 - `outputs/conditional_water_model.csv`
 
 This is the correct baseline to improve once monthly City customer-meter records arrive. Bundled OWRD series are **not** used as campus-meter substitutes or calibration targets.
 
-After the reconstruction is written, the same command also runs the OWRD external consistency layer (`src/owrd_water_model_validation.py`). That step can also be run on its own:
+The same command rebuilds the hourly reconstruction and then runs the OWRD external consistency layer (`src/owrd_water_model_validation.py`). `python run_prineville.py validate` and `owrd-validate` also rebuild before comparing, so they cannot silently use a stale hourly file:
 
 ```bash
 python run_prineville.py owrd-validate

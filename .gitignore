@@ -17,3 +17,6 @@ checkpoints/
 logs/
 
 .ipynb_checkpoints/
+
+# Deterministic generated hourly reconstruction; rebuild via run_prineville.py
+simulation/Meta_Prineville_Oregon_v3/outputs/hourly_conditional_reconstruction.csv

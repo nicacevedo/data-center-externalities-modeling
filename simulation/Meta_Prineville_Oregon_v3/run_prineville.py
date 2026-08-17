@@ -15,7 +15,8 @@ def audit():
     subprocess.run([sys.executable,str(ROOT/'src'/'change_point_seed.py')],check=True)
 
 def conditional():
-    subprocess.run([sys.executable,str(ROOT/'src'/'conditional_reconstruction.py')],check=True)
+    # Reconstruction is rebuilt inside owrd-validate so the consistency layer
+    # cannot silently use a stale hourly file.
     owrd_validate()
 
 def calibrate():
@@ -26,6 +27,10 @@ def calibrate():
     print('After reconstruction, python run_prineville.py validate (or owrd-validate) compares the modeled monthly campus series with those OWRD observations without using them as calibration targets.')
 
 def validate():
+    print('\nOWRD water-model validation (external consistency layer; not a calibration target):')
+    print('Rebuilding the hourly reconstruction before comparing OWRD series.')
+    owrd_validate()
+
     p=ROOT/'outputs'/'conditional_annual_compare.csv'
     if p.exists():
         import pandas as pd
@@ -49,9 +54,6 @@ def validate():
         if len(unresolved):
             print('\nOWRD sources intentionally not auto-mapped:')
             print(unresolved[['oha_facility_id','canonical_source_name','mapping_status']].to_string(index=False))
-
-    print('\nOWRD water-model validation (external consistency layer; not a calibration target):')
-    owrd_validate()
 
 def main():
     cmd=sys.argv[1] if len(sys.argv)>1 else 'audit'
