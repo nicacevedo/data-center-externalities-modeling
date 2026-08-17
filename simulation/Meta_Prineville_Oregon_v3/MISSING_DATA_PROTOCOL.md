@@ -42,6 +42,8 @@ Validation hierarchy:
 2. monthly City/Meta meter data if obtained;
 3. municipal well/ASR seasonality as an external consistency constraint.
 
+Bundled OWRD City production and Vitesse/Facebook direct POD series are used in `src/owrd_water_model_validation.py` as that external consistency layer. They are not monthly campus meter data and are not calibration targets.
+
 ## E. Water consumption vs withdrawal
 Preferred:
 

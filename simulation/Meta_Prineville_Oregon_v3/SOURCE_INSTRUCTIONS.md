@@ -111,6 +111,14 @@ Run `python run_prineville.py water` to normalize them. The script preserves mea
 
 Accepted and candidate source mappings are deliberately separate. Do not treat a blank as zero, do not allocate the combined Airport Well #1/#2 POD across individual wells without another meter, and do not map current DT13 to D13/Report 68003.
 
+OWRD is now used as an **external water-model validation / consistency layer**, not as a replacement for Meta-reported annual campus withdrawal and not as a calibration target. After the conditional reconstruction exists, `python run_prineville.py validate` (or `owrd-validate`) joins:
+
+- reconstructed monthly campus withdrawal (fitted/proxy);
+- OWRD Vitesse/Facebook direct groundwater POD use (facility-adjacent evidence; reports 64500/64845/64846);
+- OWRD City accepted municipal production (system context only).
+
+These three series remain separately identified. City production is not Meta meter data. Direct POD use is not assumed to be a strict lower bound on campus withdrawal. Actual monthly campus deliveries remain unavailable until City customer-meter records are obtained.
+
 Additional interactive searching is only needed to refresh the exports or resolve still-unlinked sources such as DT14/DT18.
 
 ## 7. Prineville ASR / groundwater engineering evidence

@@ -170,7 +170,21 @@ This does **not** invent hourly IT telemetry. For each year it fits one latent I
 - `outputs/conditional_annual_compare.csv`
 - `outputs/conditional_water_model.csv`
 
-This is the correct baseline to improve once monthly City/OWRD data arrive.
+This is the correct baseline to improve once monthly City customer-meter records arrive. Bundled OWRD series are **not** used as campus-meter substitutes or calibration targets.
+
+After the reconstruction is written, the same command also runs the OWRD external consistency layer (`src/owrd_water_model_validation.py`). That step can also be run on its own:
+
+```bash
+python run_prineville.py owrd-validate
+```
+
+Outputs:
+- `outputs/owrd_water_model_validation.csv`
+- `outputs/owrd_water_model_validation_annual.csv`
+- `outputs/owrd_water_model_validation_checks.csv`
+- `outputs/owrd_water_model_validation.png`
+
+City production is municipal-system context. Vitesse/Facebook OWRD observations are direct groundwater POD records. Meta annual withdrawal remains the primary campus-level annual observation. Actual monthly campus deliveries remain unavailable until City customer-meter records are obtained.
 
 ### Stage 7 — gray-box fit
 
@@ -203,7 +217,7 @@ Validation hierarchy:
 1. exact identities and units;
 2. calibration closure on train years;
 3. annual held-out electricity/water/location-Scope-2 prediction;
-4. external city/OWRD water-system consistency;
+4. external city/OWRD water-system consistency (`python run_prineville.py validate` now runs this against the reconstructed monthly campus water series; OWRD is not a calibration target);
 5. grid/eGRID carbon consistency;
 6. weather-year counterfactuals and sensitivity.
 
