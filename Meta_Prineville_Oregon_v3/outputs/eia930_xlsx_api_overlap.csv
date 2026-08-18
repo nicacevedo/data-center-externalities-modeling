@@ -1,0 +1,9 @@
+series,alignment,status,n_overlap,n_equal,n_differ,max_abs_diff_mwh
+demand_reported_mwh,same_timestamp,compared,52608,52608,0,0.0
+demand_forecast_mwh,same_timestamp,compared,52608,52608,0,0.0
+net_generation_reported_mwh,same_timestamp,compared,52608,52608,0,0.0
+total_interchange_reported_mwh,same_timestamp,compared,52608,52608,0,0.0
+demand_reported_mwh,xlsx_hour_ending_vs_api_hour_beginning,compared,52607,217,52390,2827.0
+demand_forecast_mwh,xlsx_hour_ending_vs_api_hour_beginning,compared,52607,178,52429,483.0
+net_generation_reported_mwh,xlsx_hour_ending_vs_api_hour_beginning,compared,52607,400,52207,2744.0
+total_interchange_reported_mwh,xlsx_hour_ending_vs_api_hour_beginning,compared,52607,172,52435,1363.0

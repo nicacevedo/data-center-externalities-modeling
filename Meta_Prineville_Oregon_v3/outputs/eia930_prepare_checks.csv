@@ -1,0 +1,8 @@
+check,status,detail
+ba_is_pacw,PASS,ba=['PACW']
+unique_utc,PASS,n=83320
+reconstruction_window_ends_2024,PASS,max=2024-12-31 23:00:00+00:00
+workbook_not_truncated_before_read,PASS,raw_n=97584 kept=83320
+reported_imputed_adjusted_are_separate_columns,PASS,reported/imputed/adjusted remain separate columns
+missing_reported_demand_not_converted_to_zero,PASS,n_missing=3697
+known_data_issue_attached,PASS,issue flag joined

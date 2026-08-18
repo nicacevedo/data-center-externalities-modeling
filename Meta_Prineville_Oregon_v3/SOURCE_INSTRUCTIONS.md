@@ -189,11 +189,27 @@ Required weather columns after processing:
 
 ## 10. Physical grid context — EIA-930 / PacifiCorp West
 
-- EIA Open Data: `https://www.eia.gov/opendata/`
+- Source IDs: `EIA930`, `EIA_PACW`
+- Grid Monitor: `https://www.eia.gov/electricity/gridmonitor/about`
+- PACW dashboard: `https://www.eia.gov/electricity/gridmonitor/dashboard/electric_overview/balancing_authority/PACW`
 - Balancing authority: `PACW`.
-- EIA's hourly BA operating data include actual/forecast demand, net generation and interchange.
 
-Run:
+Canonical historical file (leave untouched):
+
+```text
+data/raw/eia930/historical/PACW.xlsx
+```
+
+This is EIA's individual-BA full reported history. It is balancing-authority demand, forecast, generation and interchange—not campus feeder data. Prepare:
+
+```bash
+python run_prineville.py eia
+```
+
+`src/prepare_eia930.py` keeps reported/imputed/adjusted MWh as separate columns, joins EIA known-data-issue flags, and cuts the reconstruction window at `2024-12-31 23:59 UTC`. It compares 2019-2024 workbook values with the API when `PACW_region-data_2019_2024.csv` is present; it does **not** concatenate the two.
+
+The API remains useful for overlap checks and later updates:
+
 ```bash
 export EIA_API_KEY='YOUR_FREE_EIA_KEY'
 python src/download_eia930.py --discover

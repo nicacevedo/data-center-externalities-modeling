@@ -87,16 +87,20 @@ Populate `data/manual_templates/campus_buildings.csv`.
 
 A building becomes a model capacity breakpoint only when a completion/final/CO/operation date is supported; an announcement date is not enough.
 
-## 5. EIA API key (only if using API rather than dashboard/bulk files)
+## 5. EIA-930 PACW historical workbook (canonical) and optional API overlap
 
-Source: https://www.eia.gov/opendata/
+Source: https://www.eia.gov/electricity/gridmonitor/dashboard/electric_overview/balancing_authority/PACW
 
-1. Register for a free EIA API key.
+The canonical file is already bundled as the untouched Grid Monitor download `data/raw/eia930/historical/PACW.xlsx`. Do not edit it. Run `python run_prineville.py eia` to build `data/processed/pacw_hourly.csv` through 2024-12-31.
+
+The EIA API is optional overlap validation and future updating, not a replacement for the workbook:
+
+1. Register for a free EIA API key at https://www.eia.gov/opendata/
 2. Set `EIA_API_KEY` in the environment.
 3. Run `python src/download_eia930.py --discover` first.
-4. Then run the pull command in `README.md`.
+4. Then pull 2019-2024 PACW region data as documented in `README.md`.
 
-The script discovers the current EIA route metadata/facets before downloading, which is safer than hard-coding type codes that can change.
+The API downloader discovers current route metadata/facets before downloading. Do not concatenate API rows onto the workbook.
 
 ## 6. EPA eGRID annual cross-check
 

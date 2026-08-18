@@ -1,5 +1,11 @@
 """Download EIA APIv2 RTO data for PacifiCorp West (PACW).
 
+The canonical historical series is the untouched Grid Monitor workbook
+`data/raw/eia930/historical/PACW.xlsx`, prepared by `src/prepare_eia930.py`.
+This API downloader is for metadata discovery, overlap validation against that
+workbook, and future updating. It does not replace the workbook and should not
+be concatenated into it.
+
 Requires a free EIA API key in EIA_API_KEY. The downloader intentionally queries
 metadata and pulls all `type` values for PACW rather than hard-coding type codes.
 """

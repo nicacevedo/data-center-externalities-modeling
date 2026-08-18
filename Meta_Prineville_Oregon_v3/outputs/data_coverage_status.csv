@@ -6,7 +6,7 @@ priority,quantity,current_best_resolution,current_coverage,status,next_action,ex
 2,municipal water-source identity,source/well inventory,current plus well logs,curated public crosswalk,use IDs for OWRD/City joins,high
 2,ASR hydrogeology/design,engineering/project,2018-2021 design/pilot period,public engineering evidence,extract priors/events now; request operational monthly series,high
 2,weather,hourly nearby station,2011-2024,bundled NOAA KRDM raw + processed hourly file,compare with closer Prineville AWOS if a complete archive is obtained,high
-2,regional grid,hourly BA,modern,automatable official API,obtain free EIA API key and run downloader,high
+2,regional grid,hourly BA,2015-07-01 to 2024-12-31,canonical EIA-930 PACW workbook bundled; fuel-mix NG:* from 2018-07,keep workbook untouched; API is overlap validation/future update only,high
 3,municipal well production,monthly OWRD POD/entity,WY2010-2025 City export,accepted mappings integrated as municipal-system context in OWRD water-model validation; not Meta meter data; candidates remain separate,keep as external context; resolve DT14/DT18 only if needed; seek City customer-meter records for campus deliveries,very high for groundwater validation
 3,Meta campus water meter,monthly,unknown/public-record dependent,manual request,send prepared City records request,very high for subannual validation
 3,Meta wastewater discharge,monthly,unknown/public-record dependent,manual request,send prepared City records request,very high for site consumption

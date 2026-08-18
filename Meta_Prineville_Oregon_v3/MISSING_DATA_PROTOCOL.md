@@ -60,6 +60,8 @@ For each hour:
 
 Use the best available regional/consumption-based physical intensity. Aggregate to annual and compare against Meta location-based Scope 2.
 
+Canonical PACW EIA-930 history is the untouched Grid Monitor workbook processed by `src/prepare_eia930.py`. Do not concatenate the EIA API onto that series. There is no PACW EIA-930 coverage before 2015-07-01; do not invent a 2011-2014 BA series. Keep reported, imputed, and adjusted MWh as separate columns.
+
 Do not tune physical emissions to the market-based value; market-based emissions are a separate accounting output.
 
 ## G. Building commissioning dates

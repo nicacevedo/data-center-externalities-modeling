@@ -1,0 +1,100 @@
+column,n_nonmissing,n_rows,first_timestamp_utc,last_timestamp_utc,note
+timestamp_utc,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ba,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+local_date,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+local_hour_ending,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+local_time,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+time_zone,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+generation_only,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+demand_forecast_mwh,83128,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+demand_reported_mwh,79623,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+demand_imputed_mwh,3628,83320,2015-07-15 08:00:00,2018-12-19 22:00:00,blank remains missing; zeros are reported zeros
+demand_adjusted_mwh,83152,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+net_generation_reported_mwh,79622,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+net_generation_imputed_mwh,1637,83320,2015-07-15 08:00:00,2018-12-19 22:00:00,blank remains missing; zeros are reported zeros
+net_generation_adjusted_mwh,81157,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+total_interchange_reported_mwh,79622,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+total_interchange_imputed_mwh,1,83320,2018-12-12 22:00:00,2018-12-12 22:00:00,blank remains missing; zeros are reported zeros
+total_interchange_adjusted_mwh,79622,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+known_data_issue,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+missing_ng_by_energy_source,57064,83320,2018-06-29 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+demand_forecast_range_error,1,83320,2016-02-24 18:00:00,2016-02-24 18:00:00,blank remains missing; zeros are reported zeros
+demand_range_error,104,83320,2015-09-02 07:00:00,2018-12-19 22:00:00,blank remains missing; zeros are reported zeros
+net_generation_range_error,102,83320,2015-09-02 07:00:00,2018-12-19 22:00:00,blank remains missing; zeros are reported zeros
+total_interchange_range_error,1,83320,2018-12-12 22:00:00,2018-12-12 22:00:00,blank remains missing; zeros are reported zeros
+ng_col_mwh,35847,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_ng_mwh,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_nuc_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_oil_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_geo_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_wat_mwh,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_ps_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_sun_mwh,56968,83320,2018-07-03 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_snb_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_wnd_mwh,56967,83320,2018-07-03 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_wnb_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_bat_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_oes_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_ues_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_oth_mwh,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_unk_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_col_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_ng_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_nuc_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_oil_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_geo_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_wat_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_ps_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_sun_imputed_mwh,2,83320,2018-08-22 18:00:00,2018-12-19 22:00:00,blank remains missing; zeros are reported zeros
+ng_snb_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_wnd_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_wnb_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_bat_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_oes_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_ues_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_oth_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_unk_imputed_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_col_adjusted_mwh,35847,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_ng_adjusted_mwh,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_nuc_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_oil_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_geo_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_wat_adjusted_mwh,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_ps_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_sun_adjusted_mwh,56968,83320,2018-07-03 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_snb_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_wnd_adjusted_mwh,56967,83320,2018-07-03 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_wnb_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_bat_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_oes_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_ues_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+ng_oth_adjusted_mwh,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+ng_unk_adjusted_mwh,0,83320,,,blank remains missing; zeros are reported zeros
+interchange_ava_mwh,83080,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+interchange_avrn_mwh,50416,83320,2019-04-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+interchange_bpat_mwh,82959,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+interchange_ciso_mwh,83079,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+interchange_gcpd_mwh,83078,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+interchange_ipco_mwh,83078,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+interchange_pace_mwh,61248,83320,2015-07-01 08:00:00,2022-07-06 07:00:00,blank remains missing; zeros are reported zeros
+interchange_pge_mwh,83078,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_factor_col,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_factor_ng,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_factor_oil,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_emissions_col,35847,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_emissions_ng,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_emissions_oil,0,83320,,,blank remains missing; zeros are reported zeros
+co2_emissions_other,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_emissions_generated,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_emissions_imported,57016,83320,2018-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_emissions_exported,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_emissions_consumed,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+positive_generation_mwh,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+consumed_electricity_mwh,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_intensity_generated,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+co2_intensity_consumed,56992,83320,2018-07-02 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+timestamp_convention,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+source_file,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+source_sheet,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+grid_provenance,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros
+reconstruction_window_note,83320,83320,2015-07-01 08:00:00,2024-12-31 23:00:00,blank remains missing; zeros are reported zeros

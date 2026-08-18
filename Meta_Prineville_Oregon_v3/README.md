@@ -121,30 +121,29 @@ Do **not** assign a technology epoch merely because an expansion was announced. 
 
 Prineville's renewable-accounting relationship with PacifiCorp is documented separately from physical electricity delivery. For physical regional grid behavior, use EIA-930 with balancing authority `PACW`.
 
-1. Register for a free EIA API key if using API access.
-2. Set it in your shell:
+The canonical historical file is the untouched Grid Monitor workbook:
+
+```text
+data/raw/eia930/historical/PACW.xlsx
+```
+
+Prepare the reconstruction-window hourly table (through 2024-12-31 23:59 UTC) with EIA quality fields retained:
+
+```bash
+python run_prineville.py eia
+```
+
+This writes `data/processed/pacw_hourly.csv`. Reported, imputed, and adjusted MWh remain separate columns. The EIA API is **not** concatenated into this history; it is for overlap validation and future updating:
 
 ```bash
 export EIA_API_KEY='YOUR_KEY'
-```
-
-3. Discover route metadata/facets before pulling data:
-
-```bash
 python src/download_eia930.py --discover
-```
-
-4. Pull PACW hourly regional data:
-
-```bash
 python src/download_eia930.py --start 2019-01-01 --end 2024-12-31
 ```
 
-The script intentionally discovers available facets/columns from EIA metadata rather than freezing undocumented type codes. EIA returns at most 5,000 rows per JSON request, so the script paginates.
-
 Use:
-- PACW demand/net generation/interchange as grid context;
-- EIA hourly CO2 if present in the returned route/version;
+- PACW demand/net generation/interchange as grid context (2015-07-01 onward in the workbook);
+- generation-by-energy-source when the `NG:*` fields are populated (from 2018-07 in this download);
 - EPA eGRID annual plant/subregion emission rates as an independent annual cross-check.
 
 Treat `PACW CO2 / PACW load` as an **average regional physical-intensity proxy**, not campus marginal emissions. A later phase can improve this using generator-level CEMS plus interchange/consumption-based accounting.
@@ -212,9 +211,11 @@ Hourly arrivals, workload, IT power, PUE, withdrawal and emissions remain
 fitted/scenario quantities rather than recovered telemetry.
 
 By default, reported annual location Scope 2 is allocated over hourly facility
-energy without inventing a regional carbon shape. `--use-pacw-shape` enables the
-incomplete PACW fuel/interchange data only as an explicit average-regional
-relative-shape sensitivity; it is not a marginal-emissions estimate.
+energy without inventing a regional carbon shape. `--use-pacw-shape` uses the
+processed PACW EIA-930 workbook series as an explicit average-regional
+relative-shape sensitivity (demand/interchange from 2015-07; fuel mix from
+2018-07). It is not a marginal-emissions estimate, and 2011 through mid-2015
+have no PACW EIA-930 coverage.
 
 Main outputs are:
 - `outputs/stochastic_proxy_annual_summary.csv`

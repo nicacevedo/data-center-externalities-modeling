@@ -51,6 +51,18 @@ High-confidence candidate mappings (currently DT4-DT12 sequence) for review/sens
 ## `data/processed/owrd_meta_direct_monthly_use.csv`
 Calendar-month-normalized Vitesse/Facebook direct POD reports. This is not automatically substituted for Meta's reported site withdrawal because the reporting boundary is not proven identical.
 
+## `data/processed/pacw_hourly.csv`
+Hourly PacifiCorp West (PACW) EIA-930 series from the untouched Grid Monitor workbook `data/raw/eia930/historical/PACW.xlsx`, cut at 2024-12-31 23:59 UTC. This is balancing-authority grid context, not campus feeder electricity. `timestamp_utc` is EIA's hour-ending UTC time.
+
+Key columns:
+- `demand_reported_mwh` / `demand_imputed_mwh` / `demand_adjusted_mwh`: EIA reported, imputed-when-made, and adjusted demand. Adjusted equals reported unless EIA imputed.
+- Analogous reported/imputed/adjusted fields for net generation and total interchange.
+- `ng_*_mwh`: generation by energy source (`COL`, `NG`, `WAT`, `SUN`, `WND`, `OTH`, …). Several codes are unused for PACW.
+- `interchange_*_mwh`: bilateral interchange with neighboring BAs.
+- `known_data_issue` and range-error flags from the workbook `Known Data Issues` sheet.
+
+The EIA API is not concatenated into this file. Overlap diagnostics are in `outputs/eia930_xlsx_api_overlap.csv`. Series start/end dates are in `outputs/eia930_series_coverage.csv`.
+
 ## `outputs/owrd_water_model_validation.csv`
 Calendar-month join of reconstructed campus withdrawal, OWRD Vitesse/Facebook direct groundwater POD use, and OWRD City accepted municipal production. Diagnostic only: OWRD is not a calibration target. Missing OWRD values remain missing. Candidate City mappings appear only as `owrd_city_candidate_production_m3`.
 

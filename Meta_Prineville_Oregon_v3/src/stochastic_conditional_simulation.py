@@ -14,8 +14,9 @@ The public annual observations remain the empirical anchors:
 * a separate train-only water model (2014-2022 by default) is evaluated on the
   untouched 2023-2024 annual observations;
 * reported location-based Scope 2 is closed exactly by annual allocation;
-  incomplete PACW data can be enabled only as an explicit relative-shape
-  sensitivity and are never treated as marginal emissions.
+  PACW EIA-930 from the historical workbook can be enabled only as an explicit
+  relative-shape sensitivity (demand/interchange from 2015-07; fuel mix from
+  2018-07) and is never treated as marginal emissions.
 
 Synthetic arrivals are dimensionless work units.  Their absolute counts,
 queues, utilization, IT power, PUE, hourly water, and hourly emissions are
@@ -51,6 +52,7 @@ TARGETS = ROOT / "data" / "canonical" / "meta_prineville_annual.csv"
 WEATHER = ROOT / "data" / "processed" / "weather_hourly.csv"
 EIA_REGION = ROOT / "data" / "raw" / "eia930" / "PACW_region-data_2019_2024.csv"
 EIA_FUEL = ROOT / "data" / "raw" / "eia930" / "PACW_fuel-type-data_2019_2024.csv"
+PACW_HOURLY = ROOT / "data" / "processed" / "pacw_hourly.csv"
 OUT = ROOT / "outputs"
 
 PROVENANCE = {
@@ -340,12 +342,35 @@ def water_shape_weights(
 
 
 def build_pacw_relative_carbon_shape() -> dict[int, pd.DataFrame]:
-    """Build a relative regional carbon-shape proxy for 2019-2024.
+    """Build a relative regional carbon-shape proxy from PACW EIA-930.
 
-    Scenario factors are used only to create within-year variation.  Every
-    resulting campus emissions series is renormalized to Meta's reported annual
-    location-based Scope 2, so these factors are not claimed as site intensities.
+    Prefer the processed historical workbook (`pacw_hourly.csv`). Fall back to the
+    API extracts only if that file is absent. Scenario factors create within-year
+    variation; campus emissions are still renormalized to Meta's reported annual
+    location-based Scope 2.
     """
+
+    if PACW_HOURLY.exists():
+        z = pd.read_csv(PACW_HOURLY)
+        z["timestamp_utc"] = pd.to_datetime(z["timestamp_utc"], utc=True)
+        thermal_kg_proxy = (
+            1000.0 * z.get("ng_col_mwh", pd.Series(0.0, index=z.index)).fillna(0.0).clip(lower=0.0)
+            + 450.0 * z.get("ng_ng_mwh", pd.Series(0.0, index=z.index)).fillna(0.0).clip(lower=0.0)
+            + 500.0 * z.get("ng_oth_mwh", pd.Series(0.0, index=z.index)).fillna(0.0).clip(lower=0.0)
+        )
+        demand = z["demand_reported_mwh"].clip(lower=1.0)
+        net_generation = z["net_generation_reported_mwh"].fillna(0.0).clip(lower=0.0)
+        import_residual = (demand - net_generation).clip(lower=0.0)
+        score = thermal_kg_proxy.fillna(0.0) + 350.0 * import_residual
+        relative = (score / demand).replace([np.inf, -np.inf], np.nan)
+        relative.index = z["timestamp_utc"]
+        relative = relative.fillna(relative.groupby(relative.index.year).transform("median"))
+        out: dict[int, pd.DataFrame] = {}
+        for year, s in relative.groupby(relative.index.year):
+            out[int(year)] = pd.DataFrame(
+                {"timestamp_utc": s.index, "pacw_relative_carbon_score": s.to_numpy(float)}
+            )
+        return out
 
     if not (EIA_REGION.exists() and EIA_FUEL.exists()):
         return {}
@@ -1204,9 +1229,10 @@ def parse_args() -> argparse.Namespace:
         "--use-pacw-shape",
         action="store_true",
         help=(
-            "Use incomplete PACW fuel/interchange data only as an explicit relative "
-            "hourly carbon-shape sensitivity. Default allocates annual location "
-            "Scope 2 in proportion to facility energy."
+            "Use processed PACW EIA-930 workbook series as an explicit relative "
+            "hourly carbon-shape sensitivity (demand/interchange from 2015-07; "
+            "fuel mix from 2018-07). Default allocates annual location Scope 2 "
+            "in proportion to facility energy. Not a marginal-emissions estimate."
         ),
     )
     args = parser.parse_args()

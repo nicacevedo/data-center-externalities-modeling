@@ -6,6 +6,9 @@ ROOT=Path(__file__).resolve().parent
 def water():
     subprocess.run([sys.executable,str(ROOT/'src'/'prepare_owrd_wateruse.py')],check=True)
 
+def eia():
+    subprocess.run([sys.executable,str(ROOT/'src'/'prepare_eia930.py'), *sys.argv[2:]],check=True)
+
 def owrd_validate():
     subprocess.run([sys.executable,str(ROOT/'src'/'owrd_water_model_validation.py'), *sys.argv[2:]],check=True)
 
@@ -72,6 +75,7 @@ def main():
     elif cmd=='calibrate': calibrate()
     elif cmd=='validate': validate()
     elif cmd=='owrd-validate': owrd_validate()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate]')
+    elif cmd=='eia': eia()
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate|eia]')
 
 if __name__=='__main__': main()

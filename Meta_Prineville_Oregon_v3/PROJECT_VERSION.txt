@@ -7,4 +7,5 @@ Key changes:
 - change-point audit now writes exploratory all-years and train-only (through 2022) rankings separately
 - candidate_annual_breaks.csv retained as backward-compatible exploratory alias
 - OWRD is an external water-model validation layer (not a calibration target)
-- unified command set: audit, water, conditional, simulate, calibrate, validate, owrd-validate
+- unified command set: audit, water, conditional, simulate, calibrate, validate, owrd-validate, eia
+- canonical PACW EIA-930 history is data/raw/eia930/historical/PACW.xlsx; API is overlap/update only
