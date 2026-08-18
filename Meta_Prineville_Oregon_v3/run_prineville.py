@@ -6,6 +6,9 @@ ROOT=Path(__file__).resolve().parent
 def water():
     subprocess.run([sys.executable,str(ROOT/'src'/'prepare_owrd_wateruse.py')],check=True)
 
+def owrd_validate():
+    subprocess.run([sys.executable,str(ROOT/'src'/'owrd_water_model_validation.py'), *sys.argv[2:]],check=True)
+
 def audit():
     subprocess.run([sys.executable,str(ROOT/'src'/'build_targets.py')],check=True)
     water()
@@ -13,7 +16,9 @@ def audit():
     subprocess.run([sys.executable,str(ROOT/'src'/'change_point_seed.py')],check=True)
 
 def conditional():
-    subprocess.run([sys.executable,str(ROOT/'src'/'conditional_reconstruction.py')],check=True)
+    # Reconstruction is rebuilt inside owrd-validate so the consistency layer
+    # cannot silently use a stale hourly file.
+    owrd_validate()
 
 def simulate():
     subprocess.run(
@@ -26,8 +31,14 @@ def calibrate():
     print('  python run_prineville.py conditional')
     print('It closes annual facility electricity, fits water-scale/optional break on training years only, and leaves 2023-2024 held out.')
     print('OWRD municipal production and Vitesse/Facebook direct POD series are external water evidence; they are not silently substituted for Meta site-meter withdrawal.')
+    print('After reconstruction, python run_prineville.py validate (or owrd-validate) compares the modeled monthly campus series with those OWRD observations without using them as calibration targets.')
+    print('python run_prineville.py simulate remains the separate stochastic proxy workflow.')
 
 def validate():
+    print('\nOWRD water-model validation (external consistency layer; not a calibration target):')
+    print('Rebuilding the hourly reconstruction before comparing OWRD series.')
+    owrd_validate()
+
     p=ROOT/'outputs'/'conditional_annual_compare.csv'
     if p.exists():
         import pandas as pd
@@ -60,6 +71,7 @@ def main():
     elif cmd=='simulate': simulate()
     elif cmd=='calibrate': calibrate()
     elif cmd=='validate': validate()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate]')
+    elif cmd=='owrd-validate': owrd_validate()
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate]')
 
 if __name__=='__main__': main()

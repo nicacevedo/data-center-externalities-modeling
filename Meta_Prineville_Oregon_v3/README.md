@@ -1,5 +1,7 @@
 # Meta Prineville public-data reconstruction seed
 
+This is the **canonical Prineville v3 package**. Develop here, not under `simulation/`. Earlier packages remain at `Meta_Prineville_Oregon/` and `Meta_Prineville_Oregon_v2/`.
+
 This package is a curated starting point for a **public-data gray-box reconstruction** of the Meta Prineville data-center campus. Its intended standard is:
 
 1. exact reproduction of published annual site quantities;
@@ -166,11 +168,25 @@ python run_prineville.py conditional
 
 This does **not** invent hourly IT telemetry. For each year it fits one latent IT-power scale so modeled facility electricity closes exactly to the reported Meta annual MWh, uses hourly weather/psychrometrics to generate PUE/cooling/water shape, fits a parsimonious global or one-break water scale on **2014-2022 training years only**, and predicts 2023-2024 water as holdout. The break, if selected, is statistical evidence only until an independent permit/engineering event explains it. Outputs are:
 
-- `outputs/hourly_conditional_reconstruction.csv`
+- `outputs/hourly_conditional_reconstruction.csv` (generated; not tracked in git)
 - `outputs/conditional_annual_compare.csv`
 - `outputs/conditional_water_model.csv`
 
-This is the correct baseline to improve once monthly City/OWRD data arrive.
+This is the correct baseline to improve once monthly City customer-meter records arrive. Bundled OWRD series are **not** used as campus-meter substitutes or calibration targets.
+
+The same command rebuilds the hourly reconstruction and then runs the OWRD external consistency layer (`src/owrd_water_model_validation.py`). `python run_prineville.py validate` and `owrd-validate` also rebuild before comparing, so they cannot silently use a stale hourly file:
+
+```bash
+python run_prineville.py owrd-validate
+```
+
+Outputs:
+- `outputs/owrd_water_model_validation.csv`
+- `outputs/owrd_water_model_validation_annual.csv`
+- `outputs/owrd_water_model_validation_checks.csv`
+- `outputs/owrd_water_model_validation.png`
+
+City production is municipal-system context. Vitesse/Facebook OWRD observations are direct groundwater POD records. Meta annual withdrawal remains the primary campus-level annual observation. Actual monthly campus deliveries remain unavailable until City customer-meter records are obtained.
 
 ### Stage 6.6 — run the stochastic conditional proxy
 
@@ -242,7 +258,7 @@ Validation hierarchy:
 1. exact identities and units;
 2. calibration closure on train years;
 3. annual held-out electricity/water/location-Scope-2 prediction;
-4. external city/OWRD water-system consistency;
+4. external city/OWRD water-system consistency (`python run_prineville.py validate` now runs this against the reconstructed monthly campus water series; OWRD is not a calibration target);
 5. grid/eGRID carbon consistency;
 6. weather-year counterfactuals and sensitivity.
 

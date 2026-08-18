@@ -51,6 +51,21 @@ High-confidence candidate mappings (currently DT4-DT12 sequence) for review/sens
 ## `data/processed/owrd_meta_direct_monthly_use.csv`
 Calendar-month-normalized Vitesse/Facebook direct POD reports. This is not automatically substituted for Meta's reported site withdrawal because the reporting boundary is not proven identical.
 
+## `outputs/owrd_water_model_validation.csv`
+Calendar-month join of reconstructed campus withdrawal, OWRD Vitesse/Facebook direct groundwater POD use, and OWRD City accepted municipal production. Diagnostic only: OWRD is not a calibration target. Missing OWRD values remain missing. Candidate City mappings appear only as `owrd_city_candidate_production_m3`.
+
+Key columns:
+- `modeled_campus_withdrawal_m3`: monthly sum of the conditional reconstruction's `water_withdrawal_proxy_m3_per_h`.
+- `owrd_meta_direct_groundwater_m3`: sum of reported volumes for registry POD reports 64500/64845/64846.
+- `owrd_city_production_m3`: sum of accepted City source groups.
+- `meta_annual_reported_withdrawal_m3`: Meta annual campus withdrawal repeated onto months of that year.
+- `validation_flag`: `no_diagnostic_trigger` / `review_boundary` / `missing_owrd` / `partial_owrd_coverage`. `no_diagnostic_trigger` means the simple overlap thresholds were not fired; it does **not** mean OWRD validates the reconstruction.
+- `owrd_meta_direct_expected_report_count`: number of registry POD reports whose bundled export interval covers that month. Report 64500 is not expected before it appears in the export.
+- OWRD provenance is `reported OWRD water-use record` (may be measured or estimated). `owrd_meta_direct_measurement_method` and `owrd_city_measurement_method` retain the source method text.
+
+## `outputs/owrd_water_model_validation_annual.csv`
+Calendar-year descriptive totals of the same three boundaries versus Meta-reported annual withdrawal. Equality is not expected. OWRD annual sums use reported months only. Direct annual ratios (`direct_pod_to_modeled_ratio`, `direct_pod_to_meta_reported_ratio`) are NaN unless `direct_annual_complete` is true, which requires every interval-expected report-month to have a reported value.
+
 ## `data/canonical/campus_events_seed.csv`
 High-confidence public events only. Event timing does not imply commissioning unless explicitly supported.
 

@@ -1,8 +1,10 @@
 Meta Prineville high-confidence project
-Stage 4 audit-integrated correction
-Build date: 2026-08-12
+Canonical v3 package at repository root
+Build date: 2026-08-17
 Key changes:
 - audit now validates campus_buildings.csv, campus_permit_evidence.csv, and campus_permit_events.csv
 - audit writes outputs/campus_permit_audit.csv
 - change-point audit now writes exploratory all-years and train-only (through 2022) rankings separately
 - candidate_annual_breaks.csv retained as backward-compatible exploratory alias
+- OWRD is an external water-model validation layer (not a calibration target)
+- unified command set: audit, water, conditional, simulate, calibrate, validate, owrd-validate
