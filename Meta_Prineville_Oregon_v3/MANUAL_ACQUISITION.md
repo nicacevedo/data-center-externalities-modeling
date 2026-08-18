@@ -115,6 +115,16 @@ US-customary detailed workbooks for 2010-2023 are already organized under `data/
 
 This is an annual physical-grid cross-check against Meta campus MWh, not a replacement for hourly EIA-930 and not campus-meter data.
 
+## 6b. Oregon CAMPD / EIA-860 / EIA-923 / cooling (already downloaded)
+
+Raw files are under `data/raw/campd/`, `data/raw/epa_eia_crosswalk/`, `data/raw/eia860/`, `data/raw/eia923/`, and `data/raw/eia_cooling/`. Do not edit them. Rebuild the Oregon-only 2011-2024 pilot with:
+
+```bash
+python run_prineville.py oregon
+```
+
+This is pipeline validation of plant/unit joins and coverage. It does not identify generators serving the Prineville campus.
+
 ## 7. NOAA weather — scripted, but this environment could not bundle the remote CSVs
 
 The package already contains the official NCEI downloader and cleaner. Run locally:

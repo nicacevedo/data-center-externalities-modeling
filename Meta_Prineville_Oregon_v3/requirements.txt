@@ -7,3 +7,4 @@ psychrolib
 matplotlib
 openpyxl
 xlrd
+python-calamine

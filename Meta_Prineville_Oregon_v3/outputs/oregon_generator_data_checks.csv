@@ -1,0 +1,17 @@
+check,status,detail
+campd_unit_hour_key_unique,PASS,duplicate_keys=0
+campd_coverage_2011_2024,PASS,"years=[2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]"
+blanks_not_converted_to_zero,PASS,processed steam NA=981035 zero=0; raw NA=981035 zero=0
+reported_zero_distinguished_from_missing,PASS,steam NA=981035 steam0=0 co2_na=0 co2_0=110
+no_emissions_duplication_from_crosswalk,PASS,hourly_tonnes=111357521.952725 monthly_tonnes=111357521.952725
+no_second_operating_time_multiplication,PASS,monthly=111357521.953 posted_sum=111357521.953 optime_scaled=111246892.743
+facility_and_unit_id_preserved,PASS,n_facilities=8 n_units=15
+epa_eia_match_rate_accounted,PASS,units=15 accepted=5 one_to_many=10 many_to_one=0 unmatched=0
+unmatched_units_preserved,PASS,unmatched_units=0 (retained in audit; not dropped)
+eia923_monthly_generation_aggregation_valid,PASS,share_within_2pct=1.000 n=2912 median_rel=0.0
+monthly_to_annual_reaggregation_internally_consistent,PASS,monthly_hours=981035 hourly_rows=981035
+unit_conversions_correct,PASS,short_ton_to_tonne=0.90718474 lb_to_kg=0.45359237 m3_per_million_gal=3785.411784
+cooling_missingness_preserved,PASS,2011-2012_m3_all_missing=True duplicated_cooling_water_conflicts=0
+eia860_operating_retirement_dates_consistent_with_observations,FAIL,"flagged_unit_years=1 examples=[{'plant_id': 6106.0, 'camd_facility_id': 6106, 'camd_unit_id': '1SG', 'year': 2020, 'n_campd_hours': 3556, 'eia860_statuses': 'RE', 'eia860_prime_mover': 'ST', 'eia860_fuel': 'SUB', 'eia860_capacity_mw': 642.2, 'flag': 'observed_after_eia860_retired_listing'}]"
+campd_eia923_generation_comparison_plausible,PASS,n=1312 corr=0.996 median_R=1.023 extreme_R_count=13
+analysis_table_has_required_flags,PASS,columns_ok n_rows=32568

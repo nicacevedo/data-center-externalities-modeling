@@ -76,6 +76,27 @@ Key columns:
 - `coal_share` … `solar_share`: generation mix as fractions 0-1. eGRID 2010-2016 store 0-100 percent; 2018+ store 0-1 fractions under the same "percent" header.
 - `source_file` / `source_revision` / `provenance_class`.
 
+## `data/processed/campd_or_unit_hourly.csv`
+Oregon CAMPD unit-hour extract, 2011-2024. Native key `Facility ID` × `Unit ID` × `Date` × `Hour`. Mass, heat input, and gross load are posted CAMPD values (not multiplied by `Operating Time`). Blanks remain missing.
+
+## `data/processed/campd_or_plant_monthly.csv`
+CAMPD aggregated to EIA plant × year × month after a unique unit→plant map. `campd_co2_tonnes` is metric tonnes from short tons; NOx/SO2 are kg from pounds. `campd_gross_load_mwh_or_equivalent` is the sum of posted hourly MW, not × Operating Time.
+
+## `data/processed/eia860_generator_annual.csv`
+Oregon EIA-860 generator-year attributes (operable/proposed/retired sheets). Status, operating/retirement years, prime mover, fuel, and nameplate are native.
+
+## `data/processed/eia923_generation_fuel_monthly.csv`
+Oregon EIA-923 Page 1 generation/fuel melted to plant × prime mover × fuel × month. Confidential `.` / `W` remain missing.
+
+## `data/processed/eia923_cooling_operations.csv`
+Oregon plant-month cooling water. 2014-2024 from EIA cooling-detail (water unique on cooling system, not generator rows). 2013 from EIA-923 Schedule 8 million-gallon volumes. 2011-2012 water_m3 left missing.
+
+## `data/processed/oregon_generator_externalities_monthly.csv`
+Oregon plant-month integration table. Emission intensities are CAMPD/CAMPD. Water intensities are cooling-water / cooling-associated generation. EIA-923 `generation_mwh` is net generation and is not forced equal to CAMPD gross load.
+
+## `outputs/oregon_generator_data_checks.csv`
+PASS/FAIL implementation and data-quality checks for the Oregon pilot.
+
 ## `outputs/egrid_meta_annual_compare.csv`
 Derived annual benchmark: Meta campus `electricity_mwh_reported` × eGRID total output rates, converted to metric tonnes. PACW demand is not the energy input. `difference_tonnes` compares eGRID CO2e tonnes with Meta location-based Scope 2 (tCO2e) where Meta reported it. Market-based/REC values are not used.
 

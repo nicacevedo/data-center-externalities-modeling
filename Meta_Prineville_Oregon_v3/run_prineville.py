@@ -12,6 +12,9 @@ def eia():
 def egrid():
     subprocess.run([sys.executable,str(ROOT/'src'/'prepare_egrid.py'), *sys.argv[2:]],check=True)
 
+def oregon():
+    subprocess.run([sys.executable,str(ROOT/'src'/'prepare_oregon_generators.py'), *sys.argv[2:]],check=True)
+
 def grid():
     eia()
     egrid()
@@ -84,7 +87,8 @@ def main():
     elif cmd=='owrd-validate': owrd_validate()
     elif cmd=='eia': eia()
     elif cmd=='egrid': egrid()
+    elif cmd=='oregon': oregon()
     elif cmd=='grid': grid()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|grid]')
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid]')
 
 if __name__=='__main__': main()

@@ -263,14 +263,30 @@ with pounds converted to metric tonnes by dividing by 2204.6226218487757. `E_y^{
 
 eGRID measures annual generation-weighted subregion output rates, not hourly campus intensity and not PACW BA demand.
 
-## 12. Renewable accounting / Schedule 272 context
+## 12. Oregon generator / CEMS / cooling pilot (pipeline validation only)
+
+- Sources: CAMPD Oregon hourly (2011-2024), EPA/EIA unit crosswalk, EIA-860 annual, EIA-923 annual, EIA standardized cooling-detail (2014-2024).
+- Command: `python run_prineville.py oregon`
+- Raw files under `data/raw/campd/`, `data/raw/epa_eia_crosswalk/`, `data/raw/eia860/`, `data/raw/eia923/`, and `data/raw/eia_cooling/` are never modified.
+
+Rules:
+- Filter EIA-derived analysis tables to Oregon after read; do not alter national ZIPs/xlsx.
+- CAMPD native key is Facility ID × Unit ID × Date × Hour. Posted CO2/NOx/SO2/heat/gross load are **not** multiplied by Operating Time.
+- Blanks stay missing; reported zeros stay zero.
+- Join CAMD Facility+Unit to the EPA/EIA crosswalk, then to EIA plant/generator/boiler IDs. Do not explode CEMS hours across generator rows. Stop if that join would duplicate emissions.
+- Aggregate CAMPD to EIA plant × year × month. Compare CAMPD posted gross load with EIA-923 net generation as a join/coverage diagnostic; inequality is expected.
+- Standardized cooling water (million gallons) is used for 2014-2024. 2013 Schedule 8 volumes are used where reported in million gallons. 2011-2012 Schedule 8 flow rates are **not** converted: native units are not defensibly the same as the later product.
+- Water intensities use cooling-product water over cooling-associated generation only. Emission intensities use CAMPD mass over CAMPD posted gross load only.
+- This layer does **not** identify which generators served the Prineville campus. Do not expand to other states until Oregon QC passes.
+
+## 13. Renewable accounting / Schedule 272 context
 
 - Source ID: `OREGON_BER_RENEWABLE`
 - URL is in `data/source_manifest.csv`.
 
 Use only to interpret the market-vs-location emissions break and renewable certificate arrangement. Do not infer that the campus physically consumed the same generators' output each hour.
 
-## 13. What cannot be obtained from these public sources
+## 14. What cannot be obtained from these public sources
 
 Do not manufacture:
 - true hourly IT workload;

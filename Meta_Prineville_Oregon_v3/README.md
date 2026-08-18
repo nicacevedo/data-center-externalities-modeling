@@ -160,6 +160,16 @@ Never treat PACW demand as campus electricity. Never treat eGRID non-baseload ra
 
 eGRID vintage map used here: 2011→2010, 2012–2013→2012, 2014–2015→2014, 2016–2017→2016, then matching years through 2023, and **2024→eGRID2023**.
 
+### Stage 5.5 — Oregon generator/emissions/cooling pilot (pipeline validation)
+
+This step integrates CAMPD, the EPA/EIA unit crosswalk, EIA-860, EIA-923, and EIA cooling **for Oregon 2011–2024 only**. It does **not** infer which plants served the Prineville campus and must pass QC before any other-state expansion.
+
+```bash
+python run_prineville.py oregon
+```
+
+Writes Oregon-filtered processed tables under `data/processed/` and QC files under `outputs/oregon_*`. CAMPD posted mass/load are not multiplied by Operating Time. Crosswalk joins are not exploded to generator rows. 2011–2012 Schedule 8 cooling volumes are left missing because the native flow-rate units are not defensibly comparable to the 2013+ / 2014–2024 million-gallon product.
+
 ### Stage 6 — run the baseline audit
 
 ```bash
