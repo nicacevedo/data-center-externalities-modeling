@@ -271,12 +271,12 @@ eGRID measures annual generation-weighted subregion output rates, not hourly cam
 
 Rules:
 - Filter EIA-derived analysis tables to Oregon after read; do not alter national ZIPs/xlsx.
-- CAMPD native key is Facility ID × Unit ID × Date × Hour. Posted CO2/NOx/SO2/heat/gross load are **not** multiplied by Operating Time.
+- CAMPD native key is Facility ID × Unit ID × Date × Hour. Posted CO2/NOx/SO2 mass and heat input are **not** multiplied by Operating Time. `Gross Load (MW)` is a rate; hourly gross generation is Gross Load (MW) × Operating Time when both are reported.
 - Blanks stay missing; reported zeros stay zero.
 - Join CAMD Facility+Unit to the EPA/EIA crosswalk, then to EIA plant/generator/boiler IDs. Do not explode CEMS hours across generator rows. Stop if that join would duplicate emissions.
-- Aggregate CAMPD to EIA plant × year × month. Compare CAMPD posted gross load with EIA-923 net generation as a join/coverage diagnostic; inequality is expected.
+- Aggregate CAMPD to EIA plant × year × month. Compare CAMPD gross generation (MW × Operating Time) with EIA-923 net generation as a join/coverage diagnostic; inequality is expected.
 - Standardized cooling water (million gallons) is used for 2014-2024. 2013 Schedule 8 volumes are used where reported in million gallons. 2011-2012 Schedule 8 flow rates are **not** converted: native units are not defensibly the same as the later product.
-- Water intensities use cooling-product water over cooling-associated generation only. Emission intensities use CAMPD mass over CAMPD posted gross load only.
+- Water intensities use cooling-product water over cooling-associated generation only. Emission intensities use CAMPD mass over CAMPD gross generation only. Negative official cooling consumption is not clipped and is not used for intensity.
 - This layer does **not** identify which generators served the Prineville campus. Do not expand to other states until Oregon QC passes.
 
 ## 13. Renewable accounting / Schedule 272 context

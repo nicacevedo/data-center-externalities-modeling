@@ -168,7 +168,7 @@ This step integrates CAMPD, the EPA/EIA unit crosswalk, EIA-860, EIA-923, and EI
 python run_prineville.py oregon
 ```
 
-Writes Oregon-filtered processed tables under `data/processed/` and QC files under `outputs/oregon_*`. CAMPD posted mass/load are not multiplied by Operating Time. Crosswalk joins are not exploded to generator rows. 2011–2012 Schedule 8 cooling volumes are left missing because the native flow-rate units are not defensibly comparable to the 2013+ / 2014–2024 million-gallon product.
+Writes Oregon-filtered processed tables under `data/processed/` and QC files under `outputs/oregon_*`. CAMPD posted mass and heat input are not multiplied by Operating Time. CAMPD Gross Load (MW) is converted to hourly MWh as rate × Operating Time. Crosswalk joins are not exploded to generator rows. 2011–2012 Schedule 8 cooling volumes are left missing because the native flow-rate units are not defensibly comparable to the 2013+ / 2014–2024 million-gallon product.
 
 ### Stage 6 — run the baseline audit
 

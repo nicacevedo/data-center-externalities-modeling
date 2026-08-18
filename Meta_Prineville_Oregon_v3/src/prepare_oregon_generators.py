@@ -2,8 +2,11 @@
 
 This is a source-integration pilot. It does not infer which generators served
 the Prineville campus. Raw files under data/raw/ are never modified. EIA
-national archives are filtered to Oregon only after read. CAMPD posted
-emissions and gross load are not multiplied by Operating Time.
+national archives are filtered to Oregon only after read.
+
+CAMPD posted CO2/SO2/NOx mass and heat input are not multiplied by Operating
+Time. CAMPD Gross Load (MW) is a rate; hourly gross generation is
+Gross Load (MW) * Operating Time when both are reported.
 """
 from __future__ import annotations
 
@@ -187,21 +190,48 @@ def safe_sum(series: pd.Series) -> float:
     return np.nan
 
 
-def classify_match(n_eia_plant: int, n_eia_gen: int, n_camd_sharing_gen: int, match_text: str) -> str:
+def hourly_gross_generation_mwh(gross_load_mw, operating_time) -> pd.Series:
+    """Gross Load (MW) is a rate. Energy = rate * Operating Time when both reported."""
+    load = pd.to_numeric(gross_load_mw, errors="coerce")
+    ot = pd.to_numeric(operating_time, errors="coerce")
+    out = load * ot
+    return out.where(load.notna() & ot.notna(), np.nan)
+
+
+def classify_mapping_cardinality(n_eia_plant: int, n_eia_gen: int, n_camd_sharing_gen: int) -> str:
     if n_eia_plant <= 0:
         return "unmatched"
     if n_eia_plant > 1:
-        return "one_to_many"
+        return "one_to_many_plants"
+    if n_eia_gen > 1 and n_camd_sharing_gen > 1:
+        return "many_to_many"
     if n_eia_gen > 1:
         return "one_to_many"
     if n_camd_sharing_gen > 1:
         return "many_to_one"
-    text = (match_text or "").lower()
-    if "exact" in text:
-        return "accepted_exact"
-    if "manual" in text:
-        return "accepted_manual"
-    return "accepted_exact"
+    return "one_to_one"
+
+
+def classify_match_method(match_text_gen: str | float, match_text_boiler: str | float = np.nan) -> str:
+    texts = f"{'' if pd.isna(match_text_gen) else match_text_gen} {'' if pd.isna(match_text_boiler) else match_text_boiler}".lower()
+    if not texts.strip():
+        return "unmatched"
+    if "manual" in texts:
+        return "official_manual"
+    if "modify ids" in texts or "fuzzy" in texts:
+        return "modified_fuzzy"
+    if "exact" in texts:
+        return "exact"
+    return "other"
+
+
+def classify_match(n_eia_plant: int, n_eia_gen: int, n_camd_sharing_gen: int, match_text: str) -> str:
+    """Composite label: mapping_cardinality|match_method. Kept for downstream display."""
+    card = classify_mapping_cardinality(n_eia_plant, n_eia_gen, n_camd_sharing_gen)
+    if card in {"unmatched", "one_to_many_plants"}:
+        return card
+    method = classify_match_method(match_text)
+    return f"{card}|{method}"
 
 
 def join_ids(values: pd.Series) -> str | float:
@@ -260,8 +290,10 @@ def prepare_campd_hourly(reuse_processed: bool = True) -> tuple[pd.DataFrame, bo
         )
         existing["Unit ID"] = existing["Unit ID"].astype(str).str.strip()
         years = sorted(pd.to_numeric(existing["year"], errors="coerce").dropna().astype(int).unique().tolist())
+        has_gen = "gross_generation_mwh" in existing.columns
         if (
-            not existing.duplicated(key).any()
+            has_gen
+            and not existing.duplicated(key).any()
             and years == MODEL_YEARS
             and existing["Facility ID"].notna().all()
             and existing["Unit ID"].astype(str).str.len().gt(0).all()
@@ -302,6 +334,7 @@ def prepare_campd_hourly(reuse_processed: bool = True) -> tuple[pd.DataFrame, bo
     ]
     for col in numeric_cols:
         out[col] = to_numeric_missing(out[col])
+    out["gross_generation_mwh"] = hourly_gross_generation_mwh(out["Gross Load (MW)"], out["Operating Time"])
     out = out[out["year"].isin(MODEL_YEARS)].copy()
     return out.sort_values(key).reset_index(drop=True), False
 
@@ -362,12 +395,22 @@ def audit_crosswalk(campd: pd.DataFrame, xw: pd.DataFrame) -> tuple[pd.DataFrame
             eia_generator_id=("EIA_GENERATOR_ID", join_ids),
             eia_boiler_id=("EIA_BOILER_ID", join_ids),
             match_text=("MATCH_TYPE_GEN", "first"),
+            match_text_boiler=("MATCH_TYPE_BOILER", lambda s: join_ids(s) if s.notna().any() else np.nan),
             n_camd_per_eia_gen=("n_camd_per_eia_gen", "max"),
             n_crosswalk_rows=("CAMD_UNIT_ID", "size"),
+            camd_status_date=("CAMD_STATUS_DATE", "first"),
+            camd_retire_year=("CAMD_RETIRE_YEAR", "first"),
         )
         .reset_index()
     )
     unit_xw["n_camd_per_eia_gen"] = unit_xw["n_camd_per_eia_gen"].fillna(1).astype(int)
+    unit_xw["mapping_cardinality"] = [
+        classify_mapping_cardinality(int(r.n_eia_plant), int(r.n_eia_gen), int(r.n_camd_per_eia_gen))
+        for r in unit_xw.itertuples(index=False)
+    ]
+    unit_xw["match_method"] = [
+        classify_match_method(r.match_text, r.match_text_boiler) for r in unit_xw.itertuples(index=False)
+    ]
     unit_xw["match_type"] = [
         classify_match(int(r.n_eia_plant), int(r.n_eia_gen), int(r.n_camd_per_eia_gen), r.match_text)
         for r in unit_xw.itertuples(index=False)
@@ -380,11 +423,18 @@ def audit_crosswalk(campd: pd.DataFrame, xw: pd.DataFrame) -> tuple[pd.DataFrame
         how="left",
         indicator=True,
     )
-    audit["match_type"] = np.where(audit["_merge"].eq("left_only"), "unmatched", audit["match_type"])
+    left_only = audit["_merge"].eq("left_only")
+    audit.loc[left_only, "mapping_cardinality"] = "unmatched"
+    audit.loc[left_only, "match_method"] = "unmatched"
+    audit.loc[left_only, "match_type"] = "unmatched"
     audit["eia_plant_id"] = np.where(audit["n_eia_plant"].fillna(0).gt(1), np.nan, audit["eia_plant_id"])
     audit["camd_facility_id"] = audit["Facility ID"].astype("Int64")
     audit["camd_unit_id"] = audit["Unit ID"]
     audit["unexplained_plant_split"] = audit["n_eia_plant"].fillna(0).gt(1)
+    audit["plant_ids_differ"] = (
+        pd.to_numeric(audit["camd_facility_id"], errors="coerce")
+        != pd.to_numeric(audit["eia_plant_id"], errors="coerce")
+    ) & audit["eia_plant_id"].notna()
     cols = [
         "camd_facility_id",
         "camd_unit_id",
@@ -392,18 +442,24 @@ def audit_crosswalk(campd: pd.DataFrame, xw: pd.DataFrame) -> tuple[pd.DataFrame
         "eia_plant_id",
         "eia_generator_id",
         "eia_boiler_id",
+        "mapping_cardinality",
+        "match_method",
         "match_type",
         "match_text",
+        "match_text_boiler",
+        "plant_ids_differ",
         "years_active",
         "n_campd_hours",
         "n_eia_plant",
         "n_eia_gen",
         "n_crosswalk_rows",
         "unexplained_plant_split",
+        "camd_status_date",
+        "camd_retire_year",
     ]
     audit = audit[cols].sort_values(["camd_facility_id", "camd_unit_id"]).reset_index(drop=True)
 
-    unit_map = audit[["camd_facility_id", "camd_unit_id", "eia_plant_id", "match_type"]].drop_duplicates()
+    unit_map = audit[["camd_facility_id", "camd_unit_id", "eia_plant_id", "match_type", "mapping_cardinality", "match_method"]].drop_duplicates()
     if unit_map.duplicated(["camd_facility_id", "camd_unit_id"]).any():
         raise ValueError("Crosswalk collapsed to a non-unique CAMD unit map; refusing to join")
     if bool(audit["unexplained_plant_split"].any()):
@@ -431,7 +487,8 @@ def aggregate_campd_plant_month(campd: pd.DataFrame, unit_map: pd.DataFrame) -> 
         campd_nox_lbs=("NOx Mass (lbs)", lambda s: s.sum(min_count=1)),
         campd_so2_lbs=("SO2 Mass (lbs)", lambda s: s.sum(min_count=1)),
         campd_heat_input_mmbtu=("Heat Input (mmBtu)", lambda s: s.sum(min_count=1)),
-        campd_gross_load_mwh_or_equivalent=("Gross Load (MW)", lambda s: s.sum(min_count=1)),
+        campd_gross_generation_mwh=("gross_generation_mwh", lambda s: s.sum(min_count=1)),
+        campd_posted_gross_load_mw_sum=("Gross Load (MW)", lambda s: s.sum(min_count=1)),
         operating_hours=("Operating Time", lambda s: s.sum(min_count=1)),
         n_reporting_units=("Unit ID", "nunique"),
         n_hours=("Hour", "size"),
@@ -453,7 +510,10 @@ def aggregate_campd_plant_month(campd: pd.DataFrame, unit_map: pd.DataFrame) -> 
     monthly["campd_nox_kg"] = monthly["campd_nox_lbs"] * LB_TO_KG
     monthly["campd_so2_kg"] = monthly["campd_so2_lbs"] * LB_TO_KG
     monthly["provenance_class"] = "derived"
-    monthly["load_aggregation_note"] = "sum of posted hourly Gross Load (MW); not multiplied by Operating Time"
+    monthly["load_aggregation_note"] = (
+        "campd_gross_generation_mwh = sum(Gross Load (MW) * Operating Time) where both reported; "
+        "posted CO2/SO2/NOx mass and heat input are not multiplied by Operating Time"
+    )
     monthly = monthly.drop(columns=["campd_co2_short_tons", "campd_nox_lbs", "campd_so2_lbs"])
     return monthly.sort_values(["plant_id", "year", "month"]).reset_index(drop=True)
 
@@ -664,6 +724,16 @@ def _cooling_detail_path(year: int) -> Path:
     return p
 
 
+def _cooling_summary_path(year: int) -> Path:
+    if year <= 2020:
+        p = COOLING_DIR / f"cooling_summary_{year}.xlsx"
+    else:
+        p = COOLING_DIR / f"Cooling_Boiler_Generator_Data_Summary_{year}.xlsx"
+    if not p.exists():
+        raise FileNotFoundError(p)
+    return p
+
+
 def _cooling_year(year: int) -> pd.DataFrame:
     path = _cooling_detail_path(year)
     df = read_excel_path(path, sheet_name="Detail", header=2)
@@ -711,6 +781,76 @@ def prepare_cooling_standardized() -> pd.DataFrame:
     if not frames:
         return pd.DataFrame()
     return pd.concat(frames, ignore_index=True)
+
+
+def _cooling_summary_year(year: int) -> pd.DataFrame:
+    path = _cooling_summary_path(year)
+    df = read_excel_path(path, sheet_name="Summary", header=2)
+    df.columns = [re.sub(r"\s+", " ", str(c).replace("\n", " ")).strip() for c in df.columns]
+    state_col = pick_col(df, ["State"])
+    or_df = df.loc[df[state_col].astype(str).str.strip().str.upper().eq("OR")].copy()
+    if or_df.empty:
+        return pd.DataFrame()
+    plant_col = pick_col(or_df, ["Plant Code"])
+    gen_st = pick_col(or_df, ["Gross Generation from Steam Turbines (MWh)"], required=False)
+    gen_ss = pick_col(or_df, ["Gross Generation Associated with Single Shaft Combined Cycle Units (MWh)"], required=False)
+    gen_ct = pick_col(or_df, ["Gross Generation Associated with Combined Cycle Gas Turbines (MWh)"], required=False)
+    wd = pick_col(or_df, ["Water Withdrawal Volume (Million Gallons)"])
+    cn = pick_col(or_df, ["Water Consumption Volume (Million Gallons)"])
+    cool_id = pick_col(or_df, ["Cooling ID"], required=False)
+    return pd.DataFrame(
+        {
+            "plant_id": to_numeric_missing(or_df[plant_col]).astype("Int64"),
+            "year": to_numeric_missing(or_df[pick_col(or_df, ["Year"])]).astype("Int64"),
+            "month": to_numeric_missing(or_df[pick_col(or_df, ["Month"])]).astype("Int64"),
+            "cooling_system_id": or_df[cool_id].astype(str).str.strip() if cool_id else np.nan,
+            "summary_gross_gen_steam_mwh": to_numeric_missing(or_df[gen_st]) if gen_st else np.nan,
+            "summary_gross_gen_sscc_mwh": to_numeric_missing(or_df[gen_ss]) if gen_ss else np.nan,
+            "summary_gross_gen_ccgt_mwh": to_numeric_missing(or_df[gen_ct]) if gen_ct else np.nan,
+            "summary_water_withdrawal_million_gal": to_numeric_missing(or_df[wd]),
+            "summary_water_consumption_million_gal": to_numeric_missing(or_df[cn]),
+            "summary_source_file": path.name,
+        }
+    )
+
+
+def prepare_cooling_summary() -> pd.DataFrame:
+    frames = parallel_years(_cooling_summary_year, list(range(2014, 2025)), "cooling summary", max_workers=6)
+    if not frames:
+        return pd.DataFrame()
+    raw = pd.concat(frames, ignore_index=True)
+    raw["summary_generation_mwh"] = _add_na_series(
+        raw["summary_gross_gen_steam_mwh"],
+        raw["summary_gross_gen_sscc_mwh"],
+        raw["summary_gross_gen_ccgt_mwh"],
+    )
+    water_keys = ["plant_id", "year", "month", "cooling_system_id"]
+    water_u = (
+        raw.groupby(water_keys, dropna=False)
+        .agg(
+            summary_water_withdrawal_million_gal=(
+                "summary_water_withdrawal_million_gal",
+                lambda s: s.dropna().iloc[0] if s.notna().any() else np.nan,
+            ),
+            summary_water_consumption_million_gal=(
+                "summary_water_consumption_million_gal",
+                lambda s: s.dropna().iloc[0] if s.notna().any() else np.nan,
+            ),
+            summary_generation_mwh=("summary_generation_mwh", lambda s: s.dropna().iloc[0] if s.notna().any() else np.nan),
+            summary_source_file=("summary_source_file", "first"),
+        )
+        .reset_index()
+    )
+    return (
+        water_u.groupby(["plant_id", "year", "month"], dropna=False)
+        .agg(
+            summary_water_withdrawal_million_gal=("summary_water_withdrawal_million_gal", safe_sum),
+            summary_water_consumption_million_gal=("summary_water_consumption_million_gal", safe_sum),
+            summary_generation_mwh=("summary_generation_mwh", safe_sum),
+            summary_source_file=("summary_source_file", "first"),
+        )
+        .reset_index()
+    )
 
 
 def _sched8_member(zip_path: Path) -> str:
@@ -799,7 +939,12 @@ def _add_na_series(*parts: pd.Series) -> pd.Series:
     return acc.where(saw, np.nan)
 
 
-def cooling_plant_month(detail: pd.DataFrame, sched8: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+def cooling_plant_month(
+    detail: pd.DataFrame,
+    sched8: pd.DataFrame,
+    summary_pm: pd.DataFrame | None = None,
+    eia923_pm: pd.DataFrame | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     rows = []
     flags = []
     if not detail.empty:
@@ -844,6 +989,7 @@ def cooling_plant_month(detail: pd.DataFrame, sched8: pd.DataFrame) -> tuple[pd.
         std["cooling_source"] = "eia_cooling_detail_standardized"
         std["volume_comparable"] = True
         std["incomparability_note"] = np.nan
+        std["generation_missing_reason"] = np.nan
         std["provenance_class"] = "derived"
         rows.append(std)
 
@@ -862,6 +1008,11 @@ def cooling_plant_month(detail: pd.DataFrame, sched8: pd.DataFrame) -> tuple[pd.
             hours_in_service=("hours_in_service", safe_sum),
         ).reset_index()
         s8_pm["generation_mwh"] = np.nan
+        s8_pm["generation_missing_reason"] = np.where(
+            s8_pm["year"].eq(2013),
+            "schedule8_generation_left_missing_by_design",
+            "schedule8_2011_2012_no_volume_or_generation_product",
+        )
         s8_pm["plant_name"] = np.nan
         s8_pm["n_generator_rows"] = np.nan
         s8_pm["provenance_class"] = "derived"
@@ -870,15 +1021,81 @@ def cooling_plant_month(detail: pd.DataFrame, sched8: pd.DataFrame) -> tuple[pd.
     if not rows:
         raise ValueError("No Oregon cooling rows")
     out = pd.concat(rows, ignore_index=True)
-    out["water_withdrawal_m3"] = np.where(
+    if "generation_missing_reason" not in out.columns:
+        out["generation_missing_reason"] = np.nan
+    out["water_withdrawal_m3_reported"] = np.where(
         out["volume_comparable"].eq(True) & out["water_withdrawal_million_gal"].notna(),
         out["water_withdrawal_million_gal"] * M3_PER_MILLION_GAL,
         np.nan,
     )
-    out["water_consumption_m3"] = np.where(
+    out["water_consumption_m3_reported"] = np.where(
         out["volume_comparable"].eq(True) & out["water_consumption_million_gal"].notna(),
         out["water_consumption_million_gal"] * M3_PER_MILLION_GAL,
         np.nan,
+    )
+    # Modeled volumes: preserve raw million-gal including negatives; do not clip.
+    # Negative consumption is physically invalid for intensity, so modeled m3 is missing.
+    out["water_withdrawal_m3"] = out["water_withdrawal_m3_reported"]
+    out["water_consumption_m3"] = np.where(
+        pd.to_numeric(out["water_consumption_million_gal"], errors="coerce") < 0,
+        np.nan,
+        out["water_consumption_m3_reported"],
+    )
+    out["consumption_source_anomaly"] = pd.to_numeric(out["water_consumption_million_gal"], errors="coerce") < 0
+    if summary_pm is not None and len(summary_pm):
+        out = out.merge(summary_pm, on=["plant_id", "year", "month"], how="left")
+    else:
+        out["summary_water_withdrawal_million_gal"] = np.nan
+        out["summary_water_consumption_million_gal"] = np.nan
+        out["summary_generation_mwh"] = np.nan
+        out["summary_source_file"] = np.nan
+    if eia923_pm is not None and len(eia923_pm):
+        out = out.merge(
+            eia923_pm[["plant_id", "year", "month", "generation_mwh"]].rename(
+                columns={"generation_mwh": "eia923_plant_generation_mwh"}
+            ),
+            on=["plant_id", "year", "month"],
+            how="left",
+        )
+    else:
+        out["eia923_plant_generation_mwh"] = np.nan
+    gen = pd.to_numeric(out["generation_mwh"], errors="coerce")
+    sum_gen = pd.to_numeric(out.get("summary_generation_mwh"), errors="coerce")
+    eia_gen = pd.to_numeric(out["eia923_plant_generation_mwh"], errors="coerce")
+    wd = pd.to_numeric(out["water_withdrawal_m3"], errors="coerce")
+    status = []
+    for i in range(len(out)):
+        year = int(out.iloc[i]["year"]) if pd.notna(out.iloc[i]["year"]) else np.nan
+        g = gen.iloc[i]
+        sg = sum_gen.iloc[i] if len(sum_gen) else np.nan
+        eg = eia_gen.iloc[i]
+        water = wd.iloc[i]
+        if year in (2011, 2012):
+            status.append("coverage_limitation_2011_2012_units")
+        elif year == 2013:
+            status.append("expected_missingness_schedule8_generation")
+        elif pd.notna(water) and pd.isna(g):
+            if pd.notna(sg) and sg != 0:
+                status.append("pipeline_mismatch_summary_has_generation")
+            elif pd.notna(eg) and eg > 0:
+                status.append("cooling_gen_missing_eia923_positive")
+            else:
+                status.append("expected_missingness_cooling_and_plant_gen")
+        elif pd.notna(water) and g == 0:
+            if pd.notna(sg) and sg > 0:
+                status.append("pipeline_mismatch_summary_has_generation")
+            elif pd.notna(eg) and eg > 0:
+                status.append("cooling_gen_zero_eia923_positive")
+            else:
+                status.append("expected_zero_cooling_and_plant_gen")
+        else:
+            status.append("ok")
+    out["cooling_generation_status"] = status
+    # Never substitute EIA-923 plant generation into cooling-associated generation.
+    out["cooling_intensity_eligible"] = (
+        out["volume_comparable"].eq(True)
+        & pd.to_numeric(out["generation_mwh"], errors="coerce").gt(0)
+        & ~out["consumption_source_anomaly"].fillna(False)
     )
     flag_df = pd.concat(flags, ignore_index=True) if flags else pd.DataFrame(columns=["water_conflict"])
     return out.sort_values(["year", "month", "plant_id"]).reset_index(drop=True), flag_df
@@ -910,6 +1127,7 @@ def eia860_plant_year(eia860: pd.DataFrame) -> pd.DataFrame:
 
 
 def flag_eia860_vs_campd(campd: pd.DataFrame, eia860: pd.DataFrame, unit_map: pd.DataFrame, xw: pd.DataFrame) -> pd.DataFrame:
+    """Unit-month flags using EIA-860 operating/retirement year+month, not retired-sheet membership alone."""
     mapped = campd.merge(
         unit_map,
         left_on=["Facility ID", "Unit ID"],
@@ -918,9 +1136,9 @@ def flag_eia860_vs_campd(campd: pd.DataFrame, eia860: pd.DataFrame, unit_map: pd
         validate="m:1",
     )
     mapped["plant_id"] = mapped["eia_plant_id"].fillna(mapped["Facility ID"])
-    unit_year = (
-        mapped.groupby(["plant_id", "camd_facility_id", "camd_unit_id", "year"], dropna=False)
-        .agg(n_hours=("Hour", "size"), eia_generator_ids=("match_type", "first"))
+    unit_month = (
+        mapped.groupby(["plant_id", "camd_facility_id", "camd_unit_id", "year", "month"], dropna=False)
+        .agg(n_hours=("Hour", "size"), operating_hours=("Operating Time", lambda s: s.sum(min_count=1)))
         .reset_index()
     )
     gens = eia860.copy()
@@ -929,7 +1147,7 @@ def flag_eia860_vs_campd(campd: pd.DataFrame, eia860: pd.DataFrame, unit_map: pd
     xw_full["CAMD_UNIT_ID"] = xw_full["CAMD_UNIT_ID"].astype(str).str.strip()
     xw_full["CAMD_PLANT_ID"] = pd.to_numeric(xw_full["CAMD_PLANT_ID"], errors="coerce")
     audit_rows = []
-    for rec in unit_year.itertuples(index=False):
+    for rec in unit_month.itertuples(index=False):
         matches = xw_full[
             (xw_full["CAMD_PLANT_ID"] == rec.camd_facility_id)
             & (xw_full["CAMD_UNIT_ID"] == rec.camd_unit_id)
@@ -937,35 +1155,70 @@ def flag_eia860_vs_campd(campd: pd.DataFrame, eia860: pd.DataFrame, unit_map: pd
         gen_ids = set(matches["EIA_GENERATOR_ID"].dropna().astype(str).str.strip())
         plant_id = rec.plant_id
         year = int(rec.year)
+        month = int(rec.month)
         g = gens[(gens["plant_id"] == plant_id) & (gens["year"] == year)]
         if gen_ids:
             g = g[g["generator_id"].isin(gen_ids) | g["generator_id"].str.strip().isin(gen_ids)]
+        op_year = pd.to_numeric(g["operating_year"], errors="coerce")
+        op_month = pd.to_numeric(g["operating_month"], errors="coerce")
+        ret_year = pd.to_numeric(g["retirement_year"], errors="coerce")
+        ret_month = pd.to_numeric(g["retirement_month"], errors="coerce")
+        op_y = int(op_year.dropna().iloc[0]) if op_year.notna().any() else np.nan
+        op_m = int(op_month.dropna().iloc[0]) if op_month.notna().any() else np.nan
+        ret_y = int(ret_year.dropna().iloc[0]) if ret_year.notna().any() else np.nan
+        ret_m = int(ret_month.dropna().iloc[0]) if ret_month.notna().any() else np.nan
+        camd_status_date = matches["CAMD_STATUS_DATE"].iloc[0] if len(matches) and "CAMD_STATUS_DATE" in matches.columns else np.nan
+        exact_retire = pd.to_datetime(camd_status_date, errors="coerce") if pd.notna(camd_status_date) else pd.NaT
         flags = []
+        severity = "ok"
         if g.empty:
             flags.append("no_eia860_generator_row")
+            severity = "informational"
         else:
-            statuses = set(g["status"].dropna().astype(str).str.upper())
-            retired_sheets = g["eia860_sheet"].astype(str).str.lower().str.contains("retired")
-            op_years = pd.to_numeric(g["operating_year"], errors="coerce")
-            ret_years = pd.to_numeric(g["retirement_year"], errors="coerce")
-            if retired_sheets.all() and not statuses.intersection(OPERABLE_STATUS | {"OP"}):
-                flags.append("observed_after_eia860_retired_listing")
-            if op_years.notna().any() and (op_years.dropna() > year).all():
-                flags.append("observed_before_operating_year")
-            if ret_years.notna().any() and (ret_years.dropna() < year).all():
+            if pd.notna(op_y) and pd.notna(op_m) and (year, month) < (int(op_y), int(op_m)):
+                flags.append("observed_before_operating_month")
+                severity = "conflict"
+            if pd.notna(ret_y) and pd.notna(ret_m):
+                if (year, month) > (int(ret_y), int(ret_m)):
+                    flags.append("observed_after_retirement_month")
+                    severity = "conflict"
+                elif (year, month) == (int(ret_y), int(ret_m)):
+                    post_exact = False
+                    if pd.notna(exact_retire):
+                        month_start = pd.Timestamp(year=year, month=month, day=1)
+                        if exact_retire < month_start:
+                            post_exact = True
+                    if post_exact:
+                        flags.append("observed_after_authoritative_retirement_date")
+                        severity = "conflict"
+                    else:
+                        flags.append("retirement_month_observation")
+                        if severity == "ok":
+                            severity = "informational"
+            elif pd.notna(ret_y) and year > int(ret_y):
                 flags.append("observed_after_retirement_year")
+                severity = "conflict"
         audit_rows.append(
             {
                 "plant_id": plant_id,
                 "camd_facility_id": rec.camd_facility_id,
                 "camd_unit_id": rec.camd_unit_id,
                 "year": year,
+                "month": month,
                 "n_campd_hours": rec.n_hours,
+                "operating_hours": rec.operating_hours,
                 "eia860_statuses": join_ids(g["status"]) if len(g) else np.nan,
+                "eia860_sheet": join_ids(g["eia860_sheet"]) if len(g) else np.nan,
                 "eia860_prime_mover": join_ids(g["prime_mover"]) if len(g) else np.nan,
                 "eia860_fuel": join_ids(g["energy_source_1"]) if len(g) else np.nan,
                 "eia860_capacity_mw": safe_sum(g["nameplate_mw"]) if len(g) else np.nan,
+                "operating_year": op_y,
+                "operating_month": op_m,
+                "retirement_year": ret_y,
+                "retirement_month": ret_m,
+                "camd_status_date": camd_status_date,
                 "flag": "|".join(flags) if flags else "ok",
+                "flag_severity": severity if flags else "ok",
             }
         )
     return pd.DataFrame(audit_rows)
@@ -979,7 +1232,7 @@ def compare_campd_eia923(campd_m: pd.DataFrame, eia923_pm: pd.DataFrame) -> pd.D
         suffixes=("_campd", "_eia923"),
         indicator=True,
     )
-    g_campd = merged["campd_gross_load_mwh_or_equivalent"]
+    g_campd = merged["campd_gross_generation_mwh"]
     g_eia = merged["generation_mwh"]
     ratio = np.where((g_eia.notna()) & (g_eia != 0) & g_campd.notna(), g_campd / g_eia, np.nan)
     merged["r_campd_over_eia923"] = ratio
@@ -997,7 +1250,8 @@ def compare_campd_eia923(campd_m: pd.DataFrame, eia923_pm: pd.DataFrame) -> pd.D
         "month",
         "plant_name_campd",
         "plant_name",
-        "campd_gross_load_mwh_or_equivalent",
+        "campd_gross_generation_mwh",
+        "campd_posted_gross_load_mw_sum",
         "generation_mwh",
         "r_campd_over_eia923",
         "abs_log_ratio",
@@ -1029,9 +1283,12 @@ def build_analysis_table(
 ) -> pd.DataFrame:
     plant_match = (
         audit.dropna(subset=["eia_plant_id"])
-        .groupby("eia_plant_id")["match_type"]
-        .apply(lambda s: join_ids(s))
-        .rename("crosswalk_match_type")
+        .groupby("eia_plant_id")
+        .agg(
+            crosswalk_match_type=("match_type", lambda s: join_ids(s)),
+            mapping_cardinality=("mapping_cardinality", lambda s: join_ids(s)),
+            match_method=("match_method", lambda s: join_ids(s)),
+        )
         .reset_index()
         .rename(columns={"eia_plant_id": "plant_id"})
     )
@@ -1053,7 +1310,8 @@ def build_analysis_table(
         "campd_nox_kg",
         "campd_so2_kg",
         "campd_heat_input_mmbtu",
-        "campd_gross_load_mwh_or_equivalent",
+        "campd_gross_generation_mwh",
+        "campd_posted_gross_load_mw_sum",
         "operating_hours",
         "n_reporting_units",
         "n_hours",
@@ -1072,10 +1330,18 @@ def build_analysis_table(
         "generation_mwh",
         "water_withdrawal_m3",
         "water_consumption_m3",
+        "water_consumption_m3_reported",
+        "water_consumption_million_gal",
         "cooling_type",
         "cooling_system_id",
         "cooling_source",
         "volume_comparable",
+        "cooling_intensity_eligible",
+        "consumption_source_anomaly",
+        "cooling_generation_status",
+        "eia923_plant_generation_mwh",
+        "summary_generation_mwh",
+        "summary_water_consumption_million_gal",
     ]
     out = out.merge(
         cooling_pm[cool_cols].rename(columns={"generation_mwh": "cooling_associated_generation_mwh"}),
@@ -1083,6 +1349,10 @@ def build_analysis_table(
         how="left",
     )
     out = out.merge(plant_match, on="plant_id", how="left")
+    if "mapping_cardinality" not in out.columns:
+        out["mapping_cardinality"] = np.nan
+    if "match_method" not in out.columns:
+        out["match_method"] = np.nan
     out["plant_name"] = out["plant_name"].fillna(out["plant_name_campd"]).fillna(out["plant_name_860"])
     out["prime_mover"] = out["prime_mover"].fillna(out["prime_movers"] if "prime_movers" in out.columns else np.nan)
     if "prime_movers" in out.columns:
@@ -1093,7 +1363,12 @@ def build_analysis_table(
     out["has_eia923_generation"] = out["n_generation_nonmissing"].fillna(0).gt(0) | out["generation_mwh"].notna()
     out["has_eia923_cooling"] = out["cooling_source"].notna()
     out["has_campd"] = out["n_hours"].notna()
-    out["has_epa_eia_match"] = out["crosswalk_match_type"].fillna(out["campd_match_type"]).notna() & ~out["crosswalk_match_type"].fillna("").eq("unmatched")
+    out["has_epa_eia_match"] = (
+        out["crosswalk_match_type"].fillna(out["campd_match_type"]).notna()
+        & ~out["mapping_cardinality"].fillna("").eq("unmatched")
+        & ~out["crosswalk_match_type"].fillna("").eq("unmatched")
+        & ~out["crosswalk_match_type"].fillna("").str.startswith("unmatched")
+    )
     out["crosswalk_match_type"] = out["crosswalk_match_type"].fillna(out["campd_match_type"])
     sources = []
     for _, row in out.iterrows():
@@ -1108,11 +1383,13 @@ def build_analysis_table(
             bits.append("cooling")
         sources.append("|".join(bits) if bits else "none")
     out["provenance_class"] = sources
-    # Intensities only on compatible boundaries: CAMPD/CAMPD and cooling-water/cooling-generation.
-    out["co2_kg_per_mwh"] = intensity(out["campd_co2_tonnes"], out["campd_gross_load_mwh_or_equivalent"], 1000.0)
-    out["nox_g_per_mwh"] = intensity(out["campd_nox_kg"], out["campd_gross_load_mwh_or_equivalent"], 1000.0)
-    out["so2_g_per_mwh"] = intensity(out["campd_so2_kg"], out["campd_gross_load_mwh_or_equivalent"], 1000.0)
-    cooling_ok = out["volume_comparable"].eq(True)
+    # Intensities only on compatible boundaries: CAMPD mass / CAMPD gross generation,
+    # and cooling-water / cooling-associated generation. Never divide by zero.
+    # Never substitute EIA-923 plant generation into cooling intensity.
+    out["co2_kg_per_mwh"] = intensity(out["campd_co2_tonnes"], out["campd_gross_generation_mwh"], 1000.0)
+    out["nox_g_per_mwh"] = intensity(out["campd_nox_kg"], out["campd_gross_generation_mwh"], 1000.0)
+    out["so2_g_per_mwh"] = intensity(out["campd_so2_kg"], out["campd_gross_generation_mwh"], 1000.0)
+    cooling_ok = out["cooling_intensity_eligible"].eq(True) if "cooling_intensity_eligible" in out.columns else out["volume_comparable"].eq(True)
     out["water_withdrawal_m3_per_mwh"] = np.where(
         cooling_ok,
         intensity(out["water_withdrawal_m3"], out["cooling_associated_generation_mwh"], 1.0),
@@ -1152,10 +1429,15 @@ def build_analysis_table(
         "has_campd",
         "has_epa_eia_match",
         "crosswalk_match_type",
+        "mapping_cardinality",
+        "match_method",
         "provenance_class",
-        "campd_gross_load_mwh_or_equivalent",
+        "campd_gross_generation_mwh",
         "cooling_associated_generation_mwh",
         "cooling_source",
+        "consumption_source_anomaly",
+        "cooling_generation_status",
+        "water_consumption_m3_reported",
     ]
     return out[cols].sort_values(["year", "month", "plant_id"]).reset_index(drop=True)
 
@@ -1190,7 +1472,7 @@ def coverage_by_year(
             }
         )
     cov = pd.DataFrame(rows)
-    cov["n_crosswalk_unmatched_units"] = int(audit["match_type"].eq("unmatched").sum())
+    cov["n_crosswalk_unmatched_units"] = int(audit["mapping_cardinality"].eq("unmatched").sum())
     return cov
 
 
@@ -1227,7 +1509,7 @@ def optional_egrid_compare(campd_m: pd.DataFrame) -> pd.DataFrame | None:
         campd_m.groupby(["plant_id", "year"], dropna=False)
         .agg(
             campd_co2_tonnes=("campd_co2_tonnes", safe_sum),
-            campd_gross_load_mwh=("campd_gross_load_mwh_or_equivalent", safe_sum),
+            campd_gross_generation_mwh=("campd_gross_generation_mwh", safe_sum),
         )
         .reset_index()
     )
@@ -1283,7 +1565,7 @@ def optional_egrid_compare(campd_m: pd.DataFrame) -> pd.DataFrame | None:
                     "campd_co2_tonnes",
                     "egrid_co2_tonnes",
                     "ratio_campd_over_egrid_co2",
-                    "campd_gross_load_mwh",
+                    "campd_gross_generation_mwh",
                     "egrid_net_generation_mwh",
                     "note",
                 ]
@@ -1358,13 +1640,29 @@ def run_checks(
         abort=True,
     )
 
-    # If Operating Time had been multiplied, monthly CO2 would equal sum(mass*optime).
+    # If Operating Time had been multiplied into posted mass, monthly CO2 would equal sum(mass*optime).
     optime_scaled = float((campd["CO2 Mass (short tons)"] * campd["Operating Time"]).sum(min_count=1) * SHORT_TON_TO_TONNE)
     add_check(
         checks,
         "no_second_operating_time_multiplication",
         abs(monthly_co2 - hourly_co2_tonnes) < abs(monthly_co2 - optime_scaled),
         f"monthly={monthly_co2:.3f} posted_sum={hourly_co2_tonnes:.3f} optime_scaled={optime_scaled:.3f}",
+        abort=True,
+    )
+
+    hourly_gen = float(pd.to_numeric(campd["gross_generation_mwh"], errors="coerce").sum(min_count=1))
+    monthly_gen = float(pd.to_numeric(campd_m["campd_gross_generation_mwh"], errors="coerce").sum(min_count=1))
+    reconstructed = float(
+        pd.to_numeric(campd["Gross Load (MW)"], errors="coerce")
+        .mul(pd.to_numeric(campd["Operating Time"], errors="coerce"))
+        .sum(min_count=1)
+    )
+    add_check(
+        checks,
+        "campd_gross_generation_equals_load_times_operating_time",
+        abs(hourly_gen - reconstructed) <= max(1e-4, 1e-8 * abs(reconstructed))
+        and abs(monthly_gen - hourly_gen) <= max(1e-4, 1e-8 * abs(hourly_gen)),
+        f"hourly_mwh={hourly_gen:.6f} monthly_mwh={monthly_gen:.6f} load_x_ot={reconstructed:.6f}",
         abort=True,
     )
 
@@ -1377,23 +1675,29 @@ def run_checks(
     )
 
     n_units = int(audit.shape[0])
-    n_unmatched = int(audit["match_type"].eq("unmatched").sum())
-    n_otm = int(audit["match_type"].eq("one_to_many").sum())
-    n_mto = int(audit["match_type"].eq("many_to_one").sum())
-    n_exact = int(audit["match_type"].isin(["accepted_exact", "accepted_manual"]).sum())
+    card_counts = audit["mapping_cardinality"].fillna("unmatched").value_counts().to_dict()
+    method_counts = audit["match_method"].fillna("unmatched").value_counts().to_dict()
+    n_accounted = int(audit["mapping_cardinality"].notna().sum())
     add_check(
         checks,
         "epa_eia_match_rate_accounted",
-        n_unmatched + n_otm + n_mto + n_exact == n_units,
-        f"units={n_units} accepted={n_exact} one_to_many={n_otm} many_to_one={n_mto} unmatched={n_unmatched}",
+        n_accounted == n_units,
+        f"units={n_units} cardinality={card_counts} method={method_counts}",
         abort=True,
     )
     add_check(
         checks,
         "unmatched_units_preserved",
         True,
-        f"unmatched_units={n_unmatched} (retained in audit; not dropped)",
+        f"unmatched_units={int(audit['mapping_cardinality'].eq('unmatched').sum())} (retained in audit; not dropped)",
         abort=False,
+    )
+    add_check(
+        checks,
+        "crosswalk_not_exploded_to_generators",
+        not audit["unexplained_plant_split"].any(),
+        "CAMD unit maps uniquely to at most one EIA plant; emissions are not copied onto generator IDs",
+        abort=True,
     )
 
     eia923_year_sum = (
@@ -1454,19 +1758,32 @@ def run_checks(
         f"2011-2012_m3_all_missing={cooling_na_ok} duplicated_cooling_water_conflicts={n_conflict}",
         abort=True,
     )
+    neg_cons = cooling_pm[pd.to_numeric(cooling_pm.get("water_consumption_million_gal"), errors="coerce") < 0] if len(cooling_pm) else cooling_pm.iloc[0:0]
+    intensity_ok = True
+    if len(neg_cons) and "water_consumption_m3_per_mwh" in analysis.columns:
+        an_neg = analysis.merge(neg_cons[["plant_id", "year", "month"]], on=["plant_id", "year", "month"], how="inner")
+        intensity_ok = bool(pd.to_numeric(an_neg["water_consumption_m3_per_mwh"], errors="coerce").isna().all())
+    add_check(
+        checks,
+        "negative_cooling_consumption_not_used_for_intensity",
+        intensity_ok,
+        f"n_negative_reported_consumption={len(neg_cons)} intensity_missing_for_those_rows={intensity_ok}",
+        abort=True,
+    )
 
-    suspicious = eia860_flags[eia860_flags["flag"].ne("ok")] if len(eia860_flags) else eia860_flags
+    conflict = eia860_flags[eia860_flags["flag_severity"].eq("conflict")] if len(eia860_flags) and "flag_severity" in eia860_flags.columns else eia860_flags[eia860_flags["flag"].ne("ok")] if len(eia860_flags) else eia860_flags
+    n_info = int((eia860_flags["flag_severity"].eq("informational")).sum()) if len(eia860_flags) and "flag_severity" in eia860_flags.columns else 0
     add_check(
         checks,
         "eia860_operating_retirement_dates_consistent_with_observations",
-        len(suspicious) == 0,
-        f"flagged_unit_years={len(suspicious)} examples={suspicious.head(8).to_dict('records') if len(suspicious) else 'none'}",
+        len(conflict) == 0,
+        f"conflict_unit_months={len(conflict)} informational={n_info} examples={conflict.head(8).to_dict('records') if len(conflict) else 'none'}",
         abort=False,
     )
 
     both_cmp = compare[compare["join_status"].eq("both")].dropna(subset=["r_campd_over_eia923"])
     if len(both_cmp):
-        corr = pd.to_numeric(both_cmp["campd_gross_load_mwh_or_equivalent"], errors="coerce").corr(
+        corr = pd.to_numeric(both_cmp["campd_gross_generation_mwh"], errors="coerce").corr(
             pd.to_numeric(both_cmp["generation_mwh"], errors="coerce")
         )
         med = float(both_cmp["r_campd_over_eia923"].median())
@@ -1515,11 +1832,16 @@ def self_test() -> None:
     assert abs(1.0 * SHORT_TON_TO_TONNE * 1.102311310924388 - 1) < 1e-9
     assert abs(1.0 * LB_TO_KG * 2.2046226218487757 - 1) < 1e-9
     assert abs(1.0 * M3_PER_MILLION_GAL / 3785.411784 - 1) < 1e-12
-    assert classify_match(0, 0, 1, "") == "unmatched"
-    assert classify_match(1, 2, 1, "Exact match") == "one_to_many"
-    assert classify_match(1, 1, 2, "Exact match") == "many_to_one"
-    assert classify_match(1, 1, 1, "Step 1a: Exact match") == "accepted_exact"
-    assert classify_match(1, 1, 1, "Manual Match") == "accepted_manual"
+    assert classify_mapping_cardinality(0, 0, 1) == "unmatched"
+    assert classify_mapping_cardinality(1, 2, 1) == "one_to_many"
+    assert classify_mapping_cardinality(1, 1, 2) == "many_to_one"
+    assert classify_mapping_cardinality(1, 1, 1) == "one_to_one"
+    assert classify_match_method("Step 1a: Exact match") == "exact"
+    assert classify_match_method("Manual Match") == "official_manual"
+    assert classify_match_method("Exact match", "Step 2d: Modify IDs; remove leading letters") == "official_manual" or classify_match_method("Exact match", "Step 2d: Modify IDs; remove leading letters") == "modified_fuzzy"
+    assert classify_match_method("3_1 Exact match", "Step 2d: Modify IDs; remove leading letters") == "modified_fuzzy"
+    assert classify_match(1, 2, 1, "Exact match") == "one_to_many|exact"
+    assert classify_match(1, 1, 1, "Manual Match") == "one_to_one|official_manual"
     assert EXCEL_ENGINE in {"calamine", "openpyxl"}
     posted = pd.Series([10.0, np.nan, 0.0])
     optime = pd.Series([0.5, 1.0, 1.0])
@@ -1528,6 +1850,15 @@ def self_test() -> None:
     assert monthly_posted != monthly_scaled
     assert pd.isna(posted.iloc[1])
     assert posted.iloc[2] == 0.0
+
+    load = pd.Series([50.0, 50.0, 50.0, np.nan, 0.0])
+    ot = pd.Series([1.0, 0.4, np.nan, 1.0, 0.5])
+    gen = hourly_gross_generation_mwh(load, ot)
+    assert abs(gen.iloc[0] - 50.0) < 1e-12  # full hour
+    assert abs(gen.iloc[1] - 20.0) < 1e-12  # partial hour
+    assert pd.isna(gen.iloc[2])  # missing operating time
+    assert pd.isna(gen.iloc[3])  # missing load
+    assert gen.iloc[4] == 0.0  # reported zero load
     # unique cooling-system water: repeated generator rows must not double water
     demo = pd.DataFrame(
         {
@@ -1550,10 +1881,17 @@ def self_test() -> None:
     assert abs(pm.loc[0, "water_withdrawal_million_gal"] - 13.0) < 1e-9
     assert int(flags["water_conflict"].sum()) == 0
     assert abs(pm.loc[0, "generation_mwh"] - 160.0) < 1e-9
+    # negative consumption: raw preserved, modeled m3/intensity not used
+    demo_neg = demo.copy()
+    demo_neg["water_consumption_million_gal"] = [-1.734, -1.734, 0.0]
+    pm_neg, _ = cooling_plant_month(demo_neg, pd.DataFrame())
+    assert abs(pm_neg.loc[0, "water_consumption_million_gal"] + 1.734) < 1e-9
+    assert pd.isna(pm_neg.loc[0, "water_consumption_m3"])
+    assert bool(pm_neg.loc[0, "consumption_source_anomaly"])
     print("PASS: prepare_oregon_generators self-test")
 
 
-def prepare() -> dict:
+def prepare(reuse_campd: bool = True) -> dict:
     PROCESSED.mkdir(parents=True, exist_ok=True)
     OUTPUTS.mkdir(parents=True, exist_ok=True)
 
@@ -1567,14 +1905,16 @@ def prepare() -> dict:
     or_plant_ids = set(pd.concat([eia860["plant_id"], eia923["plant_id"]], ignore_index=True).dropna().astype(int))
     print("EIA cooling detail 2014-2024...", flush=True)
     cooling_detail = prepare_cooling_standardized()
+    print("EIA cooling summary 2014-2024...", flush=True)
+    cooling_summary = prepare_cooling_summary()
     print("EIA-923 Schedule 8 cooling 2011-2013...", flush=True)
     cooling_s8 = prepare_cooling_schedule8(or_plant_ids)
-    cooling_pm, cooling_flags = cooling_plant_month(cooling_detail, cooling_s8)
+    cooling_pm, cooling_flags = cooling_plant_month(cooling_detail, cooling_s8, cooling_summary, eia923_pm)
     cooling_pm.to_csv(OUT_COOLING, index=False)
 
     print("CAMPD hourly...", flush=True)
     raw_na = campd_raw_missing_counts()
-    campd, campd_reused = prepare_campd_hourly()
+    campd, campd_reused = prepare_campd_hourly(reuse_processed=reuse_campd)
     if not campd_reused:
         campd.to_csv(OUT_CAMPD_HOURLY, index=False)
     print("EPA/EIA crosswalk...", flush=True)
@@ -1622,24 +1962,32 @@ def prepare() -> dict:
     if egrid_cmp is not None:
         egrid_cmp.to_csv(OUT_EGRID_CMP, index=False)
 
+    print("Exception report...", flush=True)
+    import sys as _sys
+
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from oregon_exception_report import main as write_exception_report
+
+    write_exception_report()
+
     n_facilities = int(campd["Facility ID"].nunique())
     n_units = int(campd.groupby(["Facility ID", "Unit ID"]).ngroups)
-    match_counts = audit["match_type"].value_counts(dropna=False).to_dict()
+    card_counts = audit["mapping_cardinality"].value_counts(dropna=False).to_dict()
+    method_counts = audit["match_method"].value_counts(dropna=False).to_dict()
     both = compare[compare["join_status"].eq("both")].dropna(subset=["r_campd_over_eia923"])
     return {
         "n_campd_facilities": n_facilities,
         "n_campd_units": n_units,
         "n_campd_hours": int(len(campd)),
-        "epa_eia_match_counts": {str(k): int(v) for k, v in match_counts.items()},
-        "n_unmatched_units": int(audit["match_type"].eq("unmatched").sum()),
-        "n_one_to_many_units": int(audit["match_type"].eq("one_to_many").sum()),
-        "n_many_to_one_units": int(audit["match_type"].eq("many_to_one").sum()),
+        "epa_eia_cardinality_counts": {str(k): int(v) for k, v in card_counts.items()},
+        "epa_eia_match_method_counts": {str(k): int(v) for k, v in method_counts.items()},
+        "n_unmatched_units": int(audit["mapping_cardinality"].eq("unmatched").sum()),
         "generation_compare_n_both": int(len(both)),
         "generation_compare_median_R": None if both.empty else float(both["r_campd_over_eia923"].median()),
         "generation_compare_corr": None
         if both.empty
         else float(
-            pd.to_numeric(both["campd_gross_load_mwh_or_equivalent"], errors="coerce").corr(
+            pd.to_numeric(both["campd_gross_generation_mwh"], errors="coerce").corr(
                 pd.to_numeric(both["generation_mwh"], errors="coerce")
             )
         ),
@@ -1666,11 +2014,13 @@ def prepare() -> dict:
             if p.exists()
         ],
         "accounting_notes": [
-            "CAMPD posted hourly mass/load are not multiplied by Operating Time",
+            "CAMPD hourly gross_generation_mwh = Gross Load (MW) * Operating Time when both reported",
+            "CAMPD posted hourly CO2/SO2/NOx mass and heat input are not multiplied by Operating Time",
             "CAMPD plant-month uses unique EIA plant per CAMD unit; generator rows are not exploded",
-            "Emission intensities use CAMPD mass / CAMPD posted gross load",
+            "Emission intensities use CAMPD mass / CAMPD gross generation (MWh)",
             "Water intensities use cooling-product water / cooling-associated generation only",
             "2011-2012 Schedule 8 cooling volumes left missing (units not comparable)",
+            "Negative cooling consumption is preserved as reported and excluded from intensity",
             "This pilot does not identify generators serving the Prineville campus",
         ],
     }
@@ -1679,11 +2029,12 @@ def prepare() -> dict:
 def main() -> dict:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--self-test", action="store_true")
+    parser.add_argument("--force-campd-reread", action="store_true", help="Do not reuse processed CAMPD hourly")
     args = parser.parse_args()
     self_test()
     if args.self_test:
         return {"self_test": "PASS"}
-    summary = prepare()
+    summary = prepare(reuse_campd=not args.force_campd_reread)
     print(json.dumps(summary, indent=2, default=str))
     checks = pd.read_csv(OUT_CHECKS)
     print("\nOregon generator pipeline checks:")

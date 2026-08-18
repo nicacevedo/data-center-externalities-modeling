@@ -5,7 +5,7 @@ year,n_plant_months,n_plants,n_withdrawal_nonmissing,n_withdrawal_zero,n_consump
 2014,84,7,84,1,84,13,77,eia_cooling_detail_standardized,True
 2015,84,7,84,8,82,11,60,eia_cooling_detail_standardized,True
 2016,96,8,84,5,84,13,90,eia_cooling_detail_standardized,True
-2017,96,8,96,1,96,14,96,eia_cooling_detail_standardized,True
+2017,96,8,96,1,94,14,96,eia_cooling_detail_standardized,True
 2018,96,8,96,8,96,15,95,eia_cooling_detail_standardized,True
 2019,96,8,96,1,96,13,96,eia_cooling_detail_standardized,True
 2020,96,8,96,0,96,12,96,eia_cooling_detail_standardized,True

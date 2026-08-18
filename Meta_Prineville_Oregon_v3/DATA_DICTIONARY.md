@@ -77,10 +77,10 @@ Key columns:
 - `source_file` / `source_revision` / `provenance_class`.
 
 ## `data/processed/campd_or_unit_hourly.csv`
-Oregon CAMPD unit-hour extract, 2011-2024. Native key `Facility ID` × `Unit ID` × `Date` × `Hour`. Mass, heat input, and gross load are posted CAMPD values (not multiplied by `Operating Time`). Blanks remain missing.
+Oregon CAMPD unit-hour extract, 2011-2024. Native key `Facility ID` × `Unit ID` × `Date` × `Hour`. Posted CO2/NOx/SO2 mass and heat input are not multiplied by `Operating Time`. `Gross Load (MW)` is the posted hourly rate. `gross_generation_mwh` = `Gross Load (MW)` × `Operating Time` when both are reported. Blanks remain missing.
 
 ## `data/processed/campd_or_plant_monthly.csv`
-CAMPD aggregated to EIA plant × year × month after a unique unit→plant map. `campd_co2_tonnes` is metric tonnes from short tons; NOx/SO2 are kg from pounds. `campd_gross_load_mwh_or_equivalent` is the sum of posted hourly MW, not × Operating Time.
+CAMPD aggregated to EIA plant × year × month after a unique unit→plant map. `campd_co2_tonnes` is metric tonnes from short tons; NOx/SO2 are kg from pounds. `campd_gross_generation_mwh` is the sum of hourly `Gross Load (MW) * Operating Time`. `campd_posted_gross_load_mw_sum` is the sum of posted MW (not energy). Mass and heat input are not multiplied by Operating Time.
 
 ## `data/processed/eia860_generator_annual.csv`
 Oregon EIA-860 generator-year attributes (operable/proposed/retired sheets). Status, operating/retirement years, prime mover, fuel, and nameplate are native.
@@ -92,7 +92,7 @@ Oregon EIA-923 Page 1 generation/fuel melted to plant × prime mover × fuel × 
 Oregon plant-month cooling water. 2014-2024 from EIA cooling-detail (water unique on cooling system, not generator rows). 2013 from EIA-923 Schedule 8 million-gallon volumes. 2011-2012 water_m3 left missing.
 
 ## `data/processed/oregon_generator_externalities_monthly.csv`
-Oregon plant-month integration table. Emission intensities are CAMPD/CAMPD. Water intensities are cooling-water / cooling-associated generation. EIA-923 `generation_mwh` is net generation and is not forced equal to CAMPD gross load.
+Oregon plant-month integration table. Emission intensities are CAMPD mass / CAMPD gross generation (MWh). Water intensities are cooling-water / cooling-associated generation. EIA-923 `generation_mwh` is net generation and is not forced equal to CAMPD gross generation. Negative official cooling consumption is preserved as reported and excluded from intensity.
 
 ## `outputs/oregon_generator_data_checks.csv`
 PASS/FAIL implementation and data-quality checks for the Oregon pilot.
