@@ -1,9 +1,10 @@
 """Prepare EPA eGRID subregion output rates for the Prineville campus.
 
-This script does not modify files under data/raw/egrid/. It reads the US-customary
-subregion (SRL) workbooks and the plant (PLNT) sheets only to verify the
-Prineville / Crook County, Oregon consumption-location subregion. PacifiCorp West
-(PACW) is regional balancing-authority context, not campus electricity.
+This script does not modify files under data/raw/egrid/. The Prineville eGRID
+subregion is selected from EPA's Power Profiler zip-code table (consumer location
+and, where a ZIP is ambiguous, service utility). Plant sheets are corroboration
+only. PacifiCorp West (PACW) is regional balancing-authority context, not campus
+electricity.
 
 eGRID total output emission rates are the annual physical-grid factors used here.
 Non-baseload output rates are retained as a separately named diagnostic and are
@@ -31,6 +32,12 @@ OUT_COMPARE = ROOT / "outputs" / "egrid_meta_annual_compare.csv"
 OUT_CHECKS = ROOT / "outputs" / "egrid_prepare_checks.csv"
 OUT_CROSSWALK = ROOT / "outputs" / "egrid_subregion_crosswalk.csv"
 OUT_PACW_CARBON = ROOT / "outputs" / "pacw_carbon_shape_compare.csv"
+POWER_PROFILER = RAW / "power_profiler" / "power_profiler_zipcode_tool_v14.2.xlsx"
+POWER_PROFILER_URL = (
+    "https://www.epa.gov/system/files/documents/2025-06/power_profiler_zipcode_tool_v14.2.xlsx"
+)
+CONSUMER_ZIP = "97754"
+SERVICE_UTILITY = "PacifiCorp / Pacific Power"
 
 MODEL_YEARS = list(range(2011, 2025))
 MODEL_YEAR_TO_EGRID = {
@@ -316,13 +323,72 @@ def _plant_subregions(series: pd.Series) -> list[str]:
     return sorted({str(v).strip() for v in series.dropna() if str(v).strip() and str(v) != "nan"})
 
 
-def map_prineville_subregion(plants: pd.DataFrame, egrid_data_year: int) -> dict:
-    """Map Prineville consumption location to an eGRID subregion from plant data.
+def _normalize_zip(value) -> str:
+    if pd.isna(value):
+        return ""
+    text = str(value).strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    if not text.isdigit():
+        return ""
+    return text.zfill(5)
 
-    Location-based electricity consumption uses the subregion of the load, not
-    the full PACW generator footprint. PACW plants can include a CAMX tail in
-    some vintages; that is recorded as evidence and is not the selection rule.
+
+def load_power_profiler_zip(path: Path = POWER_PROFILER, zip_code: str = CONSUMER_ZIP) -> dict:
+    """Read EPA's official ZIP → eGRID subregion table for the campus ZIP.
+
+    EPA assigns most ZIPs to one subregion. If Subregion 2/3 are populated, the
+    ZIP is a multi-provider overlap and Power Profiler requires the service
+    utility to choose among them. The Excel tool does not itself list utility
+    names; uniqueness of the ZIP is the documented EPA consumer-location result.
     """
+    if not path.exists():
+        raise FileNotFoundError(
+            f"EPA Power Profiler zip-code tool missing: {path}. "
+            f"Download the untouched file from {POWER_PROFILER_URL}"
+        )
+    raw = pd.read_excel(path, sheet_name="Zip-subregion", dtype=str)
+    need = {"zip", "Subregion 1"}
+    if not need <= set(raw.columns):
+        raise EgridSchemaError(
+            f"{path.name}:Zip-subregion missing columns {sorted(need - set(raw.columns))}. "
+            "Refusing to guess a zip-code mapping."
+        )
+    zips = raw["zip"].map(_normalize_zip)
+    target = _normalize_zip(zip_code)
+    hits = raw.loc[zips.eq(target)]
+    if len(hits) != 1:
+        raise EgridSchemaError(
+            f"{path.name} has {len(hits)} Zip-subregion rows for ZIP {target}; expected 1."
+        )
+    row = hits.iloc[0]
+    subs = []
+    for col in ["Subregion 1", "Subregion 2", "Subregion 3"]:
+        if col not in raw.columns:
+            continue
+        val = row[col]
+        if pd.isna(val):
+            continue
+        text = str(val).strip()
+        if text and text.lower() not in {"nan", "none", "--"}:
+            subs.append(text)
+    intro = pd.read_excel(path, sheet_name="Introduction", header=None)
+    title_vals = [str(v).strip() for v in intro.values.ravel() if pd.notna(v)]
+    tool_title = next((v for v in title_vals if "Power Profiler" in v), path.name)
+    tool_version = next((v for v in title_vals if v.lower().startswith("version")), "unspecified")
+    return {
+        "consumer_zip": target,
+        "zip_subregions": subs,
+        "zip_unique": len(subs) == 1,
+        "power_profiler_file": f"data/raw/egrid/power_profiler/{path.name}",
+        "power_profiler_sheet": "Zip-subregion",
+        "power_profiler_title": tool_title,
+        "power_profiler_version": tool_version,
+        "service_utility": SERVICE_UTILITY,
+    }
+
+
+def _plant_corroboration(plants: pd.DataFrame) -> dict:
     st = plants["PSTATABB"].astype(str).str.strip()
     cnty = plants["CNTYNAME"].astype(str)
     oregon = plants.loc[st.eq("OR")].copy()
@@ -355,43 +421,78 @@ def map_prineville_subregion(plants: pd.DataFrame, egrid_data_year: int) -> dict
             if pacw_n
             else {}
         )
-
-    if crook_subs:
-        if len(crook_subs) != 1:
-            raise EgridSchemaError(
-                f"eGRID{egrid_data_year} Crook County, Oregon plants map to multiple "
-                f"subregions {crook_subs}."
-            )
-        selected = crook_subs[0]
-        method = "crook_county_oregon_plants"
-        if oregon_subs and oregon_subs != [selected]:
-            raise EgridSchemaError(
-                f"eGRID{egrid_data_year} Crook County subregion {selected} disagrees "
-                f"with Oregon plant subregions {oregon_subs}."
-            )
-    else:
-        if len(oregon_subs) != 1:
-            raise EgridSchemaError(
-                f"eGRID{egrid_data_year} has no Crook County plants and Oregon is not "
-                f"a unique subregion ({oregon_subs}). Refusing to assume NWPP."
-            )
-        selected = oregon_subs[0]
-        method = "oregon_plants_unique_subregion_no_crook_county_plants"
-
     return {
-        "egrid_data_year": egrid_data_year,
-        "egrid_subregion": selected,
-        "subregion_selection_method": method,
         "n_crook_county_or_plants": int(len(crook)),
         "crook_county_subregions": ",".join(crook_subs),
         "n_oregon_plants": int(len(oregon)),
         "oregon_subregions": ",".join(oregon_subs),
         "n_pacw_plants": pacw_n,
         "pacw_plant_subregion_counts": json.dumps(pacw_counts, sort_keys=True),
+        "_crook_subs": crook_subs,
+        "_oregon_subs": oregon_subs,
+    }
+
+
+def map_prineville_subregion(
+    plants: pd.DataFrame,
+    egrid_data_year: int,
+    zip_lookup: dict | None = None,
+) -> dict:
+    """Select the Prineville eGRID subregion from EPA Power Profiler ZIP data.
+
+    Plant geography is corroboration. PACW generator footprint is not the
+    consumption-location assignment and may include plants outside NWPP.
+    """
+    lookup = zip_lookup if zip_lookup is not None else load_power_profiler_zip()
+    zip_subs = list(lookup["zip_subregions"])
+    zip_code = lookup["consumer_zip"]
+    if not zip_subs:
+        raise EgridSchemaError(f"EPA Power Profiler has no subregion for ZIP {zip_code}.")
+    if len(zip_subs) > 1:
+        raise EgridSchemaError(
+            f"ZIP {zip_code} maps to multiple eGRID subregions {zip_subs}. "
+            "EPA requires the Power Profiler web tool plus the service utility "
+            f"({SERVICE_UTILITY}) to disambiguate. Refusing to guess."
+        )
+    selected = zip_subs[0]
+    plant = _plant_corroboration(plants)
+    crook_subs = plant.pop("_crook_subs")
+    oregon_subs = plant.pop("_oregon_subs")
+    if crook_subs and crook_subs != [selected]:
+        raise EgridSchemaError(
+            f"eGRID{egrid_data_year} Crook County plants map to {crook_subs}, which "
+            f"disagrees with EPA Power Profiler ZIP {zip_code} → {selected}."
+        )
+    if oregon_subs and len(oregon_subs) == 1 and oregon_subs != [selected]:
+        raise EgridSchemaError(
+            f"eGRID{egrid_data_year} Oregon plants uniquely map to {oregon_subs}, which "
+            f"disagrees with EPA Power Profiler ZIP {zip_code} → {selected}."
+        )
+    if crook_subs:
+        corroboration = "crook_county_oregon_plants_agree"
+    elif oregon_subs == [selected]:
+        corroboration = "oregon_plants_unique_agree_no_crook_county_plants"
+    else:
+        corroboration = "plant_subregions_not_unique_or_absent"
+
+    return {
+        "egrid_data_year": egrid_data_year,
+        "egrid_subregion": selected,
+        "subregion_selection_method": "epa_power_profiler_zip_consumer_location",
+        "consumer_zip": zip_code,
+        "service_utility": lookup["service_utility"],
+        "utility_disambiguation_required": False,
+        "power_profiler_file": lookup["power_profiler_file"],
+        "power_profiler_sheet": lookup["power_profiler_sheet"],
+        "power_profiler_version": lookup["power_profiler_version"],
+        "plant_corroboration_status": corroboration,
+        **plant,
         "selection_note": (
-            "Location-based factor uses the eGRID subregion of Prineville / Crook "
-            "County, Oregon. PACW generator geography is corroboration only and may "
-            "include plants outside NWPP."
+            f"EPA Power Profiler Zip-subregion table assigns ZIP {zip_code} uniquely "
+            f"to {selected}. Service utility {lookup['service_utility']} is recorded "
+            "as campus context; EPA requires utility disambiguation only when a ZIP "
+            "has multiple subregions. Plant geography and PACW generators are "
+            "corroboration only."
         ),
     }
 
@@ -532,6 +633,11 @@ def write_pacw_carbon_shape_compare(hourly: pd.DataFrame | None = None) -> pd.Da
 def build_annual() -> tuple[pd.DataFrame, pd.DataFrame]:
     vintage_rows = []
     crosswalk_rows = []
+    zip_lookup = load_power_profiler_zip()
+    print(
+        f"EPA Power Profiler {zip_lookup['power_profiler_version']}: "
+        f"ZIP {zip_lookup['consumer_zip']} → {zip_lookup['zip_subregions']}"
+    )
     for data_year, spec in VINTAGES.items():
         path = RAW / spec["relative"]
         if not path.exists():
@@ -542,7 +648,7 @@ def build_annual() -> tuple[pd.DataFrame, pd.DataFrame]:
         print(f"Reading eGRID{data_year} {spec['relative']} ...")
         srl, descriptions = _load_sheet(path, spec["srl"], ("SUBRGN", "SRCO2RTA"))
         plants = _load_plant_map(path, spec["plnt"])
-        mapped = map_prineville_subregion(plants, data_year)
+        mapped = map_prineville_subregion(plants, data_year, zip_lookup)
         rates = extract_subregion_row(
             srl,
             descriptions,
@@ -602,6 +708,8 @@ def build_annual() -> tuple[pd.DataFrame, pd.DataFrame]:
                 "fuel_mix_input_scale": src["fuel_mix_input_scale"],
                 "nonbaseload_co2e_code": src["nonbaseload_co2e_code"],
                 "subregion_selection_method": cw["subregion_selection_method"],
+                "consumer_zip": cw["consumer_zip"],
+                "service_utility": cw["service_utility"],
                 "vintage_mapping_note": carry,
                 "accounting_boundary": (
                     "eGRID subregion total output emission rates for electricity "
@@ -776,6 +884,24 @@ def run_checks(
         crosswalk["egrid_data_year"].tolist() == list(VINTAGES),
         f"crosswalk_years={crosswalk['egrid_data_year'].tolist()}",
     )
+    add(
+        "subregion_selected_from_epa_power_profiler_zip",
+        (crosswalk["subregion_selection_method"] == "epa_power_profiler_zip_consumer_location").all()
+        and (crosswalk["consumer_zip"] == CONSUMER_ZIP).all()
+        and (annual["subregion_selection_method"] == "epa_power_profiler_zip_consumer_location").all(),
+        f"zip={sorted(crosswalk.consumer_zip.unique())} method={sorted(crosswalk.subregion_selection_method.unique())}",
+    )
+    add(
+        "consumer_zip_is_unique_and_requires_no_utility_guess",
+        (crosswalk["utility_disambiguation_required"] == False).all()
+        and (crosswalk["egrid_subregion"] == "NWPP").all(),
+        "ZIP 97754 uniquely maps to NWPP; PacifiCorp is recorded but not used to break a tie",
+    )
+    add(
+        "plant_geography_is_corroboration_only",
+        crosswalk["plant_corroboration_status"].str.contains("agree").all(),
+        f"plant_corroboration={sorted(crosswalk.plant_corroboration_status.unique())}",
+    )
     mix = annual[["coal_share", "gas_share", "hydro_share", "wind_share", "solar_share"]].sum(axis=1)
     add(
         "fuel_shares_are_fractions_not_percent",
@@ -850,9 +976,33 @@ def self_test() -> None:
             "BACODE": ["PACW", "PACW", "PACW"],
         }
     )
-    mapped = map_prineville_subregion(plants, 2014)
+    zip_lookup = {
+        "consumer_zip": "97754",
+        "zip_subregions": ["NWPP"],
+        "zip_unique": True,
+        "power_profiler_file": "synthetic.xlsx",
+        "power_profiler_sheet": "Zip-subregion",
+        "power_profiler_version": "synthetic",
+        "service_utility": SERVICE_UTILITY,
+    }
+    mapped = map_prineville_subregion(plants, 2014, zip_lookup)
     assert mapped["egrid_subregion"] == "NWPP"
-    assert mapped["subregion_selection_method"] == "crook_county_oregon_plants"
+    assert mapped["subregion_selection_method"] == "epa_power_profiler_zip_consumer_location"
+    assert mapped["plant_corroboration_status"] == "crook_county_oregon_plants_agree"
+    conflict = plants.copy()
+    conflict.loc[conflict.CNTYNAME.eq("Crook"), "SUBRGN"] = "CAMX"
+    try:
+        map_prineville_subregion(conflict, 2014, zip_lookup)
+        raise AssertionError("plant disagreement should fail")
+    except EgridSchemaError:
+        pass
+    multi = dict(zip_lookup)
+    multi["zip_subregions"] = ["NWPP", "CAMX"]
+    try:
+        map_prineville_subregion(plants, 2014, multi)
+        raise AssertionError("multi-subregion ZIP should fail without utility table")
+    except EgridSchemaError:
+        pass
     bad = srl.drop(columns=["SRCO2RTA"])
     try:
         extract_subregion_row(bad, descriptions, "NWPP", "synthetic.xls", "unspecified", 2010)

@@ -106,7 +106,7 @@ The API downloader discovers current route metadata/facets before downloading. D
 
 Source: https://www.epa.gov/egrid
 
-US-customary detailed workbooks for 2010-2023 are already organized under `data/raw/egrid/`. Do not edit them. The historical ZIP remains the provenance archive for 2010-2016. Run `python run_prineville.py egrid` to rebuild:
+US-customary detailed workbooks for 2010-2023 are already organized under `data/raw/egrid/`. Do not edit them. The historical ZIP remains the provenance archive for 2010-2016. The EPA Power Profiler zip-code tool is `data/raw/egrid/power_profiler/power_profiler_zipcode_tool_v14.2.xlsx` (source: https://www.epa.gov/system/files/documents/2025-06/power_profiler_zipcode_tool_v14.2.xlsx). Run `python run_prineville.py egrid` to rebuild:
 
 - `data/processed/egrid_prineville_annual.csv`
 - `outputs/egrid_meta_annual_compare.csv`

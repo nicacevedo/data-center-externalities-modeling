@@ -234,7 +234,7 @@ python run_prineville.py egrid
 
 `src/prepare_egrid.py` reads eGRID **subregion total output emission rates** (lb/MWh) for electricity-consumption accounting. Non-baseload rates are stored separately and are not ordinary Scope 2 factors. CH4/N2O rates labeled lb/GWh (eGRID 2010/2012/2014) are converted to lb/MWh. Resource-mix codes are labeled "percent" in every vintage; 2010-2016 store 0-100 and 2018+ store 0-1 fractions. The script detects the scale from the selected subregion row instead of guessing.
 
-The Prineville consumption-location subregion is verified from each vintage's plant file: Crook County, Oregon plants when present, otherwise the unique Oregon plant subregion. In this package that mapping is **NWPP (WECC Northwest)** for every eGRID vintage 2010-2023. PACW generator plants are recorded as corroboration only; they are not the selection rule because some vintages include a CAMX tail.
+The Prineville consumption-location subregion is selected from EPA's Power Profiler zip-code tool (`data/raw/egrid/power_profiler/power_profiler_zipcode_tool_v14.2.xlsx`, sheet `Zip-subregion`). Campus ZIP **97754** maps uniquely to **NWPP (WECC Northwest)**; Subregion 2/3 are blank, so EPA does not require a utility tie-breaker. PacifiCorp / Pacific Power is recorded as the campus service utility. Each eGRID vintage's plant file is retained only as corroboration (Crook County / Oregon plants agree with NWPP; PACW generators may include a CAMX/MROW tail and are not the selection rule).
 
 Model-year vintage map:
 

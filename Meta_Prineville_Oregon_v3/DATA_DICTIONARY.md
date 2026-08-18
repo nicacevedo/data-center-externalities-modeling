@@ -70,7 +70,7 @@ EPA eGRID subregion **total output emission rates** mapped to Prineville model y
 
 Key columns:
 - `model_year` / `egrid_data_year`: study year vs EPA workbook year (2024 uses eGRID2023).
-- `egrid_subregion`: consumption-location subregion verified from plant files (`NWPP`).
+- `egrid_subregion`: consumption-location subregion from EPA Power Profiler ZIP 97754 (`NWPP`). Plant geography is corroboration only.
 - `co2_lb_per_mwh` / `co2e_lb_per_mwh` / `nox_lb_per_mwh` / `so2_lb_per_mwh`: total output rates (ordinary location-based factors).
 - `co2_nonbaseload_lb_per_mwh`: non-baseload rate; do not use as an ordinary Scope 2 factor.
 - `coal_share` … `solar_share`: generation mix as fractions 0-1. eGRID 2010-2016 store 0-100 percent; 2018+ store 0-1 fractions under the same "percent" header.

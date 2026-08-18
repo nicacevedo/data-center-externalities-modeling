@@ -154,7 +154,7 @@ python run_prineville.py egrid
 Use:
 - PACW demand, demand forecast, net generation, total interchange, bilateral interchange, and generation-by-fuel as **regional balancing-authority context** (workbook from 2015-07-01; `NG:*` fuel mix and EIA-reported CO2 intensity from 2018-07);
 - EIA-reported PACW consumed CO2 intensity as the preferred regional physical carbon-shape diagnostic when present; the fuel/import score is a named sensitivity proxy only;
-- Meta-reported annual campus MWh × eGRID NWPP (WECC Northwest) total output rates as the annual location-based physical benchmark.
+- Meta-reported annual campus MWh × eGRID NWPP (WECC Northwest) total output rates as the annual location-based physical benchmark, with NWPP selected from EPA Power Profiler ZIP 97754 (PacifiCorp/Pacific Power service; plant files corroborate only).
 
 Never treat PACW demand as campus electricity. Never treat eGRID non-baseload rates as ordinary Scope 2 factors. Never treat either PACW series as Meta-specific marginal emissions. Market-based/REC accounting stays separate.
 

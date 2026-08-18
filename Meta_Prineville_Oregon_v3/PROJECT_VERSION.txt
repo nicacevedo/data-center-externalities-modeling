@@ -10,3 +10,4 @@ Key changes:
 - unified command set: audit, water, conditional, simulate, calibrate, validate, owrd-validate, eia, egrid, grid
 - canonical PACW EIA-930 history is data/raw/eia930/historical/PACW.xlsx; API is overlap/update only
 - EPA eGRID 2010-2023 US-customary workbooks organized under data/raw/egrid/; python run_prineville.py egrid joins NWPP output rates to Meta campus MWh
+- Prineville eGRID subregion is EPA Power Profiler ZIP 97754 → NWPP; plant files are corroboration only

@@ -20,10 +20,11 @@ weather:
   note: 'NCEI directory confirms 72692024230 exists in 2011 and 2024; use the same file ID for 2011-2024 and fail loudly if a year is absent.'
 
 grid:
-  utility_context: PacifiCorp
+  utility_context: PacifiCorp / Pacific Power
   balancing_authority: PACW
+  consumer_zip: '97754'
   eia_route_root: 'https://api.eia.gov/v2/electricity/rto'
-  note: 'PACW is a regional physical-grid proxy, not the campus meter or a marginal-emissions oracle.'
+  note: 'PACW is a regional physical-grid proxy, not the campus meter or a marginal-emissions oracle. The eGRID subregion is the EPA Power Profiler assignment for ZIP 97754 (PacifiCorp/Pacific Power service).'
 
 initial_design_prior_2011:
   pue_full_load: 1.07
