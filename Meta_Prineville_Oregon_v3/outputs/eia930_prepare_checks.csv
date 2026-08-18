@@ -6,3 +6,5 @@ workbook_not_truncated_before_read,PASS,raw_n=97584 kept=83320
 reported_imputed_adjusted_are_separate_columns,PASS,reported/imputed/adjusted remain separate columns
 missing_reported_demand_not_converted_to_zero,PASS,n_missing=3697
 known_data_issue_attached,PASS,issue flag joined
+co2_consumed_intensity_retained,PASS,EIA-reported PACW consumed CO2 emissions/intensity retained as regional fields
+not_campus_electricity,PASS,"PACW remains balancing-authority context, not campus electricity"

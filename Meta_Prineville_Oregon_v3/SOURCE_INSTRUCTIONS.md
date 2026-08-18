@@ -208,6 +208,8 @@ python run_prineville.py eia
 
 `src/prepare_eia930.py` keeps reported/imputed/adjusted MWh as separate columns, joins EIA known-data-issue flags, and cuts the reconstruction window at `2024-12-31 23:59 UTC`. It compares 2019-2024 workbook values with the API when `PACW_region-data_2019_2024.csv` is present; it does **not** concatenate the two.
 
+EIA-930 measures **balancing-authority operations**: demand, demand forecast, net generation, total interchange, bilateral interchange, generation by fuel, and (from 2018-07) EIA-reported CO2 emissions/intensity for generated and consumed electricity. Those series are observed PACW values, not Prineville campus meters. The fuel/import carbon score, if used, is a derived proxy. There is no PACW coverage before 2015-07-01; do not invent one.
+
 The API remains useful for overlap checks and later updates:
 
 ```bash
@@ -224,9 +226,42 @@ Use PACW only as a regional physical-grid context/proxy. It is not the campus fe
 - Current detailed-data page: `https://www.epa.gov/egrid/detailed-data`
 - Historical archive: `https://www.epa.gov/egrid/historical-egrid-data`
 
-For each model year, download the matching/historical eGRID data workbook when available and extract the relevant subregion/plant/BA fields after verifying the campus electricity-service crosswalk.
+Raw US-customary detailed workbooks are organized under `data/raw/egrid/` (leave them untouched). The 1996-2016 archive ZIP stays in `data/raw/egrid/historical/`; 2010/2012/2014/2016 detailed files were extracted from that ZIP without modifying it.
 
-Use eGRID output emission rates as an annual physical-grid cross-check. Keep Meta market-based/REC accounting separate.
+```bash
+python run_prineville.py egrid
+```
+
+`src/prepare_egrid.py` reads eGRID **subregion total output emission rates** (lb/MWh) for electricity-consumption accounting. Non-baseload rates are stored separately and are not ordinary Scope 2 factors. CH4/N2O rates labeled lb/GWh (eGRID 2010/2012/2014) are converted to lb/MWh. Resource-mix codes are labeled "percent" in every vintage; 2010-2016 store 0-100 and 2018+ store 0-1 fractions. The script detects the scale from the selected subregion row instead of guessing.
+
+The Prineville consumption-location subregion is verified from each vintage's plant file: Crook County, Oregon plants when present, otherwise the unique Oregon plant subregion. In this package that mapping is **NWPP (WECC Northwest)** for every eGRID vintage 2010-2023. PACW generator plants are recorded as corroboration only; they are not the selection rule because some vintages include a CAMX tail.
+
+Model-year vintage map:
+
+```text
+2011 → eGRID2010
+2012 → eGRID2012
+2013 → eGRID2012
+2014 → eGRID2014
+2015 → eGRID2014
+2016 → eGRID2016
+2017 → eGRID2016
+2018 → eGRID2018
+2019 → eGRID2019
+2020 → eGRID2020
+2021 → eGRID2021
+2022 → eGRID2022
+2023 → eGRID2023
+2024 → eGRID2023
+```
+
+The annual benchmark is:
+
+`CO2_y^{eGRID} = E_y^{Meta} × EF_y^{eGRID}`
+
+with pounds converted to metric tonnes by dividing by 2204.6226218487757. `E_y^{Meta}` is Meta-reported campus electricity from `data/canonical/meta_prineville_annual.csv`, not PACW regional demand. Compare location-based physical totals with Meta location-based Scope 2 where disclosed. Keep market-based/REC accounting separate.
+
+eGRID measures annual generation-weighted subregion output rates, not hourly campus intensity and not PACW BA demand.
 
 ## 12. Renewable accounting / Schedule 272 context
 

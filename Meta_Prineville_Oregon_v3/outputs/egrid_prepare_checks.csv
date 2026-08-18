@@ -1,0 +1,16 @@
+check,status,detail
+all_model_years_2011_2024,PASS,"years=[2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]"
+no_duplicate_model_years,PASS,model_year unique
+correct_egrid_vintage_mapping,PASS,"mapped=[2010, 2012, 2012, 2014, 2014, 2016, 2016, 2018, 2019, 2020, 2021, 2022, 2023, 2023]"
+one_unique_subregion_per_model_year,PASS,subregions=['NWPP']
+source_workbook_and_vintage_preserved,PASS,source_file and source_revision present on every row
+units_are_lb_per_mwh,PASS,units=['lb/MWh']
+emission_factors_numeric_nonmissing,PASS,missing_or_nonnumeric=[]
+normal_and_nonbaseload_factors_not_confused,PASS,total output CO2 rates differ from non-baseload CO2 rates
+model_year_2024_uses_egrid2023,PASS,egrid_data_year=2023; note=Model year 2024 explicitly uses eGRID2023; EPA had not published a 2024 detailed workbook in this package.
+meta_electricity_is_campus_energy_input,PASS,compare.meta_electricity_mwh matches canonical Meta campus electricity
+eia930_co2_intensity_consumed_available_as_regional_shape,PASS,pacw_hourly.csv retains EIA consumed CO2 intensity
+pacw_demand_never_substituted_for_campus_electricity,PASS,Meta campus MWh is distinct from annual PACW reported demand on overlapping years
+crosswalk_has_one_row_per_egrid_vintage,PASS,"crosswalk_years=[2010, 2012, 2014, 2016, 2018, 2019, 2020, 2021, 2022, 2023]"
+fuel_shares_are_fractions_not_percent,PASS,"five-fuel share sums=[0.94, 0.944, 0.944, 0.946, 0.946, 0.94, 0.94, 0.943, 0.946, 0.945, 0.947, 0.944, 0.946, 0.946]"
+location_based_not_market_based,PASS,market-based/REC excluded from the physical eGRID benchmark

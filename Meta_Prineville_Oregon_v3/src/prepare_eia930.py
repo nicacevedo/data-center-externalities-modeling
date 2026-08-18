@@ -13,6 +13,7 @@ from __future__ import annotations
 from pathlib import Path
 import argparse
 import json
+import sys
 
 import numpy as np
 import pandas as pd
@@ -363,6 +364,16 @@ def run_checks(hourly: pd.DataFrame, raw_n: int) -> list[dict]:
         f"n_missing={int(hourly['demand_reported_mwh'].isna().sum())}",
     )
     add("known_data_issue_attached", "known_data_issue" in hourly.columns, "issue flag joined")
+    add(
+        "co2_consumed_intensity_retained",
+        "co2_intensity_consumed" in hourly.columns and "co2_emissions_consumed" in hourly.columns,
+        "EIA-reported PACW consumed CO2 emissions/intensity retained as regional fields",
+    )
+    add(
+        "not_campus_electricity",
+        hourly["grid_provenance"].astype(str).str.contains("not campus meter data").all(),
+        "PACW remains balancing-authority context, not campus electricity",
+    )
     return checks
 
 
@@ -413,6 +424,11 @@ def prepare() -> dict:
     coverage = coverage_table(hourly)
     overlap = compare_api_overlap(hourly, API_REGION)
     checks = run_checks(hourly, raw_n)
+    src_dir = Path(__file__).resolve().parent
+    if str(src_dir) not in sys.path:
+        sys.path.insert(0, str(src_dir))
+    from prepare_egrid import write_pacw_carbon_shape_compare
+    write_pacw_carbon_shape_compare(hourly)
 
     OUT_HOURLY.parent.mkdir(parents=True, exist_ok=True)
     OUT_COVERAGE.parent.mkdir(parents=True, exist_ok=True)

@@ -106,7 +106,14 @@ The API downloader discovers current route metadata/facets before downloading. D
 
 Source: https://www.epa.gov/egrid
 
-Download annual eGRID workbooks for the years overlapping the model. Extract the relevant PacifiCorp West / Northwest regional emission rates and generation mix used for the chosen accounting boundary. This is a validation/cross-check, not a replacement for hourly EIA data.
+US-customary detailed workbooks for 2010-2023 are already organized under `data/raw/egrid/`. Do not edit them. The historical ZIP remains the provenance archive for 2010-2016. Run `python run_prineville.py egrid` to rebuild:
+
+- `data/processed/egrid_prineville_annual.csv`
+- `outputs/egrid_meta_annual_compare.csv`
+- `outputs/egrid_prepare_checks.csv`
+- `outputs/egrid_subregion_crosswalk.csv`
+
+This is an annual physical-grid cross-check against Meta campus MWh, not a replacement for hourly EIA-930 and not campus-meter data.
 
 ## 7. NOAA weather — scripted, but this environment could not bundle the remote CSVs
 

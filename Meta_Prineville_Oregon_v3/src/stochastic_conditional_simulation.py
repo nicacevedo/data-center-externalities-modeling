@@ -15,8 +15,9 @@ The public annual observations remain the empirical anchors:
   untouched 2023-2024 annual observations;
 * reported location-based Scope 2 is closed exactly by annual allocation;
   PACW EIA-930 from the historical workbook can be enabled only as an explicit
-  relative-shape sensitivity (demand/interchange from 2015-07; fuel mix from
-  2018-07) and is never treated as marginal emissions.
+  relative-shape sensitivity: EIA consumed CO2 intensity when present (from
+  2018-07), otherwise a named fuel/import proxy (demand/interchange from 2015-07).
+  It is never treated as Meta-specific marginal emissions.
 
 Synthetic arrivals are dimensionless work units.  Their absolute counts,
 queues, utilization, IT power, PUE, hourly water, and hourly emissions are
@@ -62,7 +63,11 @@ PROVENANCE = {
     "facility_power": "fitted: annual closure + scenario overhead priors",
     "water_closure": "fitted: hourly shape closed to reported annual site withdrawal",
     "water_prediction": "fitted: train-only annual scale; no target-year water used",
-    "carbon": "fitted proxy: PACW relative shape closed to Meta annual location Scope 2",
+    "carbon": (
+        "fitted proxy: PACW regional physical carbon shape closed to Meta annual "
+        "location Scope 2; prefers EIA-reported consumed CO2 intensity when present, "
+        "else the named fuel/import sensitivity proxy; not Meta-specific marginal emissions"
+    ),
 }
 
 
@@ -341,34 +346,58 @@ def water_shape_weights(
     }
 
 
-def build_pacw_relative_carbon_shape() -> dict[int, pd.DataFrame]:
-    """Build a relative regional carbon-shape proxy from PACW EIA-930.
+def _pacw_fuel_import_proxy_score(z: pd.DataFrame) -> pd.Series:
+    """Named sensitivity proxy from PACW fuel mix plus a residual import score.
 
-    Prefer the processed historical workbook (`pacw_hourly.csv`). Fall back to the
-    API extracts only if that file is absent. Scenario factors create within-year
-    variation; campus emissions are still renormalized to Meta's reported annual
-    location-based Scope 2.
+    This is not EIA's reported CO2 intensity and is not a marginal-emissions series.
+    """
+    thermal_kg_proxy = (
+        1000.0 * z.get("ng_col_mwh", pd.Series(0.0, index=z.index)).fillna(0.0).clip(lower=0.0)
+        + 450.0 * z.get("ng_ng_mwh", pd.Series(0.0, index=z.index)).fillna(0.0).clip(lower=0.0)
+        + 500.0 * z.get("ng_oth_mwh", pd.Series(0.0, index=z.index)).fillna(0.0).clip(lower=0.0)
+    )
+    demand = z["demand_reported_mwh"].clip(lower=1.0)
+    net_generation = z["net_generation_reported_mwh"].fillna(0.0).clip(lower=0.0)
+    import_residual = (demand - net_generation).clip(lower=0.0)
+    return (thermal_kg_proxy.fillna(0.0) + 350.0 * import_residual) / demand
+
+
+def build_pacw_relative_carbon_shape() -> dict[int, pd.DataFrame]:
+    """Build a relative regional carbon-shape series from PACW EIA-930.
+
+    Prefer EIA-reported `co2_intensity_consumed` when it is present and valid.
+    Retain the fuel/import score only as `pacw_fuel_import_proxy_score`. Campus
+    emissions are still renormalized to Meta's reported annual location-based
+    Scope 2. Neither series is Meta-specific marginal emissions.
     """
 
     if PACW_HOURLY.exists():
         z = pd.read_csv(PACW_HOURLY)
         z["timestamp_utc"] = pd.to_datetime(z["timestamp_utc"], utc=True)
-        thermal_kg_proxy = (
-            1000.0 * z.get("ng_col_mwh", pd.Series(0.0, index=z.index)).fillna(0.0).clip(lower=0.0)
-            + 450.0 * z.get("ng_ng_mwh", pd.Series(0.0, index=z.index)).fillna(0.0).clip(lower=0.0)
-            + 500.0 * z.get("ng_oth_mwh", pd.Series(0.0, index=z.index)).fillna(0.0).clip(lower=0.0)
+        fuel_proxy = _pacw_fuel_import_proxy_score(z).replace([np.inf, -np.inf], np.nan)
+        eia = pd.to_numeric(z.get("co2_intensity_consumed"), errors="coerce")
+        eia = eia.where(np.isfinite(eia) & (eia > 0))
+        preferred = eia.where(eia.notna(), fuel_proxy)
+        preferred.index = z["timestamp_utc"]
+        fuel_proxy.index = z["timestamp_utc"]
+        eia.index = z["timestamp_utc"]
+        preferred = preferred.fillna(preferred.groupby(preferred.index.year).transform("median"))
+        source = np.where(
+            eia.notna().to_numpy(),
+            "eia_co2_intensity_consumed",
+            np.where(fuel_proxy.notna().to_numpy(), "fuel_import_proxy", "unavailable"),
         )
-        demand = z["demand_reported_mwh"].clip(lower=1.0)
-        net_generation = z["net_generation_reported_mwh"].fillna(0.0).clip(lower=0.0)
-        import_residual = (demand - net_generation).clip(lower=0.0)
-        score = thermal_kg_proxy.fillna(0.0) + 350.0 * import_residual
-        relative = (score / demand).replace([np.inf, -np.inf], np.nan)
-        relative.index = z["timestamp_utc"]
-        relative = relative.fillna(relative.groupby(relative.index.year).transform("median"))
         out: dict[int, pd.DataFrame] = {}
-        for year, s in relative.groupby(relative.index.year):
+        for year, s in preferred.groupby(preferred.index.year):
+            idx = s.index
             out[int(year)] = pd.DataFrame(
-                {"timestamp_utc": s.index, "pacw_relative_carbon_score": s.to_numpy(float)}
+                {
+                    "timestamp_utc": idx,
+                    "pacw_relative_carbon_score": s.to_numpy(float),
+                    "pacw_eia_co2_intensity_consumed": eia.reindex(idx).to_numpy(float),
+                    "pacw_fuel_import_proxy_score": fuel_proxy.reindex(idx).to_numpy(float),
+                    "pacw_carbon_shape_source": pd.Series(source, index=preferred.index).reindex(idx).to_numpy(),
+                }
             )
         return out
 
@@ -407,6 +436,9 @@ def build_pacw_relative_carbon_shape() -> dict[int, pd.DataFrame]:
             {
                 "timestamp_utc": s.index,
                 "pacw_relative_carbon_score": s.to_numpy(float),
+                "pacw_eia_co2_intensity_consumed": np.nan,
+                "pacw_fuel_import_proxy_score": s.to_numpy(float),
+                "pacw_carbon_shape_source": "fuel_import_proxy",
             }
         )
         out[int(year)] = z
@@ -1166,7 +1198,7 @@ def run(args: argparse.Namespace) -> dict:
             "carbon_allocation": (
                 "annual location Scope 2 allocated over facility energy"
                 if not args.use_pacw_shape
-                else "optional PACW relative average-regional sensitivity; not marginal emissions"
+                else "optional PACW regional physical-shape sensitivity (EIA consumed CO2 intensity when present); not Meta-specific marginal emissions"
             ),
         },
         "outputs": [
@@ -1229,10 +1261,12 @@ def parse_args() -> argparse.Namespace:
         "--use-pacw-shape",
         action="store_true",
         help=(
-            "Use processed PACW EIA-930 workbook series as an explicit relative "
-            "hourly carbon-shape sensitivity (demand/interchange from 2015-07; "
-            "fuel mix from 2018-07). Default allocates annual location Scope 2 "
-            "in proportion to facility energy. Not a marginal-emissions estimate."
+            "Use processed PACW EIA-930 as an explicit relative hourly carbon-shape "
+            "sensitivity. Prefers EIA-reported consumed CO2 intensity from 2018-07; "
+            "the fuel/import proxy is retained only as a named sensitivity and for "
+            "hours without EIA intensity. Demand/interchange begin 2015-07. Default "
+            "allocates annual location Scope 2 in proportion to facility energy. "
+            "Not a Meta-specific marginal-emissions estimate."
         ),
     )
     args = parser.parse_args()

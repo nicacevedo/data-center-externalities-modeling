@@ -22,6 +22,8 @@ It is **not** a claim that public data identify Meta's private hourly IT workloa
 - `data/canonical/owrd_report_index.csv`: the 57 City of Prineville OWRD report IDs from the 2010-2025 entity export.
 - `data/canonical/meta_owrd_direct_sources.csv`: verified OWRD POD registry for the three Vitesse LLC c/o Facebook Inc reports (64500, 64845, 64846).
 - `data/raw/owrd/wateruse_entity_report.csv` and `wateruse_entity_report_facebook.txt`: raw City and Vitesse/Facebook OWRD entity exports.
+- `data/raw/eia930/historical/PACW.xlsx` and `src/prepare_eia930.py`: canonical PACW EIA-930 history (`python run_prineville.py eia`).
+- `data/raw/egrid/` and `src/prepare_egrid.py`: EPA eGRID subregion output rates × Meta campus MWh (`python run_prineville.py egrid`).
 - `src/prepare_owrd_wateruse.py`: deterministic water-year/calendar-month normalization and confidence-aware source joining.
 - `data/source_manifest.csv`: exact source URLs, role, resolution, quality and whether manual action is needed.
 - `data/canonical/source_priority_matrix.csv`: one-row-per-quantity preferred source, fallback and validation role.
@@ -141,12 +143,22 @@ python src/download_eia930.py --discover
 python src/download_eia930.py --start 2019-01-01 --end 2024-12-31
 ```
 
-Use:
-- PACW demand/net generation/interchange as grid context (2015-07-01 onward in the workbook);
-- generation-by-energy-source when the `NG:*` fields are populated (from 2018-07 in this download);
-- EPA eGRID annual plant/subregion emission rates as an independent annual cross-check.
+EPA eGRID annual subregion **total output emission rates** are the independent annual physical-grid cross-check. They are not PACW hourly data and not campus meters:
 
-Treat `PACW CO2 / PACW load` as an **average regional physical-intensity proxy**, not campus marginal emissions. A later phase can improve this using generator-level CEMS plus interchange/consumption-based accounting.
+```bash
+python run_prineville.py egrid
+```
+
+`python run_prineville.py grid` runs EIA-930 preparation then eGRID. Do not put these workbook rebuilds inside `audit`.
+
+Use:
+- PACW demand, demand forecast, net generation, total interchange, bilateral interchange, and generation-by-fuel as **regional balancing-authority context** (workbook from 2015-07-01; `NG:*` fuel mix and EIA-reported CO2 intensity from 2018-07);
+- EIA-reported PACW consumed CO2 intensity as the preferred regional physical carbon-shape diagnostic when present; the fuel/import score is a named sensitivity proxy only;
+- Meta-reported annual campus MWh × eGRID NWPP (WECC Northwest) total output rates as the annual location-based physical benchmark.
+
+Never treat PACW demand as campus electricity. Never treat eGRID non-baseload rates as ordinary Scope 2 factors. Never treat either PACW series as Meta-specific marginal emissions. Market-based/REC accounting stays separate.
+
+eGRID vintage map used here: 2011→2010, 2012–2013→2012, 2014–2015→2014, 2016–2017→2016, then matching years through 2023, and **2024→eGRID2023**.
 
 ### Stage 6 — run the baseline audit
 
@@ -211,11 +223,12 @@ Hourly arrivals, workload, IT power, PUE, withdrawal and emissions remain
 fitted/scenario quantities rather than recovered telemetry.
 
 By default, reported annual location Scope 2 is allocated over hourly facility
-energy without inventing a regional carbon shape. `--use-pacw-shape` uses the
-processed PACW EIA-930 workbook series as an explicit average-regional
-relative-shape sensitivity (demand/interchange from 2015-07; fuel mix from
-2018-07). It is not a marginal-emissions estimate, and 2011 through mid-2015
-have no PACW EIA-930 coverage.
+energy without inventing a regional carbon shape. `--use-pacw-shape` uses PACW
+as an explicit average-regional relative-shape sensitivity: EIA-reported consumed
+CO2 intensity when present (from 2018-07), otherwise the named fuel/import proxy
+(demand/interchange from 2015-07). It is not a Meta-specific marginal-emissions
+estimate, and 2011 through mid-2015 have no PACW EIA-930 coverage. The annual
+eGRID × Meta MWh benchmark is a separate location-based physical check.
 
 Main outputs are:
 - `outputs/stochastic_proxy_annual_summary.csv`

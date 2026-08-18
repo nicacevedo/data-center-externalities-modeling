@@ -60,7 +60,9 @@ For each hour:
 
 Use the best available regional/consumption-based physical intensity. Aggregate to annual and compare against Meta location-based Scope 2.
 
-Canonical PACW EIA-930 history is the untouched Grid Monitor workbook processed by `src/prepare_eia930.py`. Do not concatenate the EIA API onto that series. There is no PACW EIA-930 coverage before 2015-07-01; do not invent a 2011-2014 BA series. Keep reported, imputed, and adjusted MWh as separate columns.
+Canonical PACW EIA-930 history is the untouched Grid Monitor workbook processed by `src/prepare_eia930.py`. Do not concatenate the EIA API onto that series. There is no PACW EIA-930 coverage before 2015-07-01; do not invent a 2011-2014 BA series. Keep reported, imputed, and adjusted MWh as separate columns. Prefer EIA-reported PACW consumed CO2 intensity for the regional physical carbon-shape diagnostic when it exists; keep the fuel/import score as a named proxy. Neither is campus electricity or Meta-specific marginal emissions.
+
+The annual physical cross-check is Meta campus MWh × eGRID subregion total output rates (`python run_prineville.py egrid`), not PACW demand × eGRID. Non-baseload eGRID rates are not ordinary Scope 2 factors. Model year 2024 uses eGRID2023.
 
 Do not tune physical emissions to the market-based value; market-based emissions are a separate accounting output.
 

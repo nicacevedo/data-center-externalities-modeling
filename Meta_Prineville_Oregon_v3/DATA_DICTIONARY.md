@@ -61,7 +61,23 @@ Key columns:
 - `interchange_*_mwh`: bilateral interchange with neighboring BAs.
 - `known_data_issue` and range-error flags from the workbook `Known Data Issues` sheet.
 
-The EIA API is not concatenated into this file. Overlap diagnostics are in `outputs/eia930_xlsx_api_overlap.csv`. Series start/end dates are in `outputs/eia930_series_coverage.csv`.
+Also retained, from 2018-07-02: EIA-reported `co2_emissions_consumed` / `co2_emissions_generated` and `co2_intensity_consumed` / `co2_intensity_generated`. Those are PACW regional physical series, not campus meters and not marginal emissions.
+
+The EIA API is not concatenated into this file. Overlap diagnostics are in `outputs/eia930_xlsx_api_overlap.csv`. Series start/end dates are in `outputs/eia930_series_coverage.csv`. The regional carbon-shape comparison of EIA consumed intensity vs the named fuel/import proxy is `outputs/pacw_carbon_shape_compare.csv`.
+
+## `data/processed/egrid_prineville_annual.csv`
+EPA eGRID subregion **total output emission rates** mapped to Prineville model years 2011-2024. Observed eGRID fields; CH4/N2O may be unit-converted from lb/GWh; fuel shares are stored as 0-1 fractions. This is not a campus meter series.
+
+Key columns:
+- `model_year` / `egrid_data_year`: study year vs EPA workbook year (2024 uses eGRID2023).
+- `egrid_subregion`: consumption-location subregion verified from plant files (`NWPP`).
+- `co2_lb_per_mwh` / `co2e_lb_per_mwh` / `nox_lb_per_mwh` / `so2_lb_per_mwh`: total output rates (ordinary location-based factors).
+- `co2_nonbaseload_lb_per_mwh`: non-baseload rate; do not use as an ordinary Scope 2 factor.
+- `coal_share` … `solar_share`: generation mix as fractions 0-1. eGRID 2010-2016 store 0-100 percent; 2018+ store 0-1 fractions under the same "percent" header.
+- `source_file` / `source_revision` / `provenance_class`.
+
+## `outputs/egrid_meta_annual_compare.csv`
+Derived annual benchmark: Meta campus `electricity_mwh_reported` × eGRID total output rates, converted to metric tonnes. PACW demand is not the energy input. `difference_tonnes` compares eGRID CO2e tonnes with Meta location-based Scope 2 (tCO2e) where Meta reported it. Market-based/REC values are not used.
 
 ## `outputs/owrd_water_model_validation.csv`
 Calendar-month join of reconstructed campus withdrawal, OWRD Vitesse/Facebook direct groundwater POD use, and OWRD City accepted municipal production. Diagnostic only: OWRD is not a calibration target. Missing OWRD values remain missing. Candidate City mappings appear only as `owrd_city_candidate_production_m3`.

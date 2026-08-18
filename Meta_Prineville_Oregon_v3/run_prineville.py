@@ -9,6 +9,13 @@ def water():
 def eia():
     subprocess.run([sys.executable,str(ROOT/'src'/'prepare_eia930.py'), *sys.argv[2:]],check=True)
 
+def egrid():
+    subprocess.run([sys.executable,str(ROOT/'src'/'prepare_egrid.py'), *sys.argv[2:]],check=True)
+
+def grid():
+    eia()
+    egrid()
+
 def owrd_validate():
     subprocess.run([sys.executable,str(ROOT/'src'/'owrd_water_model_validation.py'), *sys.argv[2:]],check=True)
 
@@ -76,6 +83,8 @@ def main():
     elif cmd=='validate': validate()
     elif cmd=='owrd-validate': owrd_validate()
     elif cmd=='eia': eia()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate|eia]')
+    elif cmd=='egrid': egrid()
+    elif cmd=='grid': grid()
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|grid]')
 
 if __name__=='__main__': main()
