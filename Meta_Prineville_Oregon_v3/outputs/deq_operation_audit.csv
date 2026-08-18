@@ -1,0 +1,12 @@
+year,n_generator_months,n_generators,testing_hours_sum,note
+2012,210,18,244.38,missing years remain missing; zeros are reported zeros
+2013,213,18,521.412,missing years remain missing; zeros are reported zeros
+2014,358,30,469.81,missing years remain missing; zeros are reported zeros
+2015,339,29,415.32,missing years remain missing; zeros are reported zeros
+2017,456,38,405.96999999999997,missing years remain missing; zeros are reported zeros
+2020,1272,106,1309.64,missing years remain missing; zeros are reported zeros
+2022,300,25,233.77,missing years remain missing; zeros are reported zeros
+2023,420,35,345.74,missing years remain missing; zeros are reported zeros
+2024,2160,180,845.54,missing years remain missing; zeros are reported zeros
+2025,2159,180,1028.64,missing years remain missing; zeros are reported zeros
+,,,,conflicts: john_deere_nameplate_kw=150 kW vs 177 kW || john_deere_model=6068HF285 vs 4045HF285 || prn3_n_units_rating=2.5 MW (2018 RR) vs listed under 3.0 MW 6ETC (2019 PMRR) || pmrr2019_existing_capacity_arithmetic=stated 148.7 MW vs 82*3.0 + 2*1.0 + 0.55 + 0.177 = 248.727 MW

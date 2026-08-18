@@ -86,7 +86,19 @@ CAMPD aggregated to EIA plant × year × month after a unique unit→plant map. 
 Oregon EIA-860 generator-year attributes (operable/proposed/retired sheets). Status, operating/retirement years, prime mover, fuel, and nameplate are native.
 
 ## `data/processed/eia923_generation_fuel_monthly.csv`
-Oregon EIA-923 Page 1 generation/fuel melted to plant × prime mover × fuel × month. Confidential `.` / `W` remain missing.
+Oregon EIA-923 Page 1 generation/fuel melted to plant × prime mover × fuel × month. Confidential `.` / `W` remain missing. `reporting_frequency` is the Plant Frame code (`A`, `M`, `AM`, `AM/A`). `monthly_generation_basis` is `eia_allocated_from_annual` for `A` and `respondent_monthly` otherwise. For frequency `A`, `provenance_class=eia_published_monthly_allocation` on monthly Netgen; the Page 1 annual column remains the respondent calendar-year total.
+
+## `data/processed/eia923_plant_frame_annual.csv`
+Oregon rows from EIA-923 Page 6 Plant Frame. One row per plant-year with `reporting_frequency` and the native frequency column name.
+
+## `outputs/oregon_campd_eia923_generation_compare.csv`
+Plant-month CAMPD gross generation vs EIA-923 published net generation. Includes `reporting_frequency` and `monthly_generation_basis`. Monthly ratios for frequency=`A` are diagnostics, not primary QC.
+
+## `outputs/oregon_campd_eia923_annual_reconciliation.csv`
+Plant-year CAMPD gross vs EIA-923 net for CAMPD plants. Primary generation QC for annual EIA-923 respondents. `qc_status` is `ok`, `annual_comparability_warning`, `campd_only`, `eia923_only`, or `not_comparable`. The documented ok envelope is annual ratio 0.85–1.15 (gross vs net plus ordinary noise). Sources are not rescaled. `annual_comparability_warning` is a documented limitation, not a correction.
+
+## `outputs/oregon_plant_55544_generation_outlier_diagnosis.csv`
+Audit artifact from the plant-55544 monthly-outlier investigation. Not used as pipeline or exception logic.
 
 ## `data/processed/eia923_cooling_operations.csv`
 Oregon plant-month cooling water. 2014-2024 from EIA cooling-detail (water unique on cooling system, not generator rows). 2013 from EIA-923 Schedule 8 million-gallon volumes. 2011-2012 water_m3 left missing.
@@ -95,7 +107,7 @@ Oregon plant-month cooling water. 2014-2024 from EIA cooling-detail (water uniqu
 Oregon plant-month integration table. Emission intensities are CAMPD mass / CAMPD gross generation (MWh). Water intensities are cooling-water / cooling-associated generation. EIA-923 `generation_mwh` is net generation and is not forced equal to CAMPD gross generation. Negative official cooling consumption is preserved as reported and excluded from intensity.
 
 ## `outputs/oregon_generator_data_checks.csv`
-PASS/FAIL implementation and data-quality checks for the Oregon pilot.
+PASS/FAIL implementation and data-quality checks for the Oregon pilot. Monthly CAMPD/EIA-923 plausibility is evaluated on respondent monthly reporters only. Annual respondents are checked on the plant-year reconciliation table.
 
 ## `outputs/egrid_meta_annual_compare.csv`
 Derived annual benchmark: Meta campus `electricity_mwh_reported` × eGRID total output rates, converted to metric tonnes. PACW demand is not the energy input. `difference_tonnes` compares eGRID CO2e tonnes with Meta location-based Scope 2 (tCO2e) where Meta reported it. Market-based/REC values are not used.
@@ -115,8 +127,32 @@ Key columns:
 ## `outputs/owrd_water_model_validation_annual.csv`
 Calendar-year descriptive totals of the same three boundaries versus Meta-reported annual withdrawal. Equality is not expected. OWRD annual sums use reported months only. Direct annual ratios (`direct_pod_to_modeled_ratio`, `direct_pod_to_meta_reported_ratio`) are NaN unless `direct_annual_complete` is true, which requires every interval-expected report-month to have a reported value.
 
+## `data/canonical/deq_document_inventory.csv`
+Collected Oregon DEQ air PDFs and GHG workbooks. `document_calendar_year` is the reporting/permit year of the file; observation months still come from table tokens. `scan_only` files were not OCR'd. GHG workbooks other than `ghgElectricityEms.xlsx` are provenance-only.
+
+## `data/canonical/meta_backup_generator_inventory.csv`
+Onsite emergency generators. `nameplate_kw` is backup emergency capacity, never IT or facility load. `state_2018` is existing vs proposed from RR_2018 Table 1. `latest_state` is proposed / authorized / installed_listed / active / retired. Proposed units stay proposed unless listed in extracted hours tables. Conflicting kW/model strings are preserved via `nameplate_kw_alt`.
+
+## `data/canonical/meta_backup_generator_events.csv`
+Permit issuances, additions, commissioning, well-house retirement/replacement notice. Does not rewrite `campus_events_seed.csv`.
+
+## `data/processed/meta_backup_operation_monthly.csv`
+Canonical unique `generator_id` × year × month hours. Monthly testing/emergency/demand-response hours are the observation; `*_rolling12` columns are not used as monthly operations. Missing hours stay missing.
+
+## `data/processed/meta_backup_emissions_monthly.csv`
+Facility-wide DEQ-calculated annual-report emissions (short tons), non-emergency vs emergency. Not PSEL, not source tests, not Scope 2 / eGRID / PACW.
+
+## `data/processed/meta_backup_fuel_monthly.csv`
+Facility-wide diesel gallons from annual-report fuel summaries. Monthly gallons are the observation; rolling 12-month gallons are diagnostic.
+
+## `data/processed/meta_backup_source_tests.csv`
+RR_2018 source-test runs and DEQ-approved NOx factors (lb/hr). Separate from annual-report calculated tons.
+
+## `data/processed/pacific_power_deq_ghg_annual.csv`
+Oregon DEQ electricity-supplier GHG for Pacific Power (PacifiCorp), 2010-2024. Utility Oregon-delivery energy and anthropogenic MTCO2e. Not Vitesse onsite backup CO2e and not campus eGRID/PACW Scope 2.
+
 ## `data/canonical/campus_events_seed.csv`
-High-confidence public events only. Event timing does not imply commissioning unless explicitly supported.
+High-confidence public events only. Event timing does not imply commissioning unless explicitly supported. DEQ matches are in `outputs/deq_campus_event_crosswalk.csv` only.
 
 ## `data/source_manifest.csv`
 Source registry. Every final result should be traceable to one or more `source_id` values.

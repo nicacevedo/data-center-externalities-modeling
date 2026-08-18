@@ -24,6 +24,7 @@ It is **not** a claim that public data identify Meta's private hourly IT workloa
 - `data/raw/owrd/wateruse_entity_report.csv` and `wateruse_entity_report_facebook.txt`: raw City and Vitesse/Facebook OWRD entity exports.
 - `data/raw/eia930/historical/PACW.xlsx` and `src/prepare_eia930.py`: canonical PACW EIA-930 history (`python run_prineville.py eia`).
 - `data/raw/egrid/` and `src/prepare_egrid.py`: EPA eGRID subregion output rates × Meta campus MWh (`python run_prineville.py egrid`).
+- `data/raw/deq_air/` and `data/raw/deq_ghg/`: Oregon DEQ Vitesse 07-0037 air-permit PDFs (2012-2025) and DEQ electricity-supplier GHG workbooks. Independent onsite-generation module (`python run_prineville.py deq`); not grid Scope 2.
 - `src/prepare_owrd_wateruse.py`: deterministic water-year/calendar-month normalization and confidence-aware source joining.
 - `data/source_manifest.csv`: exact source URLs, role, resolution, quality and whether manual action is needed.
 - `data/canonical/source_priority_matrix.csv`: one-row-per-quantity preferred source, fallback and validation role.
@@ -170,6 +171,18 @@ python run_prineville.py oregon
 
 Writes Oregon-filtered processed tables under `data/processed/` and QC files under `outputs/oregon_*`. CAMPD posted mass and heat input are not multiplied by Operating Time. CAMPD Gross Load (MW) is converted to hourly MWh as rate × Operating Time. Crosswalk joins are not exploded to generator rows. 2011–2012 Schedule 8 cooling volumes are left missing because the native flow-rate units are not defensibly comparable to the 2013+ / 2014–2024 million-gallon product.
 
+EIA-923 Plant Frame `Reporting Frequency` / `Respondent Frequency` is joined at plant-year. For frequency `A`, published monthly Netgen is not treated as a respondent monthly observation; primary CAMPD/EIA-923 generation QC is the plant-year reconciliation in `outputs/oregon_campd_eia923_annual_reconciliation.csv` (gross vs net, envelope 0.85–1.15). Monthly ratios remain diagnostics. Monthly reporters (`M`, `AM`, `AM/A`) stay eligible for monthly discrepancy QC. Neither source is rescaled.
+
+### Stage 5.6 — Oregon DEQ onsite generation / local emissions (independent module)
+
+This step reads the collected Oregon DEQ Vitesse/Meta Prineville air-permit PDFs (`data/raw/deq_air/`, permit 07-0037) and DEQ GHG workbooks (`data/raw/deq_ghg/`). It does **not** change OWRD, EIA-930, eGRID, Oregon CAMPD/EIA, gray-box, or stochastic outputs.
+
+```bash
+python run_prineville.py deq
+```
+
+Writes canonical inventory/events, processed monthly hours/fuel/emissions/source tests, Pacific Power DEQ GHG annual rows, and `outputs/deq_*` QC. Backup nameplate MW is emergency capacity, not IT or facility load. PSEL/PTE are not actual emissions. Source tests stay separate from annual-report calculated emissions. Onsite DEQ tons stay separate from Scope 2 / eGRID / PACW. Scan-only pages are not OCR'd. Proposed generators are not treated as active without hours-table evidence.
+
 ### Stage 6 — run the baseline audit
 
 ```bash
@@ -299,7 +312,7 @@ If a quantity was used as a fitting constraint, call the agreement **closure**, 
 | Building commissioning dates | Crook County/City permits | Permit/final/CO request; use change points only as statistical candidates, not facts |
 | Building-specific cooling systems | Mechanical permits/Meta | Use initial design only for initial epoch; later architecture uncertain until evidence supports it |
 | Exact physical source of each campus MWh | Utility/dispatch records | PACW regional average/consumption-based proxy; keep separate from REC market accounting |
-| Campus backup-generator hourly operation | Air permits/CEMS/local logs if reported | Model only testing/outage scenarios within permit bounds; do not assume continuous onsite generation |
+| Campus backup-generator hourly operation | Air permits/CEMS/local logs if reported | Monthly DEQ hours exist for extracted years; do not treat nameplate MW as IT load or PSEL as actuals; hourly dispatch remains missing |
 
 ## Provenance classes
 

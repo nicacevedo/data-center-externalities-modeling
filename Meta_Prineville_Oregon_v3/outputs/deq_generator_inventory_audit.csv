@@ -1,0 +1,7 @@
+epoch,n_generators,capacity_mw_table1,expected_n,expected_mw,match_n,match_mw,note
+2018_existing,48,136.7,48,136.7,1,True,42x3.0 MW + 4x2.5 MW + 0.55 MW + 0.15 MW using Table 1 150 kW John Deere
+2018_proposed_additional,38,110.0,38,110.0,1,True,36x3.0 MW + 2x1.0 MW proposed; not treated as active
+2018_full_proposed_buildout,86,246.7,86,246.7,1,True,"existing + proposed; nameplate is emergency capacity, not IT or facility load"
+2019_authorized_existing_table1,86,148.7,86,,True,,"PMRR 2019 para 10 states 82x3.0 MW + 2x1.0 + 0.55 + 0.177 = 148.7 MW; arithmetic of those counts is 248.727 MW. Flagged, not silently reconciled."
+2019_proposed_additional,37,109.0,37,109.0,True,True,36x3.0 MW SCR + 1x1.0 MW proposed; PMRR states full buildout 357.7 MW
+extracted_hours_listed,181,,,,,,Generators appearing in extracted annual-report hours tables; proposed IDs without hours remain proposed

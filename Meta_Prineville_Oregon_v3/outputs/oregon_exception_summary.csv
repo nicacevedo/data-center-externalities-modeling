@@ -1,4 +1,6 @@
 root_cause_class,issue_type,n_raw_flag_rows,n_unique_root_causes,n_needs_manual_review
+coverage_limitation,campd_eia923_annual_comparability_warning,8,8,0
+coverage_limitation,campd_eia923_generation_outlier,10,1,0
 coverage_limitation,cooling_associated_generation_missing_or_zero,26,26,0
 coverage_limitation,cooling_schedule8_units_not_comparable,168,1,0
 expected_missingness,cooling_schedule8_generation_left_missing,81,1,0
@@ -9,4 +11,3 @@ structural_relationship,cooling_repeated_system_generator_links,7,1,0
 structural_relationship,epa_eia_crosswalk_generator_cardinality,1,1,0
 structural_relationship,epa_eia_crosswalk_modified_fuzzy_provenance,1,1,0
 structural_relationship,epa_eia_crosswalk_plant_id_differs,1,1,0
-unresolved_source_conflict,campd_eia923_generation_outlier,10,10,10

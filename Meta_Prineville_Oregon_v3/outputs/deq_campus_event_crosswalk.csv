@@ -1,0 +1,6 @@
+campus_events_seed_date,campus_event,deq_date,deq_event,relation,auto_applied_to_campus_events_seed,note
+2010,groundbreaking,2011-01,facility built (DEQ RR),related_offset,False,DEQ states the facility was built January 2011; campus seed uses 2010 groundbreaking. Not merged.
+2011-04-14,design_benchmark,2011-01,facility built / later Simple ACDP 2012-06-07,same_campus_start,False,Design PUE/WUE is not generator capacity. Backup MW is not IT load.
+2018,Schedule 272 RECs,2018-05-15,Standard ACDP issued,same_calendar_year_different_meaning,False,REC market accounting is not a physical onsite-generation switch.
+2021-03-18,expansion_announcement,2020,CCO1/CCO2 engines added / commissioning,candidate_related,False,DEQ hours tables show CCO buildings operating around the expansion period; announcement is not a commissioning date.
+2024,11 data-center buildings,"2024 AR buildings PRN1-6 + CCO1,2,3,5,6",eleven DEQ building labels in 2024/2025 hours tables,consistent_count,False,"PRN1-6 (6) + CCO1, CCO2, CCO3, CCO5, CCO6 (5) = 11. Does not identify individual CO dates."

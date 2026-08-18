@@ -16,11 +16,28 @@ import io
 import json
 import os
 import re
+import sys
 import zipfile
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from oregon_generation_qc import (
+    ANNUAL_RATIO_HIGH,
+    ANNUAL_RATIO_LOW,
+    MONTHLY_EXTREME_HIGH,
+    MONTHLY_EXTREME_LOW,
+    annual_reconciliation_notes,
+    classify_annual_reconciliation,
+    is_annual_only_eia923,
+    is_observed_monthly_eia923,
+    monthly_generation_basis,
+    monthly_ratio_is_extreme,
+    normalize_reporting_frequency,
+    relative_difference as annual_relative_difference,
+)
 
 try:
     import python_calamine  # noqa: F401
@@ -43,6 +60,7 @@ EGRID_DIR = RAW / "egrid"
 
 OUT_EIA860 = PROCESSED / "eia860_generator_annual.csv"
 OUT_EIA923 = PROCESSED / "eia923_generation_fuel_monthly.csv"
+OUT_EIA923_FRAME = PROCESSED / "eia923_plant_frame_annual.csv"
 OUT_COOLING = PROCESSED / "eia923_cooling_operations.csv"
 OUT_CAMPD_HOURLY = PROCESSED / "campd_or_unit_hourly.csv"
 OUT_CROSSWALK = PROCESSED / "epa_eia_unit_crosswalk.csv"
@@ -54,6 +72,7 @@ OUT_CHECKS = OUTPUTS / "oregon_generator_data_checks.csv"
 OUT_COVERAGE = OUTPUTS / "oregon_generator_coverage_by_year.csv"
 OUT_COOLING_COV = OUTPUTS / "oregon_cooling_water_coverage_by_year.csv"
 OUT_COMPARE = OUTPUTS / "oregon_campd_eia923_generation_compare.csv"
+OUT_ANNUAL_RECON = OUTPUTS / "oregon_campd_eia923_annual_reconciliation.csv"
 OUT_EIA860_FLAGS = OUTPUTS / "oregon_eia860_observation_flags.csv"
 OUT_EGRID_CMP = OUTPUTS / "oregon_egrid_plant_consistency.csv"
 
@@ -615,7 +634,73 @@ def _923_gen_member(zip_path: Path) -> str:
     return hits[0]
 
 
-def _eia923_year(year: int) -> pd.DataFrame:
+def _eia923_plant_frame_from_excel(xl: pd.ExcelFile, year: int, zip_name: str, member: str) -> pd.DataFrame:
+    empty_cols = [
+        "year",
+        "plant_id",
+        "plant_name",
+        "state",
+        "reporting_frequency",
+        "source_file",
+        "source_frequency_column",
+        "n_frame_rows",
+    ]
+    sheet = sheet_by_keywords(xl.sheet_names, ["plant frame"], exclude=["puerto", "layout"])
+    if sheet is None:
+        sheet = sheet_by_keywords(xl.sheet_names, ["page 6"], exclude=["puerto", "layout", "file"])
+    if sheet is None:
+        return pd.DataFrame(columns=empty_cols)
+    df = parse_sheet_detect_header(xl, sheet, token="plant id")
+    plant_col = pick_col(df, ["Plant Id", "Plant ID"])
+    state_col = pick_col(df, ["Plant State", "State"], required=False)
+    name_col = pick_col(df, ["Plant Name"], required=False)
+    freq_col = pick_col(
+        df,
+        [
+            "Respondent Frequency",
+            "Reporting Frequency",
+            "Reporting Frequency (Annual Or Monthly)",
+        ],
+        required=False,
+    )
+    if freq_col is None:
+        raise ValueError(f"{year} EIA-923 Plant Frame has no reporting-frequency column: {list(df.columns)[:20]}")
+    if state_col:
+        state = df[state_col].astype(str).str.strip().str.upper()
+        or_df = df.loc[state.eq("OR")].copy()
+    else:
+        or_df = df.copy()
+    if or_df.empty:
+        return pd.DataFrame(columns=empty_cols)
+    out = pd.DataFrame(
+        {
+            "year": year,
+            "plant_id": to_numeric_missing(or_df[plant_col]).astype("Int64"),
+            "plant_name": or_df[name_col] if name_col else np.nan,
+            "state": "OR",
+            "reporting_frequency": or_df[freq_col].map(normalize_reporting_frequency),
+            "source_file": f"{zip_name}:{member}:{sheet}",
+            "source_frequency_column": freq_col,
+        }
+    )
+    out = out.dropna(subset=["plant_id"])
+    collapsed = (
+        out.groupby(["plant_id", "year"], dropna=False)
+        .agg(
+            plant_name=("plant_name", "first"),
+            state=("state", "first"),
+            reporting_frequency=("reporting_frequency", lambda s: "|".join(sorted({v for v in s if v}))),
+            source_file=("source_file", "first"),
+            source_frequency_column=("source_frequency_column", "first"),
+            n_frame_rows=("plant_id", "size"),
+        )
+        .reset_index()
+    )
+    collapsed["reporting_frequency"] = collapsed["reporting_frequency"].fillna("").astype(str)
+    return collapsed
+
+
+def _eia923_workbook_year(year: int) -> tuple[pd.DataFrame, pd.DataFrame]:
     zip_path = EIA923_DIR / f"f923_{year}.zip"
     if not zip_path.exists():
         raise FileNotFoundError(zip_path)
@@ -627,6 +712,11 @@ def _eia923_year(year: int) -> pd.DataFrame:
     if sheet is None:
         raise ValueError(f"No generation-and-fuel sheet in {zip_path.name}")
     df = parse_sheet_detect_header(xl, sheet, token="plant id")
+    plant_frame = _eia923_plant_frame_from_excel(xl, year, zip_path.name, member)
+    return _eia923_generation_from_page1(df, year, zip_path.name, member), plant_frame
+
+
+def _eia923_generation_from_page1(df: pd.DataFrame, year: int, zip_name: str, member: str) -> pd.DataFrame:
     plant_col = pick_col(df, ["Plant Id", "Plant ID"])
     state_col = pick_col(df, ["Plant State", "State"])
     name_col = pick_col(df, ["Plant Name"], required=False)
@@ -678,7 +768,7 @@ def _eia923_year(year: int) -> pd.DataFrame:
                     "elec_fuel_mmbtu": to_numeric_missing(or_df[elec_mmbtu[month]]) if month in elec_mmbtu else np.nan,
                     "annual_net_generation_mwh": to_numeric_missing(or_df[annual_gen_col]) if annual_gen_col else np.nan,
                     "annual_total_fuel_mmbtu": to_numeric_missing(or_df[annual_mmbtu_col]) if annual_mmbtu_col else np.nan,
-                    "source_file": f"{zip_path.name}:{member}",
+                    "source_file": f"{zip_name}:{member}",
                     "source_year_field": to_numeric_missing(or_df[year_col]) if year_col else year,
                     "provenance_class": "reported",
                 }
@@ -687,18 +777,63 @@ def _eia923_year(year: int) -> pd.DataFrame:
     return pd.concat(rows, ignore_index=True)
 
 
-def prepare_eia923_generation() -> pd.DataFrame:
-    frames = parallel_years(_eia923_year, MODEL_YEARS, "EIA-923", max_workers=8)
-    if not frames:
+def prepare_eia923_generation() -> tuple[pd.DataFrame, pd.DataFrame]:
+    workers = max(1, min(8, len(MODEL_YEARS), os.cpu_count() or 4))
+    print(f"  EIA-923: {len(MODEL_YEARS)} years, {workers} workers, excel_engine={EXCEL_ENGINE}", flush=True)
+    gen_frames: list[pd.DataFrame] = []
+    frame_frames: list[pd.DataFrame] = []
+    with ProcessPoolExecutor(max_workers=workers) as pool:
+        futs = {pool.submit(_eia923_workbook_year, year): year for year in MODEL_YEARS}
+        for fut in as_completed(futs):
+            year = futs[fut]
+            gen, frame = fut.result()
+            n_gen = 0 if gen is None or gen.empty else len(gen)
+            n_frame = 0 if frame is None or frame.empty else len(frame)
+            print(f"  EIA-923 {year}: {n_gen} generation rows, {n_frame} plant-frame rows", flush=True)
+            if gen is not None and len(gen):
+                gen_frames.append(gen)
+            if frame is not None and len(frame):
+                frame_frames.append(frame)
+    if not gen_frames:
         raise ValueError("No Oregon EIA-923 generation rows")
-    out = pd.concat(frames, ignore_index=True)
-    out = out.dropna(subset=["plant_id"])
-    return out.sort_values(["year", "month", "plant_id", "prime_mover", "fuel_code"]).reset_index(drop=True)
+    out = pd.concat(gen_frames, ignore_index=True).dropna(subset=["plant_id"])
+    plant_frame = (
+        pd.concat(frame_frames, ignore_index=True).dropna(subset=["plant_id"])
+        if frame_frames
+        else pd.DataFrame(
+            columns=[
+                "year",
+                "plant_id",
+                "plant_name",
+                "state",
+                "reporting_frequency",
+                "source_file",
+                "source_frequency_column",
+                "n_frame_rows",
+            ]
+        )
+    )
+    out = attach_reporting_frequency(out, plant_frame)
+    out = out.sort_values(["year", "month", "plant_id", "prime_mover", "fuel_code"]).reset_index(drop=True)
+    plant_frame = plant_frame.sort_values(["year", "plant_id"]).reset_index(drop=True)
+    return out, plant_frame
+
+
+def attach_reporting_frequency(gen_fuel: pd.DataFrame, plant_frame: pd.DataFrame) -> pd.DataFrame:
+    out = gen_fuel.copy()
+    keys = plant_frame[["plant_id", "year", "reporting_frequency"]].drop_duplicates(["plant_id", "year"])
+    out = out.drop(columns=["reporting_frequency", "monthly_generation_basis"], errors="ignore")
+    out = out.merge(keys, on=["plant_id", "year"], how="left")
+    out["reporting_frequency"] = out["reporting_frequency"].map(normalize_reporting_frequency)
+    out["monthly_generation_basis"] = out["reporting_frequency"].map(monthly_generation_basis)
+    annual_only = out["reporting_frequency"].map(is_annual_only_eia923)
+    out.loc[annual_only, "provenance_class"] = "eia_published_monthly_allocation"
+    return out
 
 
 def eia923_plant_month(gen_fuel: pd.DataFrame) -> pd.DataFrame:
     grouped = gen_fuel.groupby(["plant_id", "year", "month"], dropna=False)
-    return grouped.agg(
+    out = grouped.agg(
         plant_name=("plant_name", "first"),
         generation_mwh=("net_generation_mwh", lambda s: s.sum(min_count=1)),
         fuel_mmbtu=("total_fuel_mmbtu", lambda s: s.sum(min_count=1)),
@@ -708,6 +843,115 @@ def eia923_plant_month(gen_fuel: pd.DataFrame) -> pd.DataFrame:
         n_generation_nonmissing=("net_generation_mwh", lambda s: int(s.notna().sum())),
         n_generation_zero=("net_generation_mwh", lambda s: int((s == 0).sum())),
     ).reset_index()
+    if "reporting_frequency" in gen_fuel.columns:
+        cols = ["plant_id", "year", "month", "reporting_frequency"]
+        if "monthly_generation_basis" in gen_fuel.columns:
+            cols.append("monthly_generation_basis")
+        freq = gen_fuel[cols].drop_duplicates(["plant_id", "year", "month"], keep="first")
+        out = out.merge(freq, on=["plant_id", "year", "month"], how="left")
+    else:
+        out["reporting_frequency"] = ""
+        out["monthly_generation_basis"] = "unknown"
+    if "monthly_generation_basis" not in out.columns:
+        out["monthly_generation_basis"] = out["reporting_frequency"].map(monthly_generation_basis)
+    return out
+
+
+def eia923_plant_year(gen_fuel: pd.DataFrame) -> pd.DataFrame:
+    """Calendar-year EIA-923 net generation from the Page 1 annual column, not monthly sums."""
+    agg = {
+        "plant_name": ("plant_name", "first"),
+        "eia923_net_generation_mwh": ("annual_net_generation_mwh", "first"),
+        "eia923_monthly_net_sum": ("net_generation_mwh", lambda s: s.sum(min_count=1)),
+        "eia923_fuel_mmbtu": ("annual_total_fuel_mmbtu", "first"),
+    }
+    if "reporting_frequency" in gen_fuel.columns:
+        agg["reporting_frequency"] = ("reporting_frequency", "first")
+    row = gen_fuel.groupby(["plant_id", "year", "prime_mover", "fuel_code"], dropna=False).agg(**agg).reset_index()
+    if "reporting_frequency" not in row.columns:
+        row["reporting_frequency"] = ""
+    missing_annual = row["eia923_net_generation_mwh"].isna() & row["eia923_monthly_net_sum"].notna()
+    row.loc[missing_annual, "eia923_net_generation_mwh"] = row.loc[missing_annual, "eia923_monthly_net_sum"]
+    plant = (
+        row.groupby(["plant_id", "year"], dropna=False)
+        .agg(
+            plant_name=("plant_name", "first"),
+            eia923_net_generation_mwh=("eia923_net_generation_mwh", lambda s: s.sum(min_count=1)),
+            eia923_monthly_net_sum=("eia923_monthly_net_sum", lambda s: s.sum(min_count=1)),
+            eia923_fuel_mmbtu=("eia923_fuel_mmbtu", lambda s: s.sum(min_count=1)),
+            reporting_frequency=("reporting_frequency", lambda s: next((v for v in s if v), "")),
+        )
+        .reset_index()
+    )
+    plant["monthly_generation_basis"] = plant["reporting_frequency"].map(monthly_generation_basis)
+    return plant
+
+
+def campd_eia923_annual_reconciliation(campd_m: pd.DataFrame, eia923: pd.DataFrame, plant_frame: pd.DataFrame) -> pd.DataFrame:
+    """Plant-year CAMPD gross vs EIA-923 net. Universe is CAMPD plants (comparable CEMS units)."""
+    campd_agg = {
+        "campd_gross_generation_mwh": ("campd_gross_generation_mwh", lambda s: s.sum(min_count=1)),
+        "n_campd_months": ("month", "nunique"),
+    }
+    if "campd_heat_input_mmbtu" in campd_m.columns:
+        campd_agg["campd_heat_input_mmbtu"] = ("campd_heat_input_mmbtu", lambda s: s.sum(min_count=1))
+    if "plant_name_campd" in campd_m.columns:
+        campd_agg["plant_name_campd"] = ("plant_name_campd", "first")
+    campd_y = campd_m.groupby(["plant_id", "year"], dropna=False).agg(**campd_agg).reset_index()
+    campd_plants = set(pd.to_numeric(campd_y["plant_id"], errors="coerce").dropna().astype(int))
+    eia_y = eia923_plant_year(eia923)
+    eia_y = eia_y[pd.to_numeric(eia_y["plant_id"], errors="coerce").isin(campd_plants)]
+    recon = campd_y.merge(eia_y, on=["plant_id", "year"], how="outer", suffixes=("_campd", "_eia"))
+    if len(plant_frame):
+        frame_keys = plant_frame[["plant_id", "year", "reporting_frequency"]].drop_duplicates(["plant_id", "year"])
+    else:
+        frame_keys = pd.DataFrame(columns=["plant_id", "year", "reporting_frequency"])
+    if "reporting_frequency" in recon.columns:
+        recon = recon.rename(columns={"reporting_frequency": "reporting_frequency_eia"})
+    recon = recon.merge(frame_keys, on=["plant_id", "year"], how="left")
+    if "reporting_frequency" not in recon.columns:
+        recon["reporting_frequency"] = recon.get("reporting_frequency_eia", "")
+    eia_freq = recon["reporting_frequency_eia"] if "reporting_frequency_eia" in recon.columns else ""
+    recon["reporting_frequency"] = recon["reporting_frequency"].replace("", np.nan).fillna(eia_freq).map(normalize_reporting_frequency)
+    recon["monthly_generation_basis"] = recon["reporting_frequency"].map(monthly_generation_basis)
+    campd = pd.to_numeric(recon["campd_gross_generation_mwh"], errors="coerce")
+    eia = pd.to_numeric(recon["eia923_net_generation_mwh"], errors="coerce")
+    recon["annual_ratio"] = np.where(eia.notna() & (eia != 0) & campd.notna(), campd / eia, np.nan)
+    recon["annual_difference_mwh"] = campd - eia
+    recon["relative_difference"] = np.where(eia.notna() & (eia != 0) & campd.notna(), (campd - eia) / eia, np.nan)
+    recon["qc_status"] = [
+        classify_annual_reconciliation(c, e, f)
+        for c, e, f in zip(campd, eia, recon["reporting_frequency"])
+    ]
+    heat = pd.to_numeric(recon["campd_heat_input_mmbtu"], errors="coerce") if "campd_heat_input_mmbtu" in recon.columns else pd.Series(np.nan, index=recon.index)
+    fuel = pd.to_numeric(recon["eia923_fuel_mmbtu"], errors="coerce") if "eia923_fuel_mmbtu" in recon.columns else pd.Series(np.nan, index=recon.index)
+    recon["notes"] = [
+        annual_reconciliation_notes(status, freq, h, fu)
+        for status, freq, h, fu in zip(recon["qc_status"], recon["reporting_frequency"], heat, fuel)
+    ]
+    name_campd = recon["plant_name_campd"] if "plant_name_campd" in recon.columns else pd.Series(np.nan, index=recon.index)
+    name_eia = recon["plant_name"] if "plant_name" in recon.columns else pd.Series(np.nan, index=recon.index)
+    recon["plant_name"] = name_campd.where(name_campd.notna() & name_campd.astype(str).ne("nan"), name_eia)
+    keep = [
+        "plant_id",
+        "year",
+        "plant_name",
+        "reporting_frequency",
+        "monthly_generation_basis",
+        "campd_gross_generation_mwh",
+        "eia923_net_generation_mwh",
+        "annual_ratio",
+        "annual_difference_mwh",
+        "relative_difference",
+        "campd_heat_input_mmbtu",
+        "eia923_fuel_mmbtu",
+        "qc_status",
+        "notes",
+    ]
+    for c in keep:
+        if c not in recon.columns:
+            recon[c] = np.nan
+    return recon[keep].sort_values(["year", "plant_id"]).reset_index(drop=True)
 
 
 # ---------------------------------------------------------------------------
@@ -1250,6 +1494,8 @@ def compare_campd_eia923(campd_m: pd.DataFrame, eia923_pm: pd.DataFrame) -> pd.D
         "month",
         "plant_name_campd",
         "plant_name",
+        "reporting_frequency",
+        "monthly_generation_basis",
         "campd_gross_generation_mwh",
         "campd_posted_gross_load_mw_sum",
         "generation_mwh",
@@ -1259,6 +1505,12 @@ def compare_campd_eia923(campd_m: pd.DataFrame, eia923_pm: pd.DataFrame) -> pd.D
         "n_reporting_units",
         "n_hours",
     ]
+    if "reporting_frequency" not in merged.columns and "reporting_frequency_eia923" in merged.columns:
+        merged["reporting_frequency"] = merged["reporting_frequency_eia923"]
+    if "monthly_generation_basis" not in merged.columns and "monthly_generation_basis_eia923" in merged.columns:
+        merged["monthly_generation_basis"] = merged["monthly_generation_basis_eia923"]
+    if "monthly_generation_basis" not in merged.columns:
+        merged["monthly_generation_basis"] = merged.get("reporting_frequency", pd.Series("", index=merged.index)).map(monthly_generation_basis)
     # plant_name from eia923 agg
     if "plant_name" not in merged.columns and "plant_name_eia923" in merged.columns:
         merged["plant_name"] = merged["plant_name_eia923"]
@@ -1598,6 +1850,7 @@ def run_checks(
     analysis: pd.DataFrame,
     compare: pd.DataFrame,
     eia860_flags: pd.DataFrame,
+    annual_recon: pd.DataFrame | None = None,
 ) -> list[dict]:
     checks: list[dict] = []
     key = ["Facility ID", "Unit ID", "Date", "Hour"]
@@ -1782,21 +2035,77 @@ def run_checks(
     )
 
     both_cmp = compare[compare["join_status"].eq("both")].dropna(subset=["r_campd_over_eia923"])
-    if len(both_cmp):
-        corr = pd.to_numeric(both_cmp["campd_gross_generation_mwh"], errors="coerce").corr(
-            pd.to_numeric(both_cmp["generation_mwh"], errors="coerce")
+    if "monthly_generation_basis" in both_cmp.columns:
+        monthly_obs = both_cmp[both_cmp["monthly_generation_basis"].eq("respondent_monthly")]
+        annual_only_months = both_cmp[both_cmp["monthly_generation_basis"].eq("eia_allocated_from_annual")]
+    else:
+        monthly_obs = both_cmp
+        annual_only_months = both_cmp.iloc[0:0]
+    if len(monthly_obs):
+        corr = pd.to_numeric(monthly_obs["campd_gross_generation_mwh"], errors="coerce").corr(
+            pd.to_numeric(monthly_obs["generation_mwh"], errors="coerce")
         )
-        med = float(both_cmp["r_campd_over_eia923"].median())
-        extreme = int(((both_cmp["r_campd_over_eia923"] > 5) | (both_cmp["r_campd_over_eia923"] < 0.05)).sum())
+        med = float(monthly_obs["r_campd_over_eia923"].median())
+        extreme_monthly = int(monthly_obs["r_campd_over_eia923"].map(monthly_ratio_is_extreme).sum())
         add_check(
             checks,
             "campd_eia923_generation_comparison_plausible",
             pd.notna(corr) and corr > 0.5 and 0.5 <= med <= 2.0,
-            f"n={len(both_cmp)} corr={corr:.3f} median_R={med:.3f} extreme_R_count={extreme}",
+            (
+                f"monthly_reporters n={len(monthly_obs)} corr={corr:.3f} median_R={med:.3f} "
+                f"extreme_R_count={extreme_monthly}; annual_respondent_months_excluded={len(annual_only_months)}"
+            ),
             abort=False,
         )
     else:
-        add_check(checks, "campd_eia923_generation_comparison_plausible", False, "no overlapping plant-months", abort=False)
+        add_check(checks, "campd_eia923_generation_comparison_plausible", False, "no overlapping monthly-reporter plant-months", abort=False)
+
+    extreme_annual_only = int(annual_only_months["r_campd_over_eia923"].map(monthly_ratio_is_extreme).sum()) if len(annual_only_months) else 0
+    add_check(
+        checks,
+        "eia923_annual_respondents_not_treated_as_observed_monthly",
+        (
+            "monthly_generation_basis" in compare.columns
+            and (
+                annual_only_months.empty
+                or annual_only_months["reporting_frequency"].map(is_annual_only_eia923).all()
+            )
+        ),
+        (
+            f"frequency=A months={len(annual_only_months)} "
+            f"monthly_extreme_R_as_diagnostic_only={extreme_annual_only}"
+        ),
+        abort=False,
+    )
+
+    if annual_recon is not None and len(annual_recon):
+        n_warn = int(annual_recon["qc_status"].eq("annual_comparability_warning").sum())
+        n_ok = int(annual_recon["qc_status"].eq("ok").sum())
+        n_both = int(
+            (annual_recon["campd_gross_generation_mwh"].notna() & annual_recon["eia923_net_generation_mwh"].notna()).sum()
+        )
+        a_rows = annual_recon[annual_recon["reporting_frequency"].map(is_annual_only_eia923)]
+        a_primary = int(a_rows["qc_status"].isin(["ok", "annual_comparability_warning", "campd_only", "eia923_only", "not_comparable"]).sum()) if len(a_rows) else 0
+        add_check(
+            checks,
+            "campd_eia923_annual_reconciliation_primary_for_annual_respondents",
+            len(a_rows) == 0 or a_primary == len(a_rows),
+            (
+                f"annual_respondent_plant_years={len(a_rows)} "
+                f"all_have_annual_qc={a_primary == len(a_rows)} "
+                f"comparable_ok={n_ok} warnings={n_warn} comparable_rows={n_both} "
+                f"envelope={ANNUAL_RATIO_LOW}-{ANNUAL_RATIO_HIGH}"
+            ),
+            abort=False,
+        )
+    else:
+        add_check(
+            checks,
+            "campd_eia923_annual_reconciliation_primary_for_annual_respondents",
+            False,
+            "annual reconciliation table missing",
+            abort=False,
+        )
 
     add_check(
         checks,
@@ -1842,6 +2151,13 @@ def self_test() -> None:
     assert classify_match_method("3_1 Exact match", "Step 2d: Modify IDs; remove leading letters") == "modified_fuzzy"
     assert classify_match(1, 2, 1, "Exact match") == "one_to_many|exact"
     assert classify_match(1, 1, 1, "Manual Match") == "one_to_one|official_manual"
+    assert normalize_reporting_frequency("A") == "A"
+    assert normalize_reporting_frequency("Monthly") == "M"
+    assert is_annual_only_eia923("A") and not is_observed_monthly_eia923("A")
+    assert is_observed_monthly_eia923("M") and is_observed_monthly_eia923("AM")
+    assert monthly_generation_basis("A") == "eia_allocated_from_annual"
+    assert classify_annual_reconciliation(1210.0, 1000.0, "A") == "annual_comparability_warning"
+    assert classify_annual_reconciliation(1020.0, 1000.0, "A") == "ok"
     assert EXCEL_ENGINE in {"calamine", "openpyxl"}
     posted = pd.Series([10.0, np.nan, 0.0])
     optime = pd.Series([0.5, 1.0, 1.0])
@@ -1899,8 +2215,9 @@ def prepare(reuse_campd: bool = True) -> dict:
     eia860 = prepare_eia860()
     eia860.to_csv(OUT_EIA860, index=False)
     print("EIA-923 generation/fuel...", flush=True)
-    eia923 = prepare_eia923_generation()
+    eia923, plant_frame = prepare_eia923_generation()
     eia923.to_csv(OUT_EIA923, index=False)
+    plant_frame.to_csv(OUT_EIA923_FRAME, index=False)
     eia923_pm = eia923_plant_month(eia923)
     or_plant_ids = set(pd.concat([eia860["plant_id"], eia923["plant_id"]], ignore_index=True).dropna().astype(int))
     print("EIA cooling detail 2014-2024...", flush=True)
@@ -1929,6 +2246,7 @@ def prepare(reuse_campd: bool = True) -> dict:
     eia860_py = eia860_plant_year(eia860)
     eia860_flags = flag_eia860_vs_campd(campd, eia860, unit_map, xw)
     compare = compare_campd_eia923(campd_m, eia923_pm)
+    annual_recon = campd_eia923_annual_reconciliation(campd_m, eia923, plant_frame)
     analysis = build_analysis_table(eia923_pm, eia860_py, campd_m, cooling_pm, audit)
     coverage = coverage_by_year(eia860, eia923, campd, analysis, audit)
     cooling_cov = cooling_coverage_by_year(cooling_pm)
@@ -1938,6 +2256,7 @@ def prepare(reuse_campd: bool = True) -> dict:
     coverage.to_csv(OUT_COVERAGE, index=False)
     cooling_cov.to_csv(OUT_COOLING_COV, index=False)
     compare.to_csv(OUT_COMPARE, index=False)
+    annual_recon.to_csv(OUT_ANNUAL_RECON, index=False)
     eia860_flags.to_csv(OUT_EIA860_FLAGS, index=False)
 
     checks = run_checks(
@@ -1952,6 +2271,7 @@ def prepare(reuse_campd: bool = True) -> dict:
         analysis,
         compare,
         eia860_flags,
+        annual_recon,
     )
     pd.DataFrame(checks).to_csv(OUT_CHECKS, index=False)
     try:
@@ -1998,6 +2318,7 @@ def prepare(reuse_campd: bool = True) -> dict:
             for p in [
                 OUT_EIA860,
                 OUT_EIA923,
+                OUT_EIA923_FRAME,
                 OUT_COOLING,
                 OUT_CAMPD_HOURLY,
                 OUT_CROSSWALK,
@@ -2008,6 +2329,7 @@ def prepare(reuse_campd: bool = True) -> dict:
                 OUT_COVERAGE,
                 OUT_COOLING_COV,
                 OUT_COMPARE,
+                OUT_ANNUAL_RECON,
                 OUT_EIA860_FLAGS,
                 OUT_EGRID_CMP,
             ]
@@ -2021,6 +2343,8 @@ def prepare(reuse_campd: bool = True) -> dict:
             "Water intensities use cooling-product water / cooling-associated generation only",
             "2011-2012 Schedule 8 cooling volumes left missing (units not comparable)",
             "Negative cooling consumption is preserved as reported and excluded from intensity",
+            "EIA-923 Plant Frame reporting frequency is attached; frequency=A monthly Netgen is not treated as observed",
+            "Primary CAMPD/EIA-923 generation QC for annual respondents is plant-year reconciliation, not monthly ratios",
             "This pilot does not identify generators serving the Prineville campus",
         ],
     }

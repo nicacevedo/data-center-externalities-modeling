@@ -9,9 +9,21 @@ unresolved cases.
 from __future__ import annotations
 
 from pathlib import Path
+import sys
 
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from oregon_generation_qc import (
+    MONTHLY_EXTREME_HIGH,
+    MONTHLY_EXTREME_LOW,
+    is_annual_only_eia923,
+    monthly_generation_basis,
+    monthly_outlier_is_primary_conflict,
+    monthly_ratio_is_extreme,
+    normalize_reporting_frequency,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 PROCESSED = ROOT / "data" / "processed"
@@ -19,6 +31,7 @@ OUTPUTS = ROOT / "outputs"
 
 OUT_REPORT = OUTPUTS / "oregon_exception_report.csv"
 OUT_SUMMARY = OUTPUTS / "oregon_exception_summary.csv"
+OUT_ANNUAL_RECON = OUTPUTS / "oregon_campd_eia923_annual_reconciliation.csv"
 
 COLS = [
     "issue_type",
@@ -49,8 +62,8 @@ COLS = [
     "needs_manual_review",
 ]
 
-EXTREME_HIGH = 5.0
-EXTREME_LOW = 0.05
+EXTREME_HIGH = MONTHLY_EXTREME_HIGH
+EXTREME_LOW = MONTHLY_EXTREME_LOW
 
 
 def row(**kwargs) -> dict:
@@ -282,8 +295,14 @@ def generation_outliers(compare: pd.DataFrame, audit: pd.DataFrame) -> list[dict
     rows = []
     both = compare[compare["join_status"].eq("both")].copy()
     both["r_campd_over_eia923"] = pd.to_numeric(both["r_campd_over_eia923"], errors="coerce")
+    if "reporting_frequency" in both.columns:
+        both["reporting_frequency"] = both["reporting_frequency"].map(normalize_reporting_frequency)
+    else:
+        both["reporting_frequency"] = ""
+    if "monthly_generation_basis" not in both.columns:
+        both["monthly_generation_basis"] = both["reporting_frequency"].map(monthly_generation_basis)
     gen_col = "campd_gross_generation_mwh" if "campd_gross_generation_mwh" in both.columns else "campd_gross_load_mwh_or_equivalent"
-    ext = both[(both["r_campd_over_eia923"] > EXTREME_HIGH) | (both["r_campd_over_eia923"] < EXTREME_LOW)]
+    ext = both[both["r_campd_over_eia923"].map(monthly_ratio_is_extreme)]
     ext = ext.sort_values(["year", "month", "plant_id"])
     unit_map = (
         audit.dropna(subset=["eia_plant_id"])
@@ -305,6 +324,48 @@ def generation_outliers(compare: pd.DataFrame, audit: pd.DataFrame) -> list[dict
         g_eia = rec.generation_mwh
         r = rec.r_campd_over_eia923
         campd_name = rec.plant_name_campd if pd.notna(rec.plant_name_campd) else rec.plant_name
+        freq = normalize_reporting_frequency(getattr(rec, "reporting_frequency", ""))
+        basis = monthly_generation_basis(freq)
+        primary = monthly_outlier_is_primary_conflict(freq)
+        if is_annual_only_eia923(freq) or (not primary and basis == "eia_allocated_from_annual"):
+            rows.append(
+                row(
+                    issue_type="campd_eia923_generation_outlier",
+                    root_cause_class="coverage_limitation",
+                    root_cause_id="eia923_annual_respondent_monthly_not_observed",
+                    severity="low",
+                    year=int(rec.year),
+                    month=int(rec.month),
+                    plant_name=campd_name,
+                    camd_facility_id=_num(rec.camd_facility_id),
+                    camd_unit_id=rec.camd_unit_id,
+                    eia_plant_id=_num(rec.plant_id),
+                    eia_generator_id=rec.eia_generator_id,
+                    mapping_cardinality=rec.mapping_cardinality,
+                    match_method=rec.match_method,
+                    match_type=rec.match_type,
+                    source_a="CAMPD plant-month gross generation MWh (Gross Load MW × Operating Time)",
+                    value_a=_num(g_campd),
+                    source_b="EIA-923 published monthly net generation MWh (annual respondent; not observed)",
+                    value_b=_num(g_eia),
+                    difference=_num(g_campd) - _num(g_eia) if pd.notna(g_campd) and pd.notna(g_eia) else np.nan,
+                    ratio=_num(r),
+                    reason_flagged=(
+                        f"EIA-923 Plant Frame frequency={freq}; monthly_generation_basis={basis}. "
+                        f"Monthly R={r} is a diagnostic only. Primary QC is annual CAMPD/EIA-923 reconciliation."
+                    ),
+                    agent_interpretation=(
+                        "Annual EIA-923 respondents report calendar-year totals and do not break generation "
+                        "down by month. Published monthly Netgen columns are EIA allocations/estimates, not "
+                        "respondent monthly observations. Monthly CAMPD vs EIA-923 disagreement is expected "
+                        "and is not an unresolved source conflict."
+                    ),
+                    confidence="high",
+                    recommended_action="Use the plant-year CAMPD/EIA-923 reconciliation. Do not rescale CAMPD or EIA-923 monthly values.",
+                    needs_manual_review=False,
+                )
+            )
+            continue
         rows.append(
             row(
                 issue_type="campd_eia923_generation_outlier",
@@ -323,24 +384,89 @@ def generation_outliers(compare: pd.DataFrame, audit: pd.DataFrame) -> list[dict
                 match_type=rec.match_type,
                 source_a="CAMPD plant-month gross generation MWh (Gross Load MW × Operating Time)",
                 value_a=_num(g_campd),
-                source_b="EIA-923 plant-month net generation MWh",
+                source_b="EIA-923 plant-month net generation MWh (respondent monthly)",
                 value_b=_num(g_eia),
                 difference=_num(g_campd) - _num(g_eia) if pd.notna(g_campd) and pd.notna(g_eia) else np.nan,
                 ratio=_num(r),
                 reason_flagged=(
-                    f"residual extreme ratio after CAMPD energy fix: R={r} "
-                    f"(threshold R> {EXTREME_HIGH} or R< {EXTREME_LOW}); "
+                    f"EIA-923 Plant Frame frequency={freq or 'unknown'}; monthly_generation_basis={basis}. "
+                    f"Respondent monthly ratio R={r} outside {EXTREME_LOW}-{EXTREME_HIGH}; "
                     f"n_reporting_units={rec.n_reporting_units}; n_hours={rec.n_hours}; "
                     f"CAMPD name={campd_name}; EIA-923 name={rec.plant_name}"
                 ),
                 agent_interpretation=(
                     "CAMPD is unit-level gross generation; EIA-923 is plant-level net generation. "
-                    "Inequality is expected. This residual ratio remains outside the QC extreme band. "
-                    "Values were not rescaled or forced equal."
+                    "This plant-year is a monthly EIA-923 reporter, so monthly disagreement remains "
+                    "eligible for discrepancy QC. Values were not rescaled or forced equal."
                 ),
                 confidence="high",
                 recommended_action="Inspect EIA-923 fuel-row coverage for this plant-month. Do not multiply posted CAMPD mass by Operating Time.",
                 needs_manual_review=True,
+            )
+        )
+    return rows
+
+
+def annual_reconciliation_exceptions(recon: pd.DataFrame, audit: pd.DataFrame) -> list[dict]:
+    rows = []
+    if recon is None or recon.empty:
+        return rows
+    unit_map = (
+        audit.dropna(subset=["eia_plant_id"])
+        .groupby("eia_plant_id")
+        .agg(
+            camd_facility_id=("camd_facility_id", "first"),
+            camd_unit_id=("camd_unit_id", lambda s: "|".join(sorted(s.astype(str)))),
+            mapping_cardinality=("mapping_cardinality", lambda s: join_unique(s)),
+            match_method=("match_method", lambda s: join_unique(s)),
+        )
+        .reset_index()
+        .rename(columns={"eia_plant_id": "plant_id"})
+        if len(audit) and "eia_plant_id" in audit.columns
+        else pd.DataFrame()
+    )
+    warn = recon[recon["qc_status"].eq("annual_comparability_warning")].copy()
+    if unit_map.empty:
+        merged = warn
+        for col in ["camd_facility_id", "camd_unit_id", "mapping_cardinality", "match_method"]:
+            if col not in merged.columns:
+                merged[col] = np.nan
+    else:
+        merged = warn.merge(unit_map, on="plant_id", how="left")
+    for rec in merged.itertuples(index=False):
+        freq = normalize_reporting_frequency(getattr(rec, "reporting_frequency", ""))
+        rows.append(
+            row(
+                issue_type="campd_eia923_annual_comparability_warning",
+                root_cause_class="coverage_limitation",
+                root_cause_id=f"annual_comparability_{int(rec.plant_id)}_{int(rec.year)}",
+                severity="medium",
+                year=int(rec.year),
+                plant_name=getattr(rec, "plant_name", np.nan),
+                camd_facility_id=_num(getattr(rec, "camd_facility_id", np.nan)),
+                camd_unit_id=getattr(rec, "camd_unit_id", np.nan),
+                eia_plant_id=_num(rec.plant_id),
+                mapping_cardinality=getattr(rec, "mapping_cardinality", np.nan),
+                match_method=getattr(rec, "match_method", np.nan),
+                source_a="CAMPD annual gross generation MWh",
+                value_a=_num(rec.campd_gross_generation_mwh),
+                source_b="EIA-923 annual net generation MWh",
+                value_b=_num(rec.eia923_net_generation_mwh),
+                difference=_num(rec.annual_difference_mwh),
+                ratio=_num(rec.annual_ratio),
+                reason_flagged=str(getattr(rec, "notes", "")),
+                agent_interpretation=(
+                    "Annual CAMPD gross vs EIA-923 net is outside the documented envelope. "
+                    "Monthly EIA-923 allocation cannot explain an annual gap. "
+                    "Evidence is insufficient to choose a source correction; values were not rescaled."
+                    if is_annual_only_eia923(freq)
+                    else "Annual CAMPD gross vs EIA-923 net is outside the documented envelope. "
+                    "This may reflect gross vs net, CEMS coverage versus plant-level EIA-923, or another "
+                    "source-boundary difference. Values were not rescaled."
+                ),
+                confidence="medium",
+                recommended_action="Leave both sources as reported. Do not use this plant-year as a monthly-forced-agreement check.",
+                needs_manual_review=False,
             )
         )
     return rows
@@ -607,11 +733,13 @@ def build() -> tuple[pd.DataFrame, pd.DataFrame]:
     campd_m = pd.read_csv(PROCESSED / "campd_or_plant_monthly.csv")
     analysis = pd.read_csv(PROCESSED / "oregon_generator_externalities_monthly.csv")
     names = plant_name_map(campd_m, analysis, cool)
+    annual_recon = pd.read_csv(OUT_ANNUAL_RECON) if OUT_ANNUAL_RECON.exists() else pd.DataFrame()
 
     records = []
     records.extend(crosswalk_exceptions(audit))
     records.extend(temporal_exceptions(flags, names))
     records.extend(generation_outliers(compare, audit))
+    records.extend(annual_reconciliation_exceptions(annual_recon, audit))
     records.extend(cooling_exceptions(cool, names))
     records.extend(qc_failures(checks))
 

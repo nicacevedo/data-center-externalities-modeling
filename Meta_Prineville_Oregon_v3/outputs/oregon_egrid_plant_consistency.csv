@@ -5,7 +5,7 @@ model_year,egrid_data_year,plant_id,campd_co2_tonnes,egrid_co2_tonnes,ratio_camp
 2014,2014,54761,951883.9774220315,951883.9774220316,0.9999999999999999,2222352.3,2315061.0,implementation consistency only; eGRID already incorporates EIA/EPA sources
 2014,2014,55103,893521.1888318916,801861.4090594507,1.114308755524167,2258460.41,2184907.0,implementation consistency only; eGRID already incorporates EIA/EPA sources
 2014,2014,55328,1208209.435756534,1208209.4357565339,1.0000000000000002,3181576.8000000003,3100584.0,implementation consistency only; eGRID already incorporates EIA/EPA sources
-2014,2014,55544,20057.075329708343,20057.07532970834,1.0000000000000002,35241.71,34991.0,implementation consistency only; eGRID already incorporates EIA/EPA sources
+2014,2014,55544,20057.075329708343,20057.07532970834,1.0000000000000002,35241.70999999999,34991.0,implementation consistency only; eGRID already incorporates EIA/EPA sources
 2014,2014,56227,734415.4450534625,734415.4450534625,1.0,1985476.1300000004,1943131.0,implementation consistency only; eGRID already incorporates EIA/EPA sources
 2015,2014,6106,2296296.9080643207,3048558.430541686,0.7532402479345954,2528798.2800000003,3202307.0,implementation consistency only; eGRID already incorporates EIA/EPA sources
 2015,2014,7350,644729.2302607511,1051368.4832174387,0.6132286068607703,1709631.56,1273703.0,implementation consistency only; eGRID already incorporates EIA/EPA sources

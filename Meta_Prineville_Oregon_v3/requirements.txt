@@ -8,3 +8,4 @@ matplotlib
 openpyxl
 xlrd
 python-calamine
+pymupdf

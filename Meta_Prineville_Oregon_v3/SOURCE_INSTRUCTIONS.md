@@ -279,6 +279,26 @@ Rules:
 - Water intensities use cooling-product water over cooling-associated generation only. Emission intensities use CAMPD mass over CAMPD gross generation only. Negative official cooling consumption is not clipped and is not used for intensity.
 - This layer does **not** identify which generators served the Prineville campus. Do not expand to other states until Oregon QC passes.
 
+## 12.5 Oregon DEQ Vitesse air permit / GHG (onsite generation, independent)
+
+- Sources: collected PDFs under `data/raw/deq_air/` (permit 07-0037, 2012-2025) and workbooks under `data/raw/deq_ghg/`.
+- Command: `python run_prineville.py deq`
+- Scripts: `src/prepare_deq_prineville.py`, `src/prepare_deq_ghg.py`, `src/audit_deq_prineville.py`.
+- Raw files are never modified.
+
+Rules:
+- Observation year/month come from the table token (`Jan-20`), not the filename. A 2012 annual report may still contain 2013 month cells; those are 2013 observations.
+- Rolling 12-month totals are diagnostics only. Canonical monthly operations use the monthly column. Repeated reprints of the same generator-month across later annual reports are collapsed to one row (prefer the same-year annual report) rather than summed.
+- Preserve conflicting vintages. Flag, do not silently pick, the 150 kW vs 177 kW John Deere rating, the 6068HF285 vs 4045HF285 model strings, the 2018 2.5 MW vs 2019 3.0 MW class for PRN3-EG-N1..N4, and the 2019 PMRR 148.7 vs 248.7 MW arithmetic.
+- Generator states are separate: proposed / authorized / installed-listed / active / retired. Never treat proposed units as active without hours-table or commissioning evidence.
+- Never interpret backup nameplate MW as IT capacity or facility load.
+- Never treat PSEL/PTE permit limits as actual emissions.
+- Keep source-test measurements (`data/processed/meta_backup_source_tests.csv`) separate from DEQ-calculated annual-report emissions.
+- Keep onsite DEQ tons separate from grid Scope 2, eGRID NWPP, and PACW.
+- Missing stays missing. Scan-only PDFs (2019/2021 ARs; 2020 and 2022 permit/review scans) are not OCR'd.
+- Process `ghgElectricityEms.xlsx` for Pacific Power (PacifiCorp) Oregon deliveries. Other GHG workbooks are provenance unless they contain Vitesse 07-0037 observations (none identified).
+- Do not rewrite `data/canonical/campus_events_seed.csv`. The join is `outputs/deq_campus_event_crosswalk.csv`.
+
 ## 13. Renewable accounting / Schedule 272 context
 
 - Source ID: `OREGON_BER_RENEWABLE`

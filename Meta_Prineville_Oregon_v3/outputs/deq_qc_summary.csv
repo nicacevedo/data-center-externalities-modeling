@@ -1,0 +1,24 @@
+check,status,severity,detail
+rr2018_existing_count_48,PASS,ok,n=48
+rr2018_proposed_count_38,PASS,ok,n=38
+rr2018_total_count_86,PASS,ok,n=86
+rr2018_existing_capacity_136p7_mw,PASS,ok,mw=136.7
+rr2018_buildout_capacity_246p7_mw,PASS,ok,mw=246.7
+john_deere_150_vs_177_kw_flagged,PASS,ok,2018 Table 1 / para 10: 150 kW; 2018 emission-detail sheets and 2019 PMRR: 177 kW. Both preserved.
+monthly_key_unique_generator_year_month,PASS,ok,duplicate_rows=0
+rolling12_not_used_as_monthly_observation,PASS,ok,canonical monthly fields are the monthly columns; rolling12 retained only as diagnostic
+observation_year_from_table_not_filename,PASS,ok,"rows_with_doc_year_ne_obs_year=561 (later-AR reprints of prior-year monthly, not filename years)"
+emissions_monthly_key_unique,PASS,ok,dups=0
+nox_hours_factor_partial_2020,PASS,ok,reported=18.92 partial_6etc_est=13.95 ratio=0.7375484143763216
+nox_hours_factor_partial_2024,PASS,ok,reported=8.25 partial_6etc_est=5.114 ratio=0.619824
+nox_hours_factor_partial_2025,PASS,ok,reported=10.22 partial_6etc_est=6.539 ratio=0.6398105675146771
+psel_not_treated_as_actual,PASS,ok,PSEL columns are not stored as actual emissions
+onsite_deq_emissions_not_scope2,PASS,ok,backup emissions files marked not_scope2 / not eGRID/PACW
+source_tests_separate_from_ar_emissions,PASS,ok,source_test_rows=14
+pacific_power_ghg_separate,PASS,ok,"years=[2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]"
+no_ocr,PASS,ok,ocr_used is false for all documents
+scan_only_ars_not_ocrd,PASS,ok,files=07-0037-ST-01_AR_2019.pdf;07-0037-ST-01_AR_2021.pdf
+campus_events_seed_unmodified,PASS,ok,crosswalk written; campus_events_seed.csv is not rewritten by this module
+existing_model_outputs_not_written_by_deq,PASS,ok,DEQ scripts write only deq_*/meta_backup_* paths and pacific_power_deq_ghg_annual.csv. Frozen hashes: data/canonical/meta_prineville_annual.csv:1f6b19f466b89a0e08c4914689186bed1bc8a9574c5732bb26c17562e5a1e513 | data/canonical/campus_events_seed.csv:7a3c1d127f64f0791d612a6e484e5c57549fc2066d0e357c8c7f23b3900e6ad3 | data/processed/pacw_hourly.csv:97a0e1a5a295b1dab5029f6531618e29697be71a08a049086ddeef3bb3f95b1e | data/processed/egrid_prineville_annual.csv:91525496ce943a6c10341ed010dc9dba844d1f698f144f03731be71565e8f4b2 | outputs/oregon_generator_data_checks.csv:7eddfe0d6d4f54cd4febb8a665daee2c191413e0dd57dc51f4c6bdd2c7d467a3 | outputs/conditional_annual_compare.csv:1e33f9168a4744b61f0025a41ef6b91895dd5243524ad43494c0f7e6a822baa6
+remaining_gaps_documented,PASS,ok,No AR_2013 in the collected dump. | No AR_2018 in the collected dump. | Scan-only annual reports / permits not OCR'd: 07-0037-ST-01_AR_2019.pdf; 07-0037-ST-01_AR_2021.pdf | Scan-only permit/review PDFs not OCR'd: 07-0037-ST-01_PMRR_2020_2.pdf; 07-0037-ST-01_PM_2020_2.pdf; 07-0037-ST-01_P_2022.pdf; 07-0037-ST-01_RR_2022.pdf | 2014 AR native text is garbled; monthly hours were not auto-extracted from that file. | Hourly backup-generator dispatch is not in these DEQ annual reports (monthly hours only). | Well-house 550 kW replacement is proposed/noticed; not treated as active without operating evidence.
+cross_document_conflicts,FLAG,flag,john_deere_nameplate_kw: 150 kW vs 177 kW | john_deere_model: 6068HF285 vs 4045HF285 | prn3_n_units_rating: 2.5 MW (2018 RR) vs listed under 3.0 MW 6ETC (2019 PMRR) | pmrr2019_existing_capacity_arithmetic: stated 148.7 MW vs 82*3.0 + 2*1.0 + 0.55 + 0.177 = 248.727 MW

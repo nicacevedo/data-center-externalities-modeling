@@ -1,0 +1,15 @@
+year,n_documents_filename_year,annual_report_present,annual_report_files,scan_only_annual_report,text_extractable,ocr_used,generator_month_rows_extracted,facility_emissions_rows,facility_fuel_rows,gap_note
+2012,1,True,07-0037-ST-01_AR_2012.pdf,False,True,False,210,0,0,
+2013,0,False,,False,False,False,213,0,0,no annual report in dump
+2014,1,True,07-0037-ST-01_AR_2014.pdf,False,True,False,358,0,0,2014 AR native text is garbled; monthly hours come only from later-AR reprints or high-confidence 4/6-value rows
+2015,1,True,07-0037-ST-01_AR_2015.pdf,False,True,False,339,0,0,
+2016,2,True,07-0037-ST-01_AR_2016.pdf,False,True,False,0,0,0,2016 AR hours are column-major; empty/low-confidence rows dropped rather than stored as zero
+2017,1,True,07-0037-ST-01_AR_2017.pdf,False,True,False,456,0,0,
+2018,2,False,,False,False,False,0,0,0,no annual report in dump
+2019,3,True,07-0037-ST-01_AR_2019.pdf,True,False,False,0,0,0,scan-only; not OCR'd
+2020,4,True,07-0037-ST-01_AR_2020.pdf,False,True,False,1272,24,12,
+2021,1,True,07-0037-ST-01_AR_2021.pdf,True,False,False,0,0,0,scan-only; not OCR'd
+2022,3,True,07-0037-ST-01_AR_2022.pdf,False,True,False,300,0,11,2022-2023 text extraction is partial (some generator blocks overlay emergency columns)
+2023,1,True,07-0037-ST-01_AR_2023.pdf,False,True,False,420,0,11,2022-2023 text extraction is partial (some generator blocks overlay emergency columns)
+2024,4,True,PRN_CCO 2024 Annual Report.pdf,False,True,False,2160,24,12,
+2025,2,True,Vitesse - RY2025 Annual Report.pdf,False,True,False,2159,24,12,
