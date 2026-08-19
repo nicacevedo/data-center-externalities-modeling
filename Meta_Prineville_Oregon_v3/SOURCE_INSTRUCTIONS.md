@@ -299,6 +299,31 @@ Rules:
 - Process `ghgElectricityEms.xlsx` for Pacific Power (PacifiCorp) Oregon deliveries. Other GHG workbooks are provenance unless they contain Vitesse 07-0037 observations (none identified).
 - Do not rewrite `data/canonical/campus_events_seed.csv`. The join is `outputs/deq_campus_event_crosswalk.csv`.
 
+## 12.6 USGS NWAA HUC12 water (modeled regional context)
+
+- API: `https://api.water.usgs.gov/nwaa-data/data`
+- Catalog: `https://api.water.usgs.gov/nwaa-data/models`
+- Command: `python run_prineville.py usgs`
+- Scripts: `src/download_usgs_nwaa.py`, `src/build_usgs_huc12_panels.py`, `src/audit_usgs_nwaa.py`, `src/build_municipal_huc12_crosswalk.py`
+- Raw files under `data/raw/usgs_nwaa/` are never modified after retrieval.
+
+Official model IDs (do not guess):
+- `iwa-assessment-outputs-conus-2025` (`sui`, `availab`, `strflow`, `consum`), 2009-10–2020-09
+- `wu-public-supply-cu` (`pscutot`), 2009-01–2020-12
+- `wu-public-supply-wd` (`pswdtot`, `pswdgw`, `pswdsw`), 2000-01–2020-12
+- `wu-irrigation-wd` (`irrwdtot`), 2000-01–2020-12
+- `wu-irrigation-cu` (`irrcutot`), 2000-01–2020-12
+
+Rules:
+- Preserve raw API responses separately from processed panels. HUC12 IDs stay 12-character strings.
+- IWA `strflow` is cumulative upstream + local supply. IWA `consum` is cumulative upstream + local consumptive use. `availab = strflow - consum` is an internal consistency check, not independent validation.
+- `pscutot` is modeled public-supply consumptive use, not Meta-specific use. None of these USGS variables are campus water-meter observations.
+- Do not force source-specific tables onto the shorter IWA period. Overlap panels are separate and cover 2009-10–2020-09.
+- Do not sum `pscutot` or `irrcutot` into IWA `consum`.
+- IWA cannot support 2021–2024 analysis by itself.
+- Thermoelectric (`wu-thermoelectric`) is screened for HUC8 `17070305` only. If modeled withdrawals are zero, do not add the series to panels.
+- Municipal source → HUC12 assignment uses official coordinates only. Do not infer well locations from TRSQQ.
+
 ## 13. Renewable accounting / Schedule 272 context
 
 - Source ID: `OREGON_BER_RENEWABLE`

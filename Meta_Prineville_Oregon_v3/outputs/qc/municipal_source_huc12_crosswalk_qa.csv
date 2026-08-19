@@ -1,0 +1,2 @@
+n_sources,n_assigned_in_study_huc12,n_out_of_study_huc12,n_unresolved_missing_coordinates,n_in_site_huc12,assigned_in_study_huc12_ids,site_huc12_id,site_designation,campus_footprint_verified
+28,14,1,13,11,170703050404;170703051001;170703051002,170703051002,site_point_huc12,False

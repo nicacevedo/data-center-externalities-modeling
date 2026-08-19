@@ -20,6 +20,9 @@ def deq():
     subprocess.run([sys.executable, str(ROOT/'src'/'prepare_deq_ghg.py')], check=True)
     subprocess.run([sys.executable, str(ROOT/'src'/'audit_deq_prineville.py')], check=True)
 
+def usgs():
+    subprocess.run([sys.executable, str(ROOT/'src'/'run_usgs_nwaa.py')], check=True, cwd=ROOT)
+
 def grid():
     eia()
     egrid()
@@ -95,6 +98,7 @@ def main():
     elif cmd=='oregon': oregon()
     elif cmd=='grid': grid()
     elif cmd=='deq': deq()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid|deq]')
+    elif cmd=='usgs': usgs()
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid|deq|usgs]')
 
 if __name__=='__main__': main()

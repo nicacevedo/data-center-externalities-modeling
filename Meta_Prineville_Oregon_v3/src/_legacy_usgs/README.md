@@ -1,0 +1,1 @@
+One-off USGS download/panel scripts superseded by `src/download_usgs_nwaa.py`, `src/build_usgs_huc12_panels.py`, and `src/audit_usgs_nwaa.py`. Geography builders remain at the package root because they were not replaced.

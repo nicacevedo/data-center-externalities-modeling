@@ -1,0 +1,127 @@
+direction,depth,huc12,name,tohuc,areasqkm,states
+site,0,170703051002,Town of Prineville-Crooked River,170703051006,69.22,OR
+upstream,1,170703050102,Stearns Dam-Crooked River,170703051002,146.22,OR
+upstream,1,170703050404,Town of Prineville-Ochoco Creek,170703051002,48.76,OR
+upstream,1,170703051001,Juniper Canyon,170703051002,50.97,OR
+upstream,2,170703040802,Lower Prineville Reservoir,170703050102,130.53,OR
+upstream,2,170703050101,Dry Creek,170703050102,95.95,OR
+upstream,2,170703050403,Ochoco Reservoir-Ochoco Creek,170703050404,119.48,OR
+upstream,3,170703040801,Upper Prineville Reservoir,170703040802,88.45,OR
+upstream,3,170703040706,Lower Bear Creek,170703040802,93.8,OR
+upstream,3,170703050302,Mill Creek,170703050403,98.51,OR
+upstream,3,170703050402,Veazie Creek-Ochoco Creek,170703050403,67.53,OR
+upstream,4,170703040608,Conant Creek-Crooked River,170703040801,140.72,OR
+upstream,4,170703040703,Middle Bear Creek,170703040706,102.67,OR
+upstream,4,170703040704,Sage Hollow,170703040706,106.78,OR
+upstream,4,170703040705,Little Bear Creek,170703040706,58.05,OR
+upstream,4,170703050301,East Fork Mill Creek,170703050302,86.85,OR
+upstream,4,170703050401,Lawson Creek,170703050402,66.91,OR
+upstream,4,170703050205,Duncan Creek-Ochoco Creek,170703050402,91.12,OR
+upstream,5,170703040606,Lower Horse Heaven Creek,170703040608,55.33,OR
+upstream,5,170703040603,Pine Creek-Crooked River,170703040608,120.77,OR
+upstream,5,170703040604,Newsome Creek,170703040608,85.4,OR
+upstream,5,170703040607,Wickiup Creek,170703040608,57.85,OR
+upstream,5,170703040702,Upper Bear Creek,170703040703,103.34,OR
+upstream,5,170703050201,Headwaters Ochoco Creek,170703050205,65.25,OR
+upstream,5,170703050202,Wolf Creek,170703050205,75.25,OR
+upstream,5,170703050204,Lower Marks Creek,170703050205,73.74,OR
+upstream,6,170703040605,Upper Horse Heaven Creek,170703040606,75.58,OR
+upstream,6,170703040502,Rough Canyon Creek-North Fork Crooked River,170703040603,102.27,OR
+upstream,6,170703040601,Lost Creek,170703040603,82.73,OR
+upstream,6,170703040602,Drake Creek,170703040603,41.79,OR
+upstream,6,170703040203,Maury Creek-Crooked River,170703040603,77.42,OR
+upstream,6,170703040701,Headwaters Bear Creek,170703040702,94.6,OR
+upstream,6,170703050203,Upper Marks Creek,170703050204,83.31,OR
+upstream,7,170703040501,Fox Canyon Creek-North Fork Crooked River,170703040502,79.55,OR
+upstream,7,170703040105,Cottonwood Creek-Camp Creek,170703040203,161.78,OR
+upstream,7,170703040201,Kelly Creek-Crooked River,170703040203,59.19,OR
+upstream,7,170703040202,Watson Creek,170703040203,101.81,OR
+upstream,8,170703040308,Peterson Creek-North Fork Crooked River,170703040501,92.39,OR
+upstream,8,170703040403,Crazy Creek-Deep Creek,170703040501,58.97,OR
+upstream,8,170703040104,Clover Creek,170703040105,99.63,OR
+upstream,8,170703040102,West Fork Camp Creek,170703040105,73.17,OR
+upstream,8,170703040103,Middle Fork Camp Creek,170703040105,66.94,OR
+upstream,8,170703031009,Homested Butte-South Fork Crooked River,170703040201,53.87,OR
+upstream,9,170703040307,Porter Creek,170703040308,39.87,OR
+upstream,9,170703040306,Allen Creek,170703040308,39.62,OR
+upstream,9,170703040304,Headwaters North Fork Crooked River,170703040308,63.06,OR
+upstream,9,170703040305,Johnson Creek-Elliott Creek,170703040308,75.12,OR
+upstream,9,170703040402,Little Summitt Creek,170703040403,67.21,OR
+upstream,9,170703040401,Jackson Creek,170703040403,98.15,OR
+upstream,9,170703040101,Indian Creek,170703040102,50.49,OR
+upstream,9,170703030904,Odell Hollow-Beaver Creek,170703031009,83.97,OR
+upstream,9,170703031008,Bedell Canyon-South Fork Crooked River,170703031009,87.42,OR
+upstream,10,170703040301,Gray Creek,170703040304,42.49,OR
+upstream,10,170703040302,Headwaters Elliott Creek,170703040305,59.09,OR
+upstream,10,170703040303,Howard Creek,170703040305,47.32,OR
+upstream,10,170703030603,Lower Grindstone Creek,170703030904,120.56,OR
+upstream,10,170703030704,North Fork Beaver Creek-Beaver Creek,170703030904,60.17,OR
+upstream,10,170703030803,Lower Paulina Creek,170703030904,72.48,OR
+upstream,10,170703030902,Wolf Creek,170703030904,87.03,OR
+upstream,10,170703030903,Alkali Creek,170703030904,108.1,OR
+upstream,10,170703031006,Sherman Rim-South Fork Crooked River,170703031008,63,OR
+upstream,10,170703030405,Lower Twelvemile Creek,170703031008,93.36,OR
+upstream,10,170703031007,Sand Hollow Creek,170703031008,110.72,OR
+upstream,11,170703030601,Upper Grindstone Creek,170703030603,80.95,OR
+upstream,11,170703030602,Trout Creek,170703030603,76.87,OR
+upstream,11,170703030504,Rock Creek-South Fork Beaver Creek,170703030704,80.99,OR
+upstream,11,170703030702,Powell Creek-North Fork Beaver Creek,170703030704,81.33,OR
+upstream,11,170703030703,Sugar Creek,170703030704,41.85,OR
+upstream,11,170703030801,Upper Paulina Creek,170703030803,73.02,OR
+upstream,11,170703030802,Dry Paulina Creek,170703030803,64.26,OR
+upstream,11,170703030901,North Wolf Creek,170703030902,50.16,OR
+upstream,11,170703031005,Sears Canyon-South Fork Crooked River,170703031006,92.49,OR
+upstream,11,170703031004,Ibex Butte,170703031006,48.49,OR
+upstream,11,170703030404,Upper Twelvemile Creek,170703030405,69.76,OR
+upstream,12,170703030502,Swamp Creek-South Fork Beaver Creek,170703030504,73.17,OR
+upstream,12,170703030503,Camp Creek,170703030504,47.97,OR
+upstream,12,170703030701,Beaverdam Creek-North Fork Beaver Creek,170703030702,68.24,OR
+upstream,12,170703031003,Logan Reservoir-South Fork Crooked River,170703031005,85.62,OR
+upstream,12,170703030401,Black Snag Creek,170703030404,62.88,OR
+upstream,12,170703030402,Norcross Creek,170703030404,66.13,OR
+upstream,12,170703030403,Long Hollow Creek,170703030404,72.13,OR
+upstream,13,170703030501,Freeman Creek-South Fork Beaver Creek,170703030502,64.94,OR
+upstream,13,170703031001,Long Hollow,170703031003,60.85,OR
+upstream,13,170703031002,Fife Butte,170703031003,69.66,OR
+upstream,13,170703030207,Misery Flat-South Fork Crooked River,170703031003,82.63,OR
+upstream,13,170703030304,Mackey Butte-Buck Creek,170703031003,61.51,OR
+upstream,14,170703030206,Rattlesnake Ridge,170703030207,75.78,OR
+upstream,14,170703030205,Musser Reservoir,170703030207,159.23,OR
+upstream,14,170703030303,Lower Swamp Creek,170703030304,73.44,OR
+upstream,15,170703030204,Town of Hampton,170703030206,148.36,OR
+upstream,15,170703030301,Upper Swamp Creek,170703030303,80.59,OR
+upstream,15,170703030302,Hat Butte,170703030303,44.08,OR
+upstream,16,170703030202,Cougar Butte,170703030204,145.76,OR
+upstream,16,170703030203,Perry Flat,170703030204,72.28,OR
+upstream,17,170703030106,Lizard Creek,170703030202,106.48,OR
+upstream,18,170703030104,Frederick Butte,170703030106,53.26,OR
+upstream,18,170703030105,Imperial Valley,170703030106,63.04,OR
+downstream,1,170703051006,McAllister Slough-Crooked River,170703051101,110.77,OR
+downstream,2,170703051101,Osborne Canyon-Crooked River,170703051102,171.54,OR
+downstream,3,170703051102,Crooked River,170703011104,82.53,OR
+downstream,4,170703011104,Haystack Draw-Deschutes River,170703060103,75.19,OR
+downstream,5,170703060103,Lake Simtustus-Deschutes River,170703060304,48.72,OR
+downstream,6,170703060304,Pelton Dam-Deschutes River,170703060305,147.24,OR
+downstream,7,170703060305,Webster Flat-Deschutes River,170703061101,79.08,OR
+downstream,8,170703061101,Big Cove-Deschutes River,170703061104,130.61,OR
+downstream,9,170703061104,Little Cove-Deschutes River,170703061107,148.72,OR
+downstream,10,170703061107,Chicken Spring Canyon-Deschutes River,170703061108,92.01,OR
+downstream,11,170703061108,Oak Springs Creek-Deschutes River,170703061202,65.58,OR
+downstream,12,170703061202,Oak Canyon-Deschutes River,170703061203,95.66,OR
+downstream,13,170703061203,Box Elder Canyon-Deschutes River,170703061204,125.02,OR
+downstream,14,170703061204,Bull Run Canyon-Deschutes River,170703061205,110.77,OR
+downstream,15,170703061205,Gordon Canyon-Deschutes River,170701050103,109.91,OR
+downstream,16,170701050103,Hells Gate Canyon-Columbia River,170701050401,167.14,"OR,WA"
+downstream,17,170701050401,Threemile Creek-Columbia River,170701050406,129.57,"OR,WA"
+downstream,18,170701050406,Town of Murdock-Columbia River,170701051105,100.94,"OR,WA"
+downstream,19,170701051105,Rowena Creek-Columbia River,170701051106,130.07,"OR,WA"
+downstream,20,170701051106,Grays Creek-Columbia River,170701051204,167.67,"OR,WA"
+downstream,21,170701051204,Carson Creek-Columbia River,170800010801,93.32,"OR,WA"
+downstream,22,170800010801,Tanner Creek-Columbia River,170800010802,119.38,"OR,WA"
+downstream,23,170800010802,Woodard Creek-Columbia River,170800010803,114.24,"OR,WA"
+downstream,24,170800010803,Bridal Veil Creek-Columbia River,170800010804,73.19,"OR,WA"
+downstream,25,170800010804,Latourell Creek-Columbia River,170800030200,120.14,"OR,WA"
+downstream,26,170800030200,Hayden Island-Columbia River,170800030900,75.64,"OR,WA"
+downstream,27,170800030900,Cathlamet Channel-Columbia River,170800060500,183.31,"OR,WA"
+downstream,28,170800060500,Baker Bay-Columbia River,171002010200,388.05,"OR,WA"
+downstream,29,171002010200,Smuggler Cove-Pacific Ocean,OCEAN,462.43,OR

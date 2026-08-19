@@ -157,6 +157,52 @@ High-confidence public events only. Event timing does not imply commissioning un
 ## `data/source_manifest.csv`
 Source registry. Every final result should be traceable to one or more `source_id` values.
 
+## USGS NWAA HUC12 water module
+
+Modeled USGS National Water Availability Assessment series at HUC12 × month. **None of these variables are Meta water-meter observations.** They are regional modeled context for later merge with Meta, OWRD, weather, and event-timing data.
+
+### Spatial interpretation
+- Site HUC12 `170703051002` is designated `site_point_huc12`. The repository does not contain a Meta campus polygon, so full-footprint containment remains outstanding.
+- The HUC12 containing the Meta buildings is not necessarily the HUC12 from which Prineville withdraws water that serves Meta. See `data/canonical/municipal_source_huc12_crosswalk.csv`.
+- `scope_local`: site HUC12 plus touching HUC12s (9).
+- `same_site_huc8`: all HUC12s in HUC8 `17070305` (52).
+- IWA `strflow` / `consum` are **cumulative** (upstream + local), not local-only.
+
+### Units and conversions
+Native units are preserved. Processed tables add `*_m3_month`:
+- IWA mm/month: `m3 = mm * areasqkm * 1000`.
+- MGD monthly mean: `m3 = mgd * days_in_month * 3785.411784`.
+Documented in `data/processed/usgs_nwaa/UNIT_CONVERSIONS.md`.
+
+### Variable definitions (processed names)
+
+| Processed name | Native USGS | Model | Units | Period | Meaning |
+|---|---|---|---|---|---|
+| `iwa_sui` | `sui` / `sui_frac` | `iwa-assessment-outputs-conus-2025` | fraction | 2009-10–2020-09 | Modeled surface-water supply/use indicator |
+| `iwa_cumulative_streamflow_mm_month` | `strflow` | IWA | mm/month | 2009-10–2020-09 | Cumulative upstream + local surface-water supply |
+| `iwa_cumulative_consumption_mm_month` | `consum` | IWA | mm/month | 2009-10–2020-09 | Cumulative upstream + local consumptive use (not local HUC12 alone) |
+| `iwa_surface_water_availability_mm_month` | `availab` | IWA | mm/month | 2009-10–2020-09 | `strflow - consum`; **internal consistency check**, not independent validation |
+| `public_supply_consumption_mgd` | `pscutot` | `wu-public-supply-cu` | mgd | 2009-01–2020-12 | Modeled public-supply consumptive use, **not Meta-specific** |
+| `public_supply_withdrawal_total_mgd` | `pswdtot` | `wu-public-supply-wd` | mgd | 2000-01–2020-12 | Modeled total public-supply withdrawals |
+| `public_supply_withdrawal_groundwater_mgd` | `pswdgw` | `wu-public-supply-wd` | mgd | 2000-01–2020-12 | Modeled groundwater public-supply withdrawals |
+| `public_supply_withdrawal_surface_water_mgd` | `pswdsw` | `wu-public-supply-wd` | mgd | 2000-01–2020-12 | Modeled surface-water public-supply withdrawals |
+| `irrigation_withdrawal_mgd` | `irrwdtot` | `wu-irrigation-wd` | mgd | 2000-01–2020-12 | Modeled crop-irrigation withdrawals |
+| `irrigation_consumption_mgd` | `irrcutot` | `wu-irrigation-cu` | mgd | 2000-01–2020-12 | Modeled crop-irrigation consumptive use |
+
+Withdrawal ≠ consumption. Consumption is water not returned to the local hydrologic cycle. IWA already incorporates sectoral consumptive-use components; **do not add `pscutot` or `irrcutot` into IWA `consum`**.
+
+IWA **ends 2020-09** and cannot by itself support 2021–2024 Prineville analysis. Public-supply CU ends 2020-12; withdrawal and irrigation series end 2020-12.
+
+### Files
+- Raw API responses: `data/raw/usgs_nwaa/` (aggregates + per-HUC12 extracts). Source values are not modified.
+- Source-specific full-period panels: `data/processed/usgs_nwaa/usgs_{iwa,public_supply_cu,public_supply_wd,irrigation}_huc12_monthly_{scope}.csv`
+- Common-overlap panel (2009-10–2020-09): `data/processed/usgs_nwaa/usgs_huc12_monthly_overlap_{scope}.csv`
+- QA: `outputs/qc/usgs_nwaa_qa.csv`, `outputs/qc/usgs_nwaa_download_log.csv`
+- Municipal source → HUC12: `data/canonical/municipal_source_huc12_crosswalk.csv`
+
+### `data/canonical/municipal_source_huc12_crosswalk.csv`
+Links City of Prineville PWS 00682 sources to HUC12 using official coordinates only (inventory lat/lon or OWRD well-log decimal degrees + WBD point-in-polygon). Missing coordinates stay unresolved; TRSQQ is not converted to a point.
+
 ## Provenance labels for modeled hourly data
 - `reported`: directly published source value.
 - `measured`: meter/monitor record supplied by agency/utility.

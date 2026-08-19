@@ -105,6 +105,26 @@ The default model uses only accepted mappings. Candidate D4-D12 mappings are ava
 
 The City municipal series and Vitesse/Facebook direct POD series have different accounting boundaries and are never summed automatically. Remaining high-value acquisition is City/Meta meter data, City well-production/ASR records, discharge, and final resolution of unresolved POD identities where needed.
 
+### Stage 3.5 — USGS NWAA HUC12 water module (modeled regional context)
+
+This step finishes the USGS National Water Availability Assessment (NWAA) HUC12 water layer for the Meta Prineville study geography. It does **not** estimate Meta water use, assign treatment timing, or run an event study.
+
+```bash
+python run_prineville.py usgs
+```
+
+Verified geography is preserved: site HUC12 `170703051002` (designated `site_point_huc12`; campus-footprint verification remains outstanding), 9-HUC local scope, 52-HUC same-HUC8 scope. Raw API responses stay under `data/raw/usgs_nwaa/`; processed panels under `data/processed/usgs_nwaa/`; QA under `outputs/qc/`.
+
+Processed IWA names are explicit because the native labels are easy to misread:
+
+- `iwa_cumulative_streamflow_mm_month` (`strflow`) is cumulative upstream + local surface-water supply.
+- `iwa_cumulative_consumption_mm_month` (`consum`) is cumulative upstream + local consumptive use, not local HUC12 consumption alone.
+- `iwa_surface_water_availability_mm_month` (`availab`) = `strflow - consum` (internal consistency check, not independent validation).
+- `iwa_sui` is a modeled surface-water supply/use indicator.
+- `pscutot` / `public_supply_consumption_mgd` is modeled public-supply consumptive use, not Meta-specific use.
+
+IWA ends in **2020-09** and cannot by itself support the 2021–2024 portion of the Prineville analysis. None of these USGS series are campus water-meter observations. Do not add `pscutot` or `irrcutot` into IWA `consum`.
+
 ### Stage 4 — build the campus chronology
 
 Use `data/canonical/campus_events_seed.csv` as the seed, then complete `data/manual_templates/campus_buildings.csv` from Crook County/City permit records.
