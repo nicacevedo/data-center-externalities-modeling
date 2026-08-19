@@ -209,6 +209,20 @@ Finest defensible OWRD source/reporting-group × month table with USGS HUC12 con
 ## `data/processed/water/prineville_water_monthly_context.csv`
 Calendar-month spine with **separate** columns for accepted City production, Vitesse/Facebook direct POD use, Meta annual campus withdrawal (labeled annual, not monthly), site-HUC12 USGS variables, and KRDM monthly weather. USGS values are missing after their official coverage ends.
 
+## `data/processed/weather_krdm_hourly.csv`
+
+KRDM / Roberts Field (NCEI Global Hourly `72692024230`) 2011–2024 UTC hourly backbone. Measured dry-bulb and dewpoint; station pressure from sea-level pressure via the existing hypsometric conversion at 929 m; RH and wet-bulb **derived**. This file is the preserved KRDM-only baseline and is not overwritten by the KS39 merge.
+
+## `data/processed/weather_ks39_hourly.csv`
+
+KS39 / Prineville Airport MADIS METAR, one row per physical UTC hour of `timeObs`. Temperature/dewpoint/wind are means of QC-usable unique reports in the hour. `precip1Hour` is an overlapping 1-hour accumulation (meters in MADIS); the hourly value is the last usable report in the hour, converted to mm — reports are not summed. Station pressure is **derived** from altimeter setting (Pa) and station elevation using the ICAO standard atmosphere. MADIS QC fields remain on the raw report table.
+
+## `data/processed/weather_hourly.csv`
+
+Canonical 2011–2024 model weather (UTC hourly). Hierarchy: QC-usable KS39 observed (from 2015-09-01 local) > KRDM gap-fill > KRDM observed > missing. No interpolation of long gaps. Row provenance: `weather_source`, `weather_method`, `weather_observed`, `weather_gapfilled`, `qc_status`. Reconstruction still keys facility years by UTC `timestamp_utc.dt.year`.
+
+Exact coverage: `outputs/ks39_coverage_monthly.csv`, `outputs/ks39_coverage_annual.csv`, `outputs/ks39_gap_summary.csv`. Overlap: `outputs/ks39_krdm_overlap_summary.csv`. Discovery sample rates in `madis_test/outputs/` are not exact completeness.
+
 ## Provenance labels for modeled hourly data
 - `reported`: directly published source value.
 - `measured`: meter/monitor record supplied by agency/utility.

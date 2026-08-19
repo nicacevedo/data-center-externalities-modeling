@@ -1,0 +1,25 @@
+item,value
+first_timeObs_utc,2015-08-11 12:20:00+00:00
+last_timeObs_utc,2025-01-02 00:35:00+00:00
+first_hourly_utc,2015-08-11 12:00:00+00:00
+last_hourly_utc,2025-01-02 00:00:00+00:00
+first_local_date_with_24_usable_hours,2015-08-12
+first_sustained_7day_full_coverage_local,2015-09-02
+n_unique_raw_reports,239224
+n_hourly_rows,80041
+report_altimeter_nonmissing,239156
+report_sealevelpress_nonmissing,182
+report_altimeter_pct,99.97157475838544
+report_sealevelpress_pct,0.07607932314483497
+lat_median,44.27999877929688
+lon_median,-120.9000015258789
+elev_m_median,991.0
+discovery_sample_note,"2011-2024 madis_test sample rates are discovery estimates, not these exact counts"
+truncated_noaa_archive_hours,2018-09-19T23:00Z; 2018-11-14T16:00Z; 2018-11-14T17:00Z; 2019-11-13T12:00Z
+truncated_noaa_archive_note,"HTTP 200 but Content-Length 65536 and gzip EOF; NOAA file is truncated. Recorded as error, not KS39-absent."
+canonical_switch_local,2015-09-01 00:00 America/Los_Angeles
+pre2015_krdm_correction,rejected
+pressure_method,derived_from_altimeter_icao at elevation 991 m; seaLevelPress almost never present
+longest_2020_physical_gap,2020-07-15 19:00Z to 2020-07-20 14:00Z (116 h); KS39 absent while archive ok
+longest_2023_physical_gap,2023-08-13 07:00Z to 2023-08-21 17:00Z (203 h); KS39 absent while archive ok
+longest_2024_physical_gap,"2024-04-13 15:00Z to 2024-04-22 17:00Z (219 h); mostly NOAA archive not_found (220 hours in April), not KS39-absent"

@@ -70,22 +70,27 @@ This checks:
 
 ### Stage 2 — download NOAA hourly weather
 
-The stable public baseline station is **KRDM / Redmond Roberts Field**. NCEI Global Hourly files for this modern record use file ID `72692024230`. This is a nearby reference station, **not an on-campus station**. A closer Prineville Airport/S39-AWOS record should be acquired when a complete hourly archive is verified and used for overlap bias testing before replacing the KRDM baseline.
+The stable public baseline station is **KRDM / Redmond Roberts Field**. NCEI Global Hourly files for this modern record use file ID `72692024230`. This is a nearby reference station, **not an on-campus station**.
+
+From 2015-09-01 America/Los_Angeles onward the canonical model weather prefers QC-usable **KS39 / Prineville Airport** MADIS METAR observations, with KRDM as the documented gap-fill. Before that local date the series remains KRDM. Intermittent August 2015 KS39 reports are audit evidence only.
 
 ```bash
 python src/download_noaa_global_hourly.py --start 2011 --end 2024
 python src/prepare_weather.py
+python src/download_madis_ks39.py --workers 4
+python src/download_madis_ks39.py --export-only
+python src/prepare_weather_ks39.py
 ```
 
-The downloader uses:
+Or: `python run_prineville.py weather-ks39`.
 
-```text
-https://www.ncei.noaa.gov/data/global-hourly/access/{YEAR}/72692024230.csv
-```
+`prepare_weather.py` writes the KRDM-only baseline `data/processed/weather_krdm_hourly.csv` and does **not** overwrite the canonical model file. `prepare_weather_ks39.py` writes `weather_ks39_hourly.csv` and then the canonical `data/processed/weather_hourly.csv` with row-level `weather_source` / `weather_method` provenance.
 
-The cleaner parses NOAA scaled temperature/dew-point/pressure fields, removes missing sentinels/failed values, resamples to a regular hourly UTC index, computes RH, and uses PsychroLib for pressure-aware wet-bulb temperature.
+Exact KS39 coverage is in `outputs/ks39_coverage_annual.csv` (and monthly/gap files). The `madis_test/` sampled 2011–2024 rates are discovery estimates, not exact completeness.
 
-**Fallback rule:** if a year is absent or has material gaps, do not silently interpolate long gaps. Add a secondary nearby NCEI station/reanalysis only for the missing intervals and add a provenance flag.
+The KRDM cleaner parses NOAA scaled temperature/dew-point/pressure fields, removes missing sentinels/failed values, resamples to a regular hourly UTC index, computes RH, and uses PsychroLib for pressure-aware wet-bulb temperature. KS39 uses MADIS documented QC (DD/QCR); station pressure is **derived** from altimeter setting and station elevation (ICAO standard atmosphere), not measured station pressure. RH and wet-bulb remain derived.
+
+**Fallback rule:** if a year is absent or has material gaps, do not silently interpolate long gaps. Missing KS39 hours are filled from observed KRDM when that KRDM hour exists, and left missing otherwise.
 
 ### Stage 3 — normalize the bundled OWRD monthly water-use exports
 

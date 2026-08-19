@@ -1,0 +1,7 @@
+field,n_nonmissing,pct,role
+temperature,239140,99.96488646624084,measured K
+dewpoint,239140,99.96488646624084,measured K
+altimeter,239156,99.97157475838546,measured Pa; pressure input
+seaLevelPress,182,0.07607932314483497,measured Pa; usually missing
+windSpeed,229336,95.86663545463666,measured m/s
+precip1Hour,1871,0.782112162659265,measured m; overlapping accumulation

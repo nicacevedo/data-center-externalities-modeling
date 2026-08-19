@@ -8,4 +8,4 @@ matplotlib
 openpyxl
 xlrd
 python-calamine
-pymupdf
+netCDF4

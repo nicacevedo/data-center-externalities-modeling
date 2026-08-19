@@ -1,0 +1,10 @@
+metric,value
+holdout_water_pct_error_2023,152.20922226841665
+holdout_water_pct_error_2024,110.23931304304011
+holdout_water_mape,131.2242676557284
+max_abs_elec_residual_mwh,2.3283064365386963e-10
+cooling_mode_frac_outside_air_or_winter_mix,0.909073132577239
+cooling_mode_frac_partial_evap,0.08972917481423544
+cooling_mode_frac_full_evap,0.001197692608525616
+summer_jja_mean_evap_m3_h,12.328634179976794
+annual_raw_evap_m3_sum,447410.88681974064

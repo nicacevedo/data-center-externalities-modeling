@@ -162,30 +162,32 @@ Use the ready-to-copy request in `MANUAL_ACQUISITION.md` for:
 
 Raw responses go under `data/raw/city/` and are never overwritten.
 
-## 9. Weather — NOAA/NCEI Global Hourly
+## 9. Weather — NOAA/NCEI Global Hourly and NOAA MADIS KS39
 
-- Source ID: `NOAA_ISD`
+- Source ID: `NOAA_ISD` / `NOAA_GH_KRDM_FILES`
 - Documentation: `https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database`
-- Stable baseline station used by the package: KRDM / Roberts Field, Global Hourly file ID `72692024230`.
+- KRDM / Roberts Field, Global Hourly file ID `72692024230`. Nearby reference station, not on campus.
 - Direct yearly file template: `https://www.ncei.noaa.gov/data/global-hourly/access/{YEAR}/72692024230.csv`
+
+- Source ID: `NOAA_MADIS_KS39`
+- Official MADIS METAR archive: `https://madis-data.ncep.noaa.gov/madisPublic1/data/archive/YYYY/MM/DD/point/metar/netcdf/YYYYMMDD_HH00.gz`
+- Station: KS39 / Prineville Airport. Coordinates/elevation are taken from the extracted records (approximately 44.28 N, −120.90 W, 991 m).
+- QC: NOAA MADIS surface QC notes (`https://madis.ncep.noaa.gov/madis_sfc_qc_notes.shtml`). Model aggregates exclude DD `X`/`B`/`Q` and QCR validity-bit failures. ICA/ICR words are preserved; their bit layout is not interpreted.
+- Acquisition window: 2015-08-01 00:00 UTC through 2025-01-02 00:00 UTC. Do not bulk-download 2011–2014; sampled MADIS files showed no regular KS39 then.
+- Scientific canonical rule: KRDM through 2015-08-31 local (`America/Los_Angeles`); from 2015-09-01 local, QC-usable KS39 when present, else KRDM gap-fill. August 2015 KS39 is audit-only.
+- Pressure: MADIS `seaLevelPress` is often missing. Usable input is `altimeter` (Pa). Station pressure is **derived** via ICAO standard atmosphere from altimeter + elevation. RH and wet-bulb remain derived from T, Td, and pressure.
+- Outputs: `data/raw/noaa_madis_ks39/`, `data/processed/weather_ks39_hourly.csv`, `data/processed/weather_krdm_hourly.csv`, canonical `data/processed/weather_hourly.csv`, `outputs/ks39_coverage_*.csv`, `outputs/ks39_krdm_overlap_*.csv`.
 
 Run:
 ```bash
 python src/download_noaa_global_hourly.py --start 2011 --end 2024
 python src/prepare_weather.py
+python src/download_madis_ks39.py --workers 4
+python src/download_madis_ks39.py --export-only
+python src/prepare_weather_ks39.py
 ```
 
-Why KRDM is the baseline: the direct NCEI Global Hourly archive is stable across the target years. It is **not on the campus**. A closer Prineville Airport/S39-AWOS record should be acquired when a complete hourly archive can be verified, then used to quantify local station bias or replace KRDM only after overlap validation.
-
-Required weather columns after processing:
-- UTC timestamp;
-- dry-bulb temperature;
-- dew point;
-- station pressure;
-- RH derived from T/dewpoint;
-- wet-bulb derived psychrometrically;
-- precipitation/wind where reliable;
-- source/gap-fill flags.
+`prepare_weather.py` writes the KRDM baseline only (`weather_krdm_hourly.csv`). Canonical model weather is assembled by `prepare_weather_ks39.py`. Pre-2015 KRDM monthly additive bias correction is tested on KS39 overlap holdout years and adopted only if that station test is stable and material; it is not tuned on Meta water.
 
 ## 10. Physical grid context — EIA-930 / PacifiCorp West
 

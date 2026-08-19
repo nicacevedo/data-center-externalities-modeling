@@ -17,7 +17,7 @@ except Exception:
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT/'data'/'raw'/'noaa'
-OUT = ROOT/'data'/'processed'/'weather_hourly.csv'
+OUT = ROOT/'data'/'processed'/'weather_krdm_hourly.csv'
 STATION = '72692024230'
 ELEV_M = 929.0
 
@@ -126,6 +126,7 @@ def main():
     h.to_csv(OUT,index=False)
     miss=100*h['t_db_C'].isna().mean()
     print(f'Wrote {OUT}: {len(h):,} hours; dry-bulb missing {miss:.2f}%')
+    print('KRDM baseline only. Canonical model weather is data/processed/weather_hourly.csv (KS39/KRDM mix).')
 
 
 if __name__=='__main__':

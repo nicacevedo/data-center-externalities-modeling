@@ -16,7 +16,7 @@ incomplete_year_direct_ratios_are_nan,PASS,complete=False ratio=nan
 accepted_and_candidate_keys_disjoint,PASS,no silent candidate inclusion
 city_default_file_is_accepted_only,PASS,accepted only
 candidate_series_not_copied_into_accepted,PASS,candidate remains a separate field
-electricity_annual_closure_unchanged,PASS,max_abs_mwh=2.328e-10
-monthly_modeled_water_aggregates_to_annual_prediction,PASS,max_abs_m3=1.746e-10
+electricity_annual_closure_unchanged,PASS,max_abs_mwh=4.657e-10
+monthly_modeled_water_aggregates_to_annual_prediction,PASS,max_abs_m3=1.164e-10
 ratios_nan_when_denominator_invalid,PASS,direct/modeled NaN if modeled <= 0
 city_measurement_method_retained,PASS,City series keeps aggregated measurement_method

@@ -1,0 +1,4 @@
+year,month,sampled_hours,ks39_hours,ks39_records,temp_records,dewpoint_records,pressure_records,ks39_presence_pct
+2015,7,124,0,0,0,0,0,0.0
+2015,8,124,80,271,271,271,0,64.51612903225806
+2015,9,120,120,390,390,390,1,100.0

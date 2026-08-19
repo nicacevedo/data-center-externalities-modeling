@@ -57,6 +57,25 @@ def report():
         cwd=ROOT,
     )
 
+def weather_ks39():
+    extra = sys.argv[2:]
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "download_madis_ks39.py"), *extra],
+        check=True,
+        cwd=ROOT,
+    )
+    if extra and extra[0] in {"--export-only"}:
+        return
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "download_madis_ks39.py"), "--export-only"],
+        check=True,
+        cwd=ROOT,
+    )
+    prep = [sys.executable, str(ROOT / "src" / "prepare_weather_ks39.py")]
+    if "--smoke" in extra:
+        prep.append("--no-canonical-overwrite")
+    subprocess.run(prep, check=True, cwd=ROOT)
+
 def calibrate():
     print('Public-data calibration uses the conditional reconstruction as the defensible baseline:')
     print('  python run_prineville.py conditional')
@@ -111,6 +130,7 @@ def main():
     elif cmd=='usgs': usgs()
     elif cmd=='water-context': water_context()
     elif cmd=='report': report()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|water-context|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid|deq|usgs|report]')
+    elif cmd=='weather-ks39': weather_ks39()
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|water-context|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid|deq|usgs|report|weather-ks39]')
 
 if __name__=='__main__': main()
