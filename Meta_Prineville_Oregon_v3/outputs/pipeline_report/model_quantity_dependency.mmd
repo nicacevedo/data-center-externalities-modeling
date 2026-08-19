@@ -1,0 +1,26 @@
+%% Quantity dependency (implemented chain). Arrow labels are provenance.
+flowchart LR
+  WLscen[workload scenario Cox/AR/Poisson/Gamma] -->|scenario| U[utilization index]
+  U -->|scenario| Shape[IT-power shape]
+  MetaE[Meta annual facility electricity] -->|reported| Closure[latent IT-power scale]
+  Shape -->|scenario| Closure
+  WX[KRDM weather] -->|measured| Gray[gray-box physics]
+  Closure -->|fitted| Gray
+  Gray -->|derived| Heat[IT heat ≈ P_IT]
+  Gray -->|derived| Mode[cooling mode]
+  Gray -->|derived| Fac[facility electricity hourly]
+  Gray -->|derived| Evap[raw evaporation]
+  Fac -->|fitted closure| MetaE
+  Evap -->|proxy| Wscale[train-only water scale / energy-only candidate]
+  MetaW[Meta annual withdrawal] -->|reported| Wscale
+  Wscale -->|proxy| Wpred[predicted annual water]
+  Fac -->|derived| PACW[PACW / eGRID]
+  PACW -->|reported/derived| C[location carbon]
+  MetaS2[Meta location Scope 2] -->|reported| C
+  City[OWRD City production] -->|reported| Ctx[regional water context]
+  POD[Vitesse/Facebook POD] -->|reported| Ctx
+  USGS[USGS IWA/PS/irrigation through 2020] -->|proxy| Ctx
+  Gen[Oregon CAMPD/EIA/cooling] -->|measured| GW[generator water/emissions]
+  GW -->|unavailable| Attr[site attribution currently missing]
+  DEQ[DEQ backup] -->|reported| Onsite[onsite backup emissions]
+  GWnet[groundwater network] -->|unavailable| Head[head/storage/recharge not identified]

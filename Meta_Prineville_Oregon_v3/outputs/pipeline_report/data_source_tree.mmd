@@ -1,0 +1,82 @@
+%% Prineville pipeline data-source tree
+%% provider → raw → processed → model → quantities
+flowchart TB
+  classDef gt fill:#dbeafe,stroke:#1d4ed8,color:#111
+  classDef wx fill:#ecfccb,stroke:#4d7c0f,color:#111
+  classDef wt fill:#cffafe,stroke:#0e7490,color:#111
+  classDef gd fill:#fef3c7,stroke:#b45309,color:#111
+  classDef gn fill:#fae8ff,stroke:#7e22ce,color:#111
+  classDef pm fill:#ffe4e6,stroke:#be123c,color:#111
+
+  subgraph GT[Facility ground truth]
+    MetaPDFs[Meta disclosure PDFs 2014-2025 vintages]
+    Annual[canonical meta_prineville_annual.csv]
+    Eng2011[2011 engineering design PUE/WUE]
+    MetaPDFs --> Annual
+    Eng2011 --> GrayPriors[gray-box priors / PUE diagnostic]
+  end
+
+  subgraph WX[Weather]
+    NOAA[NOAA NCEI Global Hourly KRDM 72692024230]
+    Weather[processed weather_hourly.csv]
+    NOAA --> Weather
+  end
+
+  subgraph WT[Water]
+    OWRD[OWRD water-use exports City + Vitesse POD]
+    OHA[OHA PWS 00682 inventory]
+    USGS[USGS NWAA IWA / public-supply / irrigation + WBD]
+    OWRDtab[processed OWRD monthly]
+    USGStab[processed USGS HUC12 panels]
+    Ctx[prineville_water_monthly_context.csv]
+    OWRD --> OWRDtab --> Ctx
+    OHA --> Ctx
+    USGS --> USGStab --> Ctx
+  end
+
+  subgraph GD[Grid / carbon]
+    EIA[EIA-930 PACW.xlsx]
+    PACW[processed pacw_hourly.csv]
+    EGRID[EPA eGRID vintages + Power Profiler ZIP 97754]
+    EGtab[egrid_prineville_annual.csv]
+    EIA --> PACW
+    EGRID --> EGtab
+  end
+
+  subgraph GN[Generators Oregon only]
+    CAMPD[EPA CAMPD Oregon hourly]
+    EIA860[EIA-860 / 923 / cooling]
+    ORtab[oregon_generator_externalities_monthly.csv]
+    CAMPD --> ORtab
+    EIA860 --> ORtab
+  end
+
+  subgraph PM[Onsite generation / permits]
+    DEQ[Oregon DEQ 07-0037 air + GHG workbooks]
+    Permits[Crook County inspection summaries]
+    Backup[meta_backup_* monthly tables]
+    Evt[campus_permit_events.csv]
+    DEQ --> Backup
+    Permits --> Evt
+  end
+
+  Annual --> Closure[conditional reconstruction: annual electricity closure]
+  Weather --> Gray[prineville_graybox.py]
+  Gray --> Closure
+  Closure --> PIT[fitted hourly IT / facility power / PUE]
+  PIT --> Wproxy[raw evaporation × train-only water scale]
+  Annual --> Wproxy
+  Wproxy --> Wpred[holdout water prediction]
+  Annual --> EGtab
+  EGtab --> Cbench[eGRID physical Scope 2 benchmark]
+  PACW --> Cshape[PACW relative carbon shape]
+  Ctx --> External[external water evidence; do not sum boundaries]
+  ORtab --> NoAttr[generator water/emissions; site attribution missing]
+  Backup --> Onsite[onsite backup hours/emissions; independent of Scope 2]
+
+  class MetaPDFs,Annual,Eng2011,GrayPriors gt
+  class NOAA,Weather wx
+  class OWRD,OHA,USGS,OWRDtab,USGStab,Ctx wt
+  class EIA,PACW,EGRID,EGtab gd
+  class CAMPD,EIA860,ORtab gn
+  class DEQ,Permits,Backup,Evt pm

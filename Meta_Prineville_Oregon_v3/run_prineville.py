@@ -50,6 +50,13 @@ def simulate():
         check=True,
     )
 
+def report():
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "build_pipeline_report.py"), *sys.argv[2:]],
+        check=True,
+        cwd=ROOT,
+    )
+
 def calibrate():
     print('Public-data calibration uses the conditional reconstruction as the defensible baseline:')
     print('  python run_prineville.py conditional')
@@ -103,6 +110,7 @@ def main():
     elif cmd=='deq': deq()
     elif cmd=='usgs': usgs()
     elif cmd=='water-context': water_context()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|water-context|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid|deq|usgs]')
+    elif cmd=='report': report()
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|water-context|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid|deq|usgs|report]')
 
 if __name__=='__main__': main()

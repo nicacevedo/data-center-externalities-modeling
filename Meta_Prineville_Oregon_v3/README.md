@@ -340,15 +340,25 @@ Default final holdout: 2023-2024.
 python run_prineville.py validate
 ```
 
-Validation hierarchy:
+Validation hierarchy (code behavior):
 1. exact identities and units;
-2. calibration closure on train years;
-3. annual held-out electricity/water/location-Scope-2 prediction;
+2. calibration **closure** of annual facility electricity (not a holdout forecast);
+3. annual held-out **water** prediction (2023-2024); do not treat electricity or location Scope 2 closure as prediction;
 4. external city/OWRD water-system consistency (`python run_prineville.py validate` now runs this against the reconstructed monthly campus water series; OWRD is not a calibration target);
-5. grid/eGRID carbon consistency;
+5. grid/eGRID carbon **benchmark** consistency;
 6. weather-year counterfactuals and sensitivity.
 
 If a quantity was used as a fitting constraint, call the agreement **closure**, not validation.
+
+### Stage 9 — pipeline audit report (no model retuning)
+
+After processed artifacts exist:
+
+```bash
+python run_prineville.py report
+```
+
+Rebuilds registries, diagrams, six figures, and `docs/PIPELINE_DATA_MODEL_REPORT.md` from existing outputs. Does not download data or change modeling logic. Fails if prerequisite artifacts are missing.
 
 ## What is missing, and how to fill it
 
