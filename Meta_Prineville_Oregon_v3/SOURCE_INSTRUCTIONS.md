@@ -107,7 +107,7 @@ The current project bundles two manual exports already obtained from this query:
 - City of Prineville entity export, water years 2010-2025;
 - Vitesse LLC c/o Facebook Inc entity export, water years 2011-2024, Report IDs 64500/64845/64846.
 
-Run `python run_prineville.py water` to normalize them. The script preserves measurement method, converts OWRD water-year months to calendar months, labels OWRD's standardized acre-foot unit, and attaches the confidence-aware source crosswalk in `data/canonical/prineville_owrd_source_crosswalk.csv`.
+Run `python run_prineville.py water` to normalize them. Outputs are written under `data/processed/owrd/`. The script preserves measurement method, converts OWRD water-year months to calendar months, labels OWRD's standardized acre-foot unit, and attaches the confidence-aware source crosswalk in `data/canonical/prineville_owrd_source_crosswalk.csv`.
 
 Accepted and candidate source mappings are deliberately separate. Do not treat a blank as zero, do not allocate the combined Airport Well #1/#2 POD across individual wells without another meter, and do not map current DT13 to D13/Report 68003.
 
@@ -304,7 +304,8 @@ Rules:
 - API: `https://api.water.usgs.gov/nwaa-data/data`
 - Catalog: `https://api.water.usgs.gov/nwaa-data/models`
 - Command: `python run_prineville.py usgs`
-- Scripts: `src/download_usgs_nwaa.py`, `src/build_usgs_huc12_panels.py`, `src/audit_usgs_nwaa.py`, `src/build_municipal_huc12_crosswalk.py`
+- Scripts: `src/download_usgs_nwaa.py`, `src/build_usgs_huc12_panels.py`, `src/build_municipal_huc12_crosswalk.py`, `src/audit_usgs_nwaa.py`
+- Order: download/organize → HUC12 panels → municipal HUC12 crosswalk → audit.
 - Raw files under `data/raw/usgs_nwaa/` are never modified after retrieval.
 
 Official model IDs (do not guess):
@@ -323,6 +324,22 @@ Rules:
 - IWA cannot support 2021–2024 analysis by itself.
 - Thermoelectric (`wu-thermoelectric`) is screened for HUC8 `17070305` only. If modeled withdrawals are zero, do not add the series to panels.
 - Municipal source → HUC12 assignment uses official coordinates only. Do not infer well locations from TRSQQ.
+
+## 12.7 Source-aware water context
+
+- Command: `python run_prineville.py water-context`
+- Script: `src/build_water_context.py`
+- Inputs: existing `data/processed/owrd/` monthly products, USGS HUC12 panels, municipal HUC12 crosswalk, Meta annual water, KRDM hourly weather.
+- Outputs: `data/processed/water/water_source_monthly_context.csv`, `data/processed/water/prineville_water_monthly_context.csv`, `outputs/qc/water_context_qa.csv`.
+- Layout: raw OWRD/USGS/City under `data/raw/<source>/`; geography under `data/canonical/usgs/`; source-specific products under `data/processed/owrd/` and `data/processed/usgs_nwaa/`; integrated tables only under `data/processed/water/`.
+
+Rules:
+- Reuse the OWRD monthly layer; do not rebuild it here.
+- Never sum or equate City production, Vitesse/Facebook PODs, Meta annual withdrawal, and USGS modeled HUC12 series.
+- If a source has no verified in-study HUC12, USGS columns stay missing. Do not infer from well names or the Meta campus.
+- USGS values are missing after their official end dates (IWA 2020-09; public-supply CU/WD and irrigation 2020-12). Do not extrapolate.
+- Meta campus withdrawal is annual; do not treat it as a monthly meter.
+- Candidate/conflict City mappings never enter primary City totals.
 
 ## 13. Renewable accounting / Schedule 272 context
 

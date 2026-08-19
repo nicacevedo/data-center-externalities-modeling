@@ -23,6 +23,9 @@ def deq():
 def usgs():
     subprocess.run([sys.executable, str(ROOT/'src'/'run_usgs_nwaa.py')], check=True, cwd=ROOT)
 
+def water_context():
+    subprocess.run([sys.executable, str(ROOT/'src'/'build_water_context.py')], check=True, cwd=ROOT)
+
 def grid():
     eia()
     egrid()
@@ -99,6 +102,7 @@ def main():
     elif cmd=='grid': grid()
     elif cmd=='deq': deq()
     elif cmd=='usgs': usgs()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid|deq|usgs]')
+    elif cmd=='water-context': water_context()
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|water-context|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid|deq|usgs]')
 
 if __name__=='__main__': main()

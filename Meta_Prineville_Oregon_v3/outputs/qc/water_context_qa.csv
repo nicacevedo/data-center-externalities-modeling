@@ -1,0 +1,15 @@
+check,status,detail
+no_duplicate_source_month,PASS,n=0
+no_duplicate_calendar_month,PASS,
+city_owrd_totals_unchanged,PASS,before=28042208.988511063 after=28042208.988511063
+direct_owrd_totals_unchanged,PASS,before=693933.7170153256 after=693933.7170153256
+month_city_equals_source_accepted,PASS,month=28042208.988511063 source=28042208.988511063
+candidates_excluded_from_primary,PASS,
+reported_zero_distinct_from_missing,PASS,
+huc12_12_char_when_assigned,PASS,
+usgs_iwa_missing_outside_period,PASS,n_months=60
+usgs_wd_missing_outside_period,PASS,n_months=57
+meta_labeled_annual_not_monthly,PASS,
+accounting_boundary_labels_present,PASS,
+do_not_sum_flag_present,PASS,
+usgs_join_did_not_explode_rows,PASS,n_source=2496 expected=2496 usgs_joined_rows=732

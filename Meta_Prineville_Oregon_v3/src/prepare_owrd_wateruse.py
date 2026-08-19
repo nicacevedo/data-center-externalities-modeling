@@ -24,7 +24,7 @@ CITY_RAW = ROOT / "data" / "raw" / "owrd" / "wateruse_entity_report.csv"
 META_RAW = ROOT / "data" / "raw" / "owrd" / "wateruse_entity_report_facebook.txt"
 CROSSWALK = ROOT / "data" / "canonical" / "prineville_owrd_source_crosswalk.csv"
 META_SOURCES = ROOT / "data" / "canonical" / "meta_owrd_direct_sources.csv"
-OUTDIR = ROOT / "data" / "processed"
+OUTDIR = ROOT / "data" / "processed" / "owrd"
 AUDIT_OUT = ROOT / "outputs" / "owrd_mapping_audit.csv"
 
 MONTHS = [

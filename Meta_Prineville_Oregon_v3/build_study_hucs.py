@@ -1,9 +1,13 @@
 import csv
+from pathlib import Path
 import requests
 
 SITE_HUC12 = "170703051002"
 SITE_HUC10 = "1707030510"
 SITE_HUC8  = "17070305"
+
+CANONICAL = Path("data/canonical/usgs")
+CANONICAL.mkdir(parents=True, exist_ok=True)
 
 WBD_URL = (
     "https://hydro.nationalmap.gov/"
@@ -53,13 +57,8 @@ def query_prefix(prefix):
 # Existing files you already created
 # ------------------------------------------------------------
 
-network = read_csv(
-    "meta_huc12_hydrologic_network.csv"
-)
-
-touching = read_csv(
-    "touching_huc12s.csv"
-)
+network = read_csv(CANONICAL / "meta_huc12_hydrologic_network.csv")
+touching = read_csv(CANONICAL / "touching_huc12s.csv")
 
 
 network_by_huc = {
@@ -253,11 +252,12 @@ fields = [
     "scope_hydro_near",
 ]
 
-with open(
-    "meta_prineville_study_hucs.csv",
-    "w",
-    newline=""
-) as f:
+with open(CANONICAL / "meta_prineville_study_hucs.csv", "w", newline="") as f:
+    writer = csv.DictWriter(f, fieldnames=fields)
+    writer.writeheader()
+    writer.writerows(output)
+
+with open("meta_prineville_study_hucs.csv", "w", newline="") as f:
 
     writer = csv.DictWriter(
         f,
@@ -312,5 +312,5 @@ print(
 
 print(
     "\nSaved:",
-    "meta_prineville_study_hucs.csv"
+    "data/canonical/usgs/meta_prineville_study_hucs.csv"
 )

@@ -1,6 +1,11 @@
-import requests
 import csv
 import time
+from pathlib import Path
+
+import requests
+
+CANONICAL = Path("data/canonical/usgs")
+CANONICAL.mkdir(parents=True, exist_ok=True)
 
 URL = (
     "https://hydro.nationalmap.gov/"
@@ -187,38 +192,30 @@ rows.append({
 rows.extend(upstream)
 rows.extend(downstream)
 
-with open(
-    "meta_huc12_hydrologic_network.csv",
-    "w",
-    newline=""
-) as f:
+fields = [
+    "direction",
+    "depth",
+    "huc12",
+    "name",
+    "tohuc",
+    "areasqkm",
+    "states",
+]
 
-    fields = [
-        "direction",
-        "depth",
-        "huc12",
-        "name",
-        "tohuc",
-        "areasqkm",
-        "states",
-    ]
 
-    writer = csv.DictWriter(
-        f,
-        fieldnames=fields
-    )
+def _write_network(path):
+    with open(path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fields)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({k: row.get(k) for k in fields})
 
-    writer.writeheader()
 
-    for row in rows:
-        writer.writerow({
-            k: row.get(k)
-            for k in fields
-        })
-
+_write_network(CANONICAL / "meta_huc12_hydrologic_network.csv")
+_write_network("meta_huc12_hydrologic_network.csv")
 
 print("\nSaved:")
-print("meta_huc12_hydrologic_network.csv")
+print("data/canonical/usgs/meta_huc12_hydrologic_network.csv")
 
 print("\nCounts:")
 print("Upstream HUC12s :", len(upstream))

@@ -22,6 +22,9 @@ It is **not** a claim that public data identify Meta's private hourly IT workloa
 - `data/canonical/owrd_report_index.csv`: the 57 City of Prineville OWRD report IDs from the 2010-2025 entity export.
 - `data/canonical/meta_owrd_direct_sources.csv`: verified OWRD POD registry for the three Vitesse LLC c/o Facebook Inc reports (64500, 64845, 64846).
 - `data/raw/owrd/wateruse_entity_report.csv` and `wateruse_entity_report_facebook.txt`: raw City and Vitesse/Facebook OWRD entity exports.
+- `data/canonical/usgs/`: study HUC12 geography (site `170703051002`, local 9, HUC8 52).
+- `data/canonical/municipal_source_huc12_crosswalk.csv`: City wells → HUC12 using official coordinates only.
+- `data/processed/owrd/`, `data/processed/usgs_nwaa/`, `data/processed/water/`: source-specific then integrated water tables (`python run_prineville.py water` / `usgs` / `water-context`).
 - `data/raw/eia930/historical/PACW.xlsx` and `src/prepare_eia930.py`: canonical PACW EIA-930 history (`python run_prineville.py eia`).
 - `data/raw/egrid/` and `src/prepare_egrid.py`: EPA eGRID subregion output rates × Meta campus MWh (`python run_prineville.py egrid`).
 - `data/raw/deq_air/` and `data/raw/deq_ghg/`: Oregon DEQ Vitesse 07-0037 air-permit PDFs (2012-2025) and DEQ electricity-supplier GHG workbooks. Independent onsite-generation module (`python run_prineville.py deq`); not grid Scope 2.
@@ -93,10 +96,10 @@ python run_prineville.py water
 ```
 
 This creates:
-- `data/processed/owrd_city_monthly_report_use.csv`: every City report-month, including unmapped/legacy reports;
-- `data/processed/owrd_city_monthly_model_use.csv`: **accepted-only** canonical source/reporting groups;
-- `data/processed/owrd_city_monthly_candidate_use.csv`: high-confidence DT4-DT12 candidates kept separate from the default model;
-- `data/processed/owrd_meta_direct_monthly_use.csv`: the three Vitesse/Facebook direct OWRD POD series;
+- `data/processed/owrd/owrd_city_monthly_report_use.csv`: every City report-month, including unmapped/legacy reports;
+- `data/processed/owrd/owrd_city_monthly_model_use.csv`: **accepted-only** canonical source/reporting groups;
+- `data/processed/owrd/owrd_city_monthly_candidate_use.csv`: high-confidence DT4-DT12 candidates kept separate from the default model;
+- `data/processed/owrd/owrd_meta_direct_monthly_use.csv`: the three Vitesse/Facebook direct OWRD POD series;
 - annual calendar-year summaries and `outputs/owrd_mapping_audit.csv`.
 
 OWRD water years are converted to actual calendar months. OWRD's query reports these values in acre-feet; zero is preserved as a reported zero and blank remains missing. Airport Wells #1/#2 share Report 62423 and therefore remain a single combined reporting group so their volume is not double-counted.
@@ -104,6 +107,20 @@ OWRD water years are converted to actual calendar months. OWRD's query reports t
 The default model uses only accepted mappings. Candidate D4-D12 mappings are available for sensitivity/review but are not automatically promoted. DT13 is explicitly excluded from D13/Report 68003 because the well identifiers conflict. DT14 and DT18 remain unresolved on the water-use-report side and are not imputed as zero.
 
 The City municipal series and Vitesse/Facebook direct POD series have different accounting boundaries and are never summed automatically. Remaining high-value acquisition is City/Meta meter data, City well-production/ASR records, discharge, and final resolution of unresolved POD identities where needed.
+
+Water files follow this layout (electricity/emissions paths are unchanged):
+
+```text
+data/raw/owrd/              untouched OWRD entity exports
+data/raw/usgs_nwaa/         untouched USGS NWAA API responses
+data/raw/city/              future City meter/well records
+data/canonical/             Meta/OWRD/OHA identities and crosswalks
+data/canonical/usgs/        HUC12 geography and site_point_huc12 note
+data/processed/owrd/        normalized OWRD monthly/annual tables
+data/processed/usgs_nwaa/   HUC12 × month USGS panels
+data/processed/water/       cross-source integrated context only
+outputs/qc/                 USGS/OWRD/water-context QA
+```
 
 ### Stage 3.5 — USGS NWAA HUC12 water module (modeled regional context)
 
@@ -113,7 +130,9 @@ This step finishes the USGS National Water Availability Assessment (NWAA) HUC12 
 python run_prineville.py usgs
 ```
 
-Verified geography is preserved: site HUC12 `170703051002` (designated `site_point_huc12`; campus-footprint verification remains outstanding), 9-HUC local scope, 52-HUC same-HUC8 scope. Raw API responses stay under `data/raw/usgs_nwaa/`; processed panels under `data/processed/usgs_nwaa/`; QA under `outputs/qc/`.
+Order: download/organize existing USGS files → build HUC12 panels → municipal-source HUC12 crosswalk → audit (including unique source IDs and the Yancey #3 out-of-study flag). Do not re-download series that already passed QA.
+
+Verified geography is preserved: site HUC12 `170703051002` (designated `site_point_huc12`; campus-footprint verification remains outstanding), 9-HUC local scope, 52-HUC same-HUC8 scope. Raw API responses stay under `data/raw/usgs_nwaa/`; processed panels under `data/processed/usgs_nwaa/`; QA under `outputs/qc/`. Official models: `iwa-assessment-outputs-conus-2025`, `wu-public-supply-cu`, `wu-public-supply-wd`, `wu-irrigation-wd`, `wu-irrigation-cu`.
 
 Processed IWA names are explicit because the native labels are easy to misread:
 
@@ -124,6 +143,16 @@ Processed IWA names are explicit because the native labels are easy to misread:
 - `pscutot` / `public_supply_consumption_mgd` is modeled public-supply consumptive use, not Meta-specific use.
 
 IWA ends in **2020-09** and cannot by itself support the 2021–2024 portion of the Prineville analysis. None of these USGS series are campus water-meter observations. Do not add `pscutot` or `irrcutot` into IWA `consum`.
+
+### Stage 3.6 — source-aware water context (no calibration)
+
+Join existing OWRD monthly products with USGS HUC12 context, KRDM monthly weather, and Meta annual campus withdrawal **without summing or equating them**.
+
+```bash
+python run_prineville.py water-context
+```
+
+Writes `data/processed/water/water_source_monthly_context.csv`, `data/processed/water/prineville_water_monthly_context.csv`, and `outputs/qc/water_context_qa.csv`. City production is not Meta delivery. Vitesse/Facebook PODs are not total Meta withdrawal. USGS values go missing after their official end dates. Unverified wells do not receive a guessed HUC12.
 
 ### Stage 4 — build the campus chronology
 

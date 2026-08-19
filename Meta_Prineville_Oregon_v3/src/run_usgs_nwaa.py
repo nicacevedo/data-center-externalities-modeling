@@ -36,8 +36,8 @@ def main() -> None:
 
     download_main()
     panel_main()
-    audit_main()
     crosswalk_main()
+    audit_main()
     archive_legacy_scripts()
 
 

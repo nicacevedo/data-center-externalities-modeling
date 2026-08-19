@@ -16,6 +16,7 @@ from usgs_nwaa_config import (
     IWA_MM_COLUMNS,
     M3_PER_MILLION_US_GALLONS,
     MM_OVER_KM2_TO_M3,
+    MUNICIPAL_CROSSWALK,
     PROCESSED,
     QC_DIR,
     SCOPES,
@@ -262,9 +263,10 @@ def audit_processed_scope(geo: pd.DataFrame, scope: str) -> list[dict]:
             expected = df[col] * pd.Series(days, index=df.index) * (
                 M3_PER_MILLION_US_GALLONS
             )
-            rel = (df[m3_col] - expected).abs() / expected.replace(0, pd.NA)
             abs_err = (df[m3_col] - expected).abs()
-            rel_fail = rel.astype("float64").fillna(0) > M3_RTOL
+            denom = expected.mask(expected == 0)
+            rel = abs_err / denom
+            rel_fail = rel.fillna(0) > M3_RTOL
             n_fail = int(((abs_err > M3_ATOL) & rel_fail).sum())
             n_fail += int(((expected == 0) & (df[m3_col].fillna(0) != 0)).sum())
             rec[f"{m3_col}_n_fail"] = n_fail
@@ -289,6 +291,70 @@ def audit_processed_scope(geo: pd.DataFrame, scope: str) -> list[dict]:
     return out
 
 
+YANCEY_WELL_3 = "SRC-DC"
+
+
+def _truthy(value) -> bool:
+    return str(value).strip().lower() in {"1", "true", "yes"}
+
+
+def audit_municipal_crosswalk() -> dict:
+    rec = {
+        "dataset": "municipal_source_huc12_crosswalk",
+        "scope": "pws_00682",
+        "status": "PASS",
+        "failures": "",
+    }
+    failures = []
+    if not MUNICIPAL_CROSSWALK.exists():
+        rec["status"] = "FAIL"
+        rec["failures"] = "missing_crosswalk_file"
+        return rec
+    df = pd.read_csv(MUNICIPAL_CROSSWALK, dtype=str)
+    rec["actual_rows"] = int(len(df))
+    rec["n_huc12_requested"] = int(len(df))
+    if "source_id" not in df.columns:
+        rec["status"] = "FAIL"
+        rec["failures"] = "missing_source_id"
+        return rec
+    dup = int(df["source_id"].duplicated().sum())
+    rec["duplicate_source_ids"] = dup
+    if dup:
+        failures.append(f"duplicate_source_ids:{dup}")
+    assigned = df["huc12_id"].fillna("").str.strip() != ""
+    in_study = df["in_study_geography"].map(_truthy)
+    rec["n_assigned_in_study"] = int((assigned & in_study).sum())
+    rec["n_out_of_study"] = int((assigned & ~in_study).sum())
+    rec["n_assigned_huc12"] = rec["n_assigned_in_study"]
+    rec["n_unresolved"] = int((~assigned).sum())
+    bad_len = int((assigned & (df["huc12_id"].map(pad_huc12).str.len() != 12)).sum())
+    rec["huc12_not_12_char"] = bad_len
+    if bad_len:
+        failures.append(f"huc12_id_len:{bad_len}")
+    unresolved = df.loc[~assigned]
+    if unresolved.empty:
+        failures.append("unresolved_sources_dropped")
+    elif (unresolved["confidence"].fillna("") != "unresolved").any():
+        failures.append("unresolved_sources_not_flagged_unresolved")
+    yancey = df.loc[df["source_id"] == YANCEY_WELL_3]
+    if yancey.empty:
+        failures.append("yancey_well_3_missing")
+    else:
+        row = yancey.iloc[0]
+        in_study = _truthy(row.get("in_study_geography"))
+        conf = str(row.get("confidence") or "")
+        rec["yancey_well_3_confidence"] = conf
+        rec["yancey_well_3_in_study_geography"] = in_study
+        if in_study or conf == "coordinate_wbd_intersect":
+            failures.append("yancey_well_3_silently_accepted")
+        if conf != "out_of_study_geography":
+            failures.append(f"yancey_well_3_confidence:{conf}")
+    if failures:
+        rec["status"] = "FAIL"
+        rec["failures"] = ";".join(failures)
+    return rec
+
+
 def main() -> None:
     geo = load_geo()
     QC_DIR.mkdir(parents=True, exist_ok=True)
@@ -306,6 +372,7 @@ def main() -> None:
         for spec, prefix in raw_specs:
             rows.append(audit_raw_scope(geo, scope, spec, prefix))
         rows.extend(audit_processed_scope(geo, scope))
+    rows.append(audit_municipal_crosswalk())
     out = pd.DataFrame(rows)
     path = QC_DIR / "usgs_nwaa_qa.csv"
     out.to_csv(path, index=False)

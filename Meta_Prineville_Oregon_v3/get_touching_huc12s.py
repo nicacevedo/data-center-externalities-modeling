@@ -1,6 +1,11 @@
 import json
-import requests
 import csv
+from pathlib import Path
+
+import requests
+
+CANONICAL = Path("data/canonical/usgs")
+CANONICAL.mkdir(parents=True, exist_ok=True)
 
 URL = (
     "https://hydro.nationalmap.gov/"
@@ -96,6 +101,8 @@ print("\nTotal touching HUC12s:", len(features))
 # 4. Save geometry
 # -------------------------------------------------------
 
+with open(CANONICAL / "touching_huc12s.geojson", "w") as f:
+    json.dump(neighbors, f, indent=2)
 with open("touching_huc12s.geojson", "w") as f:
     json.dump(neighbors, f, indent=2)
 
@@ -103,6 +110,16 @@ with open("touching_huc12s.geojson", "w") as f:
 # -------------------------------------------------------
 # 5. Save easy-to-use CSV
 # -------------------------------------------------------
+
+with open(CANONICAL / "touching_huc12s.csv", "w", newline="") as f:
+    writer = csv.writer(f)
+    writer.writerow(["huc12", "name", "tohuc", "areasqkm", "states"])
+    for feat in features:
+        p = feat["properties"]
+        writer.writerow([
+            p.get("huc12"), p.get("name"), p.get("tohuc"),
+            p.get("areasqkm"), p.get("states"),
+        ])
 
 with open("touching_huc12s.csv", "w", newline="") as f:
     writer = csv.writer(f)
@@ -127,5 +144,5 @@ with open("touching_huc12s.csv", "w", newline="") as f:
         ])
 
 print("\nSaved:")
-print("  touching_huc12s.geojson")
-print("  touching_huc12s.csv")
+print("  data/canonical/usgs/touching_huc12s.geojson")
+print("  data/canonical/usgs/touching_huc12s.csv")

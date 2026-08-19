@@ -39,16 +39,16 @@ Confidence-aware crosswalk between OHA PWS 00682 sources and OWRD water-use Repo
 ## `data/canonical/meta_owrd_direct_sources.csv`
 Verified registry of the three OWRD POD reports associated with `VITESSE LLC C/O FACEBOOK INC`: 64500, 64845 and 64846. Treat them as direct-groundwater evidence with a separate boundary from City municipal production.
 
-## `data/processed/owrd_city_monthly_report_use.csv`
-Long-form OWRD City export with one row per Report ID/calendar month. Preserves raw facility/source/location/TRSQQ, measurement method, reported-zero vs blank, and accepted/candidate/conflict mapping fields. OWRD values are acre-feet and `volume_m3` is a deterministic unit conversion.
+## `data/processed/owrd/owrd_city_monthly_report_use.csv`
+Long-form OWRD City export with one row per Report ID/calendar month. Preserves raw facility/source/location/TRSQQ, measurement method, reported-zero vs blank, and accepted/candidate/conflict mapping fields. OWRD values are acre-feet and `volume_m3` is a deterministic unit conversion. Normalized OWRD products live under `data/processed/owrd/`; integrated joins live under `data/processed/water/` only.
 
-## `data/processed/owrd_city_monthly_model_use.csv`
+## `data/processed/owrd/owrd_city_monthly_model_use.csv`
 Accepted-only model-facing municipal source/reporting groups. A combined POD such as Airport Wells #1/#2 is represented once under a combined key; its volume is not duplicated across the two physical sources.
 
-## `data/processed/owrd_city_monthly_candidate_use.csv`
+## `data/processed/owrd/owrd_city_monthly_candidate_use.csv`
 High-confidence candidate mappings (currently DT4-DT12 sequence) for review/sensitivity only. These are not used by the default model.
 
-## `data/processed/owrd_meta_direct_monthly_use.csv`
+## `data/processed/owrd/owrd_meta_direct_monthly_use.csv`
 Calendar-month-normalized Vitesse/Facebook direct POD reports. This is not automatically substituted for Meta's reported site withdrawal because the reporting boundary is not proven identical.
 
 ## `data/processed/pacw_hourly.csv`
@@ -201,7 +201,13 @@ IWA **ends 2020-09** and cannot by itself support 2021–2024 Prineville analysi
 - Municipal source → HUC12: `data/canonical/municipal_source_huc12_crosswalk.csv`
 
 ### `data/canonical/municipal_source_huc12_crosswalk.csv`
-Links City of Prineville PWS 00682 sources to HUC12 using official coordinates only (inventory lat/lon or OWRD well-log decimal degrees + WBD point-in-polygon). Missing coordinates stay unresolved; TRSQQ is not converted to a point.
+Links City of Prineville PWS 00682 sources to HUC12 using official coordinates only (inventory lat/lon or OWRD well-log decimal degrees + WBD point-in-polygon). Missing coordinates stay unresolved; TRSQQ is not converted to a point. Yancey Well #3 (`SRC-DC`) is flagged `out_of_study_geography` and is not treated as a Prineville HUC12 assignment.
+
+## `data/processed/water/water_source_monthly_context.csv`
+Finest defensible OWRD source/reporting-group × month table with USGS HUC12 context attached only where a verified in-study HUC12 exists. Boundaries (`city_municipal_production`, `city_municipal_candidate_sensitivity`, `vitesse_facebook_direct_pod`) are never summed. Candidate rows are identifiable and excluded from primary City totals.
+
+## `data/processed/water/prineville_water_monthly_context.csv`
+Calendar-month spine with **separate** columns for accepted City production, Vitesse/Facebook direct POD use, Meta annual campus withdrawal (labeled annual, not monthly), site-HUC12 USGS variables, and KRDM monthly weather. USGS values are missing after their official coverage ends.
 
 ## Provenance labels for modeled hourly data
 - `reported`: directly published source value.
