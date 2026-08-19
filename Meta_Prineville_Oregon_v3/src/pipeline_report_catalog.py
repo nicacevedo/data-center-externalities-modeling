@@ -77,6 +77,8 @@ QUANTITY_COLUMNS = [
     "confidence_level",
     "missing_information_limitation",
     "glossary_section",
+    "boundary_id",
+    "accounting_boundary_note",
 ]
 
 MODEL_COLUMNS = [
@@ -647,7 +649,7 @@ def source_inventory() -> list[dict]:
             reported_measured_modeled_status="official modeled annual generation-weighted output rates",
             processing_script="src/prepare_egrid.py",
             processed_outputs="data/processed/egrid_prineville_annual.csv; outputs/egrid_meta_annual_compare.csv",
-            model_role="independent annual physical carbon benchmark = Meta MWh × NWPP output rate",
+            model_role="methodology/accounting consistency benchmark = Meta MWh × NWPP output rate versus Meta location Scope 2; not fully independent external validation",
             known_limitations="Not hourly campus intensity, not PACW demand, not market/REC accounting. 2024 uses eGRID2023.",
             branch_group="grid_carbon",
             in_source_manifest=True,
@@ -1244,7 +1246,7 @@ def quantity_registry() -> list[dict]:
             quantity_id="Q_PUE",
             quantity="PUE",
             symbol="PUE",
-            definition="P_fac/P_IT from the gray-box. Annual modeled PUE ≈ 1.060. 2011 design full-load PUE 1.07 is a benchmark, not a fit target.",
+            definition="P_fac/P_IT from the gray-box. Annual modeled PUE ≈ 1.060. 2011 design full-load PUE 1.07 is a design/assumption consistency (falsification) check, not independent validation.",
             unit="unitless",
             time_resolution="hourly and annual",
             spatial_resolution="campus (modeled)",
@@ -1258,7 +1260,7 @@ def quantity_registry() -> list[dict]:
             fitted_parameters="overhead priors; IT scale does not change PUE in the linear gray-box except via spray",
             modeling_assumptions="bottom-up PUE; not an independent input",
             calibration_target="none (2011 1.07 is a falsification diagnostic)",
-            independent_validation_source="2011 design PUE 1.07; fleet PUE in Meta tables is not site annual telemetry",
+            independent_validation_source="2011 design PUE 1.07 is a design/assumption consistency check, not independent validation; fleet PUE in Meta tables is not site annual telemetry",
             accuracy_diagnostic_available="2011 modeled annual PUE 1.060 vs 1.07",
             confidence_level="medium vs 2011 design; low as a claim of true hourly PUE",
             missing_information_limitation="No simultaneous IT and facility metering.",
@@ -1978,7 +1980,7 @@ def quantity_registry() -> list[dict]:
             fitted_parameters="",
             modeling_assumptions="corporate location-based inventory as reported",
             calibration_target="stochastic hourly carbon can close to this annual total (closure, not prediction)",
-            independent_validation_source="eGRID NWPP × Meta MWh is a physical benchmark, not this inventory's definition",
+            independent_validation_source="eGRID NWPP × Meta MWh is a methodology/accounting consistency benchmark, not fully independent external validation",
             accuracy_diagnostic_available="egrid_meta_annual_compare.csv",
             confidence_level="high as disclosed inventory; method ≠ eGRID identity",
             missing_information_limitation="2011 missing. Market/REC operational GHG is a different quantity.",
@@ -2002,7 +2004,7 @@ def quantity_registry() -> list[dict]:
             fitted_parameters="vintage map 2011→eGRID2010 … 2024→eGRID2023",
             modeling_assumptions="consumption-location average output rate; not marginal; not PACW demand",
             calibration_target="none (benchmark)",
-            independent_validation_source="compared with Meta location Scope 2 where disclosed",
+            independent_validation_source="Meta location Scope 2 is a methodology/accounting consistency benchmark (shared Meta MWh), not fully independent external validation",
             accuracy_diagnostic_available="egrid_meta_annual_compare.csv; 2024 difference −0.036%",
             confidence_level="high as a reproducible benchmark; medium as equality to Meta's inventory method",
             missing_information_limitation="Not hourly campus intensity.",
@@ -2588,6 +2590,15 @@ def quantity_registry() -> list[dict]:
     ids = [r["quantity_id"] for r in rows]
     if len(ids) != len(set(ids)):
         raise ValueError("Duplicate quantity_id")
+    missing_b = [qid for qid in ids if qid not in QUANTITY_BOUNDARIES]
+    if missing_b:
+        raise ValueError(f"Missing boundary assignment: {missing_b}")
+    for r in rows:
+        bid, note = QUANTITY_BOUNDARIES[r["quantity_id"]]
+        if bid not in BOUNDARY_VOCABULARY:
+            raise ValueError(f"Invalid boundary_id {bid} for {r['quantity_id']}")
+        r["boundary_id"] = bid
+        r["accounting_boundary_note"] = note
     return rows
 
 
@@ -2783,7 +2794,7 @@ def model_registry() -> list[dict]:
             model_name="eGRID NWPP × Meta MWh physical benchmark",
             model_class="benchmark",
             code_path="src/prepare_egrid.py",
-            what_it_does="Independent regional physical carbon benchmark. Not electricity prediction and not a Meta-specific marginal model.",
+            what_it_does="Methodology/accounting consistency benchmark: Meta campus MWh times eGRID NWPP output rate versus Meta reported location Scope 2. Not electricity prediction, not a Meta-specific marginal model, and not fully independent external validation (both sides use the same Meta MWh and related inventory geography).",
             equations="CO2_y = E_y^{Meta} × EF_y^{NWPP} / 2204.6226218487757 lb per t",
             inputs="meta electricity; eGRID subregion rates; Power Profiler ZIP 97754",
             outputs="egrid_prineville_annual.csv; egrid_meta_annual_compare.csv",
@@ -2793,7 +2804,7 @@ def model_registry() -> list[dict]:
             holdout_period="n/a",
             selection_rule="ZIP uniquely NWPP",
             is_prediction="no",
-            notes="Compare to Meta location Scope 2 where disclosed. Market/REC not used.",
+            notes="Compare to Meta location Scope 2 where disclosed. This is an accounting-method consistency check, not independent campus carbon telemetry. Market/REC not used.",
         ),
         _m(
             model_id="M_PACW_CI",
@@ -2938,3 +2949,448 @@ DOC_VS_CODE_DISCREPANCIES = [
         "resolution": "Electricity and Scope 2 agreement are closure. Water 2023-2024 errors are the predictive holdout. Report command documents this; README Stage 8 item 3 should not be read as electricity forecast skill.",
     },
 ]
+
+
+BOUNDARY_VOCABULARY = (
+    "META_CAMPUS",
+    "META_LATENT_IT",
+    "PRINEVILLE_PWS",
+    "VITESSE_DIRECT_POD",
+    "HUC12_LOCAL_USE",
+    "HUC12_ROUTED_HYDROLOGY",
+    "PACW_BA",
+    "EGRID_NWPP",
+    "OREGON_GENERATOR",
+    "META_ONSITE_BACKUP",
+    "SCENARIO_WORKLOAD",
+    "NOT_IDENTIFIED",
+)
+
+SOURCE_QUANTITY_ROLES = ("primary", "context", "calibration_target", "benchmark", "validation")
+MODEL_IO_ROLES = ("input", "target", "output", "benchmark", "validation")
+PARAMETER_STATUSES = (
+    "physical_constant",
+    "reported_site_fact",
+    "literature/design assumption",
+    "fitted_parameter",
+    "scenario_prior",
+    "unused",
+)
+
+# boundary_id, accounting_boundary_note for every quantity_id
+QUANTITY_BOUNDARIES = {
+    "Q_ARRIVALS": ("SCENARIO_WORKLOAD", "Generative Cox-process arrivals; not campus scheduler telemetry."),
+    "Q_EXECUTED": ("SCENARIO_WORKLOAD", "Scenario queue service; not observed executed work."),
+    "Q_CAPACITY": ("NOT_IDENTIFIED", "Compute capacity is not identified."),
+    "Q_UTILIZATION": ("SCENARIO_WORKLOAD", "Scale-free utilization index in the stochastic proxy only."),
+    "Q_BACKLOG": ("SCENARIO_WORKLOAD", "Scenario aggregate queue backlog."),
+    "Q_DELAY_SLA": ("NOT_IDENTIFIED", "Delay/SLA is not implemented."),
+    "Q_P_IT": ("META_LATENT_IT", "Latent IT power: annual scale fitted to campus facility electricity, or scenario shape then the same closure. Not PDU telemetry."),
+    "Q_E_IT": ("META_LATENT_IT", "Integral of latent IT power; not a measured IT-energy series."),
+    "Q_WEATHER": ("META_CAMPUS", "KRDM station weather used as the campus cooling driver; station is not on campus."),
+    "Q_IT_HEAT": ("META_LATENT_IT", "Q_IT ≈ P_IT inside the gray-box; latent IT boundary."),
+    "Q_COOL_LOAD": ("META_LATENT_IT", "Cooling load approximated by IT heat; campus modeled, not metered."),
+    "Q_THERMAL_STATE": ("META_LATENT_IT", "Modeled supply-air temperature only."),
+    "Q_COOLING_MODE": ("META_LATENT_IT", "Weather-rule evaporative mode at the modeled campus, not BMS logs."),
+    "Q_COOLING_CONTROL": ("META_LATENT_IT", "Fixed gray-box setpoints/priors."),
+    "Q_P_COOL": ("META_LATENT_IT", "Fan plus evaporative-aux fractions of latent IT power."),
+    "Q_P_FAC": ("META_CAMPUS", "Hourly reconstructed facility power closed to Meta campus annual electricity."),
+    "Q_E_FAC": ("META_CAMPUS", "Meta-disclosed Prineville annual facility electricity. Not PACW BA demand."),
+    "Q_PUE": ("META_LATENT_IT", "Derived P_fac/P_IT from the gray-box on the latent IT + reconstructed facility boundary."),
+    "Q_HEAT_REJ": ("NOT_IDENTIFIED", "Heat rejection/reuse is not a delivered quantity."),
+    "Q_WUE_DIR": ("META_CAMPUS", "Derived withdrawal per facility kWh on the Meta campus table; not ISO WUE."),
+    "Q_A2_WUE": ("NOT_IDENTIFIED", "a2 tower curves are not implemented."),
+    "Q_W_EVAP": ("META_LATENT_IT", "Gray-box raw evaporative humidification at the modeled campus; not makeup or Meta withdrawal."),
+    "Q_MAKEUP_BLOWDOWN": ("NOT_IDENTIFIED", "Makeup/blowdown not identified."),
+    "Q_COC": ("NOT_IDENTIFIED", "Cycles of concentration not identified."),
+    "Q_W_CONS": ("NOT_IDENTIFIED", "Campus consumption is not identified."),
+    "Q_W_WITH": ("META_CAMPUS", "Meta-disclosed annual campus withdrawal. Not City production and not Vitesse/Facebook POD use."),
+    "Q_WATER_PROXY": ("META_CAMPUS", "Predicted/proxy campus withdrawal from gray-box evaporation times a train-only scale; still the Meta campus water boundary, not a meter."),
+    "Q_CHI": ("NOT_IDENTIFIED", "Consumptive fraction not identified."),
+    "Q_THETA": ("NOT_IDENTIFIED", "Campus source-share not identified."),
+    "Q_REUSE_WATER": ("NOT_IDENTIFIED", "Onsite reuse not identified."),
+    "Q_ADD_MDD": ("NOT_IDENTIFIED", "Daily ADD/MDD not identified."),
+    "Q_CITY_PROD": ("PRINEVILLE_PWS", "OWRD accepted City of Prineville municipal POD production. Not Meta campus delivery."),
+    "Q_DIRECT_POD": ("VITESSE_DIRECT_POD", "OWRD Vitesse/Facebook direct groundwater POD reports. Not total Meta withdrawal and not USGS public-supply WD."),
+    "Q_IRRIGATION": ("HUC12_LOCAL_USE", "USGS modeled HUC12 irrigation WD/CU. Not campus water."),
+    "Q_IWA_STRFLOW": ("HUC12_ROUTED_HYDROLOGY", "USGS IWA cumulative streamflow (upstream+local routing). Not local-use WD."),
+    "Q_IWA_CONSUM": ("HUC12_ROUTED_HYDROLOGY", "USGS IWA cumulative consumption (upstream+local). Not pscutot/irrcutot."),
+    "Q_IWA_AVAIL": ("HUC12_ROUTED_HYDROLOGY", "USGS IWA availability identity strflow-consum. Not independent hydrology."),
+    "Q_IWA_SUI": ("HUC12_ROUTED_HYDROLOGY", "USGS IWA supply-use index on the routed product."),
+    "Q_USGS_PS": ("HUC12_LOCAL_USE", "USGS modeled HUC12 public-supply WD/CU. Not City OWRD production and not Meta withdrawal."),
+    "Q_GRID_DEMAND": ("PACW_BA", "EIA-930 PacifiCorp West balancing-authority operations. Not campus electricity."),
+    "Q_RENEWABLE_CF": ("NOT_IDENTIFIED", "Campus/BA renewable CF model not implemented."),
+    "Q_GEN_OR": ("OREGON_GENERATOR", "Oregon CAMPD/EIA-923 generation and emissions. Not attributed to Meta and not PACW demand."),
+    "Q_GEN_WATER": ("OREGON_GENERATOR", "Oregon EIA cooling-product water. Not Meta indirect water."),
+    "Q_EWIF": ("NOT_IDENTIFIED", "Average EWIF not coupled to campus electricity."),
+    "Q_MWF": ("NOT_IDENTIFIED", "Marginal water factor not implemented."),
+    "Q_W_IND": ("NOT_IDENTIFIED", "Indirect electricity water not identified."),
+    "Q_W_OPER": ("NOT_IDENTIFIED", "Operational water footprint not identified."),
+    "Q_SCOPE2_META": ("META_CAMPUS", "Meta-disclosed location-based Scope 2 for the Prineville campus inventory."),
+    "Q_SCOPE2_EGRID": ("EGRID_NWPP", "Meta campus MWh times eGRID NWPP output rate. Same Meta MWh as Q_E_FAC; NWPP geography, not PACW demand."),
+    "Q_CI_PACW": ("PACW_BA", "PACW consumed-CO2 intensity. Regional BA shape, not campus telemetry."),
+    "Q_FUEL_IMPORT_PROXY": ("PACW_BA", "PACW fuel/import sensitivity score on the BA boundary."),
+    "Q_MEF": ("NOT_IDENTIFIED", "Marginal emission factor not implemented."),
+    "Q_BACKUP_GEN": ("META_ONSITE_BACKUP", "DEQ 07-0037 onsite engine hours. Not grid Scope 2 and not IT capacity."),
+    "Q_BACKUP_EMIS": ("META_ONSITE_BACKUP", "DEQ onsite backup emissions. Kept separate from location Scope 2 / eGRID / PACW."),
+    "Q_OP_GHG": ("META_CAMPUS", "Meta-disclosed operational Scope 1+2; market-instrument sensitive, still a campus inventory row."),
+    "Q_ELEC_COST": ("NOT_IDENTIFIED", "Electricity cost not identified."),
+    "Q_WATER_COST": ("NOT_IDENTIFIED", "Water cost not identified."),
+    "Q_CAPEX": ("NOT_IDENTIFIED", "Investment cost not identified."),
+    "Q_WF": ("NOT_IDENTIFIED", "Scarcity-weighted water footprint not implemented."),
+    "Q_CF_SCARCITY": ("NOT_IDENTIFIED", "Scarcity CF not implemented."),
+    "Q_WSF": ("NOT_IDENTIFIED", "Water-scarcity footprint not implemented."),
+    "Q_SPATIAL_M": ("META_CAMPUS", "Partial maps from the campus point/ZIP: ZIP 97754→NWPP and site point→HUC12. Not a generator or aquifer crosswalk."),
+    "Q_DC_GW": ("NOT_IDENTIFIED", "Campus groundwater extraction share is not identified."),
+    "Q_OTHER_SECTOR": ("NOT_IDENTIFIED", "Well-level other-sector pumping is not identified."),
+    "Q_RECHARGE": ("NOT_IDENTIFIED", "Groundwater recharge is not identified."),
+    "Q_HEAD": ("NOT_IDENTIFIED", "Groundwater head is not identified. Do not substitute IWA availability."),
+    "Q_STORAGE": ("NOT_IDENTIFIED", "Groundwater storage is not identified."),
+    "Q_CONDUCTANCE": ("NOT_IDENTIFIED", "Groundwater network conductance is not identified."),
+    "Q_GW_OBS": ("NOT_IDENTIFIED", "Groundwater head observations are not ingested."),
+    "Q_SITING": ("NOT_IDENTIFIED", "Siting model is not implemented."),
+    "Q_EQUITY": ("NOT_IDENTIFIED", "Equity metrics are not implemented."),
+    "Q_XI": ("SCENARIO_WORKLOAD", "Stochastic overhead/water-shape priors; scenario uncertainty, not identified ξ."),
+    "Q_HEAT_RATE": ("OREGON_GENERATOR", "CAMPD posted heat input at Oregon CEMS units. Not a campus heat-rate model."),
+}
+
+
+def _sq(source_id, quantity_id, role) -> dict:
+    if role not in SOURCE_QUANTITY_ROLES:
+        raise ValueError(f"Invalid source-quantity role {role}")
+    return {"source_id": source_id, "quantity_id": quantity_id, "role": role}
+
+
+def _mio(model_id, quantity_id, io_role) -> dict:
+    if io_role not in MODEL_IO_ROLES:
+        raise ValueError(f"Invalid model io_role {io_role}")
+    return {"model_id": model_id, "quantity_id": quantity_id, "io_role": io_role}
+
+
+def source_quantity_edges() -> list[dict]:
+    """Canonical source→quantity links actually used in the implemented pipeline."""
+    rows = [
+        _sq("META_2016_DISCLOSURE", "Q_E_FAC", "primary"),
+        _sq("META_2019_DISCLOSURE", "Q_E_FAC", "primary"),
+        _sq("META_2025_INDEX", "Q_E_FAC", "primary"),
+        _sq("META_2016_DISCLOSURE", "Q_W_WITH", "primary"),
+        _sq("META_2019_DISCLOSURE", "Q_W_WITH", "primary"),
+        _sq("META_2025_INDEX", "Q_W_WITH", "primary"),
+        _sq("META_2015_DISCLOSURE", "Q_SCOPE2_META", "primary"),
+        _sq("META_2016_DISCLOSURE", "Q_SCOPE2_META", "primary"),
+        _sq("META_2019_DISCLOSURE", "Q_SCOPE2_META", "primary"),
+        _sq("META_2025_INDEX", "Q_SCOPE2_META", "primary"),
+        _sq("META_2016_DISCLOSURE", "Q_OP_GHG", "primary"),
+        _sq("META_2019_DISCLOSURE", "Q_OP_GHG", "primary"),
+        _sq("META_2025_INDEX", "Q_OP_GHG", "primary"),
+        _sq("META_2016_DISCLOSURE", "Q_WUE_DIR", "primary"),
+        _sq("META_2019_DISCLOSURE", "Q_WUE_DIR", "primary"),
+        _sq("META_2025_INDEX", "Q_WUE_DIR", "primary"),
+        _sq("META_ENGINEERING_2011", "Q_PUE", "benchmark"),
+        _sq("META_ENGINEERING_2011", "Q_COOLING_MODE", "context"),
+        _sq("NOAA_GH_KRDM_FILES", "Q_WEATHER", "primary"),
+        _sq("NOAA_ISD", "Q_WEATHER", "context"),
+        _sq("NWS_KRDM", "Q_WEATHER", "context"),
+        _sq("OWRD_WUR_QUERY", "Q_CITY_PROD", "primary"),
+        _sq("OWRD_WUR_QUERY", "Q_DIRECT_POD", "primary"),
+        _sq("OHA_PWS_00682", "Q_CITY_PROD", "context"),
+        _sq("CITY_2024_CCR", "Q_CITY_PROD", "context"),
+        _sq("USGS_NWAA_IWA", "Q_IWA_STRFLOW", "primary"),
+        _sq("USGS_NWAA_IWA", "Q_IWA_CONSUM", "primary"),
+        _sq("USGS_NWAA_IWA", "Q_IWA_AVAIL", "primary"),
+        _sq("USGS_NWAA_IWA", "Q_IWA_SUI", "primary"),
+        _sq("USGS_NWAA_PS_WD", "Q_USGS_PS", "primary"),
+        _sq("USGS_NWAA_PS_CU", "Q_USGS_PS", "primary"),
+        _sq("USGS_NWAA_IRR_WD", "Q_IRRIGATION", "primary"),
+        _sq("USGS_NWAA_IRR_CU", "Q_IRRIGATION", "primary"),
+        _sq("USGS_WBD", "Q_SPATIAL_M", "primary"),
+        _sq("EIA930", "Q_GRID_DEMAND", "primary"),
+        _sq("EIA930", "Q_CI_PACW", "primary"),
+        _sq("EIA930", "Q_FUEL_IMPORT_PROXY", "primary"),
+        _sq("EIA_PACW", "Q_GRID_DEMAND", "context"),
+        _sq("EPA_EGRID", "Q_SCOPE2_EGRID", "primary"),
+        _sq("EPA_EGRID_POWER_PROFILER", "Q_SCOPE2_EGRID", "context"),
+        _sq("EPA_EGRID_POWER_PROFILER", "Q_SPATIAL_M", "primary"),
+        _sq("EPA_CAMPD_OR", "Q_GEN_OR", "primary"),
+        _sq("EPA_CAMPD_OR", "Q_HEAT_RATE", "primary"),
+        _sq("EIA_923", "Q_GEN_OR", "primary"),
+        _sq("EIA_860", "Q_GEN_OR", "context"),
+        _sq("EIA_COOLING", "Q_GEN_WATER", "primary"),
+        _sq("EPA_EIA_CROSSWALK", "Q_GEN_OR", "context"),
+        _sq("ODEQ_AIR_07_0037", "Q_BACKUP_GEN", "primary"),
+        _sq("ODEQ_AIR_07_0037", "Q_BACKUP_EMIS", "primary"),
+        _sq("OREGON_BER_RENEWABLE", "Q_OP_GHG", "context"),
+        _sq("CROOK_COUNTY_PERMITS", "Q_SPATIAL_M", "context"),
+        _sq("EPA_EGRID", "Q_SCOPE2_META", "benchmark"),
+        _sq("META_2016_DISCLOSURE", "Q_E_FAC", "calibration_target"),
+        _sq("META_2019_DISCLOSURE", "Q_E_FAC", "calibration_target"),
+        _sq("META_2025_INDEX", "Q_E_FAC", "calibration_target"),
+        _sq("META_2016_DISCLOSURE", "Q_W_WITH", "calibration_target"),
+        _sq("META_2019_DISCLOSURE", "Q_W_WITH", "calibration_target"),
+        _sq("META_2025_INDEX", "Q_W_WITH", "calibration_target"),
+    ]
+    keys = [(r["source_id"], r["quantity_id"], r["role"]) for r in rows]
+    if len(keys) != len(set(keys)):
+        raise ValueError("Duplicate source_quantity edge")
+    return rows
+
+
+def model_io_edges() -> list[dict]:
+    """Canonical model↔quantity I/O. Conditional and stochastic branches are separate models."""
+    rows = [
+        # Conditional electricity closure + gray-box
+        _mio("M_ELEC_CLOSURE", "Q_E_FAC", "target"),
+        _mio("M_ELEC_CLOSURE", "Q_E_FAC", "input"),
+        _mio("M_ELEC_CLOSURE", "Q_WEATHER", "input"),
+        _mio("M_ELEC_CLOSURE", "Q_P_IT", "output"),
+        _mio("M_ELEC_CLOSURE", "Q_E_IT", "output"),
+        _mio("M_ELEC_CLOSURE", "Q_P_FAC", "output"),
+        _mio("M_ELEC_CLOSURE", "Q_PUE", "output"),
+        _mio("M_GRAYBOX", "Q_WEATHER", "input"),
+        _mio("M_GRAYBOX", "Q_P_IT", "input"),
+        _mio("M_GRAYBOX", "Q_IT_HEAT", "output"),
+        _mio("M_GRAYBOX", "Q_COOL_LOAD", "output"),
+        _mio("M_GRAYBOX", "Q_COOLING_MODE", "output"),
+        _mio("M_GRAYBOX", "Q_P_COOL", "output"),
+        _mio("M_GRAYBOX", "Q_P_FAC", "output"),
+        _mio("M_GRAYBOX", "Q_PUE", "output"),
+        _mio("M_GRAYBOX", "Q_W_EVAP", "output"),
+        _mio("M_GRAYBOX", "Q_THERMAL_STATE", "output"),
+        _mio("M_WATER_SCALE_GLOBAL", "Q_W_EVAP", "input"),
+        _mio("M_WATER_SCALE_GLOBAL", "Q_W_WITH", "target"),
+        _mio("M_WATER_SCALE_GLOBAL", "Q_WATER_PROXY", "output"),
+        _mio("M_WATER_SCALE_ONEBREAK", "Q_W_EVAP", "input"),
+        _mio("M_WATER_SCALE_ONEBREAK", "Q_W_WITH", "target"),
+        # Annual water candidates: energy-only has NO evaporation input
+        _mio("M_WATER_ENERGY_NULL", "Q_E_FAC", "input"),
+        _mio("M_WATER_ENERGY_NULL", "Q_W_WITH", "target"),
+        _mio("M_WATER_EVAP_PHYS", "Q_W_EVAP", "input"),
+        _mio("M_WATER_EVAP_PHYS", "Q_W_WITH", "target"),
+        _mio("M_WATER_TWOCOMP", "Q_E_FAC", "input"),
+        _mio("M_WATER_TWOCOMP", "Q_W_EVAP", "input"),
+        _mio("M_WATER_TWOCOMP", "Q_W_WITH", "target"),
+        # Stochastic scenario branch
+        _mio("M_STOCHASTIC", "Q_ARRIVALS", "output"),
+        _mio("M_STOCHASTIC", "Q_EXECUTED", "output"),
+        _mio("M_STOCHASTIC", "Q_UTILIZATION", "output"),
+        _mio("M_STOCHASTIC", "Q_BACKLOG", "output"),
+        _mio("M_STOCHASTIC", "Q_WEATHER", "input"),
+        _mio("M_STOCHASTIC", "Q_E_FAC", "target"),
+        _mio("M_STOCHASTIC", "Q_P_IT", "output"),
+        _mio("M_STOCHASTIC", "Q_P_FAC", "output"),
+        _mio("M_STOCHASTIC", "Q_W_EVAP", "output"),
+        _mio("M_STOCHASTIC", "Q_W_WITH", "target"),
+        _mio("M_STOCHASTIC", "Q_SCOPE2_META", "target"),
+        _mio("M_STOCHASTIC", "Q_XI", "input"),
+        # Carbon / grid
+        _mio("M_EGRID_BENCH", "Q_E_FAC", "input"),
+        _mio("M_EGRID_BENCH", "Q_SCOPE2_EGRID", "output"),
+        _mio("M_EGRID_BENCH", "Q_SCOPE2_META", "benchmark"),
+        _mio("M_PACW_CI", "Q_CI_PACW", "input"),
+        _mio("M_PACW_CI", "Q_P_FAC", "input"),
+        _mio("M_PACW_CI", "Q_SCOPE2_META", "target"),
+        _mio("M_FUEL_IMPORT", "Q_FUEL_IMPORT_PROXY", "output"),
+        _mio("M_FUEL_IMPORT", "Q_GRID_DEMAND", "input"),
+        _mio("M_CHANGEPOINT", "Q_E_FAC", "input"),
+        _mio("M_CHANGEPOINT", "Q_W_WITH", "input"),
+        _mio("M_CHANGEPOINT", "Q_WUE_DIR", "input"),
+        _mio("M_IWA_IDENTITY", "Q_IWA_STRFLOW", "input"),
+        _mio("M_IWA_IDENTITY", "Q_IWA_CONSUM", "input"),
+        _mio("M_IWA_IDENTITY", "Q_IWA_AVAIL", "output"),
+        _mio("M_OWRD_EXTERNAL", "Q_CITY_PROD", "validation"),
+        _mio("M_OWRD_EXTERNAL", "Q_DIRECT_POD", "validation"),
+        _mio("M_OWRD_EXTERNAL", "Q_WATER_PROXY", "input"),
+        _mio("M_OR_GEN_QC", "Q_GEN_OR", "input"),
+        _mio("M_OR_GEN_QC", "Q_GEN_WATER", "input"),
+        _mio("M_OR_GEN_QC", "Q_HEAT_RATE", "input"),
+    ]
+    keys = [(r["model_id"], r["quantity_id"], r["io_role"]) for r in rows]
+    if len(keys) != len(set(keys)):
+        raise ValueError("Duplicate model_io edge")
+    return rows
+
+
+def parameter_registry() -> list[dict]:
+    """Gray-box and closely related parameters actually declared in code."""
+    cols = [
+        "model_id", "parameter", "value", "unit", "status", "source_or_basis",
+        "assumed_or_fitted", "plausible_range", "used_in_code", "notes",
+    ]
+
+    def p(**kwargs):
+        row = {k: "" for k in cols}
+        row.update(kwargs)
+        if row["status"] not in PARAMETER_STATUSES:
+            raise ValueError(row["status"])
+        return row
+
+    return [
+        p(
+            model_id="M_GRAYBOX",
+            parameter="supply_target_C",
+            value="25.0",
+            unit="degC",
+            status="literature/design assumption",
+            source_or_basis="src/prineville_graybox.py Params; not a reported Meta setpoint",
+            assumed_or_fitted="assumed",
+            plausible_range="range_not_established",
+            used_in_code="yes",
+            notes="Controller target in simulate(). No documented numeric range in repository sources.",
+        ),
+        p(
+            model_id="M_GRAYBOX",
+            parameter="return_air_C",
+            value="35.0",
+            unit="degC",
+            status="unused",
+            source_or_basis="declared on Params; simulate() never reads it",
+            assumed_or_fitted="assumed",
+            plausible_range="range_not_established",
+            used_in_code="no",
+            notes="Declared-but-unused. Do not perturb; it cannot affect outputs.",
+        ),
+        p(
+            model_id="M_GRAYBOX",
+            parameter="evap_effectiveness",
+            value="0.85",
+            unit="1",
+            status="literature/design assumption",
+            source_or_basis="src/prineville_graybox.py Params",
+            assumed_or_fitted="assumed",
+            plausible_range="range_not_established",
+            used_in_code="yes",
+            notes="No numeric effectiveness range is documented in repository sources or the 2011 design article as used here.",
+        ),
+        p(
+            model_id="M_GRAYBOX",
+            parameter="server_deltaT_C",
+            value="12.0",
+            unit="degC",
+            status="literature/design assumption",
+            source_or_basis="src/prineville_graybox.py Params",
+            assumed_or_fitted="assumed",
+            plausible_range="range_not_established",
+            used_in_code="yes",
+            notes="Sets airflow m_air = P_IT×1e6/(cp×ΔT). No documented range in repo sources.",
+        ),
+        p(
+            model_id="M_GRAYBOX",
+            parameter="dry_air_cp_J_kgK",
+            value="1006.0",
+            unit="J/kg/K",
+            status="physical_constant",
+            source_or_basis="src/prineville_graybox.py; ASHRAE-form dry-air specific heat used in the same file",
+            assumed_or_fitted="assumed",
+            plausible_range="range_not_established",
+            used_in_code="yes",
+            notes="Treated as a physical constant. No repo-documented perturbation range; not perturbed.",
+        ),
+        p(
+            model_id="M_GRAYBOX",
+            parameter="fan_fraction_of_it",
+            value="0.025",
+            unit="1",
+            status="literature/design assumption",
+            source_or_basis="gray-box prior; stochastic_conditional_simulation.sampled_facility_priors documents total overhead in [0.045, 0.090] and fan_share in [0.25, 0.65]",
+            assumed_or_fitted="assumed",
+            plausible_range="0.01125-0.0585",
+            used_in_code="yes",
+            notes="OTA range = documented total_overhead × fan_share bounds from sampled_facility_priors. Baseline 0.025 lies inside. Sensitivity of assumptions, not a CI.",
+        ),
+        p(
+            model_id="M_GRAYBOX",
+            parameter="other_facility_fraction_of_it",
+            value="0.035",
+            unit="1",
+            status="literature/design assumption",
+            source_or_basis="gray-box prior; sampled_facility_priors total [0.045,0.090] and complementary fan_share",
+            assumed_or_fitted="assumed",
+            plausible_range="0.01575-0.0675",
+            used_in_code="yes",
+            notes="OTA range = total_overhead × (1-fan_share) bounds from sampled_facility_priors. Fan+other baseline 0.06 is intended to leave room for ~1.07 mild-weather PUE.",
+        ),
+        p(
+            model_id="M_GRAYBOX",
+            parameter="evap_aux_fraction",
+            value="0.005",
+            unit="1",
+            status="literature/design assumption",
+            source_or_basis="hard-coded 0.005×P_IT×spray in prineville_graybox.simulate; not a Params field",
+            assumed_or_fitted="assumed",
+            plausible_range="range_not_established",
+            used_in_code="yes",
+            notes="No documented numeric range. Not perturbed.",
+        ),
+        p(
+            model_id="M_WATER_SCALE_GLOBAL",
+            parameter="water_scale",
+            value="6.580050701752435",
+            unit="1",
+            status="fitted_parameter",
+            source_or_basis="outputs/conditional_water_model.csv; fit on train years through 2022",
+            assumed_or_fitted="fitted",
+            plausible_range="range_not_established",
+            used_in_code="yes",
+            notes="Geometric-mean scale. Not a gray-box physical parameter; not included in the assumption OTA audit.",
+        ),
+        p(
+            model_id="M_WATER_ENERGY_NULL",
+            parameter="beta_electricity_m3_per_mwh",
+            value="0.3643056183103121",
+            unit="m3/MWh",
+            status="fitted_parameter",
+            source_or_basis="outputs/stochastic_proxy_water_model_diagnostics.csv",
+            assumed_or_fitted="fitted",
+            plausible_range="range_not_established",
+            used_in_code="yes",
+            notes="NNLS coefficient frozen after train-only selection. Not perturbed here.",
+        ),
+        p(
+            model_id="M_STOCHASTIC",
+            parameter="total_overhead_fraction",
+            value="0.065 (prior mean; N(0.065, 0.009) clipped)",
+            unit="1",
+            status="scenario_prior",
+            source_or_basis="src/stochastic_conditional_simulation.py::sampled_facility_priors",
+            assumed_or_fitted="assumed",
+            plausible_range="0.045-0.090",
+            used_in_code="yes",
+            notes="Documented clip range used only to bound gray-box OTA fan/other fractions. Scenario prior, not a fitted campus overhead.",
+        ),
+        p(
+            model_id="M_STOCHASTIC",
+            parameter="fan_share_of_overhead",
+            value="Beta(4,5) clipped",
+            unit="1",
+            status="scenario_prior",
+            source_or_basis="src/stochastic_conditional_simulation.py::sampled_facility_priors",
+            assumed_or_fitted="assumed",
+            plausible_range="0.25-0.65",
+            used_in_code="yes",
+            notes="Complement is other-facility share. Combined with total_overhead_fraction to get the only repo-documented numeric ranges for fan_fraction_of_it and other_facility_fraction_of_it.",
+        ),
+    ]
+
+
+def validate_lineage_ids() -> None:
+    sids = {r["source_id"] for r in source_inventory()}
+    qids = {r["quantity_id"] for r in quantity_registry()}
+    mids = {r["model_id"] for r in model_registry()}
+    for e in source_quantity_edges():
+        if e["source_id"] not in sids:
+            raise ValueError(f"Unknown source_id in edge: {e}")
+        if e["quantity_id"] not in qids:
+            raise ValueError(f"Unknown quantity_id in edge: {e}")
+    for e in model_io_edges():
+        if e["model_id"] not in mids:
+            raise ValueError(f"Unknown model_id in edge: {e}")
+        if e["quantity_id"] not in qids:
+            raise ValueError(f"Unknown quantity_id in edge: {e}")
+    # Invariant: energy-only water model must not take evaporation as input
+    bad = [
+        e for e in model_io_edges()
+        if e["model_id"] == "M_WATER_ENERGY_NULL" and e["quantity_id"] == "Q_W_EVAP"
+    ]
+    if bad:
+        raise ValueError("energy-only model must not list evaporation as I/O")
+

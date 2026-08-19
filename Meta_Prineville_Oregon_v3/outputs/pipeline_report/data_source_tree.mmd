@@ -1,82 +1,134 @@
-%% Prineville pipeline data-source tree
-%% provider → raw → processed → model → quantities
+%% Generated from outputs/pipeline_report/source_quantity_edges.csv
+%% OWRD City/POD and USGS HUC12 are parallel context; neither produces the other.
 flowchart TB
-  classDef gt fill:#dbeafe,stroke:#1d4ed8,color:#111
-  classDef wx fill:#ecfccb,stroke:#4d7c0f,color:#111
-  classDef wt fill:#cffafe,stroke:#0e7490,color:#111
-  classDef gd fill:#fef3c7,stroke:#b45309,color:#111
-  classDef gn fill:#fae8ff,stroke:#7e22ce,color:#111
-  classDef pm fill:#ffe4e6,stroke:#be123c,color:#111
-
-  subgraph GT[Facility ground truth]
-    MetaPDFs[Meta disclosure PDFs 2014-2025 vintages]
-    Annual[canonical meta_prineville_annual.csv]
-    Eng2011[2011 engineering design PUE/WUE]
-    MetaPDFs --> Annual
-    Eng2011 --> GrayPriors[gray-box priors / PUE diagnostic]
+  classDef src fill:#eff6ff,stroke:#1d4ed8,color:#111
+  classDef qty fill:#f8fafc,stroke:#334155,color:#111
+  subgraph G_water[water]
+    CITY_2024_CCR[CITY_2024_CCR]
+    OHA_PWS_00682[OHA_PWS_00682]
+    OWRD_WUR_QUERY[OWRD_WUR_QUERY]
+    USGS_NWAA_IRR_CU[USGS_NWAA_IRR_CU]
+    USGS_NWAA_IRR_WD[USGS_NWAA_IRR_WD]
+    USGS_NWAA_IWA[USGS_NWAA_IWA]
+    USGS_NWAA_PS_CU[USGS_NWAA_PS_CU]
+    USGS_NWAA_PS_WD[USGS_NWAA_PS_WD]
+    USGS_WBD[USGS_WBD]
   end
-
-  subgraph WX[Weather]
-    NOAA[NOAA NCEI Global Hourly KRDM 72692024230]
-    Weather[processed weather_hourly.csv]
-    NOAA --> Weather
+  subgraph G_onsite_generation_permits[onsite_generation_permits]
+    CROOK_COUNTY_PERMITS[CROOK_COUNTY_PERMITS]
+    ODEQ_AIR_07_0037[ODEQ_AIR_07_0037]
   end
-
-  subgraph WT[Water]
-    OWRD[OWRD water-use exports City + Vitesse POD]
-    OHA[OHA PWS 00682 inventory]
-    USGS[USGS NWAA IWA / public-supply / irrigation + WBD]
-    OWRDtab[processed OWRD monthly]
-    USGStab[processed USGS HUC12 panels]
-    Ctx[prineville_water_monthly_context.csv]
-    OWRD --> OWRDtab --> Ctx
-    OHA --> Ctx
-    USGS --> USGStab --> Ctx
+  subgraph G_grid_carbon[grid_carbon]
+    EIA930[EIA930]
+    EIA_PACW[EIA_PACW]
+    EPA_EGRID[EPA_EGRID]
+    EPA_EGRID_POWER_PROFILER[EPA_EGRID_POWER_PROFILER]
+    OREGON_BER_RENEWABLE[OREGON_BER_RENEWABLE]
   end
-
-  subgraph GD[Grid / carbon]
-    EIA[EIA-930 PACW.xlsx]
-    PACW[processed pacw_hourly.csv]
-    EGRID[EPA eGRID vintages + Power Profiler ZIP 97754]
-    EGtab[egrid_prineville_annual.csv]
-    EIA --> PACW
-    EGRID --> EGtab
+  subgraph G_generators[generators]
+    EIA_860[EIA_860]
+    EIA_923[EIA_923]
+    EIA_COOLING[EIA_COOLING]
+    EPA_CAMPD_OR[EPA_CAMPD_OR]
+    EPA_EIA_CROSSWALK[EPA_EIA_CROSSWALK]
   end
-
-  subgraph GN[Generators Oregon only]
-    CAMPD[EPA CAMPD Oregon hourly]
-    EIA860[EIA-860 / 923 / cooling]
-    ORtab[oregon_generator_externalities_monthly.csv]
-    CAMPD --> ORtab
-    EIA860 --> ORtab
+  subgraph G_facility_ground_truth[facility_ground_truth]
+    META_2015_DISCLOSURE[META_2015_DISCLOSURE]
+    META_2016_DISCLOSURE[META_2016_DISCLOSURE]
+    META_2019_DISCLOSURE[META_2019_DISCLOSURE]
+    META_2025_INDEX[META_2025_INDEX]
+    META_ENGINEERING_2011[META_ENGINEERING_2011]
   end
-
-  subgraph PM[Onsite generation / permits]
-    DEQ[Oregon DEQ 07-0037 air + GHG workbooks]
-    Permits[Crook County inspection summaries]
-    Backup[meta_backup_* monthly tables]
-    Evt[campus_permit_events.csv]
-    DEQ --> Backup
-    Permits --> Evt
+  subgraph G_weather[weather]
+    NOAA_GH_KRDM_FILES[NOAA_GH_KRDM_FILES]
+    NOAA_ISD[NOAA_ISD]
+    NWS_KRDM[NWS_KRDM]
   end
-
-  Annual --> Closure[conditional reconstruction: annual electricity closure]
-  Weather --> Gray[prineville_graybox.py]
-  Gray --> Closure
-  Closure --> PIT[fitted hourly IT / facility power / PUE]
-  PIT --> Wproxy[raw evaporation × train-only water scale]
-  Annual --> Wproxy
-  Wproxy --> Wpred[holdout water prediction]
-  Annual --> EGtab
-  EGtab --> Cbench[eGRID physical Scope 2 benchmark]
-  PACW --> Cshape[PACW relative carbon shape]
-  Ctx --> External[external water evidence; do not sum boundaries]
-  ORtab --> NoAttr[generator water/emissions; site attribution missing]
-  Backup --> Onsite[onsite backup hours/emissions; independent of Scope 2]
-
-  class MetaPDFs,Annual,Eng2011,GrayPriors gt
-  class NOAA,Weather wx
-  class OWRD,OHA,USGS,OWRDtab,USGStab,Ctx wt
-  class EIA,PACW,EGRID,EGtab gd
-  class CAMPD,EIA860,ORtab gn
-  class DEQ,Permits,Backup,Evt pm
+  subgraph QTY[Quantities linked by canonical source edges]
+    Q_BACKUP_EMIS[Q_BACKUP_EMIS]
+    Q_BACKUP_GEN[Q_BACKUP_GEN]
+    Q_CITY_PROD[Q_CITY_PROD]
+    Q_CI_PACW[Q_CI_PACW]
+    Q_COOLING_MODE[Q_COOLING_MODE]
+    Q_DIRECT_POD[Q_DIRECT_POD]
+    Q_E_FAC[Q_E_FAC]
+    Q_FUEL_IMPORT_PROXY[Q_FUEL_IMPORT_PROXY]
+    Q_GEN_OR[Q_GEN_OR]
+    Q_GEN_WATER[Q_GEN_WATER]
+    Q_GRID_DEMAND[Q_GRID_DEMAND]
+    Q_HEAT_RATE[Q_HEAT_RATE]
+    Q_IRRIGATION[Q_IRRIGATION]
+    Q_IWA_AVAIL[Q_IWA_AVAIL]
+    Q_IWA_CONSUM[Q_IWA_CONSUM]
+    Q_IWA_STRFLOW[Q_IWA_STRFLOW]
+    Q_IWA_SUI[Q_IWA_SUI]
+    Q_OP_GHG[Q_OP_GHG]
+    Q_PUE[Q_PUE]
+    Q_SCOPE2_EGRID[Q_SCOPE2_EGRID]
+    Q_SCOPE2_META[Q_SCOPE2_META]
+    Q_SPATIAL_M[Q_SPATIAL_M]
+    Q_USGS_PS[Q_USGS_PS]
+    Q_WEATHER[Q_WEATHER]
+    Q_WUE_DIR[Q_WUE_DIR]
+    Q_W_WITH[Q_W_WITH]
+  end
+  META_2016_DISCLOSURE -->|primary| Q_E_FAC
+  META_2019_DISCLOSURE -->|primary| Q_E_FAC
+  META_2025_INDEX -->|primary| Q_E_FAC
+  META_2016_DISCLOSURE -->|primary| Q_W_WITH
+  META_2019_DISCLOSURE -->|primary| Q_W_WITH
+  META_2025_INDEX -->|primary| Q_W_WITH
+  META_2015_DISCLOSURE -->|primary| Q_SCOPE2_META
+  META_2016_DISCLOSURE -->|primary| Q_SCOPE2_META
+  META_2019_DISCLOSURE -->|primary| Q_SCOPE2_META
+  META_2025_INDEX -->|primary| Q_SCOPE2_META
+  META_2016_DISCLOSURE -->|primary| Q_OP_GHG
+  META_2019_DISCLOSURE -->|primary| Q_OP_GHG
+  META_2025_INDEX -->|primary| Q_OP_GHG
+  META_2016_DISCLOSURE -->|primary| Q_WUE_DIR
+  META_2019_DISCLOSURE -->|primary| Q_WUE_DIR
+  META_2025_INDEX -->|primary| Q_WUE_DIR
+  META_ENGINEERING_2011 -->|benchmark| Q_PUE
+  META_ENGINEERING_2011 -->|context| Q_COOLING_MODE
+  NOAA_GH_KRDM_FILES -->|primary| Q_WEATHER
+  NOAA_ISD -->|context| Q_WEATHER
+  NWS_KRDM -->|context| Q_WEATHER
+  OWRD_WUR_QUERY -->|primary| Q_CITY_PROD
+  OWRD_WUR_QUERY -->|primary| Q_DIRECT_POD
+  OHA_PWS_00682 -->|context| Q_CITY_PROD
+  CITY_2024_CCR -->|context| Q_CITY_PROD
+  USGS_NWAA_IWA -->|primary| Q_IWA_STRFLOW
+  USGS_NWAA_IWA -->|primary| Q_IWA_CONSUM
+  USGS_NWAA_IWA -->|primary| Q_IWA_AVAIL
+  USGS_NWAA_IWA -->|primary| Q_IWA_SUI
+  USGS_NWAA_PS_WD -->|primary| Q_USGS_PS
+  USGS_NWAA_PS_CU -->|primary| Q_USGS_PS
+  USGS_NWAA_IRR_WD -->|primary| Q_IRRIGATION
+  USGS_NWAA_IRR_CU -->|primary| Q_IRRIGATION
+  USGS_WBD -->|primary| Q_SPATIAL_M
+  EIA930 -->|primary| Q_GRID_DEMAND
+  EIA930 -->|primary| Q_CI_PACW
+  EIA930 -->|primary| Q_FUEL_IMPORT_PROXY
+  EIA_PACW -->|context| Q_GRID_DEMAND
+  EPA_EGRID -->|primary| Q_SCOPE2_EGRID
+  EPA_EGRID_POWER_PROFILER -->|context| Q_SCOPE2_EGRID
+  EPA_EGRID_POWER_PROFILER -->|primary| Q_SPATIAL_M
+  EPA_CAMPD_OR -->|primary| Q_GEN_OR
+  EPA_CAMPD_OR -->|primary| Q_HEAT_RATE
+  EIA_923 -->|primary| Q_GEN_OR
+  EIA_860 -->|context| Q_GEN_OR
+  EIA_COOLING -->|primary| Q_GEN_WATER
+  EPA_EIA_CROSSWALK -->|context| Q_GEN_OR
+  ODEQ_AIR_07_0037 -->|primary| Q_BACKUP_GEN
+  ODEQ_AIR_07_0037 -->|primary| Q_BACKUP_EMIS
+  OREGON_BER_RENEWABLE -->|context| Q_OP_GHG
+  CROOK_COUNTY_PERMITS -->|context| Q_SPATIAL_M
+  EPA_EGRID -->|benchmark| Q_SCOPE2_META
+  META_2016_DISCLOSURE -->|calibration_target| Q_E_FAC
+  META_2019_DISCLOSURE -->|calibration_target| Q_E_FAC
+  META_2025_INDEX -->|calibration_target| Q_E_FAC
+  META_2016_DISCLOSURE -->|calibration_target| Q_W_WITH
+  META_2019_DISCLOSURE -->|calibration_target| Q_W_WITH
+  META_2025_INDEX -->|calibration_target| Q_W_WITH
+  classDef note fill:#fff7ed,stroke:#c2410c,color:#111
+  PARALLEL[OWRD City/POD and USGS HUC12 are parallel external context — no producer/consumer edge]:::note

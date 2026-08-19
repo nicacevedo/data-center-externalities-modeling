@@ -25,6 +25,7 @@ from matplotlib.patches import FancyBboxPatch, Patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pipeline_report_catalog import (
+    BOUNDARY_VOCABULARY,
     DOC_VS_CODE_DISCREPANCIES,
     HOLDOUT_YEARS,
     MODEL_COLUMNS,
@@ -33,10 +34,15 @@ from pipeline_report_catalog import (
     REPORT_SEED,
     SOURCE_COLUMNS,
     TRAIN_END_YEAR,
+    model_io_edges,
     model_registry,
+    parameter_registry,
     quantity_registry,
     source_inventory,
+    source_quantity_edges,
+    validate_lineage_ids,
 )
+import pipeline_report_diagrams as _diagrams
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "outputs" / "pipeline_report"
@@ -147,6 +153,146 @@ def write_model_registry() -> pd.DataFrame:
     return df
 
 
+def write_source_quantity_edges() -> pd.DataFrame:
+    validate_lineage_ids()
+    df = pd.DataFrame(source_quantity_edges())
+    if df.duplicated(["source_id", "quantity_id", "role"]).any():
+        raise ValueError("Duplicate source_quantity edge keys")
+    df.to_csv(OUT / "source_quantity_edges.csv", index=False)
+    return df
+
+
+def write_model_io_edges() -> pd.DataFrame:
+    df = pd.DataFrame(model_io_edges())
+    if df.duplicated(["model_id", "quantity_id", "io_role"]).any():
+        raise ValueError("Duplicate model_io edge keys")
+    energy_evap = df[
+        df["model_id"].eq("M_WATER_ENERGY_NULL") & df["quantity_id"].eq("Q_W_EVAP")
+    ]
+    if len(energy_evap):
+        raise ValueError("Energy-only water model must not take evaporation as I/O")
+    df.to_csv(OUT / "model_io_edges.csv", index=False)
+    return df
+
+
+def write_parameter_registry() -> pd.DataFrame:
+    df = pd.DataFrame(parameter_registry())
+    df.to_csv(OUT / "model_parameter_registry.csv", index=False)
+    return df
+
+
+def _holdout_metrics(pred: np.ndarray, obs: np.ndarray, years: np.ndarray) -> dict:
+    pred = np.asarray(pred, dtype=float)
+    obs = np.asarray(obs, dtype=float)
+    err = pred - obs
+    mae = float(np.mean(np.abs(err)))
+    mape = float(np.mean(np.abs(err) / obs) * 100.0)
+    pct = 100.0 * err / obs
+    out = {
+        "MAE_m3": mae,
+        "MAPE_pct": mape,
+    }
+    for y, p in zip(years.astype(int), pct):
+        out[f"pct_error_{y}"] = float(p)
+    return out
+
+
+def write_water_holdout_baseline_compare() -> pd.DataFrame:
+    """Frozen naive baselines vs existing water predictors on 2023–2024 only."""
+    cond = pd.read_csv(ROOT / "outputs" / "conditional_annual_compare.csv")
+    stoch = pd.read_csv(ROOT / "outputs" / "stochastic_proxy_annual_summary.csv")
+    diag = pd.read_csv(ROOT / "outputs" / "stochastic_proxy_water_model_diagnostics.csv")
+
+    train = cond[
+        cond["split"].eq("train") & cond["water_withdrawal_m3_reported"].notna()
+    ].sort_values("year")
+    hold = cond[
+        cond["split"].eq("holdout") & cond["water_withdrawal_m3_reported"].notna()
+    ].sort_values("year")
+    stoch_h = stoch[stoch["year"].isin(hold["year"])].sort_values("year")
+    if list(stoch_h["year"].astype(int)) != list(hold["year"].astype(int)):
+        raise ValueError("Stochastic and conditional holdout years do not align")
+
+    obs = hold["water_withdrawal_m3_reported"].to_numpy(float)
+    years = hold["year"].to_numpy(int)
+    e_hold = hold["electricity_mwh_reported"].to_numpy(float)
+    evap_stoch = stoch_h["raw_evap_m3_median"].to_numpy(float)
+
+    train_mean = float(train["water_withdrawal_m3_reported"].mean())
+    train_median = float(train["water_withdrawal_m3_reported"].median())
+    persist = float(train.loc[train["year"].eq(2022), "water_withdrawal_m3_reported"].iloc[0])
+
+    coefs = {}
+    for r in diag.itertuples(index=False):
+        coefs[str(r.model)] = json.loads(str(r.coefficients))
+
+    b_e = float(coefs["energy_null"]["electricity_mwh_reported"])
+    b_v = float(coefs["evap_physics"]["raw_evap_m3_median"])
+    b2_e = float(coefs["two_component"]["electricity_mwh_reported"])
+    b2_v = float(coefs["two_component"].get("raw_evap_m3_median", 0.0))
+
+    series = [
+        ("training_mean", "frozen naive baseline", "not in model selection", np.full(len(obs), train_mean)),
+        ("training_median", "frozen naive baseline", "not in model selection", np.full(len(obs), train_median)),
+        ("persistence_2022", "frozen naive baseline", "not in model selection", np.full(len(obs), persist)),
+        (
+            "conditional_global_scale",
+            "existing predictive model",
+            "frozen train log-scale × conditional raw evaporation",
+            hold["water_pred_m3"].to_numpy(float),
+        ),
+        (
+            "energy_null_frozen_nnls",
+            "existing predictive model",
+            "selected equation W = β_E × E_fac; β frozen on 2014-2022; evaporation is not an input",
+            b_e * e_hold,
+        ),
+        (
+            "energy_null_ensemble_median",
+            "existing published diagnostic",
+            "water_train_only_pred_m3_median from residual/bootstrap draws; not a new model",
+            stoch_h["water_train_only_pred_m3_median"].to_numpy(float),
+        ),
+        (
+            "evap_physics_frozen_nnls",
+            "existing predictive model (not selected)",
+            "W = β_v × stochastic raw_evap_m3_median; β frozen on 2014-2022",
+            b_v * evap_stoch,
+        ),
+        (
+            "two_component_frozen_nnls",
+            "existing predictive model (not selected)",
+            "W = β_E × E_fac + β_v × raw_evap; current fit has β_v = 0",
+            b2_e * e_hold + b2_v * evap_stoch,
+        ),
+    ]
+
+    mae_mean = None
+    rows = []
+    for name, kind, notes, pred in series:
+        m = _holdout_metrics(pred, obs, years)
+        if name == "training_mean":
+            mae_mean = m["MAE_m3"]
+        skill = 1.0 - m["MAE_m3"] / mae_mean if mae_mean else np.nan
+        rec = {
+            "predictor": name,
+            "kind": kind,
+            "train_period": f"observations through {TRAIN_END_YEAR} only",
+            "holdout_period": "2023-2024",
+            "n_holdout_years": int(len(obs)),
+            "MAE_m3": m["MAE_m3"],
+            "MAPE_pct": m["MAPE_pct"],
+            "pct_error_2023": m["pct_error_2023"],
+            "pct_error_2024": m["pct_error_2024"],
+            "skill_MAE_vs_training_mean": skill,
+            "notes": notes + ". Holdout N=2; informative diagnostic rather than strong statistical evidence.",
+        }
+        rows.append(rec)
+    df = pd.DataFrame(rows)
+    df.to_csv(OUT / "water_holdout_baseline_compare.csv", index=False)
+    return df
+
+
 def _pct(a, b) -> float:
     if not np.isfinite(a) or not np.isfinite(b) or b == 0:
         return np.nan
@@ -249,7 +395,11 @@ def write_validation_scorecard() -> pd.DataFrame:
         n="",
         metric="expanding_window_one_step_MAPE_pct",
         value=f"{float(sel['rolling_one_step_mape_pct']):.2f}",
-        interpretation=f"Selection metric on training years only. coefficients={sel['coefficients']}",
+        interpretation=(
+            "EXPANDING-WINDOW one-step MAPE on training years only (selection metric). "
+            "This is not the full-training fitted series and is not 2023-2024 skill. "
+            f"coefficients={sel['coefficients']}"
+        ),
     )
     stoch_hold = stoch[stoch["split"].eq("holdout") & stoch["water_train_only_error_pct"].notna()]
     add(
@@ -260,7 +410,7 @@ def write_validation_scorecard() -> pd.DataFrame:
         n=int(len(stoch_hold)),
         metric="MAPE_pct",
         value=f"{float(stoch_hold['water_train_only_error_pct'].abs().mean()):.2f}",
-        interpretation="PRIMARY PREDICTIVE RESULT for the selected energy-only annual model. Retrospective ensemble water closure is not this metric.",
+            interpretation="PRIMARY PREDICTIVE RESULT for the selected energy-only annual model (published ensemble-median diagnostic). Retrospective ensemble water closure is not this metric. Holdout contains only two years, so MAPE is an informative diagnostic rather than strong statistical evidence.",
     )
     for r in stoch_hold.itertuples(index=False):
         add(
@@ -274,16 +424,62 @@ def write_validation_scorecard() -> pd.DataFrame:
             interpretation="median train-only prediction vs Meta annual withdrawal.",
         )
 
+    baselines = write_water_holdout_baseline_compare()
+    for r in baselines.itertuples(index=False):
+        add(
+            model_or_quantity=f"annual water {r.predictor}",
+            evidence_type="D. chronological predictive accuracy",
+            train_period=f"frozen through {TRAIN_END_YEAR}",
+            test_holdout_period="2023-2024",
+            n=int(r.n_holdout_years),
+            metric="MAE_m3",
+            value=f"{float(r.MAE_m3):.4f}",
+            interpretation=str(r.notes),
+        )
+        add(
+            model_or_quantity=f"annual water {r.predictor}",
+            evidence_type="D. chronological predictive accuracy",
+            train_period=f"frozen through {TRAIN_END_YEAR}",
+            test_holdout_period="2023-2024",
+            n=int(r.n_holdout_years),
+            metric="MAPE_pct",
+            value=f"{float(r.MAPE_pct):.2f}",
+            interpretation=f"skill_MAE vs training-mean baseline = {float(r.skill_MAE_vs_training_mean):+.3f}. Holdout N=2.",
+        )
+        add(
+            model_or_quantity=f"annual water {r.predictor}",
+            evidence_type="D. chronological predictive accuracy",
+            train_period=f"frozen through {TRAIN_END_YEAR}",
+            test_holdout_period="2023",
+            n=1,
+            metric="pct_error",
+            value=f"{float(r.pct_error_2023):.2f}",
+            interpretation="(pred-obs)/obs × 100. Frozen predictor; holdout unused in fitting.",
+        )
+        add(
+            model_or_quantity=f"annual water {r.predictor}",
+            evidence_type="D. chronological predictive accuracy",
+            train_period=f"frozen through {TRAIN_END_YEAR}",
+            test_holdout_period="2024",
+            n=1,
+            metric="pct_error",
+            value=f"{float(r.pct_error_2024):.2f}",
+            interpretation="(pred-obs)/obs × 100. Frozen predictor; holdout unused in fitting.",
+        )
+
     pue_2011 = float(annual.loc[annual.year.eq(2011), "annual_pue_model"].iloc[0])
     add(
         model_or_quantity="gray-box annual PUE vs 2011 design benchmark",
-        evidence_type="E. independent external consistency",
+        evidence_type="E. design/assumption consistency check",
         train_period="n/a (not fitted to PUE)",
         test_holdout_period="2011 design point",
         n=1,
         metric="modeled_2011_PUE_minus_1.07",
         value=f"{pue_2011 - 1.07:.4f}",
-        interpretation=f"Modeled 2011 annual PUE={pue_2011:.4f} vs Meta 2011 full-load design 1.07. Diagnostic, not a fit target.",
+        interpretation=(
+            f"Modeled 2011 annual PUE={pue_2011:.4f} vs Meta 2011 full-load design 1.07. "
+            "Design/assumption consistency or falsification check, not independent validation."
+        ),
     )
 
     egrid_cmp = egrid[egrid["meta_location_based_scope2_tonnes"].notna()].copy()
@@ -292,24 +488,27 @@ def write_validation_scorecard() -> pd.DataFrame:
     ) / egrid_cmp["meta_location_based_scope2_tonnes"]
     add(
         model_or_quantity="eGRID NWPP × Meta MWh vs Meta location Scope 2",
-        evidence_type="E. independent external consistency",
+        evidence_type="E. methodology/accounting consistency benchmark",
         train_period="n/a (benchmark)",
         test_holdout_period="2012-2024 where Meta Scope 2 exists",
         n=int(len(egrid_cmp)),
         metric="median_pct_difference",
         value=f"{float(egrid_cmp['pct_diff'].median()):.2f}",
-        interpretation="Physical subregion-average benchmark, not electricity prediction and not a marginal-emissions model.",
+        interpretation=(
+            "Methodology/accounting consistency benchmark, not fully independent external validation "
+            "(both sides use Meta campus MWh). Not electricity prediction and not a marginal-emissions model."
+        ),
     )
     row24 = egrid[egrid.year.eq(2024)].iloc[0]
     add(
         model_or_quantity="eGRID NWPP × Meta MWh vs Meta location Scope 2",
-        evidence_type="E. independent external consistency",
+        evidence_type="E. methodology/accounting consistency benchmark",
         train_period="n/a",
         test_holdout_period="2024 (eGRID2023 rate × 2024 MWh)",
         n=1,
         metric="pct_difference",
         value=f"{float(row24['ratio_or_percent_difference']):.4f}",
-        interpretation="Column ratio_or_percent_difference is already percent. Near agreement in 2024 is a benchmark result, not campus carbon telemetry.",
+        interpretation="Column ratio_or_percent_difference is already percent. Near agreement in 2024 is an accounting-method consistency result, not campus carbon telemetry and not independent validation.",
     )
 
     pacw_ci = pacw[pacw["n_eia_co2_intensity_consumed"] > 0]
@@ -366,7 +565,7 @@ def write_validation_scorecard() -> pd.DataFrame:
             n=int(len(oc)),
             metric="n_PASS_checks",
             value=str(int((oc.status.astype(str).str.upper() == "PASS").sum())),
-            interpretation="City production and direct POD are not treated as Meta withdrawal. No City-vs-Meta prediction error is computed.",
+            interpretation="City production and direct POD are boundary/context consistency, not Meta prediction error. No City-vs-Meta prediction error is computed.",
         )
 
     or_qc = ROOT / "outputs" / "oregon_generator_data_checks.csv"
@@ -427,250 +626,23 @@ def write_validation_scorecard() -> pd.DataFrame:
 
 
 def write_source_tree_mmd(sources: pd.DataFrame) -> Path:
-    path = OUT / "data_source_tree.mmd"
-    lines = [
-        "%% Prineville pipeline data-source tree",
-        "%% provider → raw → processed → model → quantities",
-        "flowchart TB",
-        "  classDef gt fill:#dbeafe,stroke:#1d4ed8,color:#111",
-        "  classDef wx fill:#ecfccb,stroke:#4d7c0f,color:#111",
-        "  classDef wt fill:#cffafe,stroke:#0e7490,color:#111",
-        "  classDef gd fill:#fef3c7,stroke:#b45309,color:#111",
-        "  classDef gn fill:#fae8ff,stroke:#7e22ce,color:#111",
-        "  classDef pm fill:#ffe4e6,stroke:#be123c,color:#111",
-        "",
-        "  subgraph GT[Facility ground truth]",
-        "    MetaPDFs[Meta disclosure PDFs 2014-2025 vintages]",
-        "    Annual[canonical meta_prineville_annual.csv]",
-        "    Eng2011[2011 engineering design PUE/WUE]",
-        "    MetaPDFs --> Annual",
-        "    Eng2011 --> GrayPriors[gray-box priors / PUE diagnostic]",
-        "  end",
-        "",
-        "  subgraph WX[Weather]",
-        "    NOAA[NOAA NCEI Global Hourly KRDM 72692024230]",
-        "    Weather[processed weather_hourly.csv]",
-        "    NOAA --> Weather",
-        "  end",
-        "",
-        "  subgraph WT[Water]",
-        "    OWRD[OWRD water-use exports City + Vitesse POD]",
-        "    OHA[OHA PWS 00682 inventory]",
-        "    USGS[USGS NWAA IWA / public-supply / irrigation + WBD]",
-        "    OWRDtab[processed OWRD monthly]",
-        "    USGStab[processed USGS HUC12 panels]",
-        "    Ctx[prineville_water_monthly_context.csv]",
-        "    OWRD --> OWRDtab --> Ctx",
-        "    OHA --> Ctx",
-        "    USGS --> USGStab --> Ctx",
-        "  end",
-        "",
-        "  subgraph GD[Grid / carbon]",
-        "    EIA[EIA-930 PACW.xlsx]",
-        "    PACW[processed pacw_hourly.csv]",
-        "    EGRID[EPA eGRID vintages + Power Profiler ZIP 97754]",
-        "    EGtab[egrid_prineville_annual.csv]",
-        "    EIA --> PACW",
-        "    EGRID --> EGtab",
-        "  end",
-        "",
-        "  subgraph GN[Generators Oregon only]",
-        "    CAMPD[EPA CAMPD Oregon hourly]",
-        "    EIA860[EIA-860 / 923 / cooling]",
-        "    ORtab[oregon_generator_externalities_monthly.csv]",
-        "    CAMPD --> ORtab",
-        "    EIA860 --> ORtab",
-        "  end",
-        "",
-        "  subgraph PM[Onsite generation / permits]",
-        "    DEQ[Oregon DEQ 07-0037 air + GHG workbooks]",
-        "    Permits[Crook County inspection summaries]",
-        "    Backup[meta_backup_* monthly tables]",
-        "    Evt[campus_permit_events.csv]",
-        "    DEQ --> Backup",
-        "    Permits --> Evt",
-        "  end",
-        "",
-        "  Annual --> Closure[conditional reconstruction: annual electricity closure]",
-        "  Weather --> Gray[prineville_graybox.py]",
-        "  Gray --> Closure",
-        "  Closure --> PIT[fitted hourly IT / facility power / PUE]",
-        "  PIT --> Wproxy[raw evaporation × train-only water scale]",
-        "  Annual --> Wproxy",
-        "  Wproxy --> Wpred[holdout water prediction]",
-        "  Annual --> EGtab",
-        "  EGtab --> Cbench[eGRID physical Scope 2 benchmark]",
-        "  PACW --> Cshape[PACW relative carbon shape]",
-        "  Ctx --> External[external water evidence; do not sum boundaries]",
-        "  ORtab --> NoAttr[generator water/emissions; site attribution missing]",
-        "  Backup --> Onsite[onsite backup hours/emissions; independent of Scope 2]",
-        "",
-        "  class MetaPDFs,Annual,Eng2011,GrayPriors gt",
-        "  class NOAA,Weather wx",
-        "  class OWRD,OHA,USGS,OWRDtab,USGStab,Ctx wt",
-        "  class EIA,PACW,EGRID,EGtab gd",
-        "  class CAMPD,EIA860,ORtab gn",
-        "  class DEQ,Permits,Backup,Evt pm",
-    ]
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    return path
+    return _diagrams.write_source_tree_mmd(OUT / "data_source_tree.mmd", sources)
 
 
 def write_quantity_mmd() -> Path:
-    path = OUT / "model_quantity_dependency.mmd"
-    path.write_text(
-        """%% Quantity dependency (implemented chain). Arrow labels are provenance.
-flowchart LR
-  WLscen[workload scenario Cox/AR/Poisson/Gamma] -->|scenario| U[utilization index]
-  U -->|scenario| Shape[IT-power shape]
-  MetaE[Meta annual facility electricity] -->|reported| Closure[latent IT-power scale]
-  Shape -->|scenario| Closure
-  WX[KRDM weather] -->|measured| Gray[gray-box physics]
-  Closure -->|fitted| Gray
-  Gray -->|derived| Heat[IT heat ≈ P_IT]
-  Gray -->|derived| Mode[cooling mode]
-  Gray -->|derived| Fac[facility electricity hourly]
-  Gray -->|derived| Evap[raw evaporation]
-  Fac -->|fitted closure| MetaE
-  Evap -->|proxy| Wscale[train-only water scale / energy-only candidate]
-  MetaW[Meta annual withdrawal] -->|reported| Wscale
-  Wscale -->|proxy| Wpred[predicted annual water]
-  Fac -->|derived| PACW[PACW / eGRID]
-  PACW -->|reported/derived| C[location carbon]
-  MetaS2[Meta location Scope 2] -->|reported| C
-  City[OWRD City production] -->|reported| Ctx[regional water context]
-  POD[Vitesse/Facebook POD] -->|reported| Ctx
-  USGS[USGS IWA/PS/irrigation through 2020] -->|proxy| Ctx
-  Gen[Oregon CAMPD/EIA/cooling] -->|measured| GW[generator water/emissions]
-  GW -->|unavailable| Attr[site attribution currently missing]
-  DEQ[DEQ backup] -->|reported| Onsite[onsite backup emissions]
-  GWnet[groundwater network] -->|unavailable| Head[head/storage/recharge not identified]
-""",
-        encoding="utf-8",
-    )
-    return path
+    return _diagrams.write_quantity_mmd(OUT / "model_quantity_dependency.mmd")
 
 
 def _box(ax, x, y, w, h, text, color, fontsize=7):
-    p = FancyBboxPatch(
-        (x, y),
-        w,
-        h,
-        boxstyle="round,pad=0.02,rounding_size=0.08",
-        facecolor=color,
-        edgecolor="#333333",
-        linewidth=0.6,
-    )
-    ax.add_patch(p)
-    ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=fontsize, wrap=True)
+    return _diagrams._box(ax, x, y, w, h, text, color, fontsize)
 
 
 def render_source_tree_png() -> Path:
-    fig, ax = plt.subplots(figsize=(14.5, 9.2))
-    ax.set_xlim(0, 14.5)
-    ax.set_ylim(0, 9.2)
-    ax.axis("off")
-    ax.set_title("Data-source tree (implemented pipeline)", loc="left", fontsize=12, pad=8)
-
-    groups = [
-        (0.2, 7.4, 14.1, 1.6, "#dbeafe", "Facility ground truth",
-         [(0.4, 7.6, "Meta PDFs\n2014–2025"), (2.6, 7.6, "canonical\nannual table"),
-          (4.8, 7.6, "2011 design\nPUE 1.07 / WUE 0.31"), (7.0, 7.6, "build_targets.py"),
-          (9.2, 7.6, "conditional +\nstochastic closure"), (11.5, 7.6, "E_fac, W_with,\nlocation S2")]),
-        (0.2, 5.6, 14.1, 1.6, "#ecfccb", "Weather",
-         [(0.4, 5.8, "NOAA NCEI\nKRDM 72692024230"), (2.8, 5.8, "raw/noaa\n(if present)"),
-          (5.0, 5.8, "prepare_weather.py"), (7.2, 5.8, "weather_hourly.csv"),
-          (9.4, 5.8, "gray-box"), (11.6, 5.8, "mode, PUE,\nraw evaporation")]),
-        (0.2, 3.8, 14.1, 1.6, "#cffafe", "Water",
-         [(0.4, 4.0, "OWRD / OHA"), (2.4, 4.0, "USGS NWAA\n+ WBD"),
-          (4.5, 4.0, "prepare_owrd +\nusgs panels"), (6.7, 4.0, "monthly context\n(do not sum)"),
-          (9.0, 4.0, "external\nconsistency"), (11.4, 4.0, "City / POD /\nIWA / irrigation")]),
-        (0.2, 2.0, 7.0, 1.6, "#fef3c7", "Grid / carbon",
-         [(0.4, 2.2, "EIA-930 PACW"), (2.1, 2.2, "EPA eGRID\nZIP 97754"),
-          (3.9, 2.2, "prepare_eia930\nprepare_egrid"), (5.6, 2.2, "BA demand +\nNWPP benchmark")]),
-        (7.4, 2.0, 6.9, 1.6, "#fae8ff", "Generators (Oregon)",
-         [(7.6, 2.2, "CAMPD hourly"), (9.3, 2.2, "EIA-860/923\ncooling"),
-          (11.1, 2.2, "QC tables;\nattribution missing")]),
-        (0.2, 0.25, 14.1, 1.55, "#ffe4e6", "Onsite generation / permits",
-         [(0.4, 0.45, "DEQ 07-0037"), (2.5, 0.45, "DEQ GHG\nPacific Power"),
-          (4.7, 0.45, "Crook County\npermits"), (6.9, 0.45, "backup hours\n/ emissions"),
-          (9.2, 0.45, "capacity-epoch\nannotations"), (11.5, 0.45, "not IT MW\nnot Scope 2")]),
-    ]
-    for x, y, w, h, c, title, boxes in groups:
-        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.02,rounding_size=0.05",
-                                    facecolor=c, edgecolor="#666", linewidth=0.7, alpha=0.7))
-        ax.text(x + 0.08, y + h - 0.18, title, fontsize=8, fontweight="bold", va="top")
-        for bx, by, txt in boxes:
-            _box(ax, bx, by, 1.7, 0.95, txt, "white", fontsize=6.2)
-    fig.tight_layout()
-    path = OUT / "data_source_tree.png"
-    fig.savefig(path, dpi=160)
-    plt.close(fig)
-    return path
+    return _diagrams.render_source_tree_png(OUT / "data_source_tree.png")
 
 
 def render_quantity_png() -> Path:
-    fig, ax = plt.subplots(figsize=(13.5, 7.8))
-    ax.set_xlim(0, 13.5)
-    ax.set_ylim(0, 7.8)
-    ax.axis("off")
-    ax.set_title("Model-quantity dependency (implemented)", loc="left", fontsize=12)
-
-    nodes = [
-        (0.3, 6.4, 2.2, 0.9, COLORS["scenario"], "workload scenario\n(Cox / queue)"),
-        (3.0, 6.4, 2.2, 0.9, COLORS["fitted"], "fitted IT power\n(annual scale)"),
-        (5.7, 6.4, 2.2, 0.9, COLORS["derived"], "heat / cooling\nmode + P_fac"),
-        (8.4, 6.4, 2.2, 0.9, COLORS["reported"], "facility electricity\n(annual reported)"),
-        (11.1, 6.4, 2.1, 0.9, COLORS["proxy"], "direct-water proxy\n(evap × scale)"),
-        (0.3, 4.4, 2.2, 0.9, COLORS["reported"], "facility electricity"),
-        (3.0, 4.4, 2.2, 0.9, COLORS["derived"], "PACW / eGRID\nNWPP"),
-        (5.7, 4.4, 2.2, 0.9, COLORS["reported"], "carbon\n(location S2 / bench)"),
-        (0.3, 2.5, 2.2, 0.9, COLORS["reported"], "City POD +\nVitesse POD"),
-        (3.0, 2.5, 2.2, 0.9, COLORS["proxy"], "USGS HUC12\nthrough 2020"),
-        (5.7, 2.5, 2.2, 0.9, COLORS["derived"], "regional water\ncontext"),
-        (8.4, 2.5, 2.2, 0.9, COLORS["measured"], "Oregon generator\ndata"),
-        (11.1, 2.5, 2.1, 0.9, COLORS["unavailable"], "site attribution\ncurrently missing"),
-        (0.3, 0.6, 2.2, 0.9, COLORS["unavailable"], "groundwater\nnetwork"),
-        (3.0, 0.6, 2.2, 0.9, COLORS["unavailable"], "head / storage /\nrecharge not identified"),
-        (8.4, 0.6, 2.2, 0.9, COLORS["reported"], "DEQ backup"),
-        (11.1, 0.6, 2.1, 0.9, COLORS["reported"], "onsite emissions\n≠ Scope 2"),
-    ]
-    for x, y, w, h, c, t in nodes:
-        _box(ax, x, y, w, h, t, c, fontsize=7)
-
-    def arrow(x1, y1, x2, y2, label, color="#333"):
-        ax.annotate(
-            "",
-            xy=(x2, y2),
-            xytext=(x1, y1),
-            arrowprops=dict(arrowstyle="->", color=color, lw=1.1),
-        )
-        ax.text((x1 + x2) / 2, (y1 + y2) / 2 + 0.12, label, fontsize=6, ha="center", color=color)
-
-    arrow(2.5, 6.85, 3.0, 6.85, "scenario", COLORS["scenario"])
-    arrow(5.2, 6.85, 5.7, 6.85, "fitted", COLORS["fitted"])
-    arrow(7.9, 6.85, 8.4, 6.85, "closure", COLORS["fitted"])
-    arrow(10.6, 6.85, 11.1, 6.85, "proxy", COLORS["proxy"])
-    arrow(2.5, 4.85, 3.0, 4.85, "derived", COLORS["derived"])
-    arrow(5.2, 4.85, 5.7, 4.85, "benchmark", COLORS["derived"])
-    arrow(2.5, 2.95, 3.0, 2.95, "observed", COLORS["reported"])
-    arrow(5.2, 2.95, 5.7, 2.95, "proxy", COLORS["proxy"])
-    arrow(10.6, 2.95, 11.1, 2.95, "unavailable", COLORS["unavailable"])
-    arrow(2.5, 1.05, 3.0, 1.05, "unavailable", COLORS["unavailable"])
-    arrow(10.6, 1.05, 11.1, 1.05, "reported", COLORS["reported"])
-    ax.plot([9.5, 9.5], [6.4, 4.85], color=COLORS["derived"], lw=1.0)
-    ax.text(9.65, 5.5, "derived", fontsize=6, color=COLORS["derived"])
-
-    handles = [
-        plt.Line2D([0], [0], marker="s", color="w", markerfacecolor=COLORS[k], markersize=10, label=k)
-        for k in ("reported", "derived", "fitted", "proxy", "scenario", "unavailable")
-    ]
-    ax.legend(handles=handles, loc="lower right", fontsize=7, frameon=False, ncol=3)
-    fig.tight_layout()
-    path = OUT / "model_quantity_dependency.png"
-    fig.savefig(path, dpi=160)
-    plt.close(fig)
-    return path
+    return _diagrams.render_quantity_png(OUT / "model_quantity_dependency.png")
 
 
 def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.DataFrame) -> Path:
@@ -793,14 +765,23 @@ def figure2_ground_truth(meta: pd.DataFrame, events: pd.DataFrame) -> Path:
         short = str(r.event_type).replace("_", " ")
         event_years[yr] = short
 
-    for ax in axes:
-        ax.axvspan(2022.5, 2024.5, color="#fee2e2", alpha=0.5, zorder=0)
+    for i, ax in enumerate(axes):
+        if i in (1, 3):
+            ax.axvspan(2022.5, 2024.5, color="#fee2e2", alpha=0.5, zorder=0)
         for yr in event_years:
             ax.axvline(yr, color="#9ca3af", lw=0.8, ls="--", zorder=0)
         ax.set_xlim(2009.5, 2024.5)
         ax.grid(True, axis="y", alpha=0.3)
 
-    axes[0].text(2023.5, axes[0].get_ylim()[1] * 0.92, "holdout\n2023–24", ha="center", va="top", fontsize=7, color="#991b1b")
+    axes[1].text(
+        2023.5,
+        axes[1].get_ylim()[1] * 0.92,
+        "2023–2024\nwater-model holdout",
+        ha="center",
+        va="top",
+        fontsize=7,
+        color="#991b1b",
+    )
     ymax0 = axes[0].get_ylim()[1]
     for i, (yr, lab) in enumerate(sorted(event_years.items())):
         axes[0].text(yr, ymax0 * (0.72 - 0.12 * (i % 2)), lab, ha="center", va="top", fontsize=6.5, color="#374151")
@@ -812,77 +793,163 @@ def figure2_ground_truth(meta: pd.DataFrame, events: pd.DataFrame) -> Path:
     return path
 
 
-def figure3_water_accuracy(cond: pd.DataFrame, stoch: pd.DataFrame, diag: pd.DataFrame) -> Path:
+def figure3_water_accuracy(
+    cond: pd.DataFrame,
+    stoch: pd.DataFrame,
+    diag: pd.DataFrame,
+    baselines: pd.DataFrame,
+) -> Path:
     c = cond.dropna(subset=["water_withdrawal_m3_reported"]).copy()
-    s = stoch.dropna(subset=["water_withdrawal_m3_reported"]).copy()
-    fig = plt.figure(figsize=(11.2, 8.2))
-    gs = fig.add_gridspec(2, 1, height_ratios=[2.4, 1.0], hspace=0.32)
+    train_c = c[c.split.eq("train")]
+    hold_c = c[c.split.eq("holdout")]
+    hold_s = stoch[stoch.split.eq("holdout")].copy()
+    sel = diag[diag.selected.astype(str).str.lower().eq("true")].iloc[0]
+    bmap = baselines.set_index("predictor")
+
+    fig = plt.figure(figsize=(12.2, 10.4))
+    gs = fig.add_gridspec(2, 1, height_ratios=[1.55, 1.15], hspace=0.38)
     ax = fig.add_subplot(gs[0])
     ax2 = fig.add_subplot(gs[1])
 
-    ax.plot(c.year, c.water_withdrawal_m3_reported / 1e3, "o", color="black", ms=7, label="Observed Meta withdrawal")
+    ax.plot(c.year, c.water_withdrawal_m3_reported / 1e3, "o", color="black", ms=7, zorder=5, label="Observed Meta withdrawal")
     ax.plot(
-        c.year,
-        c.water_pred_m3 / 1e3,
-        "-s",
+        train_c.year,
+        train_c.water_pred_m3 / 1e3,
+        "s--",
         color="#e66101",
         ms=5,
-        label="Conditional train-only prediction (evap × global scale)",
+        label="Conditional in-sample fitted (frozen train scale; not expanding-window)",
     )
     ax.plot(
-        s.year,
-        s.water_train_only_pred_m3_median / 1e3,
-        "--^",
+        hold_c.year,
+        hold_c.water_pred_m3 / 1e3,
+        "s-",
+        color="#c2410c",
+        ms=8,
+        label="Conditional holdout prediction (same frozen scale)",
+    )
+    # Frozen NNLS point for selected energy-only on holdout only — not the train fitted line.
+    e_hold = hold_c["electricity_mwh_reported"].to_numpy(float)
+    beta_e = json.loads(str(sel["coefficients"]))["electricity_mwh_reported"]
+    ax.plot(
+        hold_c.year,
+        (beta_e * e_hold) / 1e3,
+        "^",
         color="#5e3c99",
-        ms=5,
-        label="Selected annual model (energy-only NNLS)",
+        ms=9,
+        label="Energy-only frozen NNLS holdout (β_E×E; evaporation not an input)",
+    )
+    ax.plot(
+        hold_s.year,
+        hold_s.water_train_only_pred_m3_median / 1e3,
+        "v",
+        color="#7c3aed",
+        ms=7,
+        label="Energy-only published ensemble-median diagnostic (holdout)",
+    )
+    ax.plot(
+        hold_c.year,
+        np.full(len(hold_c), float(
+            cond.loc[cond.split.eq("train") & cond.water_withdrawal_m3_reported.notna(), "water_withdrawal_m3_reported"].mean()
+        )) / 1e3,
+        "D",
+        color="#6b7280",
+        ms=6,
+        label="Training-mean baseline (frozen)",
+    )
+    ax.plot(
+        hold_c.year,
+        np.full(len(hold_c), float(
+            cond.loc[cond.split.eq("train") & cond.water_withdrawal_m3_reported.notna(), "water_withdrawal_m3_reported"].median()
+        )) / 1e3,
+        "P",
+        color="#9ca3af",
+        ms=7,
+        label="Training-median baseline (frozen)",
+    )
+    persist = float(
+        cond.loc[cond.year.eq(2022), "water_withdrawal_m3_reported"].iloc[0]
+    )
+    ax.plot(
+        hold_c.year,
+        np.full(len(hold_c), persist) / 1e3,
+        "X",
+        color="#374151",
+        ms=8,
+        label="2022 persistence baseline (frozen)",
     )
     ax.axvspan(2022.5, 2024.5, color="#fee2e2", alpha=0.55, zorder=0)
     ax.axvline(2022.5, color="#991b1b", lw=1.0, ls="--")
     ax.set_ylabel("Annual water (thousand m³)")
-    ax.set_title("Figure 3 — Water model accuracy (train vs 2023–2024 holdout)", loc="left")
+    ax.set_title("Figure 3 — Water-model holdout vs frozen naive baselines (N=2 years)", loc="left")
     ax.set_xlim(2013.5, 2024.5)
     ax.grid(True, axis="y", alpha=0.3)
     ymax = max(
         float(c.water_withdrawal_m3_reported.max()),
         float(c.water_pred_m3.max()),
-        float(s.water_train_only_pred_m3_median.max()),
+        float(beta_e * e_hold.max()),
+        persist,
     ) / 1e3
-    ax.set_ylim(0, ymax * 1.08)
-    ax.legend(loc="upper left", fontsize=8, frameon=False)
-    ax.text(2023.5, ymax * 1.02, "holdout", ha="center", color="#991b1b", fontsize=9)
+    ax.set_ylim(0, ymax * 1.18)
+    ax.legend(loc="upper left", fontsize=6.6, frameon=False, ncol=1)
+    ax.text(2023.5, ymax * 1.12, "2023–2024 water-model holdout", ha="center", color="#991b1b", fontsize=8)
 
-    hold_c = c[c.split.eq("holdout")]
-    hold_s = s[s.split.eq("holdout")]
-    train_c = c[c.split.eq("train")]
-    sel = diag[diag.selected.astype(str).str.lower().eq("true")].iloc[0]
-    table = [
-        ["", "Train MAPE", "2023 %err", "2024 %err", "Holdout MAPE"],
-        [
-            "Conditional (evap × scale)",
-            f"{train_c.water_pct_error.abs().mean():.1f}%",
-            f"{float(hold_c.loc[hold_c.year.eq(2023), 'water_pct_error'].iloc[0]):+.1f}%",
-            f"{float(hold_c.loc[hold_c.year.eq(2024), 'water_pct_error'].iloc[0]):+.1f}%",
-            f"{hold_c.water_pct_error.abs().mean():.1f}%",
-        ],
-        [
-            f"Selected annual ({sel['model']})",
-            f"{float(sel['rolling_one_step_mape_pct']):.1f}% one-step",
-            f"{float(hold_s.loc[hold_s.year.eq(2023), 'water_train_only_error_pct'].iloc[0]):+.1f}%",
-            f"{float(hold_s.loc[hold_s.year.eq(2024), 'water_train_only_error_pct'].iloc[0]):+.1f}%",
-            f"{hold_s.water_train_only_error_pct.abs().mean():.1f}%",
-        ],
+    order = [
+        "training_mean",
+        "training_median",
+        "persistence_2022",
+        "conditional_global_scale",
+        "energy_null_frozen_nnls",
+        "energy_null_ensemble_median",
+        "evap_physics_frozen_nnls",
+        "two_component_frozen_nnls",
     ]
+    labels = {
+        "training_mean": "Training mean (naive)",
+        "training_median": "Training median (naive)",
+        "persistence_2022": "2022 persistence (naive)",
+        "conditional_global_scale": "Conditional evap×scale",
+        "energy_null_frozen_nnls": "Energy-only frozen NNLS",
+        "energy_null_ensemble_median": "Energy-only ensemble median*",
+        "evap_physics_frozen_nnls": "Evap-only frozen NNLS",
+        "two_component_frozen_nnls": "Two-component frozen NNLS",
+    }
+    table = [["Predictor", "MAE m³", "MAPE", "2023 %err", "2024 %err", "skill_MAE vs mean"]]
+    for key in order:
+        r = bmap.loc[key]
+        table.append([
+            labels[key],
+            f"{float(r.MAE_m3):,.0f}",
+            f"{float(r.MAPE_pct):.1f}%",
+            f"{float(r.pct_error_2023):+.1f}%",
+            f"{float(r.pct_error_2024):+.1f}%",
+            f"{float(r.skill_MAE_vs_training_mean):+.2f}",
+        ])
     ax2.axis("off")
     tbl = ax2.table(cellText=table, loc="center", cellLoc="center")
     tbl.auto_set_font_size(False)
-    tbl.set_fontsize(8)
-    tbl.scale(1.0, 1.6)
-    for j in range(5):
+    tbl.set_fontsize(7.2)
+    tbl.scale(1.0, 1.35)
+    for j in range(6):
         tbl[0, j].set_facecolor("#e5e7eb")
-        tbl[1, j].set_facecolor("#fff7ed")
-        tbl[2, j].set_facecolor("#f5f3ff")
-    ax2.set_title("Holdout errors are the primary predictive result; train diagnostics are not skill on 2023–2024.", fontsize=8, loc="left", pad=8)
+        for i in range(1, 4):
+            tbl[i, j].set_facecolor("#f3f4f6")
+        tbl[4, j].set_facecolor("#fff7ed")
+        tbl[5, j].set_facecolor("#f5f3ff")
+        tbl[6, j].set_facecolor("#f5f3ff")
+        tbl[7, j].set_facecolor("#faf5ff")
+        tbl[8, j].set_facecolor("#faf5ff")
+    ax2.set_title(
+        f"Holdout N=2: metrics are diagnostics, not strong statistical evidence. "
+        f"Energy-only expanding-window one-step train MAPE = {float(sel['rolling_one_step_mape_pct']):.1f}% "
+        "(selection metric only; not the train-year line). "
+        "Conditional train-year line is in-sample fit of the frozen global scale. "
+        "*ensemble median is the previously published diagnostic, not a new model. "
+        "Naive baselines were not entered into model selection.",
+        fontsize=7.2,
+        loc="left",
+        pad=6,
+    )
 
     path = FIG / "fig03_water_model_accuracy.png"
     fig.savefig(path, dpi=170, bbox_inches="tight")
@@ -1089,12 +1156,137 @@ def figure6_graybox_week(week: pd.DataFrame, meta: dict) -> Path:
     return path
 
 
+def _summarize_graybox_run(hourly: pd.DataFrame, annual: pd.DataFrame) -> dict:
+    return {
+        "annual_raw_evaporation_m3": float(annual["water_raw_m3"].sum()),
+        "annual_inferred_it_energy_mwh": float(annual["it_energy_mwh_fitted"].sum()),
+        "mean_annual_pue": float(annual["annual_pue_model"].mean()),
+        "peak_hourly_pue": float(hourly["pue"].max()),
+        "pue_2011": float(annual.loc[annual.year.eq(2011), "annual_pue_model"].iloc[0]),
+    }
+
+
+def write_graybox_parameter_sensitivity() -> tuple[pd.DataFrame, dict]:
+    """One-at-a-time sensitivity for parameters with a documented range.
+
+    Uses reconstruct() with overridden Params. Does not write conditional
+    reconstruction artifacts and does not retune water models for reporting.
+    """
+    from dataclasses import replace
+
+    from conditional_reconstruction import reconstruct
+    from prineville_graybox import Params
+
+    params = parameter_registry()
+    perturbable = []
+    for r in params:
+        if r["model_id"] != "M_GRAYBOX":
+            continue
+        if r["used_in_code"] != "yes":
+            continue
+        if r["plausible_range"] in ("", "range_not_established"):
+            continue
+        lo, hi = [float(x) for x in r["plausible_range"].split("-")]
+        perturbable.append((r["parameter"], float(r["value"]), lo, hi))
+
+    base_params = Params()
+    hourly0, annual0, _ = reconstruct(params=base_params)
+    base = _summarize_graybox_run(hourly0, annual0)
+
+    rows = []
+    for name, nominal, lo, hi in perturbable:
+        for tag, val in (("low", lo), ("high", hi)):
+            run_params = replace(base_params, **{name: val})
+            hourly, annual, _ = reconstruct(params=run_params)
+            summ = _summarize_graybox_run(hourly, annual)
+            rec = {
+                "parameter": name,
+                "level": tag,
+                "value": val,
+                "nominal_value": nominal,
+                "source_of_range": "sampled_facility_priors documented clip bounds",
+                "analysis_type": "one-at-a-time assumption sensitivity; not a confidence interval and not a recalibration",
+            }
+            for k, v in summ.items():
+                rec[k] = v
+                rec[f"pct_change_vs_baseline_{k}"] = 100.0 * (v - base[k]) / base[k] if base[k] else np.nan
+            rows.append(rec)
+    # Baseline row
+    rec0 = {
+        "parameter": "baseline",
+        "level": "nominal",
+        "value": "",
+        "nominal_value": "",
+        "source_of_range": "Params() defaults",
+        "analysis_type": "reference; not a CI",
+    }
+    rec0.update(base)
+    for k in base:
+        rec0[f"pct_change_vs_baseline_{k}"] = 0.0
+    df = pd.DataFrame([rec0] + rows)
+    df.to_csv(OUT / "graybox_parameter_sensitivity.csv", index=False)
+    return df, base
+
+
+def figure_graybox_sensitivity(sens: pd.DataFrame, base: dict) -> Path:
+    z = sens[sens.parameter.ne("baseline")].copy()
+    params = [p for p in z.parameter.unique()]
+    metrics = [
+        ("annual_raw_evaporation_m3", "annual raw evaporation"),
+        ("annual_inferred_it_energy_mwh", "annual inferred IT energy"),
+        ("mean_annual_pue", "mean annual PUE"),
+        ("peak_hourly_pue", "peak hourly PUE"),
+    ]
+    fig, axes = plt.subplots(len(metrics), 1, figsize=(10.4, 8.6), sharex=True)
+    fig.suptitle(
+        "Figure 7 — Gray-box assumption sensitivity (one-at-a-time; not a confidence interval)",
+        fontsize=11,
+        x=0.01,
+        ha="left",
+    )
+    for ax, (key, title) in zip(axes, metrics):
+        col = f"pct_change_vs_baseline_{key}"
+        y = np.arange(len(params))
+        for i, p in enumerate(params):
+            sub = z[z.parameter.eq(p)]
+            lo = float(sub.loc[sub.level.eq("low"), col].iloc[0])
+            hi = float(sub.loc[sub.level.eq("high"), col].iloc[0])
+            ax.plot([lo, hi], [i, i], color="#7c3aed", lw=6, solid_capstyle="round")
+            ax.plot([lo], [i], "o", color="#1d4ed8", ms=6)
+            ax.plot([hi], [i], "o", color="#c2410c", ms=6)
+        ax.axvline(0, color="#111", lw=0.8)
+        ax.set_yticks(y)
+        ax.set_yticklabels(params, fontsize=8)
+        ax.set_ylabel("")
+        ax.set_title(f"% change in {title}", loc="left", fontsize=9)
+        ax.grid(True, axis="x", alpha=0.3)
+    axes[-1].set_xlabel("% change versus baseline Params()")
+    axes[-1].plot([], [], "o", color="#1d4ed8", label="documented-range low")
+    axes[-1].plot([], [], "o", color="#c2410c", label="documented-range high")
+    axes[-1].legend(frameon=False, fontsize=8, loc="lower right")
+    fig.text(
+        0.01,
+        0.01,
+        "Only fan_fraction_of_it and other_facility_fraction_of_it have a repository-documented numeric range "
+        "(stochastic sampled_facility_priors). Other gray-box parameters: range_not_established; not perturbed. "
+        "Electricity closure recouples IT scale when overhead fractions change.",
+        fontsize=7.5,
+    )
+    fig.tight_layout(rect=(0, 0.06, 1, 0.96))
+    path = FIG / "fig07_graybox_parameter_sensitivity.png"
+    fig.savefig(path, dpi=170)
+    plt.close(fig)
+    return path
+
+
 def write_markdown(
     sources: pd.DataFrame,
     quantities: pd.DataFrame,
     models: pd.DataFrame,
     scorecard: pd.DataFrame,
     week_meta: dict,
+    baselines: pd.DataFrame,
+    sens: pd.DataFrame,
 ) -> Path:
     n_src = len(sources)
     n_q = len(quantities)
@@ -1128,6 +1320,7 @@ def write_markdown(
                 f"- **How is it computed?** {r.equation_transformation_model or 'not computed'}\n"
                 f"- **Assumptions?** {r.modeling_assumptions or 'n/a'}\n"
                 f"- **Provenance:** `{r.provenance_class}` ({r.implementation_status})\n"
+                f"- **Accounting boundary:** `{r.boundary_id}` — {r.accounting_boundary_note}\n"
                 f"- **Validation?** {r.accuracy_diagnostic_available or 'none'}\n"
                 f"- **Confidence:** {r.confidence_level}. {r.missing_information_limitation}\n"
             )
@@ -1140,6 +1333,22 @@ def write_markdown(
         f"- **{r.quantity}** (`{r.quantity_id}`): {r.missing_information_limitation}"
         for r in unavail.itertuples(index=False)
     )
+
+    b_lines = [
+        "| Predictor | Kind | MAE m³ | MAPE % | 2023 %err | 2024 %err | skill_MAE vs train mean |",
+        "|---|---|---:|---:|---:|---:|---:|",
+    ]
+    for r in baselines.itertuples(index=False):
+        b_lines.append(
+            f"| `{r.predictor}` | {r.kind} | {float(r.MAE_m3):,.0f} | {float(r.MAPE_pct):.1f} | "
+            f"{float(r.pct_error_2023):+.1f} | {float(r.pct_error_2024):+.1f} | "
+            f"{float(r.skill_MAE_vs_training_mean):+.3f} |"
+        )
+    baseline_md = "\n".join(b_lines)
+
+    n_bounds = int(quantities["boundary_id"].nunique()) if "boundary_id" in quantities.columns else 0
+    implemented_q = quantities[quantities.provenance_class.ne("unavailable")]
+    n_impl_bounds = int(implemented_q["boundary_id"].nunique()) if len(implemented_q) else 0
 
     gaps = """
 | Gap | Why it is unidentified | What would resolve it |
@@ -1159,11 +1368,11 @@ def write_markdown(
 
     md = f"""# Pipeline data and model report — Meta Prineville v3
 
-This report is generated by `src/build_pipeline_report.py` from the registries in `src/pipeline_report_catalog.py` and from **existing** processed artifacts. It describes **implemented code**, not the intended full glossary model. Modeling logic is not changed here.
+This report is generated by `src/build_pipeline_report.py` from the registries in `src/pipeline_report_catalog.py` and from **existing** processed artifacts. It describes **implemented code**, not the intended full glossary model. Modeling logic is not changed here. After the Pipeline Audit v1 corrections, source→quantity and model I/O lineage is taken from canonical edge tables rather than a separately maintained diagram.
 
 - Report seed (documentation / any stochastic diagnostic): `{RNG_SEED}`
-- Train / holdout convention: train through **{TRAIN_END_YEAR}**; holdout **{HOLDOUT_YEARS[0]}–{HOLDOUT_YEARS[1]}**
-- Source count: **{n_src}**. Quantity count: **{n_q}** ({n_unavail} unavailable; {n_impl} rows with implemented/partial implementation text)
+- Train / holdout convention: train through **{TRAIN_END_YEAR}**; **2023–2024 is the water-model holdout only** (electricity and Scope 2 are not held-out predictions)
+- Source count: **{n_src}**. Quantity count: **{n_q}** ({n_unavail} unavailable; {n_impl} rows with implemented/partial implementation text). Boundary IDs in use: **{n_bounds}** ({n_impl_bounds} among non-unavailable quantities). Sensitivity rows: **{len(sens)}**.
 - Canonical conceptual list: [`modeling/glossary_mapping.tex`](../modeling/glossary_mapping.tex)
 - Do not duplicate the full README; source-specific instructions remain in [`SOURCE_INSTRUCTIONS.md`](../SOURCE_INSTRUCTIONS.md), [`DATA_DICTIONARY.md`](../DATA_DICTIONARY.md), [`MISSING_DATA_PROTOCOL.md`](../MISSING_DATA_PROTOCOL.md)
 
@@ -1172,7 +1381,12 @@ Registries and figures:
 - [`outputs/pipeline_report/data_source_inventory.csv`](../outputs/pipeline_report/data_source_inventory.csv)
 - [`outputs/pipeline_report/model_quantity_registry.csv`](../outputs/pipeline_report/model_quantity_registry.csv)
 - [`outputs/pipeline_report/model_registry.csv`](../outputs/pipeline_report/model_registry.csv)
+- [`outputs/pipeline_report/source_quantity_edges.csv`](../outputs/pipeline_report/source_quantity_edges.csv)
+- [`outputs/pipeline_report/model_io_edges.csv`](../outputs/pipeline_report/model_io_edges.csv)
+- [`outputs/pipeline_report/model_parameter_registry.csv`](../outputs/pipeline_report/model_parameter_registry.csv)
 - [`outputs/pipeline_report/validation_scorecard.csv`](../outputs/pipeline_report/validation_scorecard.csv)
+- [`outputs/pipeline_report/water_holdout_baseline_compare.csv`](../outputs/pipeline_report/water_holdout_baseline_compare.csv)
+- [`outputs/pipeline_report/graybox_parameter_sensitivity.csv`](../outputs/pipeline_report/graybox_parameter_sensitivity.csv)
 - [`outputs/pipeline_report/data_source_tree.mmd`](../outputs/pipeline_report/data_source_tree.mmd) / [`.png`](../outputs/pipeline_report/data_source_tree.png)
 - [`outputs/pipeline_report/model_quantity_dependency.mmd`](../outputs/pipeline_report/model_quantity_dependency.mmd) / [`.png`](../outputs/pipeline_report/model_quantity_dependency.png)
 - Figures: [`outputs/pipeline_report/figures/`](../outputs/pipeline_report/figures/)
@@ -1198,9 +1412,16 @@ Annual electricity agreement is **closure, not prediction**. IWA `availab = strf
 
 ## 2. Data-source tree
 
-See the diagram ([PNG](../outputs/pipeline_report/data_source_tree.png), [Mermaid](../outputs/pipeline_report/data_source_tree.mmd)) and the full inventory CSV.
+See the diagram ([PNG](../outputs/pipeline_report/data_source_tree.png), [Mermaid](../outputs/pipeline_report/data_source_tree.mmd)) generated from [`source_quantity_edges.csv`](../outputs/pipeline_report/source_quantity_edges.csv) and [`model_io_edges.csv`](../outputs/pipeline_report/model_io_edges.csv). The PNG uses **visible directional arrows**.
 
 **{n_src} sources** are listed. `{int((sources.in_source_manifest=="no").sum())}` of them exist in the executable pipeline but are **absent from `data/source_manifest.csv`** (CAMPD, EIA-860/923/cooling, EPA/EIA crosswalk, Oregon DEQ, Crook County permits). Code behavior wins: they are inventoried here.
+
+The diagrams distinguish:
+
+- **Conditional branch:** Meta annual facility electricity + weather → annual latent IT-scale closure → fitted hourly IT/facility power → gray-box evaporation → train-only conditional water scale → annual water prediction.
+- **Stochastic branch:** scenario workload → scenario utilization / IT-power shape + Meta annual electricity → annual scaling → scenario facility/cooling quantities.
+- **Separate annual water candidates:** energy-only (Meta electricity only; **evaporation is not an input**); evaporation-only; two-component NNLS.
+- **Parallel external evidence:** OWRD City/POD and USGS HUC12 products are contextual series. Neither produces the other.
 
 Branch groups: facility ground truth; weather; water; grid/carbon; Oregon generators; onsite generation/permits.
 
@@ -1222,13 +1443,15 @@ Hard observations that exist:
 - **USGS NWAA**: IWA through **2020-09**; public-supply CU through 2020-12; WD/irrigation through **2020-12**. Later years are missing, not zero.
 - **Oregon generators / DEQ backup / permits**: present as documented in the inventory; not campus IT meters.
 
-[Figure 2](../outputs/pipeline_report/figures/fig02_observed_ground_truth.png) shows the campus ground-truth evolution with only well-supported annotations (2011 design, 2018 REC agreement, 2021 expansion announcement, 11 buildings through 2024).
+[Figure 2](../outputs/pipeline_report/figures/fig02_observed_ground_truth.png) shows the campus ground-truth evolution. The pink band is labeled **2023–2024 water-model holdout** on the water and intensity panels only; electricity and Scope 2 are **not** held-out predictions.
 
 ---
 
 ## 4. Model quantity → source/proxy mapping
 
-Full table: [`model_quantity_registry.csv`](../outputs/pipeline_report/model_quantity_registry.csv). Dependency diagram: [PNG](../outputs/pipeline_report/model_quantity_dependency.png).
+Full table: [`model_quantity_registry.csv`](../outputs/pipeline_report/model_quantity_registry.csv). Dependency diagram: [PNG](../outputs/pipeline_report/model_quantity_dependency.png) generated from [`model_io_edges.csv`](../outputs/pipeline_report/model_io_edges.csv).
+
+Each quantity has a `boundary_id` from a small controlled vocabulary. This makes mechanically visible that Meta campus withdrawal is not City production, not Vitesse/Facebook POD use, and not USGS public-supply WD; USGS local-use quantities are not routed IWA quantities; Meta facility electricity is not PACW BA demand; PACW/eGRID are not Oregon generator output. There is no boundary algebra beyond these two columns.
 
 Provenance classes used (exactly one per row): `reported / measured / derived / fitted / simulated / scenario / proxy / unavailable`.
 
@@ -1287,7 +1510,7 @@ Equations actually coded:
 6. **PUE:** \(P_\\mathrm{{fac}} / P^{{IT}}\).
 7. **Modes:** `outside_air_or_winter_mix` / `partial_evap` / `full_evap`.
 
-2011 design benchmark used only as a **falsification diagnostic**: full-load PUE 1.07, WUE 0.31 L/kWh. Current modeled 2011 annual PUE = **{float(wm['modeled_2011_annual_pue']):.4f}**.
+2011 design benchmark used only as a **design/assumption consistency or falsification check**, not independent validation: full-load PUE 1.07, WUE 0.31 L/kWh. Current modeled 2011 annual PUE = **{float(wm['modeled_2011_annual_pue']):.4f}**. Parameter inventory: [`model_parameter_registry.csv`](../outputs/pipeline_report/model_parameter_registry.csv). `return_air_C` is **declared but unused**. One-at-a-time sensitivity of documented-range overhead fractions is [Figure 7](../outputs/pipeline_report/figures/fig07_graybox_parameter_sensitivity.png); it is an assumption audit, **not a confidence interval**.
 
 ### Conditional reconstruction
 
@@ -1314,7 +1537,7 @@ Cox-process arrivals, AR latent intensity, Poisson counts, Gamma work sizes, agg
 ### Carbon
 
 - Meta annual **reported location Scope 2**.
-- **eGRID NWPP × Meta MWh** independent physical benchmark.
+- **eGRID NWPP × Meta MWh** is a **methodology/accounting consistency benchmark**, not fully independent external validation (both sides use Meta campus MWh).
 - **PACW EIA consumed CO2** as regional hourly **relative shape** (optional).
 - Fuel/import score: **sensitivity proxy only**.
 - None of these is a Meta-specific marginal-emissions model.
@@ -1327,11 +1550,17 @@ Cox-process arrivals, AR latent intensity, Poisson counts, Gamma work sizes, agg
 
 ## 7. Validation and predictive accuracy
 
-Scorecard: [`validation_scorecard.csv`](../outputs/pipeline_report/validation_scorecard.csv). Evidence types A–F are separated on purpose.
+Scorecard: [`validation_scorecard.csv`](../outputs/pipeline_report/validation_scorecard.csv). Evidence types A–F are separated on purpose. Type E is **not** “independent external validation”: eGRID is a methodology/accounting consistency benchmark; 2011 PUE is a design/assumption consistency check.
 
-**Electricity.** Max absolute annual residual in `conditional_annual_compare.csv` is numerically zero. That is **closure**, not forecast skill.
+**Electricity.** Max absolute annual residual in `conditional_annual_compare.csv` is numerically zero. That is **calibration closure**, not forecast skill.
 
 **Water — primary predictive figure:** [Figure 3](../outputs/pipeline_report/figures/fig03_water_model_accuracy.png).
+
+The 2023–2024 holdout contains **only two years**. MAE, MAPE, percent error, and skill versus the training-mean baseline are **informative diagnostics rather than strong statistical evidence**. Naive baselines (training mean, training median, 2022 persistence) are frozen from training observations through 2022 and were **not** entered into model selection.
+
+Expanding-window one-step MAPE for the selected energy-only candidate is a **train-period selection metric**. Full-training fitted/historical values are **not** those expanding-window predictions. 2023–2024 remain untouched holdout predictions.
+
+{baseline_md}
 
 Conditional global scale holdout (Meta annual withdrawal):
 
@@ -1339,7 +1568,7 @@ Conditional global scale holdout (Meta annual withdrawal):
 - 2024: **{float(hold.loc[hold.year.eq(2024),'water_pct_error'].iloc[0]):+.1f}%**
 - Holdout MAPE: **{float(hold.water_pct_error.abs().mean()):.1f}%**
 
-Selected annual energy-only model holdout (median prediction):
+Selected annual energy-only model published ensemble-median diagnostic:
 
 - 2023: **{float(stoch.loc[stoch.year.eq(2023),'water_train_only_error_pct'].iloc[0]):+.1f}%**
 - 2024: **{float(stoch.loc[stoch.year.eq(2024),'water_train_only_error_pct'].iloc[0]):+.1f}%**
@@ -1347,11 +1576,13 @@ Selected annual energy-only model holdout (median prediction):
 
 Train-period water fit is mixed (conditional 2020 **−50%**, 2022 **+70%**). Retrospective stochastic water **closure** to reported annual withdrawal is **not** predictive accuracy.
 
-**External water:** [Figure 4](../outputs/pipeline_report/figures/fig04_external_water_context.png). Series are aligned, never stacked as a single campus total.
+**External water:** [Figure 4](../outputs/pipeline_report/figures/fig04_external_water_context.png). Series are aligned, never stacked as a single campus total. OWRD City/POD comparisons are **boundary/context consistency, not Meta prediction error**. USGS `availab = strflow - consum` is **structural QA, not hydrologic validation**.
 
-**Carbon:** [Figure 5](../outputs/pipeline_report/figures/fig05_carbon_benchmark.png). eGRID is a benchmark. 2024 percentage difference vs Meta location Scope 2 is about **−0.036%**. PACW hourly intensity is coverage, not campus telemetry.
+**Carbon:** [Figure 5](../outputs/pipeline_report/figures/fig05_carbon_benchmark.png). eGRID × Meta MWh vs Meta location Scope 2 is a **methodology/accounting consistency benchmark**, not fully independent external validation. 2024 percentage difference is about **−0.036%**. PACW hourly intensity is coverage, not campus telemetry.
 
 **Gray-box week:** [Figure 6](../outputs/pipeline_report/figures/fig06_graybox_hot_week.png). Selection: {week_meta['rule']}. Selected week start: **{week_meta['week_start_local'][:10]}**, mean dry-bulb **{week_meta['mean_t_db_C']:.2f} °C**, complete weeks considered: {week_meta['n_complete_weeks_considered']}.
+
+**Gray-box assumption sensitivity:** [Figure 7](../outputs/pipeline_report/figures/fig07_graybox_parameter_sensitivity.png). Only parameters with a repository-documented range are perturbed. This is not a confidence interval and not a new calibration.
 
 ---
 
@@ -1412,7 +1643,11 @@ def main() -> None:
     sources = write_source_inventory()
     quantities = write_quantity_registry()
     models = write_model_registry()
+    write_source_quantity_edges()
+    write_model_io_edges()
+    write_parameter_registry()
     scorecard = write_validation_scorecard()
+    baselines = pd.read_csv(OUT / "water_holdout_baseline_compare.csv")
     write_source_tree_mmd(sources)
     write_quantity_mmd()
     render_source_tree_png()
@@ -1429,7 +1664,7 @@ def main() -> None:
 
     figure1_coverage(meta, water_ctx, pacw)
     figure2_ground_truth(meta, events)
-    figure3_water_accuracy(cond, stoch, diag)
+    figure3_water_accuracy(cond, stoch, diag, baselines)
     figure4_external_water(water_ctx, meta)
     figure5_carbon(egrid, pacw)
 
@@ -1448,13 +1683,21 @@ def main() -> None:
     (OUT / "figure6_week_selection.json").write_text(json.dumps(week_meta, indent=2), encoding="utf-8")
     figure6_graybox_week(week, week_meta)
 
-    write_markdown(sources, quantities, models, scorecard, week_meta)
+    sens, sens_base = write_graybox_parameter_sensitivity()
+    figure_graybox_sensitivity(sens, sens_base)
+
+    write_markdown(sources, quantities, models, scorecard, week_meta, baselines, sens)
 
     required_out = [
         OUT / "data_source_inventory.csv",
         OUT / "model_quantity_registry.csv",
         OUT / "model_registry.csv",
+        OUT / "source_quantity_edges.csv",
+        OUT / "model_io_edges.csv",
+        OUT / "model_parameter_registry.csv",
         OUT / "validation_scorecard.csv",
+        OUT / "water_holdout_baseline_compare.csv",
+        OUT / "graybox_parameter_sensitivity.csv",
         OUT / "data_source_tree.png",
         OUT / "data_source_tree.mmd",
         OUT / "model_quantity_dependency.png",
@@ -1465,6 +1708,7 @@ def main() -> None:
         FIG / "fig04_external_water_context.png",
         FIG / "fig05_carbon_benchmark.png",
         FIG / "fig06_graybox_hot_week.png",
+        FIG / "fig07_graybox_parameter_sensitivity.png",
         ROOT / "docs" / "PIPELINE_DATA_MODEL_REPORT.md",
     ]
     missing = [p.as_posix() for p in required_out if not p.exists()]

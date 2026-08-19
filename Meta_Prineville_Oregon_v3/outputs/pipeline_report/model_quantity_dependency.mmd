@@ -1,26 +1,143 @@
-%% Quantity dependency (implemented chain). Arrow labels are provenance.
-flowchart LR
-  WLscen[workload scenario Cox/AR/Poisson/Gamma] -->|scenario| U[utilization index]
-  U -->|scenario| Shape[IT-power shape]
-  MetaE[Meta annual facility electricity] -->|reported| Closure[latent IT-power scale]
-  Shape -->|scenario| Closure
-  WX[KRDM weather] -->|measured| Gray[gray-box physics]
-  Closure -->|fitted| Gray
-  Gray -->|derived| Heat[IT heat ≈ P_IT]
-  Gray -->|derived| Mode[cooling mode]
-  Gray -->|derived| Fac[facility electricity hourly]
-  Gray -->|derived| Evap[raw evaporation]
-  Fac -->|fitted closure| MetaE
-  Evap -->|proxy| Wscale[train-only water scale / energy-only candidate]
-  MetaW[Meta annual withdrawal] -->|reported| Wscale
-  Wscale -->|proxy| Wpred[predicted annual water]
-  Fac -->|derived| PACW[PACW / eGRID]
-  PACW -->|reported/derived| C[location carbon]
-  MetaS2[Meta location Scope 2] -->|reported| C
-  City[OWRD City production] -->|reported| Ctx[regional water context]
-  POD[Vitesse/Facebook POD] -->|reported| Ctx
-  USGS[USGS IWA/PS/irrigation through 2020] -->|proxy| Ctx
-  Gen[Oregon CAMPD/EIA/cooling] -->|measured| GW[generator water/emissions]
-  GW -->|unavailable| Attr[site attribution currently missing]
-  DEQ[DEQ backup] -->|reported| Onsite[onsite backup emissions]
-  GWnet[groundwater network] -->|unavailable| Head[head/storage/recharge not identified]
+%% Generated from outputs/pipeline_report/model_io_edges.csv
+%% Conditional reconstruction, stochastic scenario, and annual water candidates are separate.
+%% Energy-only water model has no evaporation input.
+flowchart TB
+  classDef mdl fill:#fef3c7,stroke:#b45309,color:#111
+  classDef qty fill:#e0f2fe,stroke:#0369a1,color:#111
+
+  subgraph COND[Conditional branch]
+    Q_E_FAC_C[Q_E_FAC Meta annual facility electricity]
+    Q_WEATHER_C[Q_WEATHER]
+    M_ELEC_CLOSURE[M_ELEC_CLOSURE annual latent IT-scale closure]
+    Q_P_IT_C[Q_P_IT fitted hourly IT power]
+    Q_P_FAC_C[Q_P_FAC fitted hourly facility power]
+    M_GRAYBOX[M_GRAYBOX gray-box evaporation]
+    Q_W_EVAP_C[Q_W_EVAP raw evaporation]
+    M_WATER_SCALE_GLOBAL[M_WATER_SCALE_GLOBAL train-only conditional water scale]
+    Q_W_WITH_C[Q_W_WITH annual water target]
+    Q_WATER_PROXY[Q_WATER_PROXY annual water prediction]
+  end
+  Q_E_FAC_C -->|target/input| M_ELEC_CLOSURE
+  Q_WEATHER_C -->|input| M_ELEC_CLOSURE
+  Q_WEATHER_C -->|input| M_GRAYBOX
+  M_ELEC_CLOSURE -->|output| Q_P_IT_C
+  M_ELEC_CLOSURE -->|output| Q_P_FAC_C
+  Q_P_IT_C -->|input| M_GRAYBOX
+  M_GRAYBOX -->|output| Q_W_EVAP_C
+  M_GRAYBOX -->|output| Q_P_FAC_C
+  Q_W_EVAP_C -->|input| M_WATER_SCALE_GLOBAL
+  Q_W_WITH_C -->|target| M_WATER_SCALE_GLOBAL
+  M_WATER_SCALE_GLOBAL -->|output| Q_WATER_PROXY
+
+  subgraph STOCH[Stochastic branch — separate from conditional reconstruction]
+    Q_ARRIVALS[Q_ARRIVALS scenario workload]
+    Q_UTILIZATION[Q_UTILIZATION / IT-power shape]
+    Q_E_FAC_S[Q_E_FAC Meta annual electricity]
+    M_STOCHASTIC[M_STOCHASTIC annual scaling]
+    Q_P_FAC_S[Q_P_FAC scenario facility]
+    Q_W_EVAP_S[Q_W_EVAP scenario cooling/evaporation]
+  end
+  Q_ARRIVALS -->|output| M_STOCHASTIC
+  M_STOCHASTIC -->|output| Q_UTILIZATION
+  Q_E_FAC_S -->|target| M_STOCHASTIC
+  M_STOCHASTIC -->|output| Q_P_FAC_S
+  M_STOCHASTIC -->|output| Q_W_EVAP_S
+
+  subgraph WATER[Separate annual water predictive models]
+    Q_E_FAC_W[Q_E_FAC]
+    Q_W_EVAP_W[Q_W_EVAP gray-box annual raw evaporation]
+    Q_W_WITH_W[Q_W_WITH]
+    M_WATER_ENERGY_NULL[M_WATER_ENERGY_NULL energy-only — no evaporation input]
+    M_WATER_EVAP_PHYS[M_WATER_EVAP_PHYS evaporation-only]
+    M_WATER_TWOCOMP[M_WATER_TWOCOMP electricity + evaporation NNLS]
+  end
+  Q_E_FAC_W -->|input| M_WATER_ENERGY_NULL
+  Q_W_WITH_W -->|target| M_WATER_ENERGY_NULL
+  Q_W_EVAP_W -->|input| M_WATER_EVAP_PHYS
+  Q_W_WITH_W -->|target| M_WATER_EVAP_PHYS
+  Q_E_FAC_W -->|input| M_WATER_TWOCOMP
+  Q_W_EVAP_W -->|input| M_WATER_TWOCOMP
+  Q_W_WITH_W -->|target| M_WATER_TWOCOMP
+
+  subgraph EXT[Parallel external / contextual evidence — not producer/consumer of each other]
+    Q_CITY_PROD[Q_CITY_PROD OWRD City production]
+    Q_DIRECT_POD[Q_DIRECT_POD Vitesse/Facebook POD]
+    Q_USGS_PS[Q_USGS_PS HUC12 public-supply]
+    Q_IWA_AVAIL[Q_IWA_AVAIL routed IWA availability]
+    Q_IRRIGATION[Q_IRRIGATION HUC12 irrigation]
+    M_OWRD_EXTERNAL[M_OWRD_EXTERNAL]
+    M_IWA_IDENTITY[M_IWA_IDENTITY]
+    Q_SCOPE2_META[Q_SCOPE2_META]
+    Q_SCOPE2_EGRID[Q_SCOPE2_EGRID]
+    M_EGRID_BENCH[M_EGRID_BENCH accounting benchmark]
+  end
+  Q_CITY_PROD -->|validation| M_OWRD_EXTERNAL
+  Q_DIRECT_POD -->|validation| M_OWRD_EXTERNAL
+  Q_IWA_STRFLOW[Q_IWA_STRFLOW] -->|input| M_IWA_IDENTITY
+  Q_IWA_CONSUM[Q_IWA_CONSUM] -->|input| M_IWA_IDENTITY
+  M_IWA_IDENTITY -->|output| Q_IWA_AVAIL
+  Q_E_FAC_W -->|input| M_EGRID_BENCH
+  M_EGRID_BENCH -->|output| Q_SCOPE2_EGRID
+  Q_SCOPE2_META -->|benchmark| M_EGRID_BENCH
+
+  %% Remaining canonical model_io edges (same table; IDs not duplicated above)
+  subgraph REST[Other canonical model I/O from model_io_edges.csv]
+    M_CHANGEPOINT[M_CHANGEPOINT]
+    M_FUEL_IMPORT[M_FUEL_IMPORT]
+    M_OR_GEN_QC[M_OR_GEN_QC]
+    M_PACW_CI[M_PACW_CI]
+    M_WATER_SCALE_ONEBREAK[M_WATER_SCALE_ONEBREAK]
+    Q_BACKLOG[Q_BACKLOG]
+    Q_CI_PACW[Q_CI_PACW]
+    Q_COOLING_MODE[Q_COOLING_MODE]
+    Q_COOL_LOAD[Q_COOL_LOAD]
+    Q_EXECUTED[Q_EXECUTED]
+    Q_E_FAC[Q_E_FAC]
+    Q_E_IT[Q_E_IT]
+    Q_FUEL_IMPORT_PROXY[Q_FUEL_IMPORT_PROXY]
+    Q_GEN_OR[Q_GEN_OR]
+    Q_GEN_WATER[Q_GEN_WATER]
+    Q_GRID_DEMAND[Q_GRID_DEMAND]
+    Q_HEAT_RATE[Q_HEAT_RATE]
+    Q_IT_HEAT[Q_IT_HEAT]
+    Q_PUE[Q_PUE]
+    Q_P_COOL[Q_P_COOL]
+    Q_P_FAC[Q_P_FAC]
+    Q_P_IT[Q_P_IT]
+    Q_THERMAL_STATE[Q_THERMAL_STATE]
+    Q_WATER_PROXY[Q_WATER_PROXY]
+    Q_WEATHER[Q_WEATHER]
+    Q_WUE_DIR[Q_WUE_DIR]
+    Q_W_EVAP[Q_W_EVAP]
+    Q_W_WITH[Q_W_WITH]
+    Q_XI[Q_XI]
+  end
+  M_ELEC_CLOSURE -->|output| Q_E_IT
+  M_ELEC_CLOSURE -->|output| Q_PUE
+  M_GRAYBOX -->|output| Q_IT_HEAT
+  M_GRAYBOX -->|output| Q_COOL_LOAD
+  M_GRAYBOX -->|output| Q_COOLING_MODE
+  M_GRAYBOX -->|output| Q_P_COOL
+  M_GRAYBOX -->|output| Q_PUE
+  M_GRAYBOX -->|output| Q_THERMAL_STATE
+  M_WATER_SCALE_ONEBREAK -->|input| Q_W_EVAP
+  M_WATER_SCALE_ONEBREAK -->|target| Q_W_WITH
+  M_STOCHASTIC -->|output| Q_EXECUTED
+  M_STOCHASTIC -->|output| Q_BACKLOG
+  M_STOCHASTIC -->|input| Q_WEATHER
+  M_STOCHASTIC -->|output| Q_P_IT
+  M_STOCHASTIC -->|target| Q_W_WITH
+  M_STOCHASTIC -->|target| Q_SCOPE2_META
+  M_STOCHASTIC -->|input| Q_XI
+  M_PACW_CI -->|input| Q_CI_PACW
+  M_PACW_CI -->|input| Q_P_FAC
+  M_PACW_CI -->|target| Q_SCOPE2_META
+  M_FUEL_IMPORT -->|output| Q_FUEL_IMPORT_PROXY
+  M_FUEL_IMPORT -->|input| Q_GRID_DEMAND
+  M_CHANGEPOINT -->|input| Q_E_FAC
+  M_CHANGEPOINT -->|input| Q_W_WITH
+  M_CHANGEPOINT -->|input| Q_WUE_DIR
+  M_OWRD_EXTERNAL -->|input| Q_WATER_PROXY
+  M_OR_GEN_QC -->|input| Q_GEN_OR
+  M_OR_GEN_QC -->|input| Q_GEN_WATER
+  M_OR_GEN_QC -->|input| Q_HEAT_RATE

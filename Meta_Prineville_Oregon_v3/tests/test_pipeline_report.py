@@ -10,12 +10,17 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from pipeline_report_catalog import (  # noqa: E402
+    BOUNDARY_VOCABULARY,
     MODEL_CLASSES,
     PROVENANCE_CLASSES,
     REQUIRED_GLOSSARY_QUANTITY_IDS,
+    model_io_edges,
     model_registry,
+    parameter_registry,
     quantity_registry,
     source_inventory,
+    source_quantity_edges,
+    validate_lineage_ids,
 )
 
 REPORT = ROOT / "outputs" / "pipeline_report"
@@ -127,3 +132,90 @@ def test_required_report_artifacts_if_built():
     score_text = score.astype(str).apply(lambda c: c.str.lower()).to_numpy().astype(str)
     assert any("holdout" in cell for cell in score_text.ravel())
     assert len(score) >= 8
+    for extra in (
+        REPORT / "source_quantity_edges.csv",
+        REPORT / "model_io_edges.csv",
+        REPORT / "model_parameter_registry.csv",
+        REPORT / "water_holdout_baseline_compare.csv",
+        REPORT / "graybox_parameter_sensitivity.csv",
+        REPORT / "figures" / "fig07_graybox_parameter_sensitivity.png",
+    ):
+        assert extra.exists(), extra.as_posix()
+    assert "methodology/accounting consistency" in md.lower()
+    assert "design/assumption consistency" in md.lower() or "falsification check" in md.lower()
+    assert "2023–2024 water-model holdout" in md or "2023-2024 water-model holdout" in md.lower()
+    # eGRID / PUE must not be classified as independent external validation
+    egrid_rows = score[score["model_or_quantity"].astype(str).str.contains("eGRID", case=False)]
+    pue_rows = score[score["model_or_quantity"].astype(str).str.contains("PUE", case=False)]
+    assert len(egrid_rows) and len(pue_rows)
+    assert not egrid_rows["evidence_type"].astype(str).str.contains("independent external", case=False).any()
+    assert not pue_rows["evidence_type"].astype(str).str.contains("independent external", case=False).any()
+    assert egrid_rows["evidence_type"].astype(str).str.contains("accounting", case=False).any()
+    assert pue_rows["evidence_type"].astype(str).str.contains("design|assumption|falsification", case=False, regex=True).any()
+    assert "boundary_id" in qty.columns
+    assert "accounting_boundary_note" in qty.columns
+
+
+def test_lineage_edges_reference_canonical_ids_and_no_duplicates():
+    validate_lineage_ids()
+    sids = {r["source_id"] for r in source_inventory()}
+    qids = {r["quantity_id"] for r in quantity_registry()}
+    mids = {r["model_id"] for r in model_registry()}
+    sq = source_quantity_edges()
+    mio = model_io_edges()
+    sq_keys = [(e["source_id"], e["quantity_id"], e["role"]) for e in sq]
+    mio_keys = [(e["model_id"], e["quantity_id"], e["io_role"]) for e in mio]
+    assert len(sq_keys) == len(set(sq_keys))
+    assert len(mio_keys) == len(set(mio_keys))
+    for e in sq:
+        assert e["source_id"] in sids
+        assert e["quantity_id"] in qids
+        assert e["role"] in {"primary", "context", "calibration_target", "benchmark", "validation"}
+    for e in mio:
+        assert e["model_id"] in mids
+        assert e["quantity_id"] in qids
+        assert e["io_role"] in {"input", "target", "output", "benchmark", "validation"}
+    assert not any(
+        e["model_id"] == "M_WATER_ENERGY_NULL" and e["quantity_id"] == "Q_W_EVAP" for e in mio
+    )
+
+
+def test_implemented_quantities_have_valid_boundary_id():
+    for r in quantity_registry():
+        assert r["boundary_id"] in BOUNDARY_VOCABULARY, r["quantity_id"]
+        if r["provenance_class"] != "unavailable":
+            assert r["boundary_id"] != "NOT_IDENTIFIED", r["quantity_id"]
+            assert r["accounting_boundary_note"]
+
+
+def test_parameter_registry_includes_graybox_and_unused_return_air():
+    rows = parameter_registry()
+    by_name = {(r["model_id"], r["parameter"]): r for r in rows}
+    for name in (
+        "supply_target_C",
+        "return_air_C",
+        "evap_effectiveness",
+        "server_deltaT_C",
+        "dry_air_cp_J_kgK",
+        "fan_fraction_of_it",
+        "other_facility_fraction_of_it",
+        "evap_aux_fraction",
+    ):
+        assert ("M_GRAYBOX", name) in by_name, name
+    unused = by_name[("M_GRAYBOX", "return_air_C")]
+    assert unused["status"] == "unused"
+    assert unused["used_in_code"] == "no"
+
+
+def test_validation_terminology_in_scorecard_if_built():
+    path = REPORT / "validation_scorecard.csv"
+    if not path.exists():
+        return
+    score = pd.read_csv(path)
+    joined = score.astype(str).to_string().lower()
+    assert "calibration closure" in joined or "not a prediction" in joined
+    assert "structural qa" in joined
+    assert "not independent hydrologic validation" in joined
+    assert "not meta prediction error" in joined or "boundary/context consistency" in joined
+    assert "methodology/accounting consistency" in joined
+    assert "design/assumption consistency" in joined or "falsification check" in joined
