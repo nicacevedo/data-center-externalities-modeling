@@ -1,7 +1,8 @@
 """Clean NOAA Global Hourly CSVs into one regular hourly weather table.
 
 Output columns are sufficient for the Prineville cooling model. This script preserves
-source QC codes, rejects NOAA missing sentinels/impossible physical values, and computes
+source QC codes, rejects NOAA missing sentinels/impossible physical values, applies
+official NCEI/ISD QC to temperature, dew point, and sea-level pressure, and computes
 RH and pressure-aware wet-bulb temperature. Long gaps remain missing by design.
 """
 from pathlib import Path
@@ -18,8 +19,73 @@ except Exception:
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT/'data'/'raw'/'noaa'
 OUT = ROOT/'data'/'processed'/'weather_krdm_hourly.csv'
+QC_FREQ_OUT = ROOT/'outputs'/'weather_ks39'/'krdm_ncei_qc_frequencies.csv'
 STATION = '72692024230'
 ELEV_M = 929.0
+
+# NCEI ISD additional-data quality codes (isd-format-document.pdf).
+# Passed gross / all QC: 0, 1, 4, 5, 9.
+# Editorial/manual retained by official meaning:
+#   A = flagged suspect but accepted as a good value
+#   C = AWOS whole °C; automated QC applied, treated as valid
+#   M = manual change from QC analysis
+#   P = replaced by validator
+# Suspect/erroneous, including NCEI-source variants: 2, 3, 6, 7 — reject.
+# Unknown / undocumented (I, R, U, empty, other): reject conservatively.
+NCEI_QC_PASSED = frozenset({"0", "1", "4", "5", "9"})
+NCEI_QC_EDITORIAL_RETAIN = frozenset({"A", "C", "M", "P"})
+NCEI_QC_SUSPECT_ERRONEOUS = frozenset({"2", "3", "6", "7"})
+
+
+def ncei_qc_code(x) -> str:
+    if x is None or (isinstance(x, float) and not np.isfinite(x)):
+        return ""
+    s = str(x).strip().upper()
+    if s in {"", "NAN", "NONE", "NAT"}:
+        return ""
+    return s[:1]
+
+
+def ncei_qc_usable(code) -> bool:
+    c = ncei_qc_code(code)
+    return c in NCEI_QC_PASSED or c in NCEI_QC_EDITORIAL_RETAIN
+
+
+def ncei_qc_action(code) -> str:
+    c = ncei_qc_code(code)
+    if ncei_qc_usable(c):
+        return "retain"
+    if c in NCEI_QC_SUSPECT_ERRONEOUS:
+        return "reject_suspect_erroneous"
+    return "reject_unknown_conservative"
+
+
+def _join_qc_codes(series) -> str:
+    codes = sorted({ncei_qc_code(x) for x in series if ncei_qc_code(x)})
+    return ";".join(codes)
+
+
+def write_krdm_qc_frequencies(raw: pd.DataFrame, path: Path) -> pd.DataFrame:
+    rows = []
+    n = len(raw)
+    for var, col in (("TMP", "tmp_qc"), ("DEW", "dew_qc"), ("SLP", "slp_qc")):
+        codes = raw[col].map(ncei_qc_code)
+        codes = codes.mask(codes.eq(""), "(empty)")
+        vc = codes.value_counts(dropna=False)
+        for code, cnt in vc.items():
+            raw_code = "" if code == "(empty)" else str(code)
+            rows.append({
+                "variable": var,
+                "qc_code": code,
+                "n": int(cnt),
+                "pct": 100.0 * int(cnt) / n if n else np.nan,
+                "action": ncei_qc_action(raw_code),
+            })
+    out = pd.DataFrame(rows)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    out.to_csv(path, index=False)
+    out.to_csv(ROOT / "outputs" / "krdm_ncei_qc_frequencies.csv", index=False)
+    return out
 
 
 def scaled_with_qc(x, scale=10.0, missing=9999):
@@ -102,26 +168,47 @@ def read_one(path: Path):
     return z
 
 
+def apply_ncei_qc(raw: pd.DataFrame) -> pd.DataFrame:
+    """Null T/Td/SLP that fail documented NCEI QC. Preserve original QC codes."""
+    z = raw.copy()
+    z['t_db_C'] = z['t_db_C'].where(z['tmp_qc'].map(ncei_qc_usable))
+    z['t_dew_C'] = z['t_dew_C'].where(z['dew_qc'].map(ncei_qc_usable))
+    z['slp_hPa'] = z['slp_hPa'].where(z['slp_qc'].map(ncei_qc_usable))
+    return z
+
+
 def main():
     files=sorted(RAW.glob(f'{STATION}_*.csv'))
     if not files:
         raise SystemExit(f'No NOAA files found in {RAW}. Run download_noaa_global_hourly.py first.')
     raw=pd.concat([read_one(p) for p in files], ignore_index=True)
+    write_krdm_qc_frequencies(raw, QC_FREQ_OUT)
+    raw=apply_ncei_qc(raw)
     raw['hour']=raw['timestamp_utc'].dt.floor('h')
     # Multiple sub-hourly obs -> arithmetic hourly means for continuous variables.
     h=raw.groupby('hour',as_index=False).agg(
         t_db_C=('t_db_C','mean'), t_dew_C=('t_dew_C','mean'), slp_hPa=('slp_hPa','mean'),
         wind_m_s=('wind_m_s','mean'), precip_mm=('precip_mm','sum'),
+        tmp_qc=('tmp_qc', _join_qc_codes), dew_qc=('dew_qc', _join_qc_codes),
+        slp_qc=('slp_qc', _join_qc_codes),
         source_file=('source_file',lambda x:';'.join(sorted(set(x))))
     ).rename(columns={'hour':'timestamp_utc'})
     h['rh_pct']=[rh_from_t_td(t,td) for t,td in zip(h.t_db_C,h.t_dew_C)]
     h['pressure_Pa']=[station_pressure_from_slp(p,t) for p,t in zip(h.slp_hPa,h.t_db_C)]
+    h['pressure_method']=np.where(
+        h['slp_hPa'].notna(),
+        'krdm_slp_derived',
+        'krdm_standard_atmosphere_fallback',
+    )
     h['t_wb_C']=[wetbulb(t,td,p,rh) for t,td,p,rh in zip(h.t_db_C,h.t_dew_C,h.pressure_Pa,h.rh_pct)]
     # Reindex to a complete regular UTC hourly grid; do not fill long gaps.
     idx=pd.date_range(h.timestamp_utc.min(),h.timestamp_utc.max(),freq='h',tz='UTC')
     h=h.set_index('timestamp_utc').reindex(idx).rename_axis('timestamp_utc').reset_index()
+    h.loc[h['slp_hPa'].notna(), 'pressure_method'] = 'krdm_slp_derived'
+    h.loc[h['pressure_Pa'].notna() & h['slp_hPa'].isna(), 'pressure_method'] = 'krdm_standard_atmosphere_fallback'
+    h['pressure_method'] = h['pressure_method'].fillna('')
     h['station']='KRDM / 72692024230'
-    h['provenance']='measured NOAA station observation; hourly aggregation; derived RH/wet-bulb'
+    h['provenance']='measured NOAA station observation; NCEI QC on T/Td/SLP; hourly aggregation; derived RH/wet-bulb'
     OUT.parent.mkdir(parents=True,exist_ok=True)
     h.to_csv(OUT,index=False)
     miss=100*h['t_db_C'].isna().mean()

@@ -26,6 +26,7 @@ It is **not** a claim that public data identify Meta's private hourly IT workloa
 - `data/canonical/municipal_source_huc12_crosswalk.csv`: City wells → HUC12 using official coordinates only.
 - `data/processed/owrd/`, `data/processed/usgs_nwaa/`, `data/processed/water/`: source-specific then integrated water tables (`python run_prineville.py water` / `usgs` / `water-context`).
 - `data/raw/eia930/historical/PACW.xlsx` and `src/prepare_eia930.py`: canonical PACW EIA-930 history (`python run_prineville.py eia`).
+- `data/raw/ferc_form_714/` and `src/prepare_ferc714.py`: FERC Form 714 PacifiCorp-West monthly and East+West hourly filings, 2011-2018 (`python run_prineville.py ferc`). Does not overwrite `pacw_hourly.csv`.
 - `data/raw/egrid/` and `src/prepare_egrid.py`: EPA eGRID subregion output rates × Meta campus MWh (`python run_prineville.py egrid`).
 - `data/raw/deq_air/` and `data/raw/deq_ghg/`: Oregon DEQ Vitesse 07-0037 air-permit PDFs (2012-2025) and DEQ electricity-supplier GHG workbooks. Independent onsite-generation module (`python run_prineville.py deq`); not grid Scope 2.
 - `src/prepare_owrd_wateruse.py`: deterministic water-year/calendar-month normalization and confidence-aware source joining.
@@ -82,13 +83,13 @@ python src/download_madis_ks39.py --export-only
 python src/prepare_weather_ks39.py
 ```
 
-Or: `python run_prineville.py weather-ks39`.
+Or, from cached NOAA/MADIS files only (no download): `python run_prineville.py weather`. `python run_prineville.py weather-ks39` additionally downloads MADIS and is **not** part of `full`.
 
 `prepare_weather.py` writes the KRDM-only baseline `data/processed/weather_krdm_hourly.csv` and does **not** overwrite the canonical model file. `prepare_weather_ks39.py` writes `weather_ks39_hourly.csv` and then the canonical `data/processed/weather_hourly.csv` with row-level `weather_source` / `weather_method` provenance.
 
 Exact KS39 coverage is in `outputs/ks39_coverage_annual.csv` (and monthly/gap files). The `madis_test/` sampled 2011–2024 rates are discovery estimates, not exact completeness.
 
-The KRDM cleaner parses NOAA scaled temperature/dew-point/pressure fields, removes missing sentinels/failed values, resamples to a regular hourly UTC index, computes RH, and uses PsychroLib for pressure-aware wet-bulb temperature. KS39 uses MADIS documented QC (DD/QCR); station pressure is **derived** from altimeter setting and station elevation (ICAO standard atmosphere), not measured station pressure. RH and wet-bulb remain derived.
+The KRDM cleaner parses NOAA scaled temperature/dew-point/pressure fields, applies official NCEI/ISD QC to temperature, dew point, and sea-level pressure, removes missing sentinels/failed values, resamples to a regular hourly UTC index, computes RH, and uses PsychroLib for pressure-aware wet-bulb temperature. KS39 uses MADIS documented QC (DD/QCR); station pressure is **derived** from altimeter setting and station elevation (ICAO standard atmosphere), not measured station pressure. Canonical RH and wet-bulb are recomputed after the final mixed T/Td/pressure selection. Facility-year accounting uses Prineville local calendar years (`America/Los_Angeles`); UTC remains the unique physical-hour key.
 
 **Fallback rule:** if a year is absent or has material gaps, do not silently interpolate long gaps. Missing KS39 hours are filled from observed KRDM when that KRDM hour exists, and left missing otherwise.
 
@@ -151,7 +152,7 @@ IWA ends in **2020-09** and cannot by itself support the 2021–2024 portion of 
 
 ### Stage 3.6 — source-aware water context (no calibration)
 
-Join existing OWRD monthly products with USGS HUC12 context, KRDM monthly weather, and Meta annual campus withdrawal **without summing or equating them**.
+Join existing OWRD monthly products with USGS HUC12 context, canonical KS39/KRDM monthly weather, and Meta annual campus withdrawal **without summing or equating them**.
 
 ```bash
 python run_prineville.py water-context
@@ -198,13 +199,23 @@ python src/download_eia930.py --discover
 python src/download_eia930.py --start 2019-01-01 --end 2024-12-31
 ```
 
+FERC Form 714 filings under `data/raw/ferc_form_714/` (leave untouched) supply 2011–2018 **reported PacifiCorp-West monthly** NEL/generation/interchange/peak/minimum and **PacifiCorp East+West combined** hourly planning-area demand. Parse them with:
+
+```bash
+python run_prineville.py ferc
+```
+
+West monthly values are FERC-reported PACW-West evidence. The East+West hourly series is the combined planning-area shape and is **never** labeled PACW-West. A FERC-only affine backcast (`data/processed/ferc714/pacw_hourly_backcast.csv`) uses East+West hours for intramonth shape and West monthly NEL/peak/minimum for level. It is a constrained proxy, not reported PACW hourly demand. Overlap checks vs EIA-930 are in `outputs/ferc714_eia930_validation.csv`. Optional `data/processed/pacw_demand_hourly_extended.csv` keeps EIA-reported demand where available and the FERC proxy only before EIA coverage, with row-level provenance. **Never overwrite** `data/processed/pacw_hourly.csv`. FERC is not used for consumed CO2 intensity, fuel mix, hourly interchange, campus electricity, or marginal emissions.
+
+FERC Schedule 2 hours are hour-ending local Pacific prevailing time. EIA-930 PACW hours are hour-ending UTC. Keep those conventions separate.
+
 EPA eGRID annual subregion **total output emission rates** are the independent annual physical-grid cross-check. They are not PACW hourly data and not campus meters:
 
 ```bash
 python run_prineville.py egrid
 ```
 
-`python run_prineville.py grid` runs EIA-930 preparation then eGRID. Do not put these workbook rebuilds inside `audit`.
+`python run_prineville.py grid` runs EIA-930 preparation, then FERC 714 preparation/validation, then eGRID. Do not put these workbook rebuilds inside `audit`.
 
 Use:
 - PACW demand, demand forecast, net generation, total interchange, bilateral interchange, and generation-by-fuel as **regional balancing-authority context** (workbook from 2015-07-01; `NG:*` fuel mix and EIA-reported CO2 intensity from 2018-07);
@@ -364,6 +375,14 @@ python run_prineville.py report
 ```
 
 Rebuilds registries, diagrams, six figures, and `docs/PIPELINE_DATA_MODEL_REPORT.md` from existing outputs. Does not download data or change modeling logic. Fails if prerequisite artifacts are missing.
+
+### Whole pipeline from existing raw files
+
+```bash
+python run_prineville.py full
+```
+
+Thin orchestration only: annual targets/permits/OWRD audit → weather (cached KRDM+KS39, no MADIS download) → USGS panels/crosswalk/audit → grid (EIA-930 then FERC 714 then eGRID) → Oregon generators → DEQ → water-context → conditional reconstruction/OWRD validation → stochastic simulation → pipeline report. Expects raw source files to already exist and does not intentionally acquire new external data. `conditional` already rebuilds reconstruction, so `validate` is not repeated.
 
 ## What is missing, and how to fill it
 

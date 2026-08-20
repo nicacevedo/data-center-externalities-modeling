@@ -1,4 +1,9 @@
-"""Run the USGS NWAA HUC12 water module: organize, download, panels, QA, crosswalk."""
+"""Run the USGS NWAA HUC12 water module.
+
+Order is required so the audit cannot validate a stale municipal HUC12 crosswalk:
+
+organize/reuse raw → panels → municipal-source HUC12 crosswalk → audit.
+"""
 from __future__ import annotations
 
 import shutil
@@ -34,9 +39,9 @@ def main() -> None:
     from audit_usgs_nwaa import main as audit_main
     from build_municipal_huc12_crosswalk import main as crosswalk_main
 
-    download_main()
+    download_main()  # organize/reuse existing raw; skip files that already exist
     panel_main()
-    crosswalk_main()
+    crosswalk_main()  # municipal-source HUC12 crosswalk before audit
     audit_main()
     archive_legacy_scripts()
 

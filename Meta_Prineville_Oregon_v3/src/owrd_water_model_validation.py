@@ -136,18 +136,18 @@ def load_existing_hourly() -> pd.DataFrame:
 
 
 def modeled_monthly_campus_withdrawal(hourly: pd.DataFrame) -> pd.DataFrame:
-    """Aggregate reconstructed hourly campus water to UTC calendar months.
+    """Aggregate reconstructed hourly campus water to Prineville local calendar months.
 
-    UTC months match the reconstruction's year assignment. This preserves the
+    Local months match the reconstruction's year_local assignment. This preserves the
     identity that monthly modeled water sums to the existing annual water_pred_m3
     series. That annual series is a train-only prediction, not a forced closure
     to Meta-reported withdrawal.
     """
 
     z = hourly.copy()
-    ts_naive_utc = z["timestamp_utc"].dt.tz_convert("UTC").dt.tz_localize(None)
-    z["calendar_month"] = ts_naive_utc.dt.to_period("M").dt.to_timestamp()
-    z["calendar_year"] = z["calendar_month"].dt.year
+    local = z["timestamp_utc"].dt.tz_convert("America/Los_Angeles")
+    z["calendar_month"] = pd.to_datetime({"year": local.dt.year, "month": local.dt.month, "day": 1})
+    z["calendar_year"] = local.dt.year
     grouped = z.groupby(["calendar_month", "calendar_year"], dropna=False)
     out = grouped.agg(
         modeled_campus_withdrawal_m3=("water_withdrawal_proxy_m3_per_h", "sum"),
@@ -789,7 +789,11 @@ def run_checks(
 
     joined = hourly.copy()
     joined["timestamp_utc"] = pd.to_datetime(joined["timestamp_utc"], utc=True)
-    elec = joined.groupby(joined["timestamp_utc"].dt.year)["p_fac_mw"].sum().rename("modeled_mwh")
+    if "year" in joined.columns and joined["year"].notna().all():
+        year_key = pd.to_numeric(joined["year"], errors="coerce").astype(int)
+    else:
+        year_key = joined["timestamp_utc"].dt.tz_convert("America/Los_Angeles").dt.year
+    elec = joined.groupby(year_key)["p_fac_mw"].sum().rename("modeled_mwh")
     tgt = targets.set_index("year")["electricity_mwh_reported"]
     err = (elec.reindex(tgt.index) - tgt).abs().max()
     add("electricity_annual_closure_unchanged", float(err) < 1e-4, f"max_abs_mwh={float(err):.3e}")

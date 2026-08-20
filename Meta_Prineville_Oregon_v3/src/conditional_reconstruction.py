@@ -92,7 +92,10 @@ def reconstruct(target_years=None, train_end_year: int = 2022, params: Params = 
 
     w = pd.read_csv(WEATHER)
     w["timestamp_utc"] = pd.to_datetime(w["timestamp_utc"], utc=True)
-    w["year"] = w.timestamp_utc.dt.year
+    if "year_local" in w.columns and w["year_local"].notna().all():
+        w["year"] = pd.to_numeric(w["year_local"], errors="coerce").astype(int)
+    else:
+        w["year"] = w["timestamp_utc"].dt.tz_convert("America/Los_Angeles").dt.year
 
     hourly_parts = []
     annual_rows = []

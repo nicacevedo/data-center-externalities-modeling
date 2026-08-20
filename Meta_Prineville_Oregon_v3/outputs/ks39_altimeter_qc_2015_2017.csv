@@ -1,0 +1,15 @@
+year,altimeterDD,altimeterQCR,validity_bit_failed,spatial_consistency_failed,accepted_flag,rejection_reason,n,level,conclusion,hours_usable_temperature,hours_usable_pressure,n_reports_dd_Q,n_reports_qcr_65
+2015,V,0.0,False,False,accepted,accepted,10077,report,,,,,
+2015,S,0.0,False,False,accepted,accepted,4,report,,,,,
+2015,Q,65.0,False,True,rejected,dd_questioned_failed_level2_or_3,70,report,,,,,
+2016,V,0.0,False,False,accepted,accepted,18715,report,,,,,
+2016,S,0.0,False,False,accepted,accepted,51,report,,,,,
+2016,Q,65.0,False,True,rejected,dd_questioned_failed_level2_or_3,6832,report,,,,,
+2016,Z,0.0,False,False,rejected,missing_or_nonfinite,1,report,,,,,
+2017,V,0.0,False,False,accepted,accepted,25003,report,,,,,
+2017,S,0.0,False,False,accepted,accepted,22,report,,,,,
+2017,Q,65.0,False,True,rejected,dd_questioned_failed_level2_or_3,739,report,,,,,
+2017,Z,0.0,False,False,rejected,missing_or_nonfinite,1,report,,,,,
+2015,,,False,False,hourly_summary,,3390,hourly,no_parser_bug; questioned-altimeter spike is 2016-specific,3360.0,3373.0,70.0,70.0
+2016,,,False,False,hourly_summary,,8563,hourly,genuine_noaa_qc_not_parser_bug; 2016 usable-pressure drop is DD=Q / QCR=65 (master+spatial consistency); validity bit is not set; MADIS rules already exclude Q; keep KRDM pressure fallback,8490.0,6544.0,6832.0,6832.0
+2017,,,False,False,hourly_summary,,8632,hourly,no_parser_bug; questioned-altimeter spike is 2016-specific,8539.0,8485.0,739.0,739.0

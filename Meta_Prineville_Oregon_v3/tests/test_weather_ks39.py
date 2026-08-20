@@ -13,9 +13,13 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from download_madis_ks39 import hour_key, hours_to_fetch  # noqa: E402
 from madis_qc import QCR_VALIDITY, model_usable_scalar  # noqa: E402
+from prepare_weather import ncei_qc_usable, rh_from_t_td, wetbulb  # noqa: E402
 from prepare_weather_ks39 import (  # noqa: E402
+    LOCAL_END_EXCLUSIVE,
+    LOCAL_START,
     SWITCH_LOCAL,
     TZ_LOCAL,
+    canonical_utc_index,
     station_pressure_from_altimeter_pa,
 )
 
@@ -82,16 +86,24 @@ def test_canonical_year_lengths_and_dst_preserve_utc_hours():
         return
     w = pd.read_csv(path)
     w["timestamp_utc"] = pd.to_datetime(w["timestamp_utc"], utc=True)
-    w = w[(w.timestamp_utc >= "2011-01-01T00:00:00Z") & (w.timestamp_utc <= "2024-12-31T23:00:00Z")]
+    loc = w["timestamp_utc"].dt.tz_convert(TZ_LOCAL)
+    expected = canonical_utc_index()
     assert w["timestamp_utc"].is_unique
     assert w["timestamp_utc"].is_monotonic_increasing
-    for year, n in w.groupby(w.timestamp_utc.dt.year).size().items():
+    assert len(w) == len(expected)
+    assert w["timestamp_utc"].min() == expected.min()
+    assert w["timestamp_utc"].max() == expected.max()
+    assert loc.min() >= LOCAL_START
+    assert loc.max() < LOCAL_END_EXCLUSIVE
+    years = loc.dt.year if "year_local" not in w.columns else pd.to_numeric(w["year_local"], errors="coerce")
+    for year, n in w.groupby(years).size().items():
         expect = 8784 if calendar.isleap(int(year)) else 8760
-        assert int(n) == expect, f"{year} has {n} hours, expected {expect}"
+        assert int(n) == expect, f"local year {year} has {n} hours, expected {expect}"
+    assert set(pd.Series(years).astype(int).unique()) == set(range(2011, 2025))
     # Fall-back 2016-11-06 America/Los_Angeles: two local 01:00 hours, unique UTC.
-    loc = w["timestamp_utc"].dt.tz_convert(TZ_LOCAL)
     fb = loc[(loc.dt.year == 2016) & (loc.dt.month == 11) & (loc.dt.day == 6) & (loc.dt.hour == 1)]
     assert len(fb) == 2
+    assert fb.dt.tz_convert("UTC").is_unique
     # Physical UTC hours are complete; local spring-forward is a 23-hour civil day.
     utc_spring = w[(w.timestamp_utc.dt.year == 2016) & (w.timestamp_utc.dt.month == 3) & (w.timestamp_utc.dt.day == 13)]
     assert len(utc_spring) == 24
@@ -99,6 +111,104 @@ def test_canonical_year_lengths_and_dst_preserve_utc_hours():
     assert len(local_spring) == 23
     local_fall = w[(loc.dt.year == 2016) & (loc.dt.month == 11) & (loc.dt.day == 6)]
     assert len(local_fall) == 25
+    # DST does not add or drop physical hours in the local year.
+    n_2016 = int((pd.Series(years).astype(int) == 2016).sum())
+    assert n_2016 == 8784
+
+
+def test_ncei_qc_rejects_suspect_erroneous_and_keeps_passed_editorial():
+    for code in list("01459ACMP"):
+        assert ncei_qc_usable(code), code
+    for code in list("2367"):
+        assert not ncei_qc_usable(code), code
+    for code in ["I", "R", "U", "", "Z", "X"]:
+        assert not ncei_qc_usable(code), code
+
+
+def test_canonical_rh_twb_recomputed_from_final_t_td_pressure():
+    path = ROOT / "data" / "processed" / "weather_hourly.csv"
+    if not path.exists() or "pressure_method" not in pd.read_csv(path, nrows=1).columns:
+        return
+    w = pd.read_csv(path)
+    both = w.dropna(subset=["t_db_C", "t_dew_C", "pressure_Pa", "rh_pct", "t_wb_C"])
+    mix = both[both["pressure_method"].astype(str).str.startswith("krdm_") & both["weather_source"].eq("KS39")]
+    parts = [both.head(25)]
+    if len(mix):
+        parts.append(mix.head(25))
+    ks_p = both[both["pressure_method"].eq("ks39_altimeter_derived")]
+    if len(ks_p):
+        parts.append(ks_p.head(25))
+    sample = pd.concat(parts).drop_duplicates()
+    for _, r in sample.iterrows():
+        rh = rh_from_t_td(r.t_db_C, r.t_dew_C)
+        tw = wetbulb(r.t_db_C, r.t_dew_C, r.pressure_Pa, rh)
+        assert abs(rh - r.rh_pct) < 1e-9
+        assert abs(tw - r.t_wb_C) < 1e-9
+
+
+def test_pressure_method_not_mislabeled():
+    path = ROOT / "data" / "processed" / "weather_hourly.csv"
+    if not path.exists() or "pressure_method" not in pd.read_csv(path, nrows=1).columns:
+        return
+    w = pd.read_csv(path)
+    allowed = {
+        "ks39_altimeter_derived",
+        "krdm_slp_derived",
+        "krdm_standard_atmosphere_fallback",
+        "",
+    }
+    methods = w["pressure_method"].fillna("").astype(str)
+    assert methods.isin(allowed).all()
+    ks39_p = w[methods.eq("ks39_altimeter_derived")]
+    if len(ks39_p):
+        assert (ks39_p["weather_source"] == "KS39").all()
+    krdm_src = w[w["weather_source"].eq("KRDM") & w["pressure_Pa"].notna()]
+    if len(krdm_src):
+        assert krdm_src["pressure_method"].fillna("").str.startswith("krdm_").all()
+    mix = w[w["weather_source"].eq("KS39") & methods.str.startswith("krdm_")]
+    if len(mix):
+        assert mix["pressure_method"].isin(
+            ["krdm_slp_derived", "krdm_standard_atmosphere_fallback"]
+        ).all()
+
+
+def test_2016_altimeter_audit_is_noaa_qc_not_parser_bug():
+    path = ROOT / "outputs" / "ks39_altimeter_qc_2015_2017.csv"
+    if not path.exists():
+        return
+    a = pd.read_csv(path)
+    y16 = a[a["year"].eq(2016)]
+    q = y16[y16["altimeterDD"].astype(str).eq("Q")]
+    assert q["n"].sum() > 1000
+    qcr65 = y16[y16["altimeterQCR"].fillna(-1).astype(float).eq(65)]
+    assert qcr65["n"].sum() > 1000
+    notes = " ".join(y16["conclusion"].dropna().astype(str).tolist())
+    assert "genuine_noaa_qc_not_parser_bug" in notes
+
+
+def test_stochastic_and_water_context_use_local_year_and_canonical_provenance():
+    if not (ROOT / "data" / "processed" / "weather_hourly.csv").exists():
+        return
+    from stochastic_conditional_simulation import load_weather
+    from build_water_context import WEATHER_PROVENANCE, monthly_weather
+
+    w, _ = load_weather()
+    assert set(w["year"].astype(int).unique()) == set(range(2011, 2025))
+    for year, n in w.groupby("year").size().items():
+        expect = 8784 if calendar.isleap(int(year)) else 8760
+        assert int(n) == expect
+    observed = w.loc[~w["weather_gap_filled"], "weather_driver_provenance"]
+    assert observed.str.contains("canonical KS39/KRDM weather").all()
+    assert not observed.str.contains(r"^measured KRDM").any()
+    assert "canonical KS39/KRDM" in WEATHER_PROVENANCE
+    mw = monthly_weather()
+    if len(mw):
+        assert mw["weather_station"].eq("canonical_KS39_KRDM").all()
+        assert mw["weather_provenance"].str.contains("canonical KS39/KRDM").all()
+        # January 2011 local month should not include 2010-12-31 PST hours.
+        jan = mw[mw["calendar_month"].eq(pd.Timestamp("2011-01-01"))]
+        if len(jan):
+            assert int(jan["weather_n_hours"].iloc[0]) == 31 * 24
 
 
 def test_ks39_coordinates_and_units_plausible():

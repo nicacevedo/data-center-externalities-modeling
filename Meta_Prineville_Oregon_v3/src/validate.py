@@ -9,7 +9,13 @@ TARGETS=ROOT/'data'/'canonical'/'meta_prineville_annual.csv'
 def annual_compare(hourly: pd.DataFrame, target_years=None):
     t=pd.read_csv(TARGETS)
     if target_years is not None: t=t[t.year.isin(target_years)]
-    h=hourly.copy(); h['timestamp_utc']=pd.to_datetime(h.timestamp_utc,utc=True); h['year']=h.timestamp_utc.dt.year
+    h=hourly.copy(); h['timestamp_utc']=pd.to_datetime(h.timestamp_utc,utc=True)
+    if "year" in h.columns and h["year"].notna().all():
+        h["year"] = pd.to_numeric(h["year"], errors="coerce").astype(int)
+    elif "year_local" in h.columns and h["year_local"].notna().all():
+        h["year"] = pd.to_numeric(h["year_local"], errors="coerce").astype(int)
+    else:
+        h["year"] = h["timestamp_utc"].dt.tz_convert("America/Los_Angeles").dt.year
     agg=h.groupby('year').agg(
         electricity_mwh_model=('p_fac_mw','sum'),
         water_m3_model=('evap_water_m3_per_h','sum'),

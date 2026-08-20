@@ -83,6 +83,7 @@ flowchart TB
   %% Remaining canonical model_io edges (same table; IDs not duplicated above)
   subgraph REST[Other canonical model I/O from model_io_edges.csv]
     M_CHANGEPOINT[M_CHANGEPOINT]
+    M_FERC714_BACKCAST[M_FERC714_BACKCAST]
     M_FUEL_IMPORT[M_FUEL_IMPORT]
     M_OR_GEN_QC[M_OR_GEN_QC]
     M_PACW_CI[M_PACW_CI]
@@ -94,6 +95,9 @@ flowchart TB
     Q_EXECUTED[Q_EXECUTED]
     Q_E_FAC[Q_E_FAC]
     Q_E_IT[Q_E_IT]
+    Q_FERC_EW_HOURLY[Q_FERC_EW_HOURLY]
+    Q_FERC_PACW_HOURLY_PROXY[Q_FERC_PACW_HOURLY_PROXY]
+    Q_FERC_WEST_MONTHLY[Q_FERC_WEST_MONTHLY]
     Q_FUEL_IMPORT_PROXY[Q_FUEL_IMPORT_PROXY]
     Q_GEN_OR[Q_GEN_OR]
     Q_GEN_WATER[Q_GEN_WATER]
@@ -132,6 +136,10 @@ flowchart TB
   M_PACW_CI -->|input| Q_CI_PACW
   M_PACW_CI -->|input| Q_P_FAC
   M_PACW_CI -->|target| Q_SCOPE2_META
+  M_FERC714_BACKCAST -->|input| Q_FERC_WEST_MONTHLY
+  M_FERC714_BACKCAST -->|input| Q_FERC_EW_HOURLY
+  M_FERC714_BACKCAST -->|output| Q_FERC_PACW_HOURLY_PROXY
+  M_FERC714_BACKCAST -->|validation| Q_GRID_DEMAND
   M_FUEL_IMPORT -->|output| Q_FUEL_IMPORT_PROXY
   M_FUEL_IMPORT -->|input| Q_GRID_DEMAND
   M_CHANGEPOINT -->|input| Q_E_FAC

@@ -658,7 +658,7 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
     year_status("Meta facility electricity", {y: e.get(y, "missing") for y in years})
     year_status("Meta water withdrawal", {y: w.get(y, "missing") for y in years})
     year_status("Meta location Scope 2", {y: s2.get(y, "missing") for y in years})
-    year_status("KRDM weather (processed)", {y: "measured" for y in years})
+    year_status("Canonical KS39/KRDM weather", {y: "measured" for y in years})
     year_status("Conditional IT/facility power", {y: "fitted" for y in years})
     year_status("Water proxy (evap × scale)", {y: "proxy" if y >= 2014 else "fitted" for y in years})
 
@@ -671,7 +671,9 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
             pacw_map[yr] = "proxy"
         else:
             pacw_map[yr] = "missing"
-    year_status("PACW demand / operations", {y: ("reported" if y >= 2016 or (y == 2015) else "missing") for y in years})
+    year_status("EIA-930 PACW hourly demand", {y: ("reported" if y >= 2015 else "missing") for y in years})
+    year_status("FERC PacifiCorp-West monthly", {y: ("reported" if 2011 <= y <= 2018 else "missing") for y in years})
+    year_status("FERC PACW-West hourly proxy", {y: ("proxy" if 2011 <= y <= 2018 else "missing") for y in years})
     year_status("PACW consumed CO2 intensity", {y: pacw_map.get(y, "missing") for y in years})
     year_status("eGRID NWPP benchmark", {y: "derived" for y in years})
 
@@ -707,7 +709,7 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
         [COLORS["reported"], COLORS["measured"], COLORS["derived"], COLORS["fitted"],
          COLORS["proxy"], COLORS["scenario"], COLORS["missing"]]
     )
-    fig, ax = plt.subplots(figsize=(11.5, 7.4))
+    fig, ax = plt.subplots(figsize=(11.5, 8.4))
     im = ax.imshow(Z, aspect="auto", cmap=cmap, vmin=0, vmax=6)
     ax.set_xticks(range(len(years)))
     ax.set_xticklabels(years, rotation=0, fontsize=8)
@@ -1400,11 +1402,11 @@ The implemented pipeline reconstructs a **weather-driven facility** from **annua
 Layers actually executed:
 
 1. **Targets.** `src/build_targets.py` curates Meta annual electricity (2011–2024), water withdrawal (2014–2024), location Scope 2, and operational GHG into `data/canonical/meta_prineville_annual.csv`.
-2. **Weather.** NOAA Global Hourly KRDM → `data/processed/weather_hourly.csv`.
+2. **Weather.** Canonical KS39/KRDM → `data/processed/weather_hourly.csv` (122,736 unique local-calendar hours, 2011–2024).
 3. **Gray-box physics.** `src/prineville_graybox.py` maps IT power + weather → cooling mode, PUE, raw evaporation.
 4. **Conditional reconstruction.** `src/conditional_reconstruction.py` closes annual facility electricity with one latent IT-power scale per year and predicts water with a train-only multiplicative scale on raw evaporation.
 5. **Stochastic proxy.** `src/stochastic_conditional_simulation.py` is a **generative scenario** with a separate annual water **prediction** horse-race (energy-only selected).
-6. **Context, not coupling.** OWRD City/POD, USGS HUC12 IWA/use, EIA-930 PACW, eGRID NWPP, Oregon CAMPD/EIA, DEQ backup, Crook County permits.
+6. **Context, not coupling.** OWRD City/POD, USGS HUC12 IWA/use, EIA-930 PACW, FERC Form 714 PacifiCorp-West monthly / East+West shape, eGRID NWPP, Oregon CAMPD/EIA, DEQ backup, Crook County permits.
 
 Annual electricity agreement is **closure, not prediction**. IWA `availab = strflow - consum` is an **identity, not hydrologic validation**. City production is **not** Meta delivery. Direct POD is **not** total Meta withdrawal.
 
@@ -1436,8 +1438,11 @@ Hard observations that exist:
 - Campus **electricity**: annual 2011–2024 (reported).
 - Campus **withdrawal**: annual 2014–2024 (reported); 2011–2013 not disclosed at site level.
 - **Location Scope 2**: annual 2012–2024 (reported); 2011 not separately disclosed.
-- **KRDM weather**: hourly 2011–2024 (measured station; not on-campus).
-- **PACW EIA-930**: hourly from 2015-07 (BA, not campus). Consumed CO2 intensity from **2018-07**.
+- **Canonical KS39/KRDM weather**: hourly 2011–2024 (measured stations; not on-campus). KS39 preferred from 2015-09-01 local when QC-usable.
+- **PACW EIA-930**: reported hourly BA demand from 2015-07 (not campus). Consumed CO2 intensity from **2018-07**. 2011–2014 have no EIA-930 PACW hours.
+- **FERC Form 714 PacifiCorp-West monthly**: reported 2011–2018 NEL/generation/interchange/peak/minimum.
+- **FERC PACW-West hourly**: reconstructed proxy (West monthly level × East+West shape), 2011–2018. Not observed hourly PACW demand.
+- **FERC East+West hourly**: reported combined planning-area shape; not PACW-West.
 - **eGRID NWPP**: annual vintages covering 2011–2024 (2024 uses eGRID2023).
 - **OWRD City and Vitesse/Facebook POD**: monthly reported use (different boundaries).
 - **USGS NWAA**: IWA through **2020-09**; public-supply CU through 2020-12; WD/irrigation through **2020-12**. Later years are missing, not zero.
@@ -1477,6 +1482,7 @@ Classification avoids calling every unit conversion a predictive model. Full tab
 | M_STOCHASTIC | Mixed Cox stochastic proxy | generative simulation | scenario; water horse-race is prediction |
 | M_EGRID_BENCH | eGRID NWPP × Meta MWh | benchmark | no |
 | M_PACW_CI | PACW consumed-CO2 relative shape | reconstruction | no |
+| M_FERC714_BACKCAST | FERC-constrained PACW-West hourly proxy | reconstruction | no |
 | M_FUEL_IMPORT | Fuel/import carbon score | benchmark / sensitivity | no |
 | M_CHANGEPOINT | Annual SSE break ranking | change-point screening | no; not a technology claim |
 | M_IWA_IDENTITY | availab = strflow − consum | physics/accounting | no; not validation |
@@ -1590,10 +1596,10 @@ Train-period water fit is mixed (conditional 2020 **−50%**, 2022 **+70%**). Re
 
 | Class | Examples in this pipeline |
 |---|---|
-| **Observed / reported** | Annual Meta electricity, withdrawal, location Scope 2; KRDM weather; OWRD City and POD; EIA-930 PACW; DEQ backup hours where extractable; CAMPD CEMS; EIA-860/923 where reported |
+| **Observed / reported** | Annual Meta electricity, withdrawal, location Scope 2; KS39/KRDM weather; OWRD City and POD; EIA-930 PACW hourly; FERC PacifiCorp-West monthly; FERC East+West combined hourly; DEQ backup hours where extractable; CAMPD CEMS; EIA-860/923 where reported |
 | **Derived** | PUE, raw evaporation, eGRID tonnes, IWA availability identity, facility-kWh water intensity |
 | **Fitted** | Annual IT-power scale; water multiplicative scale; NNLS water coefficients |
-| **Proxy** | Hourly withdrawal proxy; USGS HUC12 use/IWA; PACW fuel/import score |
+| **Proxy** | Hourly withdrawal proxy; USGS HUC12 use/IWA; PACW fuel/import score; FERC-constrained PACW-West hourly backcast |
 | **Simulated / scenario** | Cox arrivals, queue, utilization index, overhead priors, water-shape mixture |
 | **Unavailable** | See section 9 |
 

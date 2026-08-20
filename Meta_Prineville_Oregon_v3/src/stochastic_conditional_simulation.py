@@ -137,8 +137,12 @@ def load_weather() -> tuple[pd.DataFrame, dict]:
     w["weather_driver_provenance"] = np.where(
         missing_before,
         "proxy-filled from short interpolation/month-hour climatology",
-        "measured KRDM observation with derived psychrometrics",
+        "canonical KS39/KRDM weather; measured station observation with derived psychrometrics",
     )
+    if "year_local" in w.columns and w["year_local"].notna().all():
+        w["year"] = pd.to_numeric(w["year_local"], errors="coerce").astype(int)
+    else:
+        w["year"] = w["timestamp_utc"].dt.tz_convert("America/Los_Angeles").dt.year
     diagnostics = {
         "weather_rows": int(len(w)),
         "hours_with_any_required_field_missing_before_fill": int(missing_before.sum()),
@@ -152,7 +156,7 @@ def precompute_weather_coefficients(w: pd.DataFrame) -> dict[int, pd.DataFrame]:
     """Precompute per-MW facility and water coefficients for each year."""
 
     coeffs: dict[int, pd.DataFrame] = {}
-    for year, wy in w.groupby(w["timestamp_utc"].dt.year):
+    for year, wy in w.groupby("year"):
         wy = wy.copy().reset_index(drop=True)
         # fan/other are zero here; those uncertain priors are added per ensemble draw.
         unit = simulate(
@@ -936,7 +940,7 @@ def plot_annual_summary(annual: pd.DataFrame, train_end_year: int, path: Path) -
 
     fig.suptitle(
         "Meta Prineville conditional stochastic proxy\n"
-        "Sources: Meta annual disclosures, KRDM weather; fitted quantities are not telemetry",
+        "Sources: Meta annual disclosures, canonical KS39/KRDM weather; fitted quantities are not telemetry",
         fontsize=13,
     )
     fig.savefig(path, dpi=170)
@@ -965,7 +969,7 @@ def plot_representative_week(hourly: pd.DataFrame, year: int, path: Path) -> Non
 
     axes[2].plot(ts, week["water_withdrawal_proxy_m3_per_h"], label="Withdrawal proxy")
     ax2 = axes[2].twinx()
-    ax2.plot(ts, week["t_wb_C"], color="tab:orange", alpha=0.65, label="KRDM wet bulb")
+    ax2.plot(ts, week["t_wb_C"], color="tab:orange", alpha=0.65, label="canonical KS39/KRDM wet bulb")
     axes[2].set(xlabel="UTC timestamp", ylabel="Water (m³/hour)")
     ax2.set_ylabel("Wet-bulb temperature (°C)")
     lines, labels = axes[2].get_legend_handles_labels()

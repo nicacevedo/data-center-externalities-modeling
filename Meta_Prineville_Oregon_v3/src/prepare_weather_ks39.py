@@ -5,6 +5,7 @@ Does not retune gray-box or water models. Reuses prepare_weather psychrometrics.
 from __future__ import annotations
 
 import argparse
+import calendar
 import json
 import math
 import sys
@@ -14,7 +15,13 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from madis_qc import model_usable_series
+from madis_qc import (
+    HARD_INVALID_DD,
+    MODEL_USABLE_DD,
+    QCR_SPATIAL_CONSISTENCY,
+    QCR_VALIDITY,
+    model_usable_series,
+)
 from prepare_weather import rh_from_t_td, wetbulb
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,6 +37,8 @@ OUT = ROOT / "outputs" / "weather_ks39"
 TZ_LOCAL = "America/Los_Angeles"
 KS39_ELEV_M_DEFAULT = 991.0
 SWITCH_LOCAL = pd.Timestamp("2015-09-01 00:00:00", tz=TZ_LOCAL)
+LOCAL_START = pd.Timestamp("2011-01-01 00:00:00", tz=TZ_LOCAL)
+LOCAL_END_EXCLUSIVE = pd.Timestamp("2025-01-01 00:00:00", tz=TZ_LOCAL)
 DEW_TOL_C = 0.3
 T_RANGE = (-60.0, 60.0)
 TD_RANGE = (-80.0, 50.0)
@@ -185,7 +194,7 @@ def aggregate_hourly(z: pd.DataFrame) -> pd.DataFrame:
     h["n_usable_altimeter"] = n_alt.reindex(idx).astype(int).to_numpy()
     h["n_usable_slp"] = n_slp.reindex(idx).astype(int).to_numpy()
     h["qc_status"] = np.where((h.n_usable_temp > 0) & (h.n_usable_dew > 0), "usable", "partial_or_missing")
-    h["pressure_method"] = np.where(h.n_usable_altimeter > 0, "derived_from_altimeter_icao", "")
+    h["pressure_method"] = np.where(h.n_usable_altimeter > 0, "ks39_altimeter_derived", "")
     h["latitude"] = lat.reindex(idx).to_numpy()
     h["longitude"] = lon.reindex(idx).to_numpy()
     h["elevation_m"] = elev.reindex(idx).to_numpy()
@@ -460,19 +469,138 @@ def add_local_fields(h: pd.DataFrame) -> pd.DataFrame:
     return z
 
 
-def build_canonical(krdm: pd.DataFrame, ks39: pd.DataFrame, bias: dict) -> pd.DataFrame:
-    k = add_local_fields(krdm)
-    k = k.sort_values("timestamp_utc").drop_duplicates("timestamp_utc")
-    k = k[(k.timestamp_utc >= "2011-01-01T00:00:00Z") & (k.timestamp_utc <= "2024-12-31T23:00:00Z")].copy()
-    ks = ks39.copy()
-    keep = [
-        "timestamp_utc", "t_db_C", "t_dew_C", "rh_pct", "pressure_Pa", "t_wb_C",
-        "wind_m_s", "precip_mm", "n_usable_temp", "n_usable_dew", "qc_status",
-    ]
-    ks = ks[[c for c in keep if c in ks.columns]].rename(
-        columns={c: f"ks_{c}" for c in keep if c != "timestamp_utc"}
+def canonical_utc_index() -> pd.DatetimeIndex:
+    """Physical UTC hours covering local 2011-01-01 00:00 <= t < 2025-01-01 00:00."""
+    start = LOCAL_START.tz_convert("UTC")
+    end = LOCAL_END_EXCLUSIVE.tz_convert("UTC") - pd.Timedelta(hours=1)
+    return pd.date_range(start, end, freq="h", tz="UTC")
+
+
+def altimeter_qc_audit_2015_2017(qced: pd.DataFrame, hourly: pd.DataFrame) -> pd.DataFrame:
+    """Compact 2015–2017 KS39 altimeter QC audit. Does not change MADIS acceptance rules."""
+    z = qced.copy()
+    z["year"] = z["timeObs"].dt.year
+    z = z[z["year"].isin([2015, 2016, 2017])].copy()
+    z["altimeterDD"] = z["altimeterDD"].fillna("").astype(str).str.strip().str.upper().str[:1]
+    z["altimeterQCR"] = pd.to_numeric(z["altimeterQCR"], errors="coerce").fillna(0).astype(int)
+    z["validity_bit_failed"] = (z["altimeterQCR"].to_numpy() & QCR_VALIDITY) != 0
+    z["spatial_consistency_failed"] = (z["altimeterQCR"].to_numpy() & QCR_SPATIAL_CONSISTENCY) != 0
+    z["accepted"] = z["alt_usable"].astype(bool)
+    alt = z["altimeter_Pa"].to_numpy(dtype=float)
+    dd = z["altimeterDD"].to_numpy()
+    known_dd = set(MODEL_USABLE_DD) | set(HARD_INVALID_DD) | {"Q", ""}
+    reason = np.full(len(z), "other", dtype=object)
+    accepted = z["accepted"].to_numpy()
+    reason[accepted] = "accepted"
+    rejected = ~accepted
+    missing = ~np.isfinite(alt)
+    reason[rejected & missing] = "missing_or_nonfinite"
+    hard = np.isin(dd, list(HARD_INVALID_DD))
+    reason[rejected & ~missing & hard] = "dd_hard_invalid"
+    reason[rejected & ~missing & (dd == "Q")] = "dd_questioned_failed_level2_or_3"
+    validity = z["validity_bit_failed"].to_numpy()
+    reason[rejected & ~missing & validity & (dd != "Q") & ~hard] = "qcr_validity_bit"
+    reason[rejected & ~missing & ~np.isin(dd, list(known_dd))] = "dd_unrecognized"
+    in_range = (alt >= ALT_PA_RANGE[0]) & (alt <= ALT_PA_RANGE[1])
+    still_other = rejected & ~missing & (reason == "other") & ~in_range
+    reason[still_other] = "physical_range"
+    z["rejection_reason"] = reason
+    z["accepted_flag"] = np.where(accepted, "accepted", "rejected")
+    report = (
+        z.groupby(
+            [
+                "year",
+                "altimeterDD",
+                "altimeterQCR",
+                "validity_bit_failed",
+                "spatial_consistency_failed",
+                "accepted_flag",
+                "rejection_reason",
+            ],
+            dropna=False,
+        )
+        .size()
+        .reset_index(name="n")
+        .sort_values(["year", "accepted_flag", "n"], ascending=[True, True, False])
     )
-    j = k.merge(ks, on="timestamp_utc", how="left")
+    report["level"] = "report"
+    report["conclusion"] = ""
+
+    hs = hourly.copy()
+    hs["year"] = hs["timestamp_utc"].dt.year
+    hs = hs[hs["year"].isin([2015, 2016, 2017])]
+    hour_rows = []
+    for year, g in hs.groupby("year"):
+        n_hours = int(len(g))
+        n_p = int((g["n_usable_altimeter"].fillna(0) > 0).sum())
+        n_t = int((g["n_usable_temp"].fillna(0) > 0).sum())
+        yrep = z[z["year"] == year]
+        n_q = int((yrep["altimeterDD"] == "Q").sum())
+        n_qcr65 = int((yrep["altimeterQCR"] == 65).sum())
+        if int(year) == 2016:
+            conclusion = (
+                "genuine_noaa_qc_not_parser_bug; "
+                "2016 usable-pressure drop is DD=Q / QCR=65 (master+spatial consistency); "
+                "validity bit is not set; MADIS rules already exclude Q; keep KRDM pressure fallback"
+            )
+        else:
+            conclusion = "no_parser_bug; questioned-altimeter spike is 2016-specific"
+        hour_rows.append({
+            "year": int(year),
+            "altimeterDD": "",
+            "altimeterQCR": np.nan,
+            "validity_bit_failed": False,
+            "spatial_consistency_failed": False,
+            "accepted_flag": "hourly_summary",
+            "rejection_reason": "",
+            "n": n_hours,
+            "level": "hourly",
+            "hours_usable_temperature": n_t,
+            "hours_usable_pressure": n_p,
+            "n_reports_dd_Q": n_q,
+            "n_reports_qcr_65": n_qcr65,
+            "conclusion": conclusion,
+        })
+    hourly_sum = pd.DataFrame(hour_rows)
+    report["hours_usable_temperature"] = np.nan
+    report["hours_usable_pressure"] = np.nan
+    report["n_reports_dd_Q"] = np.nan
+    report["n_reports_qcr_65"] = np.nan
+    return pd.concat([report, hourly_sum], ignore_index=True)
+
+
+def build_canonical(krdm: pd.DataFrame, ks39: pd.DataFrame, bias: dict) -> pd.DataFrame:
+    idx = canonical_utc_index()
+    grid = add_local_fields(pd.DataFrame({"timestamp_utc": idx}))
+    k = krdm.copy()
+    k["timestamp_utc"] = pd.to_datetime(k["timestamp_utc"], utc=True)
+    k = k.sort_values("timestamp_utc").drop_duplicates("timestamp_utc")
+    k_keep = [
+        "timestamp_utc", "t_db_C", "t_dew_C", "slp_hPa", "pressure_Pa",
+        "wind_m_s", "precip_mm", "source_file", "tmp_qc", "dew_qc", "slp_qc",
+        "pressure_method",
+    ]
+    k = k[[c for c in k_keep if c in k.columns]].rename(
+        columns={
+            "t_db_C": "kr_t_db_C",
+            "t_dew_C": "kr_t_dew_C",
+            "pressure_Pa": "kr_pressure_Pa",
+            "wind_m_s": "kr_wind_m_s",
+            "precip_mm": "kr_precip_mm",
+            "pressure_method": "kr_pressure_method",
+        }
+    )
+    ks = ks39.copy()
+    ks["timestamp_utc"] = pd.to_datetime(ks["timestamp_utc"], utc=True)
+    ks_keep = [
+        "timestamp_utc", "t_db_C", "t_dew_C", "pressure_Pa",
+        "wind_m_s", "precip_mm", "n_usable_temp", "n_usable_dew", "qc_status",
+        "pressure_method",
+    ]
+    ks = ks[[c for c in ks_keep if c in ks.columns]].rename(
+        columns={c: f"ks_{c}" for c in ks_keep if c != "timestamp_utc"}
+    )
+    j = grid.merge(k, on="timestamp_utc", how="left").merge(ks, on="timestamp_utc", how="left")
     in_ks_window = j["timestamp_local"] >= SWITCH_LOCAL
     ks_ok = (
         in_ks_window
@@ -481,6 +609,16 @@ def build_canonical(krdm: pd.DataFrame, ks39: pd.DataFrame, bias: dict) -> pd.Da
         & j["ks_t_db_C"].notna()
         & j["ks_t_dew_C"].notna()
     )
+    ks_p_ok = ks_ok & j["ks_pressure_Pa"].notna()
+    kr_method = (
+        j["kr_pressure_method"].fillna("").astype(str)
+        if "kr_pressure_method" in j.columns
+        else pd.Series("", index=j.index)
+    )
+    need = j["kr_pressure_Pa"].notna() & kr_method.eq("")
+    kr_method = kr_method.mask(need & j["slp_hPa"].notna(), "krdm_slp_derived")
+    kr_method = kr_method.mask(need & j["slp_hPa"].isna(), "krdm_standard_atmosphere_fallback")
+
     out = pd.DataFrame({
         "timestamp_utc": j["timestamp_utc"],
         "timestamp_local": j["timestamp_local"],
@@ -491,17 +629,18 @@ def build_canonical(krdm: pd.DataFrame, ks39: pd.DataFrame, bias: dict) -> pd.Da
         "hour_local": j["hour_local"],
         "utc_offset": j["utc_offset"],
     })
-    out["t_db_C"] = np.where(ks_ok, j["ks_t_db_C"], j["t_db_C"])
-    out["t_dew_C"] = np.where(ks_ok, j["ks_t_dew_C"], j["t_dew_C"])
-    out["rh_pct"] = np.where(ks_ok, j["ks_rh_pct"], j["rh_pct"])
-    out["pressure_Pa"] = np.where(
-        ks_ok,
-        np.where(j["ks_pressure_Pa"].notna(), j["ks_pressure_Pa"], j["pressure_Pa"]),
-        j["pressure_Pa"],
-    )
-    out["t_wb_C"] = np.where(ks_ok, j["ks_t_wb_C"], j["t_wb_C"])
-    out["wind_m_s"] = np.where(ks_ok, j["ks_wind_m_s"], j["wind_m_s"])
-    out["precip_mm"] = np.where(ks_ok, j["ks_precip_mm"], j["precip_mm"])
+    out["t_db_C"] = np.where(ks_ok, j["ks_t_db_C"], j["kr_t_db_C"])
+    out["t_dew_C"] = np.where(ks_ok, j["ks_t_dew_C"], j["kr_t_dew_C"])
+    out["pressure_Pa"] = np.where(ks_p_ok, j["ks_pressure_Pa"], j["kr_pressure_Pa"])
+    out["pressure_method"] = np.where(ks_p_ok, "ks39_altimeter_derived", kr_method)
+    out.loc[out["pressure_Pa"].isna(), "pressure_method"] = ""
+    out["rh_pct"] = [rh_from_t_td(t, td) for t, td in zip(out.t_db_C, out.t_dew_C)]
+    out["t_wb_C"] = [
+        wetbulb(t, td, p, rh)
+        for t, td, p, rh in zip(out.t_db_C, out.t_dew_C, out.pressure_Pa, out.rh_pct)
+    ]
+    out["wind_m_s"] = np.where(ks_ok, j["ks_wind_m_s"], j["kr_wind_m_s"])
+    out["precip_mm"] = np.where(ks_ok, j["ks_precip_mm"], j["kr_precip_mm"])
     out["station"] = np.where(ks_ok, "KS39 / Prineville Airport", "KRDM / 72692024230")
     out["weather_source"] = np.where(ks_ok, "KS39", "KRDM")
     out["weather_method"] = np.select(
@@ -514,14 +653,18 @@ def build_canonical(krdm: pd.DataFrame, ks39: pd.DataFrame, bias: dict) -> pd.Da
     out["qc_status"] = np.where(ks_ok, j["ks_qc_status"].fillna("usable"), "krdm_baseline")
     out["slp_hPa"] = j["slp_hPa"] if "slp_hPa" in j.columns else np.nan
     out["source_file"] = j["source_file"] if "source_file" in j.columns else ""
-    out["provenance"] = np.where(
-        ks_ok,
-        "ks39_valid_observed; T/Td measured MADIS METAR; pressure derived from altimeter+elevation; RH/Twb derived",
-        np.where(
-            in_ks_window,
-            "krdm_gapfill; T/Td measured KRDM; RH/Twb derived",
-            "krdm_observed; T/Td measured KRDM; RH/Twb derived",
-        ),
+    if "tmp_qc" in j.columns:
+        out["tmp_qc"] = j["tmp_qc"]
+        out["dew_qc"] = j["dew_qc"]
+        out["slp_qc"] = j["slp_qc"]
+    out["provenance"] = np.select(
+        [ks_ok & ks_p_ok, ks_ok, in_ks_window],
+        [
+            "canonical KS39/KRDM weather; ks39_valid_observed; T/Td measured MADIS METAR; pressure ks39_altimeter_derived; RH/Twb recomputed from final T/Td/P",
+            "canonical KS39/KRDM weather; ks39_valid_observed; T/Td measured MADIS METAR; pressure KRDM fallback; RH/Twb recomputed from final T/Td/P",
+            "canonical KS39/KRDM weather; krdm_gapfill; T/Td measured KRDM; RH/Twb recomputed from final T/Td/P",
+        ],
+        default="canonical KS39/KRDM weather; krdm_observed; T/Td measured KRDM; RH/Twb recomputed from final T/Td/P",
     )
     if bias.get("adopt"):
         # Reserved: monthly additive T/Td would apply only to pre-switch KRDM rows.
@@ -593,6 +736,10 @@ def main() -> None:
     completeness.to_csv(OUT / "ks39_field_completeness.csv", index=False)
     completeness.to_csv(ROOT / "outputs" / "ks39_field_completeness.csv", index=False)
 
+    audit = altimeter_qc_audit_2015_2017(qced, hourly)
+    audit.to_csv(OUT / "ks39_altimeter_qc_2015_2017.csv", index=False)
+    audit.to_csv(ROOT / "outputs" / "ks39_altimeter_qc_2015_2017.csv", index=False)
+
     if not KRDM.exists():
         raise FileNotFoundError(f"Preserve KRDM baseline first: {KRDM}")
     krdm = pd.read_csv(KRDM)
@@ -611,12 +758,20 @@ def main() -> None:
         print("Pre-2015 KRDM correction REJECTED:", bias.get("reason"))
 
     canonical = build_canonical(krdm, hourly, bias)
-    # year-length checks
-    for year, n in canonical.groupby(canonical.timestamp_utc.dt.year).size().items():
-        leap = year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
-        expect = 8784 if leap else 8760
+    if canonical["timestamp_utc"].duplicated().any():
+        raise ValueError("Canonical UTC hourly key is not unique")
+    expected_index = canonical_utc_index()
+    if len(canonical) != len(expected_index):
+        raise ValueError(f"Canonical has {len(canonical)} hours, expected {len(expected_index)}")
+    if canonical["timestamp_utc"].min() != expected_index.min() or canonical["timestamp_utc"].max() != expected_index.max():
+        raise ValueError("Canonical UTC bounds do not match local calendar years 2011-2024")
+    for year, n in canonical.groupby("year_local").size().items():
+        expect = 8784 if calendar.isleap(int(year)) else 8760
         if int(n) != expect:
-            raise ValueError(f"Canonical {year} has {n} hours, expected {expect}")
+            raise ValueError(f"Canonical local year {year} has {n} hours, expected {expect}")
+    years = set(pd.to_numeric(canonical["year_local"], errors="coerce").astype(int))
+    if years != set(range(2011, 2025)):
+        raise ValueError(f"Canonical local years are {sorted(years)}, expected 2011-2024")
     if not args.no_canonical_overwrite:
         canonical.to_csv(CANONICAL, index=False)
     canonical.to_csv(ROOT / "data" / "processed" / "weather_canonical_hourly.csv", index=False)

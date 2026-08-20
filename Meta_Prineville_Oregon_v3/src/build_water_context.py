@@ -80,8 +80,8 @@ META_PROVENANCE = (
     "not a monthly measurement"
 )
 WEATHER_PROVENANCE = (
-    "KRDM/Roberts Field NOAA hourly aggregated to calendar month; "
-    "nearby station, not on-campus"
+    "canonical KS39/KRDM weather, hourly aggregated to Prineville local calendar month; "
+    "nearby stations, not on-campus"
 )
 
 
@@ -222,8 +222,19 @@ def city_measurement_methods(city: pd.DataFrame, report: pd.DataFrame) -> pd.Ser
 def monthly_weather() -> pd.DataFrame:
     if not WEATHER.exists():
         return pd.DataFrame()
-    w = pd.read_csv(WEATHER, usecols=["timestamp_utc", "t_db_C", "t_wb_C", "rh_pct", "precip_mm"])
-    w["calendar_month"] = _month_start(w["timestamp_utc"])
+    w = pd.read_csv(WEATHER)
+    w["timestamp_utc"] = pd.to_datetime(w["timestamp_utc"], utc=True)
+    if {"year_local", "month_local"}.issubset(w.columns) and w["year_local"].notna().all():
+        w["calendar_month"] = pd.to_datetime(
+            {
+                "year": pd.to_numeric(w["year_local"], errors="coerce").astype(int),
+                "month": pd.to_numeric(w["month_local"], errors="coerce").astype(int),
+                "day": 1,
+            }
+        )
+    else:
+        loc = w["timestamp_utc"].dt.tz_convert("America/Los_Angeles")
+        w["calendar_month"] = pd.to_datetime({"year": loc.dt.year, "month": loc.dt.month, "day": 1})
     out = w.groupby("calendar_month", as_index=False).agg(
         weather_t_db_C_mean=("t_db_C", "mean"),
         weather_t_wb_C_mean=("t_wb_C", "mean"),
@@ -231,7 +242,7 @@ def monthly_weather() -> pd.DataFrame:
         weather_precip_mm_sum=("precip_mm", "sum"),
         weather_n_hours=("timestamp_utc", "size"),
     )
-    out["weather_station"] = "KRDM_72692024230"
+    out["weather_station"] = "canonical_KS39_KRDM"
     out["weather_provenance"] = WEATHER_PROVENANCE
     return out
 

@@ -12,19 +12,19 @@
       "electricity_mwh_reported"
     ],
     "coefficients": {
-      "electricity_mwh_reported": 0.3643056183103121
+      "electricity_mwh_reported": 0.36430561831031194
     },
     "train_start_year": 2014,
     "train_end_year": 2022,
     "selection_metric": "expanding-window one-step MAPE on training years only; pre-registered nonnegative no-intercept candidates",
     "selection_score_pct": 34.2483644988005
   },
-  "water_holdout_mape_pct": 100.10919343114969,
+  "water_holdout_mape_pct": 100.1091934311498,
   "weather_diagnostics": {
     "weather_rows": 122736,
-    "hours_with_any_required_field_missing_before_fill": 160,
-    "missing_required_cells_before_fill": 521,
-    "fraction_hours_proxy_filled": 0.0013036110024768608
+    "hours_with_any_required_field_missing_before_fill": 138,
+    "missing_required_cells_before_fill": 391,
+    "fraction_hours_proxy_filled": 0.0011243644896362925
   },
   "selected_year_water_shape_priors": {
     "water_shape_evap_share": 0.5331737595588822,
@@ -32,7 +32,7 @@
     "water_shape_time_constant_share": 0.03
   },
   "selected_year_annual_closures": {
-    "facility_electricity_mwh": 1728290.9999999998,
+    "facility_electricity_mwh": 1728291.0,
     "water_withdrawal_m3": 328000.0,
     "location_scope2_tco2e": 498192.0
   },

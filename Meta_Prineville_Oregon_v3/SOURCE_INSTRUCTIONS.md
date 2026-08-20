@@ -210,7 +210,9 @@ python run_prineville.py eia
 
 `src/prepare_eia930.py` keeps reported/imputed/adjusted MWh as separate columns, joins EIA known-data-issue flags, and cuts the reconstruction window at `2024-12-31 23:59 UTC`. It compares 2019-2024 workbook values with the API when `PACW_region-data_2019_2024.csv` is present; it does **not** concatenate the two.
 
-EIA-930 measures **balancing-authority operations**: demand, demand forecast, net generation, total interchange, bilateral interchange, generation by fuel, and (from 2018-07) EIA-reported CO2 emissions/intensity for generated and consumed electricity. Those series are observed PACW values, not Prineville campus meters. The fuel/import carbon score, if used, is a derived proxy. There is no PACW coverage before 2015-07-01; do not invent one.
+EIA-930 measures **balancing-authority operations**: demand, demand forecast, net generation, total interchange, bilateral interchange, generation by fuel, and (from 2018-07) EIA-reported CO2 emissions/intensity for generated and consumed electricity. Those series are observed PACW values, not Prineville campus meters. The fuel/import carbon score, if used, is a derived proxy. There is no EIA-930 PACW coverage before 2015-07-01. Do not invent EIA-930 hours. A separate FERC-constrained proxy (section 10.5) may fill pre-EIA PACW **demand shape** only and must remain labeled proxy.
+
+The API remains useful for overlap checks and later updates:
 
 The API remains useful for overlap checks and later updates:
 
@@ -221,6 +223,29 @@ python src/download_eia930.py --start 2019-01-01 --end 2024-12-31
 ```
 
 Use PACW only as a regional physical-grid context/proxy. It is not the campus feeder meter.
+
+Time semantics: EIA-930 PACW hours are **hour-ending UTC**. FERC Form 714 Schedule 2 hours are **hour-ending local Pacific prevailing time**. Do not mix the two clocks.
+
+## 10.5 FERC Form 714 — PacifiCorp West monthly and East+West hourly (2011–2018)
+
+- Source ID: `FERC_FORM_714`
+- Leave all files under `data/raw/ferc_form_714/` untouched.
+- Discover filings programmatically (`src/prepare_ferc714.py`); do not hard-code filenames.
+- West-specific annual filings: extract monthly `west_net_energy_for_load_mwh`, `west_net_generation_mwh`, `west_net_interchange_mwh`, `west_monthly_peak_mw`, `west_monthly_minimum_mw`, plus filing/source identifiers and timezone/provenance.
+- East+West combined Schedule 2 filings: extract the complete reported hourly demand series with original date/hour/time-zone metadata. **Never label this series PACW-West.**
+- Prepare:
+
+```bash
+python run_prineville.py ferc
+```
+
+Writes `data/processed/ferc714/pacw_west_monthly.csv`, `pacificorp_east_west_hourly.csv`, `pacw_hourly_backcast.csv`, optional `data/processed/pacw_demand_hourly_extended.csv`, and `outputs/ferc714_*.csv`. Does **not** overwrite `data/processed/pacw_hourly.csv`.
+
+The FERC-only backcast uses East+West hours for intramonth shape and West monthly NEL/peak/minimum for level (`Dhat_W = mean_W + b_m (D_EW - mean_EW)`, `b_m ≥ 0`, exact monthly energy closure to NEL). EIA-930 is not used to fit `b_m`. Monthly NEL vs EIA-930 is a cross-source consistency test, not a calibration target. If definitions or magnitudes disagree, keep both series and do not promote the early hourly backcast as observed PACW demand.
+
+FERC is regional/grid context only. Do not use it to manufacture consumed CO2 intensity, fuel mix, hourly interchange, Meta campus electricity, or marginal emissions. Do not replace the EIA PACW file used by stochastic carbon sensitivity.
+
+`python run_prineville.py grid` is EIA-930 → FERC 714 → eGRID.
 
 ## 11. Annual physical-emissions cross-check — EPA eGRID
 
@@ -331,7 +356,7 @@ Rules:
 
 - Command: `python run_prineville.py water-context`
 - Script: `src/build_water_context.py`
-- Inputs: existing `data/processed/owrd/` monthly products, USGS HUC12 panels, municipal HUC12 crosswalk, Meta annual water, KRDM hourly weather.
+- Inputs: existing `data/processed/owrd/` monthly products, USGS HUC12 panels, municipal HUC12 crosswalk, Meta annual water, canonical KS39/KRDM hourly weather.
 - Outputs: `data/processed/water/water_source_monthly_context.csv`, `data/processed/water/prineville_water_monthly_context.csv`, `outputs/qc/water_context_qa.csv`.
 - Layout: raw OWRD/USGS/City under `data/raw/<source>/`; geography under `data/canonical/usgs/`; source-specific products under `data/processed/owrd/` and `data/processed/usgs_nwaa/`; integrated tables only under `data/processed/water/`.
 

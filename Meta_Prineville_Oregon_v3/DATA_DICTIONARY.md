@@ -65,6 +65,22 @@ Also retained, from 2018-07-02: EIA-reported `co2_emissions_consumed` / `co2_emi
 
 The EIA API is not concatenated into this file. Overlap diagnostics are in `outputs/eia930_xlsx_api_overlap.csv`. Series start/end dates are in `outputs/eia930_series_coverage.csv`. The regional carbon-shape comparison of EIA consumed intensity vs the named fuel/import proxy is `outputs/pacw_carbon_shape_compare.csv`.
 
+FERC Form 714 uses a different time convention (hour-ending local Pacific prevailing time) and is stored in separate files below. This EIA table is never overwritten by the FERC preparer.
+
+## `data/processed/ferc714/pacw_west_monthly.csv`
+Reported FERC Form 714 PacifiCorp-West monthly net energy for load, net generation, net actual interchange, monthly peak, and monthly minimum, 2011–2018. Balancing-authority evidence, not campus electricity. NEL ≈ net generation + net interchange within source precision.
+
+## `data/processed/ferc714/pacificorp_east_west_hourly.csv`
+Reported FERC Form 714 Schedule 2 hourly demand for the **PacifiCorp East+West combined planning area**. This is not PACW-West hourly demand. Columns include original FERC date/hour-ending, `local_timestamp`, `timestamp_utc`, `year_local`, `month_local` (FERC operating date; hour 24 stays on that date), timezone tags, and `series_label=pacificorp_east_west_combined_planning_area`. Missing spring-forward clock hours and unrepeated fall-back hours follow the filing; they are not interpolated.
+
+## `data/processed/ferc714/pacw_hourly_backcast.csv`
+FERC-only PACW-West hourly **proxy**: East+West intramonth shape scaled to West monthly NEL with a nonnegative monthly `b_m` chosen against West peak and minimum. Monthly energy closes to West NEL. Not reported PACW hourly demand and not campus electricity. EIA-930 is not used to fit this series.
+
+## `data/processed/pacw_demand_hourly_extended.csv`
+Concatenation with explicit row-level `provenance` / `provenance_class` / `source`: EIA-reported PACW demand where EIA-930 exists, and the FERC proxy **only** before the first EIA timestamp. Does not replace `pacw_hourly.csv`.
+
+Validation: `outputs/ferc714_qa.csv`, `outputs/ferc714_eia930_validation.csv`, `outputs/ferc714_eia930_monthly_compare.csv`. Primary EIA comparison uses physically possible `demand_reported_mwh`; adjusted EIA demand is sensitivity only.
+
 ## `data/processed/egrid_prineville_annual.csv`
 EPA eGRID subregion **total output emission rates** mapped to Prineville model years 2011-2024. Observed eGRID fields; CH4/N2O may be unit-converted from lb/GWh; fuel shares are stored as 0-1 fractions. This is not a campus meter series.
 
@@ -207,11 +223,11 @@ Links City of Prineville PWS 00682 sources to HUC12 using official coordinates o
 Finest defensible OWRD source/reporting-group × month table with USGS HUC12 context attached only where a verified in-study HUC12 exists. Boundaries (`city_municipal_production`, `city_municipal_candidate_sensitivity`, `vitesse_facebook_direct_pod`) are never summed. Candidate rows are identifiable and excluded from primary City totals.
 
 ## `data/processed/water/prineville_water_monthly_context.csv`
-Calendar-month spine with **separate** columns for accepted City production, Vitesse/Facebook direct POD use, Meta annual campus withdrawal (labeled annual, not monthly), site-HUC12 USGS variables, and KRDM monthly weather. USGS values are missing after their official coverage ends.
+Calendar-month spine with **separate** columns for accepted City production, Vitesse/Facebook direct POD use, Meta annual campus withdrawal (labeled annual, not monthly), site-HUC12 USGS variables, and canonical KS39/KRDM monthly weather. USGS values are missing after their official coverage ends.
 
 ## `data/processed/weather_krdm_hourly.csv`
 
-KRDM / Roberts Field (NCEI Global Hourly `72692024230`) 2011–2024 UTC hourly backbone. Measured dry-bulb and dewpoint; station pressure from sea-level pressure via the existing hypsometric conversion at 929 m; RH and wet-bulb **derived**. This file is the preserved KRDM-only baseline and is not overwritten by the KS39 merge.
+KRDM / Roberts Field (NCEI Global Hourly `72692024230`) 2011–2024 UTC hourly backbone. Measured dry-bulb, dewpoint, and sea-level pressure after official NCEI/ISD QC (reject 2/3/6/7; retain passed and documented editorial codes; unknown codes rejected conservatively). Station pressure from sea-level pressure via the existing hypsometric conversion at 929 m, or standard-atmosphere fallback when SLP is unusable; RH and wet-bulb **derived**. This file is the preserved KRDM-only baseline and is not overwritten by the KS39 merge.
 
 ## `data/processed/weather_ks39_hourly.csv`
 
@@ -219,7 +235,7 @@ KS39 / Prineville Airport MADIS METAR, one row per physical UTC hour of `timeObs
 
 ## `data/processed/weather_hourly.csv`
 
-Canonical 2011–2024 model weather (UTC hourly). Hierarchy: QC-usable KS39 observed (from 2015-09-01 local) > KRDM gap-fill > KRDM observed > missing. No interpolation of long gaps. Row provenance: `weather_source`, `weather_method`, `weather_observed`, `weather_gapfilled`, `qc_status`. Reconstruction still keys facility years by UTC `timestamp_utc.dt.year`.
+Canonical model weather for Prineville local calendar years 2011–2024: `2011-01-01 00:00` local `<= timestamp_local < 2025-01-01 00:00` local. UTC remains the unique physical-hour key. Hierarchy: QC-usable KS39 observed (from 2015-09-01 local) > KRDM gap-fill > KRDM observed > missing. After final T/Td/pressure selection, RH and wet-bulb are **recomputed**. Row-level `pressure_method` is `ks39_altimeter_derived`, `krdm_slp_derived`, or `krdm_standard_atmosphere_fallback`. Reconstruction and water-context months use `year_local` / local month.
 
 Exact coverage: `outputs/ks39_coverage_monthly.csv`, `outputs/ks39_coverage_annual.csv`, `outputs/ks39_gap_summary.csv`. Overlap: `outputs/ks39_krdm_overlap_summary.csv`. Discovery sample rates in `madis_test/outputs/` are not exact completeness.
 

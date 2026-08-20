@@ -1,0 +1,23 @@
+item,value
+n_html_filings,16
+west_years,"2011,2012,2013,2014,2015,2016,2017,2018"
+west_n_year_month,96
+ew_n_hours,70120
+ew_utc_unique,True
+nel_identity_max_abs_mwh,0.0
+backcast_n_hours,70120
+eia_canonical_untouched,/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/data/processed/pacw_hourly.csv
+series_not_labeled_pacw_west,pacificorp_east_west_combined_planning_area
+monthly_consistency_json,"{""partial_2015"": {""n_months"": 6, ""demand_mean_mw_ferc"": 2413.756914575866, ""demand_mean_mw_eia_reported_usable"": 2067.538365618764, ""demand_bias_mean_mw"": 346.21854895710175, ""demand_mean_pct_diff"": 18.853425071071275, ""demand_median_pct_diff"": 25.799554019653186, ""demand_correlation"": 0.8082196179133322, ""ferc_nel_annual_sum_mwh"": 10663069.0, ""eia_demand_reported_usable_sum_mwh"": 6348663.0, ""generation_mean_pct_diff"": 55.93660727220716, ""interchange_mean_pct_diff"": 14.54136592060964, ""adjusted_demand_mean_pct_diff"": 18.519501194957822, ""raw_reported_energy_median_pct_diff"": 74.9041131100066, ""note"": ""Primary monthly demand comparison is mean MW using EIA reported values inside (0.0, 8000.0] MW. Adjusted demand is sensitivity only. Raw unfiltered reported energy is not used because the extract contains negative and multi-GW spikes.""}, ""full_2016_2018"": {""n_months"": 36, ""demand_mean_mw_ferc"": 2390.408509372186, ""demand_mean_mw_eia_reported_usable"": 2322.781919124866, ""demand_bias_mean_mw"": 67.62659024732034, ""demand_mean_pct_diff"": 2.866732480660899, ""demand_median_pct_diff"": 1.8860594370640136, ""demand_correlation"": 0.965870437155666, ""ferc_nel_annual_sum_mwh"": 62888011.0, ""eia_demand_reported_usable_sum_mwh"": 55423063.0, ""generation_mean_pct_diff"": 8.833811885862836, ""interchange_mean_pct_diff"": -306.6824744205411, ""adjusted_demand_mean_pct_diff"": 2.58610868656523, ""raw_reported_energy_median_pct_diff"": 4.015458720298749, ""note"": ""Primary monthly demand comparison is mean MW using EIA reported values inside (0.0, 8000.0] MW. Adjusted demand is sensitivity only. Raw unfiltered reported energy is not used because the extract contains negative and multi-GW spikes.""}}"
+hourly_2016_2018_corr,0.9190143232118547
+hourly_2016_2018_mae,138.40779938419843
+hourly_2016_2018_rmse,192.27356548249907
+hourly_2016_2018_nrmse,0.08277584594580312
+hourly_2016_2018_mean_bias,70.39491006679341
+hourly_2016_2018_daily_mean_corr,0.9090733212559428
+hourly_2016_2018_ldc_mae,70.47281310809305
+ferc_eia_monthly_compatible,True
+hourly_proxy_promotable,True
+proxy_role,candidate_2011_mid2015_hourly_pacw_demand_proxy
+campus_electricity,never; FERC remains regional/grid context
+time_semantics,FERC=hour-ending local Pacific prevailing; EIA-930=hour-ending UTC; kept separate

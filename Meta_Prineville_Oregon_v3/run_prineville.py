@@ -26,9 +26,47 @@ def usgs():
 def water_context():
     subprocess.run([sys.executable, str(ROOT/'src'/'build_water_context.py')], check=True, cwd=ROOT)
 
+def ferc():
+    subprocess.run([sys.executable, str(ROOT / "src" / "prepare_ferc714.py")], check=True, cwd=ROOT)
+
+
+def weather():
+    """Rebuild KRDM then canonical KS39/KRDM weather from cached raw files only."""
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "prepare_weather.py")],
+        check=True,
+        cwd=ROOT,
+    )
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "prepare_weather_ks39.py")],
+        check=True,
+        cwd=ROOT,
+    )
+
+
 def grid():
     eia()
+    ferc()
     egrid()
+
+
+def full():
+    """No-download whole-pipeline rebuild from existing raw files.
+
+    Reuses stage functions; does not acquire new external data. `conditional`
+    already rebuilds reconstruction plus OWRD validation, so `validate` is not
+    repeated.
+    """
+    audit()
+    weather()
+    usgs()
+    grid()
+    oregon()
+    deq()
+    water_context()
+    conditional()
+    simulate()
+    report()
 
 def owrd_validate():
     subprocess.run([sys.executable,str(ROOT/'src'/'owrd_water_model_validation.py'), *sys.argv[2:]],check=True)
@@ -123,6 +161,7 @@ def main():
     elif cmd=='validate': validate()
     elif cmd=='owrd-validate': owrd_validate()
     elif cmd=='eia': eia()
+    elif cmd=='ferc': ferc()
     elif cmd=='egrid': egrid()
     elif cmd=='oregon': oregon()
     elif cmd=='grid': grid()
@@ -130,7 +169,9 @@ def main():
     elif cmd=='usgs': usgs()
     elif cmd=='water-context': water_context()
     elif cmd=='report': report()
+    elif cmd=='weather': weather()
     elif cmd=='weather-ks39': weather_ks39()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|water-context|conditional|simulate|calibrate|validate|owrd-validate|eia|egrid|oregon|grid|deq|usgs|report|weather-ks39]')
+    elif cmd=='full': full()
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|weather|water-context|conditional|simulate|calibrate|validate|owrd-validate|eia|ferc|egrid|oregon|grid|deq|usgs|report|weather-ks39|full]')
 
 if __name__=='__main__': main()

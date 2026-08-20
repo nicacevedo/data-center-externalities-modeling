@@ -1184,7 +1184,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 54761,2011,10,Hermiston,Hermiston Generating Plant,M,respondent_monthly,156481.18,156839.0,242636.0,0.6449215285448161,0.4386266307585129,both,2.0,1409
 55103,2011,10,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,309575.96,309716.0,303992.0,1.0183687728624438,0.01820210485147218,both,2.0,1431
 55125,2011,10,,Vansycle,A,eia_allocated_from_annual,,,3093.072,,,eia923_only,,
-55328,2011,10,Hermiston Power Plant,Hermiston Power Partnership,M,respondent_monthly,96666.08000000002,97119.0,93862.0,1.0298744966013937,0.02943694685766677,both,2.0,392
+55328,2011,10,Hermiston Power Plant,Hermiston Power Partnership,M,respondent_monthly,96666.08000000002,97119.0,93862.0,1.0298744966013937,0.029436946857666766,both,2.0,392
 55544,2011,10,Klamath Generation Peakers,Klamath Expansion Project,A,eia_allocated_from_annual,1207.14,2290.0,3080.858,0.3918194217325174,0.9369542041731757,both,4.0,126
 55739,2011,10,,Condon Windpower LLC,M,respondent_monthly,,,6141.0,,,eia923_only,,
 55871,2011,10,,Klondike Wind Power,A,eia_allocated_from_annual,,,4366.335,,,eia923_only,,
@@ -6077,7 +6077,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 52187,2014,10,,Falls Creek,A,eia_allocated_from_annual,,,1003.597,,,eia923_only,,
 54251,2014,10,,Opal Springs Hydro,A,eia_allocated_from_annual,,,1612.673,,,eia923_only,,
 54721,2014,10,,Warm Springs Power Enterprises,M,respondent_monthly,,,7051.0,,,eia923_only,,
-54761,2014,10,Hermiston,Hermiston Generating Plant,M,respondent_monthly,207867.92,209109.0,214063.0,0.9710595478901072,0.029367486216811813,both,2.0,1221
+54761,2014,10,Hermiston,Hermiston Generating Plant,M,respondent_monthly,207867.92,209109.0,214063.0,0.9710595478901072,0.02936748621681181,both,2.0,1221
 54950,2014,10,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,3921.969,,,eia923_only,,
 55103,2014,10,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,303460.62,303999.0,299966.0,1.0116500536727495,0.011582714297727798,both,2.0,1391
 55125,2014,10,,Vansycle,M,respondent_monthly,,,5666.0,,,eia923_only,,
@@ -7358,7 +7358,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 7431,2015,7,,Dalles Dam North Fishway Project,A,eia_allocated_from_annual,,,2157.397,,,eia923_only,,
 7508,2015,7,,Stone Creek,A,eia_allocated_from_annual,,,2551.492,,,eia923_only,,
 7725,2015,7,,Coffin Butte,A,eia_allocated_from_annual,,,3674.573,,,eia923_only,,
-7931,2015,7,Coyote Springs,Coyote Springs II,M,respondent_monthly,193079.0,193079.0,190308.0,1.0145606070159952,0.01445561927408448,both,1.0,744
+7931,2015,7,Coyote Springs,Coyote Springs II,M,respondent_monthly,193079.0,193079.0,190308.0,1.0145606070159952,0.014455619274084482,both,1.0,744
 8073,2015,7,,Beaver,M,respondent_monthly,,,59579.0,,,eia923_only,,
 10323,2015,7,,Copper Dam Plant,A,eia_allocated_from_annual,,,644.054,,,eia923_only,,
 10324,2015,7,,Peters Drive Plant,A,eia_allocated_from_annual,,,357.449,,,eia923_only,,
@@ -8269,7 +8269,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 56192,2016,1,,Georgia-Pacific Wauna Mill,A,eia_allocated_from_annual,,,16187.0,,,eia923_only,,
 56195,2016,1,,Combine Hills I,M,respondent_monthly,,,7322.0,,,eia923_only,,
 56223,2016,1,,Alden Bailey Power Plant,A,eia_allocated_from_annual,,,0.0,,,eia923_only,,
-56227,2016,1,Port Westward,Port Westward,M,respondent_monthly,152305.68,152424.0,148605.0,1.0249027960028263,0.024597774925447978,both,1.0,360
+56227,2016,1,Port Westward,Port Westward,M,respondent_monthly,152305.68,152424.0,148605.0,1.0249027960028263,0.024597774925447975,both,1.0,360
 56359,2016,1,,Klondike Windpower II,M,respondent_monthly,,,5810.0,,,eia923_only,,
 56360,2016,1,,Leaning Juniper,M,respondent_monthly,,,6995.0,,,eia923_only,,
 56461,2016,1,,Dry Creek LFG to Energy Project,A,eia_allocated_from_annual,,,2008.762,,,eia923_only,,
@@ -9204,7 +9204,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 52187,2016,7,,Falls Creek,A,eia_allocated_from_annual,,,983.26,,,eia923_only,,
 54251,2016,7,,Opal Springs Hydro,A,eia_allocated_from_annual,,,1676.403,,,eia923_only,,
 54721,2016,7,,Warm Springs Power Enterprises,M,respondent_monthly,,,6677.0,,,eia923_only,,
-54761,2016,7,Hermiston,Hermiston Generating Plant,M,respondent_monthly,111726.69,112835.0,113497.0,0.9844021427879152,0.01572078372246603,both,2.0,728
+54761,2016,7,Hermiston,Hermiston Generating Plant,M,respondent_monthly,111726.69,112835.0,113497.0,0.9844021427879152,0.015720783722466027,both,2.0,728
 54950,2016,7,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,181.375,,,eia923_only,,
 55103,2016,7,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,280887.08999999997,281069.0,271501.06,1.0345708779184877,0.03398673003577325,both,2.0,1346
 55125,2016,7,,Vansycle,M,respondent_monthly,,,5349.0,,,eia923_only,,
@@ -9362,7 +9362,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 52187,2016,8,,Falls Creek,A,eia_allocated_from_annual,,,824.867,,,eia923_only,,
 54251,2016,8,,Opal Springs Hydro,A,eia_allocated_from_annual,,,1406.353,,,eia923_only,,
 54721,2016,8,,Warm Springs Power Enterprises,M,respondent_monthly,,,5269.0,,,eia923_only,,
-54761,2016,8,Hermiston,Hermiston Generating Plant,M,respondent_monthly,148007.12,148963.0,153470.0,0.964404248387307,0.03624472747193827,both,2.0,911
+54761,2016,8,Hermiston,Hermiston Generating Plant,M,respondent_monthly,148007.12,148963.0,153470.0,0.964404248387307,0.03624472747193828,both,2.0,911
 54950,2016,8,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,244.412,,,eia923_only,,
 55103,2016,8,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,322653.81,322802.0,311197.33999999997,1.0368141642855946,0.03615270806344503,both,2.0,1460
 55125,2016,8,,Vansycle,M,respondent_monthly,,,4943.0,,,eia923_only,,
@@ -9522,7 +9522,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 54721,2016,9,,Warm Springs Power Enterprises,M,respondent_monthly,,,3474.0,,,eia923_only,,
 54761,2016,9,Hermiston,Hermiston Generating Plant,M,respondent_monthly,174634.91,175185.0,182245.0,0.9582425306592773,0.04265436952432541,both,2.0,1018
 54950,2016,9,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,230.27599999999998,,,eia923_only,,
-55103,2016,9,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,310825.26,310912.0,303551.8,1.0239611822430308,0.023678617933000703,both,2.0,1406
+55103,2016,9,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,310825.26,310912.0,303551.8,1.0239611822430308,0.0236786179330007,both,2.0,1406
 55125,2016,9,,Vansycle,M,respondent_monthly,,,5200.0,,,eia923_only,,
 55328,2016,9,Hermiston Power Plant,Hermiston Power Partnership,M,respondent_monthly,407610.0,407610.0,398577.0,1.022663124063857,0.022410130747318364,both,2.0,1440
 55544,2016,9,Klamath Generation Peakers,Klamath Expansion Project,A,eia_allocated_from_annual,3874.88,4569.0,5990.765,0.646808880001135,0.43570442224365924,both,4.0,258
@@ -9849,7 +9849,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 56192,2016,11,,Georgia-Pacific Wauna Mill,A,eia_allocated_from_annual,,,11485.0,,,eia923_only,,
 56195,2016,11,,Combine Hills I,M,respondent_monthly,,,10753.0,,,eia923_only,,
 56223,2016,11,,Alden Bailey Power Plant,A,eia_allocated_from_annual,,,0.0,,,eia923_only,,
-56227,2016,11,Port Westward,Port Westward,M,respondent_monthly,213559.52000000002,213618.0,208796.0,1.022814230157666,0.022557877280685628,both,1.0,578
+56227,2016,11,Port Westward,Port Westward,M,respondent_monthly,213559.52000000002,213618.0,208796.0,1.022814230157666,0.022557877280685625,both,1.0,578
 56359,2016,11,,Klondike Windpower II,M,respondent_monthly,,,8928.0,,,eia923_only,,
 56360,2016,11,,Leaning Juniper,M,respondent_monthly,,,12024.0,,,eia923_only,,
 56461,2016,11,,Dry Creek LFG to Energy Project,A,eia_allocated_from_annual,,,1688.694,,,eia923_only,,
@@ -9998,7 +9998,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 54950,2016,12,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,219.629,,,eia923_only,,
 55103,2016,12,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,254306.76,254730.0,245475.96,1.035974194784695,0.03534223501808759,both,2.0,1192
 55125,2016,12,,Vansycle,M,respondent_monthly,,,7658.0,,,eia923_only,,
-55328,2016,12,Hermiston Power Plant,Hermiston Power Partnership,M,respondent_monthly,385408.47,385623.0,378401.0,1.0185186349930364,0.018349253024989378,both,2.0,1386
+55328,2016,12,Hermiston Power Plant,Hermiston Power Partnership,M,respondent_monthly,385408.47,385623.0,378401.0,1.0185186349930364,0.01834925302498938,both,2.0,1386
 55544,2016,12,Klamath Generation Peakers,Klamath Expansion Project,A,eia_allocated_from_annual,4318.14,5643.0,5713.795,0.7557393991208996,0.2800586723863476,both,4.0,335
 55739,2016,12,,Condon Windpower LLC,M,respondent_monthly,,,9328.0,,,eia923_only,,
 55871,2016,12,,Klondike Wind Power,A,eia_allocated_from_annual,,,3418.383,,,eia923_only,,
@@ -11757,7 +11757,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 54950,2017,10,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,100.214,,,eia923_only,,
 55103,2017,10,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,300981.25,301062.0,291776.0,1.0315490307633253,0.03106158585884595,both,2.0,1432
 55125,2017,10,,Vansycle,A,eia_allocated_from_annual,,,5820.8,,,eia923_only,,
-55328,2017,10,Hermiston Power Plant,Hermiston Power Partnership,M,respondent_monthly,404981.89,405084.0,396560.0,1.0212373663506153,0.02101499634504569,both,2.0,1443
+55328,2017,10,Hermiston Power Plant,Hermiston Power Partnership,M,respondent_monthly,404981.89,405084.0,396560.0,1.0212373663506153,0.021014996345045688,both,2.0,1443
 55544,2017,10,Klamath Generation Peakers,Klamath Expansion Project,A,eia_allocated_from_annual,1886.4099999999999,2541.0,7783.505,0.2423599650799993,1.417331198988544,both,4.0,150
 55739,2017,10,,Condon Windpower LLC,A,eia_allocated_from_annual,,,8275.179,,,eia923_only,,
 55871,2017,10,,Klondike Wind Power,A,eia_allocated_from_annual,,,3753.671,,,eia923_only,,
@@ -12864,7 +12864,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 54950,2018,4,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,36.035999999999994,,,eia923_only,,
 55103,2018,4,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,67596.45,67775.0,65525.44,1.0316061975318287,0.031117002695867268,both,2.0,324
 55125,2018,4,,Vansycle,A,eia_allocated_from_annual,,,6642.098,,,eia923_only,,
-55328,2018,4,Hermiston Power Plant,Hermiston Power Partnership,M,respondent_monthly,166805.56,167633.0,162566.0,1.0260790079106332,0.02574474954463749,both,2.0,691
+55328,2018,4,Hermiston Power Plant,Hermiston Power Partnership,M,respondent_monthly,166805.56,167633.0,162566.0,1.0260790079106332,0.025744749544637485,both,2.0,691
 55544,2018,4,Klamath Generation Peakers,Klamath Expansion Project,A,eia_allocated_from_annual,1817.43,2680.0,2138.622,0.8498135715427972,0.16273828115029884,both,2.0,146
 55739,2018,4,,Condon Windpower LLC,A,eia_allocated_from_annual,,,9689.097,,,eia923_only,,
 55871,2018,4,,Klondike Wind Power,A,eia_allocated_from_annual,,,4478.214,,,eia923_only,,
@@ -13876,7 +13876,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 58382,2018,9,,Threemile Digester,A,eia_allocated_from_annual,,,2584.87,,,eia923_only,,
 58455,2018,9,,45 Mile Hydroelectric Project,A,eia_allocated_from_annual,,,445.022,,,eia923_only,,
 58470,2018,9,,C-Drop Hydro,A,eia_allocated_from_annual,,,99.78,,,eia923_only,,
-58503,2018,9,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,300551.0,300551.0,295468.0,1.0172032165919829,0.017056916762934405,both,1.0,720
+58503,2018,9,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,300551.0,300551.0,295468.0,1.0172032165919829,0.01705691676293441,both,1.0,720
 58591,2018,9,,POTB Digester,A,eia_allocated_from_annual,,,0.0,,,eia923_only,,
 58687,2018,9,,Finley Buttes Landfill Gas,A,eia_allocated_from_annual,,,2651.503,,,eia923_only,,
 58961,2018,9,,Oregon University System OIT Klamath Fal,A,eia_allocated_from_annual,,,313.578,,,eia923_only,,
@@ -15847,7 +15847,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 58382,2019,7,,Threemile Digester,A,eia_allocated_from_annual,,,3039.002,,,eia923_only,,
 58455,2019,7,,45 Mile Hydroelectric Project,A,eia_allocated_from_annual,,,437.643,,,eia923_only,,
 58470,2019,7,,C-Drop Hydro,A,eia_allocated_from_annual,,,181.42,,,eia923_only,,
-58503,2019,7,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,294349.07,294350.0,288935.0,1.0187380206620866,0.018564626644498015,both,1.0,722
+58503,2019,7,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,294349.07,294350.0,288935.0,1.0187380206620866,0.018564626644498018,both,1.0,722
 58591,2019,7,,POTB Digester,A,eia_allocated_from_annual,,,0.0,,,eia923_only,,
 58687,2019,7,,Finley Buttes Landfill Gas,A,eia_allocated_from_annual,,,2734.283,,,eia923_only,,
 58961,2019,7,,Oregon University System OIT Klamath Falls,A,eia_allocated_from_annual,,,98.694,,,eia923_only,,
@@ -19037,7 +19037,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 58382,2020,9,,Threemile Digester,A,eia_allocated_from_annual,,,3988.772,,,eia923_only,,
 58455,2020,9,,45 Mile Hydroelectric Project,A,eia_allocated_from_annual,,,308.424,,,eia923_only,,
 58470,2020,9,,C-Drop Hydro,A,eia_allocated_from_annual,,,17.984,,,eia923_only,,
-58503,2020,9,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,299517.0,299517.0,294459.0,1.0171772640673236,0.01703140282893096,both,1.0,720
+58503,2020,9,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,299517.0,299517.0,294459.0,1.0171772640673236,0.017031402828930963,both,1.0,720
 58591,2020,9,,POTB Digester,A,eia_allocated_from_annual,,,0.0,,,eia923_only,,
 58687,2020,9,,Finley Buttes Landfill Gas,A,eia_allocated_from_annual,,,2975.631,,,eia923_only,,
 58961,2020,9,,Oregon University System OIT Klamath Falls,A,eia_allocated_from_annual,,,272.812,,,eia923_only,,
@@ -21968,7 +21968,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 7431,2021,9,,Dalles Dam North Fishway Project,A,eia_allocated_from_annual,,,2500.323,,,eia923_only,,
 7508,2021,9,,Stone Creek,A,eia_allocated_from_annual,,,2182.276,,,eia923_only,,
 7725,2021,9,,Coffin Butte,A,eia_allocated_from_annual,,,3567.695,,,eia923_only,,
-7931,2021,9,Coyote Springs,Coyote Springs II,M,respondent_monthly,201085.8,201275.0,197667.0,1.0172957549818633,0.017147885980650614,both,1.0,720
+7931,2021,9,Coyote Springs,Coyote Springs II,M,respondent_monthly,201085.8,201275.0,197667.0,1.0172957549818633,0.017147885980650618,both,1.0,720
 8073,2021,9,,Beaver,AM/A,respondent_monthly,,,156279.584,,,eia923_only,,
 10323,2021,9,,Copper Dam Plant,A,eia_allocated_from_annual,,,866.506,,,eia923_only,,
 10324,2021,9,,Peters Drive Plant,A,eia_allocated_from_annual,,,424.082,,,eia923_only,,
@@ -21989,7 +21989,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 52187,2021,9,,Falls Creek,A,eia_allocated_from_annual,,,842.562,,,eia923_only,,
 54251,2021,9,,Opal Springs Hydro,A,eia_allocated_from_annual,,,1181.133,,,eia923_only,,
 54721,2021,9,,Warm Springs Power Enterprises,A,eia_allocated_from_annual,,,3433.47,,,eia923_only,,
-54761,2021,9,Hermiston,Hermiston Generating Plant,M,respondent_monthly,294748.0,294748.0,296812.0,0.9930461032572807,0.0069781877596563615,both,2.0,1440
+54761,2021,9,Hermiston,Hermiston Generating Plant,M,respondent_monthly,294748.0,294748.0,296812.0,0.9930461032572807,0.006978187759656362,both,2.0,1440
 54950,2021,9,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,48.856,,,eia923_only,,
 55103,2021,9,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,280969.57,281196.0,273462.39999999997,1.027452293258598,0.027082236391711267,both,2.0,1272
 55125,2021,9,,Vansycle,A,eia_allocated_from_annual,,,3449.089,,,eia923_only,,
@@ -23241,7 +23241,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 7431,2022,2,,Dalles Dam North Fishway Project,A,eia_allocated_from_annual,,,3460.607,,,eia923_only,,
 7508,2022,2,,Stone Creek,A,eia_allocated_from_annual,,,4379.278,,,eia923_only,,
 7725,2022,2,,Coffin Butte,A,eia_allocated_from_annual,,,3238.261,,,eia923_only,,
-7931,2022,2,Coyote Springs,Coyote Springs II,M,respondent_monthly,183520.0,183520.0,182096.0,1.0078200509621298,0.007789632841526489,both,1.0,672
+7931,2022,2,Coyote Springs,Coyote Springs II,M,respondent_monthly,183520.0,183520.0,182096.0,1.0078200509621298,0.007789632841526488,both,1.0,672
 8073,2022,2,,Beaver,AM/A,respondent_monthly,,,21124.566,,,eia923_only,,
 10323,2022,2,,Copper Dam Plant,A,eia_allocated_from_annual,,,1393.423,,,eia923_only,,
 10324,2022,2,,Peters Drive Plant,A,eia_allocated_from_annual,,,687.272,,,eia923_only,,
@@ -24627,7 +24627,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 58382,2022,7,,Threemile Digester,A,eia_allocated_from_annual,,,2080.008,,,eia923_only,,
 58455,2022,7,,45 Mile Hydroelectric Project,A,eia_allocated_from_annual,,,434.602,,,eia923_only,,
 58470,2022,7,,C-Drop Hydro,A,eia_allocated_from_annual,,,0.0,,,eia923_only,,
-58503,2022,7,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,195582.0,195582.0,192443.0,1.0163113233528889,0.0161797228420013,both,1.0,574
+58503,2022,7,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,195582.0,195582.0,192443.0,1.0163113233528889,0.016179722842001303,both,1.0,574
 58591,2022,7,,POTB Digester,A,eia_allocated_from_annual,,,132.4,,,eia923_only,,
 58687,2022,7,,Finley Buttes Landfill Gas,A,eia_allocated_from_annual,,,3204.72,,,eia923_only,,
 58961,2022,7,,Oregon University System OIT Klamath Falls,A,eia_allocated_from_annual,,,413.169,,,eia923_only,,
@@ -26719,7 +26719,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 58382,2023,3,,Threemile Digester,A,eia_allocated_from_annual,,,3471.755,,,eia923_only,,
 58455,2023,3,,45 Mile Hydroelectric Project,AM,respondent_monthly,,,0.0,,,eia923_only,,
 58470,2023,3,,C-Drop Hydro,AM,respondent_monthly,,,0.0,,,eia923_only,,
-58503,2023,3,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,324585.0,324585.0,318775.0,1.0182260214885106,0.018061918522249597,both,1.0,744
+58503,2023,3,Carty Generating Station,Carty Generating Station,AM,respondent_monthly,324585.0,324585.0,318775.0,1.0182260214885106,0.0180619185222496,both,1.0,744
 58591,2023,3,,POTB Digester,A,eia_allocated_from_annual,,,51.444,,,eia923_only,,
 58687,2023,3,,Finley Buttes Landfill Gas,A,eia_allocated_from_annual,,,2649.969,,,eia923_only,,
 58961,2023,3,,Oregon University System OIT Klamath Falls,AM,respondent_monthly,,,184.0,,,eia923_only,,
@@ -26922,7 +26922,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 52187,2023,4,,Falls Creek,AM,respondent_monthly,,,2187.0,,,eia923_only,,
 54251,2023,4,,Opal Springs Hydro,AM,respondent_monthly,,,2262.0,,,eia923_only,,
 54721,2023,4,,Warm Springs Power Enterprises,AM,respondent_monthly,,,5702.0,,,eia923_only,,
-54761,2023,4,Hermiston,Hermiston Generating Plant,M,respondent_monthly,292218.54000000004,292239.0,297582.0,0.981976530838559,0.01818787026300147,both,2.0,1427
+54761,2023,4,Hermiston,Hermiston Generating Plant,M,respondent_monthly,292218.54000000004,292239.0,297582.0,0.981976530838559,0.018187870263001466,both,2.0,1427
 54950,2023,4,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,32.087,,,eia923_only,,
 55103,2023,4,,Klamath Cogeneration Plant,M,respondent_monthly,,,0.0,,,eia923_only,,
 55125,2023,4,,Vansycle,AM,respondent_monthly,,,6719.0,,,eia923_only,,
@@ -28248,7 +28248,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 55989,2023,9,,FPL Energy Vansycle LLC (OR),AM,respondent_monthly,,,17386.0,,,eia923_only,,
 56192,2023,9,,Georgia-Pacific Wauna Mill,M,respondent_monthly,,,10167.0,,,eia923_only,,
 56195,2023,9,,Combine Hills I,AM,respondent_monthly,,,4591.0,,,eia923_only,,
-56227,2023,9,Port Westward,Port Westward,M,respondent_monthly,275402.0,275402.0,269327.0,1.022556223475552,0.02230559370728797,both,1.0,720
+56227,2023,9,Port Westward,Port Westward,M,respondent_monthly,275402.0,275402.0,269327.0,1.022556223475552,0.022305593707287966,both,1.0,720
 56359,2023,9,,Klondike Windpower II,AM,respondent_monthly,,,20468.0,,,eia923_only,,
 56360,2023,9,,Leaning Juniper,AM,respondent_monthly,,,17367.0,,,eia923_only,,
 56461,2023,9,,Dry Creek LFG to Energy Project,A,eia_allocated_from_annual,,,1123.845,,,eia923_only,,
@@ -30111,7 +30111,7 @@ plant_id,year,month,plant_name_campd,plant_name,reporting_frequency,monthly_gene
 52187,2024,4,,Falls Creek,AM,respondent_monthly,,,2002.0,,,eia923_only,,
 54251,2024,4,,Opal Springs Hydro,AM,respondent_monthly,,,3343.0,,,eia923_only,,
 54721,2024,4,,Warm Springs Power Enterprises,AM,respondent_monthly,,,6945.0,,,eia923_only,,
-54761,2024,4,Hermiston,Hermiston Generating Plant,M,respondent_monthly,257181.91,257261.0,252668.0,1.0178649848813464,0.017707281514553343,both,2.0,1247
+54761,2024,4,Hermiston,Hermiston Generating Plant,M,respondent_monthly,257181.91,257261.0,252668.0,1.0178649848813464,0.017707281514553346,both,2.0,1247
 54950,2024,4,,Univ of Oregon Central Power Station,A,eia_allocated_from_annual,,,65.164,,,eia923_only,,
 55103,2024,4,Klamath Cogeneration Project,Klamath Cogeneration Plant,M,respondent_monthly,286835.5,286916.0,279715.99,1.0254526385853022,0.025134113734203822,both,2.0,1246
 55125,2024,4,,Vansycle,AM,respondent_monthly,,,6321.0,,,eia923_only,,
