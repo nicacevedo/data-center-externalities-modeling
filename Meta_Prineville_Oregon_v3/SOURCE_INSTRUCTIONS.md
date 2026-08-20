@@ -88,6 +88,8 @@ Populate `data/manual_templates/campus_buildings.csv`.
 
 **Rule:** announcement dates are not commissioning dates. If only a date interval is known, encode lower/upper bounds and propagate the date uncertainty; do not invent a point date.
 
+A high-value local package is already present at `data/raw/prineville_strictly_valuable_permits_v2/`. Integrate it with `src/integrate_prn1_permit_evidence.py` (called from `python run_prineville.py audit`). Do not rescan unrelated `permits_pdfs/` for this package. Do not convert amp/circuit counts to MW or pipe diameter to consumption. The PRN1 late-2023/early-2024 transition is interpretation/scenario evidence and is not used to retune gray-box or the 2023–2024 water holdout.
+
 ## 5. Official Prineville municipal water-source inventory
 
 - Source ID: `OHA_PWS_00682`
@@ -147,7 +149,7 @@ Use for:
 
 These are regional water-system priors/validation evidence, **not Meta-specific meter readings**.
 
-The catalogued filenames `PrinevilleASR_Application.pdf` and `PrinevilleASR_Attachments.pdf` were not present under `data/raw/` (including `data/raw/permits_pdfs/`) at the GWIS integration stage. Local Crook County permit PDFs were scanned with machine-readable text extraction; they are inspection-summary documents and currently add no transmissivity, storativity, specific yield, or pumping-test values. Do not re-download in the no-download pipeline. Prefer tabular GWIS water levels over digitizing ASR hydrograph figures.
+The catalogued filenames `PrinevilleASR_Application.pdf` and `PrinevilleASR_Attachments.pdf` were not present under `data/raw/` (including `data/raw/permits_pdfs/`) at the GWIS integration stage. Local Crook County permit PDFs were scanned with machine-readable text extraction; they are inspection-summary documents and currently add no transmissivity, storativity, specific yield, or pumping-test values. Do not re-download in the no-download pipeline. Prefer tabular GWIS water levels over digitizing ASR hydrograph figures. `python run_prineville.py groundwater-identifiability` audits pumping↔head overlap for a possible small empirical subsystem; it does not fit a groundwater-response model.
 
 ### Local GWIS well/level exports
 - Source ID: `OWRD_GWIS`

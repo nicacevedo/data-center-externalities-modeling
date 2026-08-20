@@ -29,6 +29,14 @@ def water_context():
 def groundwater_context():
     subprocess.run([sys.executable, str(ROOT / "src" / "build_groundwater_context.py")], check=True, cwd=ROOT)
 
+
+def groundwater_identifiability():
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "audit_groundwater_identifiability.py")],
+        check=True,
+        cwd=ROOT,
+    )
+
 def public_extensions():
     subprocess.run(
         [sys.executable, str(ROOT / "src" / "build_public_quantity_extensions.py"), *sys.argv[2:]],
@@ -75,6 +83,7 @@ def full():
     deq()
     water_context()
     groundwater_context()
+    groundwater_identifiability()
     conditional()
     public_extensions()
     simulate()
@@ -86,6 +95,7 @@ def owrd_validate():
 def audit():
     subprocess.run([sys.executable,str(ROOT/'src'/'build_targets.py')],check=True)
     water()
+    subprocess.run([sys.executable, str(ROOT / "src" / "integrate_prn1_permit_evidence.py")], check=True, cwd=ROOT)
     subprocess.run([sys.executable,str(ROOT/'src'/'audit_campus_permits.py')],check=True)
     subprocess.run([sys.executable,str(ROOT/'src'/'change_point_seed.py')],check=True)
 
@@ -181,11 +191,12 @@ def main():
     elif cmd=='usgs': usgs()
     elif cmd=='water-context': water_context()
     elif cmd=='groundwater-context': groundwater_context()
+    elif cmd=='groundwater-identifiability': groundwater_identifiability()
     elif cmd=='public-extensions': public_extensions()
     elif cmd=='report': report()
     elif cmd=='weather': weather()
     elif cmd=='weather-ks39': weather_ks39()
     elif cmd=='full': full()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|weather|water-context|groundwater-context|public-extensions|conditional|simulate|calibrate|validate|owrd-validate|eia|ferc|egrid|oregon|grid|deq|usgs|report|weather-ks39|full]')
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|weather|water-context|groundwater-context|groundwater-identifiability|public-extensions|conditional|simulate|calibrate|validate|owrd-validate|eia|ferc|egrid|oregon|grid|deq|usgs|report|weather-ks39|full]')
 
 if __name__=='__main__': main()

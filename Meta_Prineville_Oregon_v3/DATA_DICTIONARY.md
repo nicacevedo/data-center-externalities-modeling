@@ -240,7 +240,10 @@ Existing OHA/OWRD/Meta identities remapped to well nodes and joined to local OWR
 - `data/canonical/groundwater/hydrogeologic_parameter_inventory.csv`: GWIS well depth / open interval / aquifer unit where reported; 260 MG/y ASR application citation as document context; T/S/Sy and pumping tests unresolved.
 - `data/processed/groundwater/groundwater_pumping_monthly.csv`: accepted City groups, Vitesse/Facebook direct PODs, and Meta annual campus withdrawal as distinct boundaries.
 - `data/processed/groundwater/groundwater_level_observations.csv`: time-indexed GWIS measured water levels (ft BLS; AMSL preserved with datum).
-- `outputs/qc/groundwater_context_qa.csv`, `outputs/groundwater/`: feasibility diagnostics recomputed from the integrated evidence.
+- `outputs/qc/groundwater_context_qa.csv`, `outputs/groundwater/`: feasibility diagnostics recomputed from the integrated evidence, plus identifiability audit tables/figures (`groundwater_identifiability_by_well.csv`, `groundwater_identifiability_summary.csv`). No groundwater-response model is fitted. Mixed datums are compared only as within-well anomaly/Δh. Combined Airport pumping is not split.
+
+## `data/canonical/facility/prn1_addition_facts.csv`
+High-confidence PRN1 addition facts from `data/raw/prineville_strictly_valuable_permits_v2/`. Provenance `reported_permit_document_evidence`. Area is a range/proxy (~82.7k ft²); `exact_final_area` and `electrical_capacity_mw` are missing. Circuit counts are not converted to MW. Not a gray-box or water-holdout input.
 
 ## `data/processed/water/meta_water_early_proxy_envelope.csv`
 2011–2013 only. Direct OWRD POD water, 2011-design WUE×IT proxy (`PUE=1.07`, `WUE=0.31 L/kWh_IT`), and the existing train-only statistical backcast. Does not fill Meta-reported water and does not force a center estimate.

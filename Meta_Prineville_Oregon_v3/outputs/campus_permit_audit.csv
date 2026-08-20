@@ -1,11 +1,11 @@
 check,status,detail
-evidence_permit_ids_unique,PASS,"rows=49, unique_permit_ids=49"
-model_facing_permit_ids_unique,PASS,"rows=35, unique_permit_ids=35"
+evidence_permit_ids_unique,PASS,"rows=56, unique_permit_ids=56"
+model_facing_permit_ids_unique,PASS,"rows=41, unique_permit_ids=41"
 model_facing_subset_of_evidence,PASS,unmatched=[]
 model_facing_dates_parse,PASS,"invalid_issue=0, invalid_final=0"
 final_not_before_opened_proxy,PASS,violations=0
 event_dates_parse,PASS,invalid_event_dates=0
-event_rows_unique,PASS,"rows=21, duplicate_rows=0"
+event_rows_unique,PASS,"rows=32, duplicate_rows=0"
 event_sources_resolve_to_evidence,PASS,unmatched=[]
 model_facing_source_record_present,PASS,missing=0
 model_facing_quality_note_present,PASS,missing=0

@@ -268,7 +268,8 @@ def test_full_rebuilds_conditional_before_public_extensions():
     start = src.index("def full():")
     end = src.index("\ndef ", start + 1)
     body = src[start:end]
-    assert body.index("groundwater_context()") < body.index("conditional()")
+    assert body.index("groundwater_context()") < body.index("groundwater_identifiability()")
+    assert body.index("groundwater_identifiability()") < body.index("conditional()")
     assert body.index("conditional()") < body.index("public_extensions()")
     assert body.index("public_extensions()") < body.index("simulate()")
     assert body.index("simulate()") < body.index("report()")

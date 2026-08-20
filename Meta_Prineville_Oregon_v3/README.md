@@ -172,6 +172,14 @@ python run_prineville.py groundwater-context
 
 Writes canonical groundwater inventory/crosswalk/parameter tables, monthly pumping by accounting boundary, time-indexed GWIS groundwater-level observations, QA, and `outputs/groundwater/` diagnostics. Duplicate GWIS exports are collapsed by file hash and measurement ID. HUC12 is never treated as an aquifer node. Combined OWRD groups are not split. Catalogued ASR application/attachments PDFs are still not in `data/raw`; local Crook County permit PDFs are scanned and currently add no T/S/Sy values.
 
+### Stage 3.7b — groundwater identifiability audit (no dynamics fit)
+
+```bash
+python run_prineville.py groundwater-identifiability
+```
+
+Uses existing GWIS heads and OWRD pumping. Classifies each matched well/pumping group as `ESTIMATION_CANDIDATE`, `VALIDATION_ONLY`, or `INSUFFICIENT`. Diagnostics use within-well head anomaly / Δh (mixed datums are not compared as absolute heads). Combined Airport pumping is not split. This audit does **not** fit a groundwater-response model.
+
 ### Stage 3.8 — public quantity extensions (no new models)
 
 Early 2011–2013 Meta water envelope, 2011 eGRID location-based Scope 2 proxy, regional cooling EWIF, and annual-closed monthly reconstructions from current outputs.
@@ -404,7 +412,7 @@ Rebuilds registries, diagrams, six figures, and `docs/PIPELINE_DATA_MODEL_REPORT
 python run_prineville.py full
 ```
 
-Thin orchestration only: annual targets/permits/OWRD audit → weather (cached KRDM+KS39, no MADIS download) → USGS panels/crosswalk/audit → grid (EIA-930 then FERC 714 then eGRID) → Oregon generators → DEQ → water-context → groundwater-context → conditional reconstruction/OWRD validation → public-extensions → stochastic simulation → pipeline report. Expects raw source files to already exist and does not intentionally acquire new external data. `conditional` already rebuilds reconstruction, so `validate` is not repeated. Public extensions never read a stale conditional reconstruction because `full` rebuilds `conditional` first.
+Thin orchestration only: annual targets/permits/OWRD audit → weather (cached KRDM+KS39, no MADIS download) → USGS panels/crosswalk/audit → grid (EIA-930 then FERC 714 then eGRID) → Oregon generators → DEQ → water-context → groundwater-context → groundwater-identifiability → conditional reconstruction/OWRD validation → public-extensions → stochastic simulation → pipeline report. Expects raw source files to already exist and does not intentionally acquire new external data. `conditional` already rebuilds reconstruction, so `validate` is not repeated. Public extensions never read a stale conditional reconstruction because `full` rebuilds `conditional` first. The current freeze label is **Prineville Public-Data Baseline v1**.
 
 ## What is missing, and how to fill it
 
@@ -448,9 +456,11 @@ See `SOURCE_INSTRUCTIONS.md` for every source and `MANUAL_ACQUISITION.md` for th
 
 ### Stage 4 permit chronology status (2026-08-12)
 
-Crook County ePermitting Inspection Summary PDFs have been reviewed for the early campus and the prioritized 2015-2025 permit set. The populated code-compatible view is `data/manual_templates/campus_buildings.csv`; the full permit-level provenance table is `data/canonical/campus_permit_evidence.csv`; and high-confidence dated milestones are in `data/canonical/campus_permit_events.csv`.
+Crook County ePermitting Inspection Summary PDFs have been reviewed for the early campus and the prioritized 2015-2025 permit set. The populated code-compatible view is `data/manual_templates/campus_buildings.csv`; the full permit-level provenance table is `data/canonical/campus_permit_evidence.csv`; high-confidence dated milestones are in `data/canonical/campus_permit_events.csv`; and PRN1 addition quantitative facts (area range, circuit counts, cooling/plumbing topology) are in `data/canonical/facility/prn1_addition_facts.csv`.
 
-Important semantics: the inspection PDFs do not expose a true permit issue date, square footage, or MW/kVA service capacity. `campus_buildings.csv::issue_date` therefore uses the ePermitting search-result `Opened` date as an explicitly documented proxy. `final_or_co_date` uses an approved final inspection where available. Partial/final milestone detail is preserved in the evidence table and quality notes. Do not interpret support-only/expired permits or the 2022 STR-01 closeout as new capacity epochs.
+The local package `data/raw/prineville_strictly_valuable_permits_v2/` supplies the 2021–2024 PRN1 addition/chiller evidence. Addition area is stored as an unresolved ~82.7k-ft² range; `electrical_capacity_mw` remains missing. This is facility technology/commissioning evidence, **not** a gray-box or water-holdout retune: 2023–2024 remain held out and the gray-box remains a simplified common-architecture baseline.
+
+Important semantics: the inspection PDFs do not expose a true permit issue date or MW/kVA service capacity. `campus_buildings.csv::issue_date` uses the ePermitting search-result `Opened` date as an explicitly documented proxy where that date exists; for the v2 PRN1 package, first inspection date is the issue_date proxy because Opened dates are not in the local files. `final_or_co_date` uses an approved final inspection where available. Partial/final milestone detail is preserved in the evidence table and quality notes. Do not interpret support-only/expired permits or the 2022 STR-01 closeout as new capacity epochs. Do not convert amp/circuit counts to MW or pipe diameter to consumption.
 
 ### Stage 4 audit integration
 
