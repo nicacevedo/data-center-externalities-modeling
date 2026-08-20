@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -85,10 +86,52 @@ def test_classifications_reproducible_from_explicit_criteria():
 def test_original_head_observations_not_replaced():
     lv = pd.read_csv(LEVELS)
     by = pd.read_csv(BY_WELL)
+    qc = pd.read_csv(ROOT / "outputs" / "groundwater" / "gwis_measurement_model_qc.csv")
     numeric = pd.to_numeric(lv["water_level_below_land_surface"], errors="coerce")
     n_by_node = numeric.notna().groupby(lv["well_node_id"]).sum()
+    elig = qc["eligible_for_state_model"]
+    if elig.dtype != bool:
+        elig = elig.astype(str).str.lower().isin(["true", "1"])
+    n_elig = qc.loc[elig].groupby("well_node_id").size()
     for node, n in n_by_node.items():
         hit = by[by.well_node_id.eq(node)]
         if hit.empty:
             continue
-        assert int(hit.iloc[0]["n_numeric_head_observations"]) == int(n)
+        assert int(hit.iloc[0]["n_numeric_bls_observations"]) == int(n)
+        expected_elig = int(n_elig.get(node, 0))
+        assert int(hit.iloc[0]["n_numeric_head_observations"]) == expected_elig
+    assert set(qc["observation_key"].astype(str)) == set(lv["observation_key"].astype(str))
+
+
+def test_head_anomaly_sign_and_eligible_subset_in_identifiability():
+    by = pd.read_csv(BY_WELL)
+    summary = pd.read_csv(SUMMARY)
+    both = by[["head_anomaly_std_ft", "bls_anomaly_std_ft"]].dropna()
+    assert not both.empty
+    assert np.allclose(
+        both["head_anomaly_std_ft"].to_numpy(float),
+        both["bls_anomaly_std_ft"].to_numpy(float),
+        atol=1e-8,
+        equal_nan=True,
+    )
+    assert "head_anomaly_ft=-(" in str(summary.iloc[0]["head_target_definition"])
+    assert "sufficient data to attempt a validated empirical response model" in str(
+        summary.iloc[0]["estimation_candidate_means"]
+    )
+    assert bool(summary.iloc[0]["lags_are_exploratory_diagnostics_not_model_specification"])
+    src = AUDIT_SRC.read_text(encoding="utf-8")
+    assert "head_anomaly = -bls_anomaly" in src
+    assert "delta_head = -delta_bls" in src
+
+
+def test_no_unresolved_vitesse_or_split_airport_or_interpolation():
+    by = pd.read_csv(BY_WELL)
+    src = AUDIT_SRC.read_text(encoding="utf-8")
+    assert "interpolate(" not in src.lower()
+    assert by["head_interpolation"].eq("none").all()
+    assert by["absolute_cross_well_gradient"].eq("not_computed").all()
+    assert not by.matched_pumping_group_id.astype(str).isin(["SRC-GA", "SRC-GB"]).any()
+    for rid in UNMAPPED_VITESSE:
+        row = by[by.well_node_id.eq(f"VITESSE:{rid}")].iloc[0]
+        assert not bool(row.defensible_pumping_mapping)
+        assert row.identifiability_class == "INSUFFICIENT"

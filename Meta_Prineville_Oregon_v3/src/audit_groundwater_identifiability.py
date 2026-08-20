@@ -1,8 +1,15 @@
 """Groundwater identifiability audit (no dynamics model).
 
-Uses existing processed GWIS heads and OWRD pumping. Diagnostics are
-within-well (anomaly / change) so mixed NGVD29/NAVD88 datums are never
-compared as absolute heads. Combined Airport pumping is not split.
+Uses the measurement-QC eligible GWIS subset and OWRD pumping. Diagnostics are
+within-well so mixed NGVD29/NAVD88 datums are never compared as absolute heads.
+
+bls_anomaly_ft = BLS − well-mean BLS (deeper water table is positive).
+head_anomaly_ft = −bls_anomaly_ft (higher hydraulic head is positive).
+delta_head_ft = −ΔBLS.
+
+Combined Airport pumping is not split. ESTIMATION_CANDIDATE means sufficient
+data to attempt a validated empirical response model, not identified dynamics.
+Lag 0/1/3/6-month correlations are exploratory diagnostics, not a model spec.
 """
 from __future__ import annotations
 
@@ -11,6 +18,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+from audit_gwis_measurement_qc import QC_OBS, main as run_measurement_qc
 
 ROOT = Path(__file__).resolve().parents[1]
 LEVELS = ROOT / "data" / "processed" / "groundwater" / "groundwater_level_observations.csv"
@@ -121,7 +130,22 @@ def _defensible_mapping(xw_row: pd.Series) -> bool:
     return True
 
 
-def _well_audit_rows(levels: pd.DataFrame, pump: pd.DataFrame, xwalk: pd.DataFrame, inv: pd.DataFrame) -> pd.DataFrame:
+def _eligible_observation_keys(qc: pd.DataFrame) -> set[str]:
+    flag = qc["eligible_for_state_model"]
+    if flag.dtype == bool:
+        hit = flag
+    else:
+        hit = flag.astype(str).str.lower().isin(["true", "1"])
+    return set(qc.loc[hit, "observation_key"].astype(str))
+
+
+def _well_audit_rows(
+    levels: pd.DataFrame,
+    pump: pd.DataFrame,
+    xwalk: pd.DataFrame,
+    inv: pd.DataFrame,
+    qc: pd.DataFrame,
+) -> tuple[pd.DataFrame, dict]:
     pump = pump.copy()
     pump = pump[pump.boundary_id.ne(META_BOUNDARY)].copy()
     pump["year_month"] = pd.PeriodIndex(pump["year_month"].astype(str), freq="M")
@@ -130,9 +154,23 @@ def _well_audit_rows(levels: pd.DataFrame, pump: pd.DataFrame, xwalk: pd.DataFra
         for gid, g in pump.groupby("node_or_reporting_group_id")
     }
 
-    numeric = levels.copy()
-    numeric["bls"] = pd.to_numeric(numeric["water_level_below_land_surface"], errors="coerce")
-    numeric = numeric[numeric["bls"].notna()].copy()
+    levels = levels.copy()
+    levels["bls"] = pd.to_numeric(levels["water_level_below_land_surface"], errors="coerce")
+    numeric_all = levels[levels["bls"].notna()].copy()
+    n_bls_by_node = numeric_all.groupby(numeric_all["well_node_id"].astype(str)).size().to_dict()
+    qc_by_node = qc.groupby(qc["well_node_id"].astype(str))
+    n_excl_by_node = {
+        node: int((~g["eligible_for_state_model"].astype(bool)).sum())
+        if g["eligible_for_state_model"].dtype == bool
+        else int((~g["eligible_for_state_model"].astype(str).str.lower().isin(["true", "1"])).sum())
+        for node, g in qc_by_node
+    }
+    n_unknown_by_node = {
+        node: int(g["eligibility_class"].eq("unknown_ambiguous").sum()) for node, g in qc_by_node
+    }
+
+    eligible_keys = _eligible_observation_keys(qc)
+    numeric = numeric_all[numeric_all["observation_key"].astype(str).isin(eligible_keys)].copy()
     numeric["obs_date"] = pd.to_datetime(numeric["measurement_datetime"], errors="coerce")
     numeric = numeric[numeric["obs_date"].notna()].copy()
     numeric["year_month"] = numeric["obs_date"].dt.to_period("M")
@@ -140,7 +178,7 @@ def _well_audit_rows(levels: pd.DataFrame, pump: pd.DataFrame, xwalk: pd.DataFra
     xw = xwalk.set_index("well_node_id")
     inv_i = inv.set_index("well_node_id")
 
-    nodes = sorted(set(numeric["well_node_id"].dropna().astype(str)))
+    nodes = sorted(set(numeric_all["well_node_id"].dropna().astype(str)))
     extra = [f"VITESSE:{rid}" for rid in UNMAPPED_VITESSE if f"VITESSE:{rid}" not in nodes]
     rows = []
     monthly_store = {}
@@ -187,16 +225,20 @@ def _well_audit_rows(levels: pd.DataFrame, pump: pd.DataFrame, xwalk: pd.DataFra
             peak_month = ""
 
         monthly = (
-            sub.groupby("year_month", as_index=True)["bls"].median().rename("head_median_bls_ft")
+            sub.groupby("year_month", as_index=True)["bls"].median().rename("median_bls_ft")
             if n_heads
             else pd.Series(dtype=float)
         )
         if len(monthly):
-            anomaly = monthly - float(monthly.mean())
-            delta = monthly.diff()
+            bls_anomaly = monthly - float(monthly.mean())
+            head_anomaly = -bls_anomaly
+            delta_bls = monthly.diff()
+            delta_head = -delta_bls
         else:
-            anomaly = pd.Series(dtype=float)
-            delta = pd.Series(dtype=float)
+            bls_anomaly = pd.Series(dtype=float)
+            head_anomaly = pd.Series(dtype=float)
+            delta_bls = pd.Series(dtype=float)
+            delta_head = pd.Series(dtype=float)
 
         pseries = pump_by_group.get(group, pd.DataFrame(columns=["year_month", "pump_m3"]))
         if node in {"SRC-GA", "SRC-GB"} and group != COMBINED_AIRPORT:
@@ -238,8 +280,8 @@ def _well_audit_rows(levels: pd.DataFrame, pump: pd.DataFrame, xwalk: pd.DataFra
                 p_ym = ym - lag
                 if p_ym in pump_lookup.index:
                     shifted.append(ym)
-                    anom_vals.append(float(anomaly.loc[ym]))
-                    delta_vals.append(float(delta.loc[ym]) if ym in delta.index else np.nan)
+                    anom_vals.append(float(head_anomaly.loc[ym]))
+                    delta_vals.append(float(delta_head.loc[ym]) if ym in delta_head.index else np.nan)
                     pump_vals.append(float(pump_lookup.loc[p_ym]))
                     n_obs_lag += int((sub["year_month"] == ym).sum())
             lag_counts[lag] = int(n_obs_lag)
@@ -248,14 +290,16 @@ def _well_audit_rows(levels: pd.DataFrame, pump: pd.DataFrame, xwalk: pd.DataFra
 
         if n_overlap_months:
             ov_pump = np.asarray([float(pump_lookup.loc[ym]) for ym in same_month], float)
-            ov_anom = np.asarray([float(anomaly.loc[ym]) for ym in same_month], float)
+            ov_anom = np.asarray([float(head_anomaly.loc[ym]) for ym in same_month], float)
             pump_std = float(np.nanstd(ov_pump, ddof=1)) if len(ov_pump) > 1 else 0.0
             pump_mean = float(np.nanmean(np.abs(ov_pump))) if len(ov_pump) else np.nan
             pump_cv = float(pump_std / pump_mean) if pump_mean and np.isfinite(pump_mean) and pump_mean > 0 else np.nan
-            head_std = float(np.nanstd(ov_anom, ddof=1)) if len(ov_anom) > 1 else float(np.nanstd(anomaly, ddof=1) if len(anomaly) > 1 else 0.0)
+            head_std = float(np.nanstd(ov_anom, ddof=1)) if len(ov_anom) > 1 else float(np.nanstd(head_anomaly, ddof=1) if len(head_anomaly) > 1 else 0.0)
+            bls_std = float(np.nanstd(np.asarray([float(bls_anomaly.loc[ym]) for ym in same_month], float), ddof=1)) if len(ov_anom) > 1 else float(np.nanstd(bls_anomaly, ddof=1) if len(bls_anomaly) > 1 else 0.0)
         else:
             pump_std = pump_cv = np.nan
-            head_std = float(np.nanstd(anomaly, ddof=1)) if len(anomaly) > 1 else (float(sub["bls"].std()) if n_heads > 1 else np.nan)
+            head_std = float(np.nanstd(head_anomaly, ddof=1)) if len(head_anomaly) > 1 else (float(sub["bls"].std()) if n_heads > 1 else np.nan)
+            bls_std = float(np.nanstd(bls_anomaly, ddof=1)) if len(bls_anomaly) > 1 else head_std
 
         mapping_ok = False if node in extra else _defensible_mapping(xrow)
         rec = {
@@ -272,6 +316,9 @@ def _well_audit_rows(levels: pd.DataFrame, pump: pd.DataFrame, xwalk: pd.DataFra
             "aquifer_geologic_unit": aquifer if n_heads else str(irow.get("aquifer_geologic_unit") or ""),
             "first_head_observation": first_head,
             "last_head_observation": last_head,
+            "n_numeric_bls_observations": int(n_bls_by_node.get(node, 0)),
+            "n_excluded_by_measurement_qc": int(n_excl_by_node.get(node, 0)),
+            "n_unknown_ambiguous_eligible": int(n_unknown_by_node.get(node, 0)),
             "n_numeric_head_observations": n_heads,
             "median_observation_interval_days": median_interval,
             "n_years_with_observations": n_years,
@@ -286,6 +333,7 @@ def _well_audit_rows(levels: pd.DataFrame, pump: pd.DataFrame, xwalk: pd.DataFra
             "n_head_observations_with_lag3_pumping": lag_counts[3],
             "n_head_observations_with_lag6_pumping": lag_counts[6],
             "head_anomaly_std_ft": head_std,
+            "bls_anomaly_std_ft": bls_std,
             "pumping_std_m3_overlap": pump_std,
             "pumping_cv_overlap": pump_cv,
             "max_year_observation_share": year_share,
@@ -301,16 +349,20 @@ def _well_audit_rows(levels: pd.DataFrame, pump: pd.DataFrame, xwalk: pd.DataFra
             "corr_dhead_pump_lag3": lag_corr_delta[3],
             "corr_dhead_pump_lag6": lag_corr_delta[6],
             "lags_months_evaluated": "0,1,3,6",
+            "lags_are_exploratory_diagnostics_not_model_specification": True,
+            "head_target_definition": "head_anomaly_ft=-(BLS_ft-well_mean_BLS_ft); delta_head_ft=-delta_BLS_ft",
             "head_interpolation": "none",
             "absolute_cross_well_gradient": "not_computed",
             "diagnostics_are_identifiability_only": True,
+            "estimation_candidate_means": "sufficient data to attempt a validated empirical response model",
         }
         rec["identifiability_class"] = classify_identifiability(rec)
         rec["classification_reason"] = _class_reason(rec)
         rows.append(rec)
         monthly_store[node] = {
             "monthly": monthly,
-            "anomaly": anomaly,
+            "bls_anomaly": bls_anomaly,
+            "head_anomaly": head_anomaly,
             "pump": pump_lookup,
             "group": group,
         }
@@ -323,9 +375,10 @@ def _class_reason(rec: dict) -> str:
     klass = rec["identifiability_class"]
     if klass == "ESTIMATION_CANDIDATE":
         return (
-            "confirmed mapping, ≥12 overlapping months, ≥3 years / ≥12 months of heads, "
-            "span ≥24 months, nontrivial head and pumping variation, and observations not "
-            "concentrated in one campaign."
+            "sufficient data to attempt a validated empirical response model: confirmed mapping, "
+            "≥12 overlapping months, ≥3 years / ≥12 months of eligible heads, span ≥24 months, "
+            "nontrivial head and pumping variation, and observations not concentrated in one campaign. "
+            "This is not proof that a response is identified."
         )
     if klass == "VALIDATION_ONLY":
         if not rec["defensible_pumping_mapping"]:
@@ -359,9 +412,12 @@ def _update_feasibility(by_well: pd.DataFrame, overall: str) -> None:
     feas["n_insufficient_wells"] = n_ins
     feas["estimation_candidate_nodes"] = est_nodes
     extra = (
-        f" Empirical reduced-order identifiability (no model fitted): {overall}. "
-        f"ESTIMATION_CANDIDATE={n_est} [{est_nodes or 'none'}]; "
+        f" Empirical reduced-order screen (no model fitted; not identified dynamics): {overall}. "
+        f"ESTIMATION_CANDIDATE={n_est} [{est_nodes or 'none'}] means sufficient data to attempt "
+        f"a validated empirical response model. "
         f"VALIDATION_ONLY={n_val}; INSUFFICIENT={n_ins}. "
+        "Identifiability uses measurement-QC eligible GWIS observations only. "
+        "head_anomaly_ft = -(BLS − well-mean BLS); BLS and AMSL are paired, not independent. "
         "Broad Class A/B/C above remains the parameterized-aquifer feasibility, not a competing definition."
     )
     marker = " Empirical reduced-order identifiability"
@@ -396,7 +452,7 @@ def _plot_overlap(by_well: pd.DataFrame, monthly_store: dict) -> None:
                 "o",
                 color="#1d4ed8",
                 ms=3.5,
-                label="head month (median of observations)" if node == nodes[0] else None,
+                label="eligible head month (median BLS)" if node == nodes[0] else None,
             )
         ax.set_ylim(0, 1)
         ax.set_yticks([])
@@ -411,7 +467,7 @@ def _plot_overlap(by_well: pd.DataFrame, monthly_store: dict) -> None:
             color="#111827",
         )
         ax.grid(True, axis="x", alpha=0.25)
-    axes[0].set_title("Groundwater pumping vs head-month overlap (no interpolation)", loc="left")
+    axes[0].set_title("Groundwater pumping vs eligible head-month overlap (no interpolation)", loc="left")
     axes[0].legend(loc="upper left", fontsize=7, frameon=False, ncol=2)
     axes[-1].set_xlabel("Month")
     fig.tight_layout()
@@ -436,7 +492,7 @@ def _plot_diagnostics(by_well: pd.DataFrame, monthly_store: dict) -> None:
     for i, node in enumerate(nodes):
         store = monthly_store[node]
         monthly = store["monthly"]
-        anomaly = store["anomaly"]
+        head_anomaly = store["head_anomaly"]
         pump = store["pump"]
         ax_t, ax_s = axes[i]
         if len(pump):
@@ -449,10 +505,10 @@ def _plot_diagnostics(by_well: pd.DataFrame, monthly_store: dict) -> None:
             )
         ax_t.set_ylabel("pump m³", fontsize=8)
         ax_t2 = ax_t.twinx()
-        if len(anomaly):
+        if len(head_anomaly):
             ax_t2.plot(
-                [p.to_timestamp() for p in anomaly.index],
-                anomaly.to_numpy(float),
+                [p.to_timestamp() for p in head_anomaly.index],
+                head_anomaly.to_numpy(float),
                 "-o",
                 color="#1d4ed8",
                 ms=3,
@@ -460,20 +516,21 @@ def _plot_diagnostics(by_well: pd.DataFrame, monthly_store: dict) -> None:
             )
         ax_t2.set_ylabel("head anomaly ft", fontsize=8)
         ax_t.set_title(node, loc="left", fontsize=9)
-        common = anomaly.index.intersection(pump.index) if len(anomaly) and len(pump) else pd.PeriodIndex([], freq="M")
+        common = head_anomaly.index.intersection(pump.index) if len(head_anomaly) and len(pump) else pd.PeriodIndex([], freq="M")
         if len(common):
             ax_s.scatter(
                 pump.loc[common].to_numpy(float),
-                anomaly.loc[common].to_numpy(float),
+                head_anomaly.loc[common].to_numpy(float),
                 s=18,
                 color="#1d4ed8",
             )
         ax_s.set_xlabel("same-month pumping m³", fontsize=8)
-        ax_s.set_ylabel("head anomaly ft", fontsize=8)
+        ax_s.set_ylabel("head anomaly ft (higher = higher water level)", fontsize=8)
         ax_s.grid(True, alpha=0.3)
         ax_t.grid(True, axis="y", alpha=0.3)
     fig.suptitle(
-        "Identifiability diagnostics only (not causal effects or calibrated coefficients)",
+        "Coverage diagnostics only (not causal effects, calibrated coefficients, or identified dynamics). "
+        "head_anomaly_ft = -(BLS − well-mean BLS).",
         fontsize=10,
         y=1.01,
     )
@@ -483,6 +540,7 @@ def _plot_diagnostics(by_well: pd.DataFrame, monthly_store: dict) -> None:
 
 
 def main() -> None:
+    qc = run_measurement_qc()
     levels = pd.read_csv(LEVELS)
     pump = pd.read_csv(PUMP)
     xwalk = pd.read_csv(XWALK)
@@ -490,19 +548,33 @@ def main() -> None:
 
     if pump["node_or_reporting_group_id"].astype(str).isin(["SRC-GA", "SRC-GB"]).any():
         raise AssertionError("Airport pumping was split; combined group required")
+    if not QC_OBS.exists():
+        raise FileNotFoundError(QC_OBS)
 
-    by_well, monthly_store = _well_audit_rows(levels, pump, xwalk, inv)
+    by_well, monthly_store = _well_audit_rows(levels, pump, xwalk, inv, qc)
     if any(c.startswith("mixed_datum") or c.endswith("_absolute_gradient_ft") for c in by_well.columns):
         raise AssertionError("absolute cross-well gradients must not be computed")
+    if "head_anomaly_std_ft" in by_well.columns and "bls_anomaly_std_ft" in by_well.columns:
+        both = by_well[["head_anomaly_std_ft", "bls_anomaly_std_ft"]].dropna()
+        if not both.empty and not np.allclose(
+            both["head_anomaly_std_ft"].to_numpy(float),
+            both["bls_anomaly_std_ft"].to_numpy(float),
+            atol=1e-8,
+            equal_nan=True,
+        ):
+            raise AssertionError("head_anomaly_std_ft must equal bls_anomaly_std_ft in magnitude")
 
     overall = _overall(by_well)
     n_est = int(by_well.identifiability_class.eq("ESTIMATION_CANDIDATE").sum())
     n_val = int(by_well.identifiability_class.eq("VALIDATION_ONLY").sum())
     n_ins = int(by_well.identifiability_class.eq("INSUFFICIENT").sum())
     next_step = (
-        "Fit a small empirical reduced-order head-response model only on ESTIMATION_CANDIDATE "
-        "well/pumping groups, keeping combined Airport pumping unsplit, using within-well head "
-        "anomaly or Δh (no mixed-datum absolute heads), and holding VALIDATION_ONLY wells out of estimation."
+        "If a first groundwater benchmark is frozen, attempt a small empirical reduced-order "
+        "head-response model only on ESTIMATION_CANDIDATE well/pumping groups (sufficient data "
+        "to attempt a validated empirical response model, not identified dynamics), keeping "
+        "combined Airport pumping unsplit, using within-well head_anomaly_ft = -(BLS − mean BLS) "
+        "or Δh (no mixed-datum absolute heads), holding VALIDATION_ONLY wells out of estimation, "
+        "and treating 0/1/3/6-month lag correlations as exploratory rather than a model specification."
         if overall == "A-small-subsystem-possible"
         else (
             "Do not attempt reduced-order estimation; retain measured heads as validation-only targets "
@@ -528,13 +600,18 @@ def main() -> None:
                 "insufficient_nodes": ",".join(
                     by_well.loc[by_well.identifiability_class.eq("INSUFFICIENT"), "well_node_id"]
                 ),
+                "n_numeric_bls_all": int(pd.to_numeric(levels["water_level_below_land_surface"], errors="coerce").notna().sum()),
+                "n_eligible_state_observations": int(by_well["n_numeric_head_observations"].sum()),
                 "lags_months_evaluated": "0,1,3,6",
+                "lags_are_exploratory_diagnostics_not_model_specification": True,
+                "head_target_definition": "head_anomaly_ft=-(BLS_ft-well_mean_BLS_ft); delta_head_ft=-delta_BLS_ft",
                 "head_interpolation": "none",
                 "airport_pumping": COMBINED_AIRPORT,
                 "vitesse_unmapped_reports": ",".join(UNMAPPED_VITESSE),
                 "datums_note": "within-well anomaly/Δh only; mixed NGVD1929/NAVD1988 absolute heads are not compared",
                 "model_fitted": False,
                 "diagnostics_are_identifiability_only": True,
+                "estimation_candidate_means": "sufficient data to attempt a validated empirical response model",
                 "next_scientific_modeling_step": next_step,
             }
         ]

@@ -1380,11 +1380,13 @@ def write_markdown(
         gw_id = pd.read_csv(gw_id_path).iloc[0]
         gw_id_md = (
             f"**Groundwater identifiability (no model fitted):** `{gw_id['overall_identifiability_conclusion']}`. "
-            f"ESTIMATION_CANDIDATE: `{gw_id['estimation_candidate_nodes'] or 'none'}`. "
+            f"ESTIMATION_CANDIDATE (sufficient data to attempt a validated empirical response model, not identified dynamics): `{gw_id['estimation_candidate_nodes'] or 'none'}`. "
             f"VALIDATION_ONLY: `{gw_id['validation_only_nodes'] or 'none'}`. "
             f"INSUFFICIENT: `{gw_id['insufficient_nodes'] or 'none'}`. "
-            "GWIS heads are measured well observations; OWRD pumping is reported at its own boundary; "
-            "permit events are facility technology/commissioning evidence. "
+            "GWIS BLS and AMSL are paired representations of the same measurement. "
+            "Identifiability uses measurement-QC eligible observations. "
+            "head_anomaly_ft = -(BLS − well-mean BLS). "
+            "OWRD pumping is reported at its own boundary; permit events are facility technology/commissioning evidence. "
             f"Next modeling step (not executed here): {gw_id['next_scientific_modeling_step']}"
         )
     else:
@@ -1452,7 +1454,7 @@ def write_markdown(
 | Campus source-share θ / groundwater extraction q_dc | City production and POD totals are different boundaries | Campus well/utility delivery meters with source IDs |
 | Generator-to-Meta attribution | Oregon CAMPD/EIA are state tables only | Contract/path/pseudo-tie evidence |
 | Indirect electricity water | Only a regional-average cooling EWIF × Meta MWh proxy exists | Generator-resolved water with attribution, or a documented BA-average used as such |
-| Groundwater head observations | GWIS well-level BLS/AMSL now ingested; a modeled head field is still unidentified | Identifiability audit exists; do not fit dynamics until ESTIMATION_CANDIDATE subsystems are modeled as a next step |
+| Groundwater head observations | GWIS well-level BLS/AMSL ingested as paired representations of the same measurement; a modeled head field is still unidentified | Measurement QC + identifiability screen exist; ESTIMATION_CANDIDATE means sufficient data to attempt a validated empirical response model, not identified dynamics |
 | Groundwater storage / recharge | Storativity, specific yield, and recharge are not recovered from local PDFs or GWIS | Catalogued ASR attachments (still not local) or pumping-test reports; IWA is surface routing |
 | ISO WUE | Withdrawal/facility-kWh is not consumption/IT-kWh | Consumption and IT energy on ISO boundaries |
 | Cost variables | No tariffs/bills | PacifiCorp / City rate schedules and bills |

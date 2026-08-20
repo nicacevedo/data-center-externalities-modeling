@@ -178,7 +178,7 @@ Writes canonical groundwater inventory/crosswalk/parameter tables, monthly pumpi
 python run_prineville.py groundwater-identifiability
 ```
 
-Uses existing GWIS heads and OWRD pumping. Classifies each matched well/pumping group as `ESTIMATION_CANDIDATE`, `VALIDATION_ONLY`, or `INSUFFICIENT`. Diagnostics use within-well head anomaly / Δh (mixed datums are not compared as absolute heads). Combined Airport pumping is not split. This audit does **not** fit a groundwater-response model.
+Uses the measurement-QC eligible GWIS subset (explicit method/status exclusions only; unknown statuses are retained and labeled) and OWRD pumping. Classifies each matched well/pumping group as `ESTIMATION_CANDIDATE` (sufficient data to attempt a validated empirical response model, not identified dynamics), `VALIDATION_ONLY`, or `INSUFFICIENT`. Within-well `head_anomaly_ft = -(BLS − well-mean BLS)`. Mixed datums are not compared as absolute heads. Combined Airport pumping is not split. 0/1/3/6-month lag correlations are exploratory diagnostics, not a model specification. This audit does **not** fit a groundwater-response model.
 
 ### Stage 3.8 — public quantity extensions (no new models)
 
