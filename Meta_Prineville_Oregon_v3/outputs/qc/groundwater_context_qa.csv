@@ -1,13 +1,17 @@
 item,value,status,detail
-n_well_nodes,31,PASS,unique physical/source wells in inventory
-n_with_official_coordinates,15,PASS,official lat/lon only; unresolved remain blank
-n_unresolved_coordinates,16,PASS,no inferred coordinates
+n_gwis_raw_txt_files,54,PASS,local GWIS text exports
+n_gwis_unique_file_hashes,47,PASS,byte-identical copies collapsed for uniqueness
+n_gwis_duplicate_extra_files,7,PASS,exact duplicate exports retained only in provenance
+n_well_nodes,34,PASS,unique physical/source wells in inventory
+n_with_official_coordinates,23,PASS,official lat/lon only; unresolved remain blank
+n_unresolved_coordinates,11,PASS,no inferred coordinates
 n_huc12_as_aquifer_node,0,PASS,HUC12 stored as location attribute only
 n_city_pumping_rows,1272,PASS,matches accepted OWRD model-use rows
 n_direct_pumping_rows,468,PASS,matches direct POD monthly rows
 n_meta_annual_pumping_rows,11,PASS,years with reported Meta water
-n_numeric_groundwater_level_obs,0,PASS,time-indexed heads recovered
-n_unresolved_hydrograph_registrations,2,PASS,"document hydrographs registered, not digitized"
+n_unique_gwis_wells,8,PASS,deduplicated GWIS sites
+n_numeric_groundwater_level_obs,800,PASS,time-indexed GWIS BLS
+n_headlike_amsl_with_datum,800,PASS,GWIS AMSL preserved with datum
 n_measured_pumping_test_parameters,0,PASS,no fabricated pumping-test values
-n_crosswalk_rows,31,PASS,one row per well node
-feasibility_class,C,PASS,"too sparse for estimation; scenario/prior model only (no numeric heads, no aquifer parameters from tests)"
+n_crosswalk_rows,34,PASS,inventory nodes including unmatched GWIS candidates
+feasibility_class,B,PASS,"measured groundwater heads exist as calibration/validation targets, but parameter, identity, or overlap limitations prevent credible full estimation"

@@ -26,6 +26,7 @@ from matplotlib.patches import FancyBboxPatch, Patch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pipeline_report_catalog import (
     BOUNDARY_VOCABULARY,
+    COVERAGE_STATUSES,
     DOC_VS_CODE_DISCREPANCIES,
     HOLDOUT_YEARS,
     MODEL_COLUMNS,
@@ -73,6 +74,7 @@ COLORS = {
     "scenario": "#7b3294",
     "simulated": "#c51b7d",
     "unavailable": "#bdbdbd",
+    "not_necessary": "#000000",
     "missing": "#d9d9d9",
     "holdout": "#d73027",
     "train": "#4575b4",
@@ -650,6 +652,9 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
     rows_spec = []
 
     def year_status(name, mapping):
+        bad = set(mapping.values()) - set(COVERAGE_STATUSES)
+        if bad:
+            raise ValueError(f"unknown coverage status in {name}: {bad}")
         rows_spec.append((name, mapping))
 
     e = {int(y): "reported" for y in meta.loc[meta.electricity_mwh_reported.notna(), "year"]}
@@ -671,9 +676,18 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
             pacw_map[yr] = "proxy"
         else:
             pacw_map[yr] = "missing"
-    year_status("EIA-930 PACW hourly demand", {y: ("reported" if y >= 2015 else "missing") for y in years})
-    year_status("FERC PacifiCorp-West monthly", {y: ("reported" if 2011 <= y <= 2018 else "missing") for y in years})
-    year_status("FERC PACW-West hourly proxy", {y: ("proxy" if 2011 <= y <= 2018 else "missing") for y in years})
+    year_status(
+        "EIA-930 PACW hourly demand",
+        {y: ("reported" if y >= 2015 else "not_necessary") for y in years},
+    )
+    year_status(
+        "FERC PacifiCorp-West monthly",
+        {y: ("reported" if 2011 <= y <= 2018 else "not_necessary") for y in years},
+    )
+    year_status(
+        "FERC PACW-West hourly proxy",
+        {y: ("proxy" if 2011 <= y <= 2018 else "not_necessary") for y in years},
+    )
     year_status("PACW consumed CO2 intensity", {y: pacw_map.get(y, "missing") for y in years})
     year_status("eGRID NWPP benchmark", {y: "derived" for y in years})
 
@@ -688,9 +702,21 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
     year_status("USGS IWA (site HUC12)", {y: ("proxy" if y in iwa_years else "missing") for y in years})
     year_status("USGS PS / irrigation", {y: ("proxy" if y in wd_years else "missing") for y in years})
     year_status("Oregon CAMPD/EIA generators", {y: "measured" for y in years})
-    year_status("Hourly IT telemetry", {y: "missing" for y in years})
+    year_status("Hourly IT telemetry", {y: "not_necessary" for y in years})
     year_status("Monthly Meta water/electricity meters", {y: "missing" for y in years})
-    year_status("Groundwater head / storage", {y: "missing" for y in years})
+
+    gw_years = {y: "missing" for y in years}
+    gw_path = ROOT / "data" / "processed" / "groundwater" / "groundwater_level_observations.csv"
+    if gw_path.exists():
+        lv = pd.read_csv(gw_path)
+        bls = pd.to_numeric(lv.get("water_level_below_land_surface"), errors="coerce")
+        dt = pd.to_datetime(lv.get("measurement_datetime"), errors="coerce")
+        if dt.isna().all() and "measurement_date" in lv.columns:
+            dt = pd.to_datetime(lv["measurement_date"], errors="coerce")
+        for y in dt[bls.notna()].dt.year.dropna().astype(int):
+            if y in gw_years:
+                gw_years[y] = "measured"
+    year_status("Groundwater head observations", gw_years)
     ewif_path = ROOT / "data" / "processed" / "water" / "regional_electricity_water_intensity.csv"
     if ewif_path.exists():
         ew = pd.read_csv(ewif_path)
@@ -709,6 +735,15 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
     else:
         year_status("Indirect electricity water (EWIF)", {y: "missing" for y in years})
 
+    status_rows = [
+        {"series": name, "year": y, "coverage_status": mapping[y]}
+        for name, mapping in rows_spec
+        for y in years
+    ]
+    status_df = pd.DataFrame(status_rows)
+    status_path = OUT / "figure1_coverage_status.csv"
+    status_df.to_csv(status_path, index=False)
+
     labels = [r[0] for r in rows_spec]
     code = {
         "reported": 0,
@@ -717,16 +752,25 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
         "fitted": 3,
         "proxy": 4,
         "scenario": 5,
-        "missing": 6,
-        "unavailable": 6,
+        "not_necessary": 6,
+        "missing": 7,
+        "unavailable": 7,
     }
     Z = np.array([[code[m[y]] for y in years] for _, m in rows_spec], dtype=float)
     cmap = ListedColormap(
-        [COLORS["reported"], COLORS["measured"], COLORS["derived"], COLORS["fitted"],
-         COLORS["proxy"], COLORS["scenario"], COLORS["missing"]]
+        [
+            COLORS["reported"],
+            COLORS["measured"],
+            COLORS["derived"],
+            COLORS["fitted"],
+            COLORS["proxy"],
+            COLORS["scenario"],
+            COLORS["not_necessary"],
+            COLORS["missing"],
+        ]
     )
     fig, ax = plt.subplots(figsize=(11.5, 8.4))
-    im = ax.imshow(Z, aspect="auto", cmap=cmap, vmin=0, vmax=6)
+    ax.imshow(Z, aspect="auto", cmap=cmap, vmin=0, vmax=7)
     ax.set_xticks(range(len(years)))
     ax.set_xticklabels(years, rotation=0, fontsize=8)
     ax.set_yticks(range(len(labels)))
@@ -739,11 +783,12 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
             Patch(facecolor=COLORS["derived"], label="derived"),
             Patch(facecolor=COLORS["fitted"], label="fitted"),
             Patch(facecolor=COLORS["proxy"], label="proxy"),
+            Patch(facecolor=COLORS["not_necessary"], label="not necessary"),
             Patch(facecolor=COLORS["missing"], label="missing"),
         ],
         loc="upper center",
         bbox_to_anchor=(0.5, -0.08),
-        ncol=5,
+        ncol=6,
         frameon=False,
         fontsize=8,
     )
@@ -1329,7 +1374,7 @@ def write_markdown(
         if r.quantity_id in (
             "Q_ARRIVALS", "Q_P_IT", "Q_E_FAC", "Q_PUE", "Q_W_WITH", "Q_WATER_PROXY",
             "Q_W_CONS", "Q_CITY_PROD", "Q_DIRECT_POD", "Q_IWA_AVAIL", "Q_SCOPE2_META",
-            "Q_SCOPE2_EGRID", "Q_GEN_OR", "Q_W_IND", "Q_DC_GW", "Q_HEAD", "Q_ELEC_COST",
+            "Q_SCOPE2_EGRID", "Q_GEN_OR", "Q_W_IND", "Q_DC_GW", "Q_HEAD", "Q_GW_OBS", "Q_ELEC_COST",
         ):
             q_lines.append(
                 f"### {r.quantity} (`{r.symbol}`)\n\n"
@@ -1377,7 +1422,8 @@ def write_markdown(
 | Campus source-share θ / groundwater extraction q_dc | City production and POD totals are different boundaries | Campus well/utility delivery meters with source IDs |
 | Generator-to-Meta attribution | Oregon CAMPD/EIA are state tables only | Contract/path/pseudo-tie evidence |
 | Indirect electricity water | Only a regional-average cooling EWIF × Meta MWh proxy exists | Generator-resolved water with attribution, or a documented BA-average used as such |
-| Groundwater head/storage/recharge | No numeric heads recovered; ASR PDFs not local; IWA is surface routing | GWIS/City well hydrographs + aquifer parameters; a calibrated GW model remains out of scope until heads exist |
+| Groundwater head observations | GWIS well-level BLS/AMSL now ingested; a modeled head field is still unidentified | Reduced-order dynamics remain out of scope until T/S/Sy, combined-POD identity, and datum issues are resolved |
+| Groundwater storage / recharge | Storativity, specific yield, and recharge are not recovered from local PDFs or GWIS | Catalogued ASR attachments (still not local) or pumping-test reports; IWA is surface routing |
 | ISO WUE | Withdrawal/facility-kWh is not consumption/IT-kWh | Consumption and IT energy on ISO boundaries |
 | Cost variables | No tariffs/bills | PacifiCorp / City rate schedules and bills |
 | Campus footprint polygon | Site HUC12 is a point-in-polygon designation | Surveyed campus polygon |
@@ -1461,8 +1507,11 @@ Hard observations that exist:
 - **FERC East+West hourly**: reported combined planning-area shape; not PACW-West.
 - **eGRID NWPP**: annual vintages covering 2011–2024 (2024 uses eGRID2023).
 - **OWRD City and Vitesse/Facebook POD**: monthly reported use (different boundaries).
+- **GWIS groundwater levels**: measured well observations from the local export (not a fitted head field). OWRD pumping remains a separate accounting series.
 - **USGS NWAA**: IWA through **2020-09**; public-supply CU through 2020-12; WD/irrigation through **2020-12**. Later years are missing, not zero.
 - **Oregon generators / DEQ backup / permits**: present as documented in the inventory; not campus IT meters.
+
+Coverage statuses in Figure 1 are distinct from quantity provenance. **not necessary** (black) means additional observations are not an acquisition target for that source/period because a replacement already covers the role or the quantity is intentionally latent/scenario. **missing** (light gray) remains an active data gap. EIA-930 PACW hourly demand before native availability, FERC PacifiCorp-West monthly after 2018, the FERC PACW-West hourly proxy after the proxy window, and hourly IT telemetry are `not_necessary`. 2011–2013 Meta water, monthly Meta meters, early PACW consumed-CO2 intensity, post-2020 USGS hydrologic context, and 2011 Meta-reported Scope 2 remain `missing`.
 
 [Figure 2](../outputs/pipeline_report/figures/fig02_observed_ground_truth.png) shows the campus ground-truth evolution. The pink band is labeled **2023–2024 water-model holdout** on the water and intensity panels only; electricity and Scope 2 are **not** held-out predictions.
 
@@ -1614,12 +1663,13 @@ Train-period water fit is mixed (conditional 2020 **−50%**, 2022 **+70%**). Re
 
 | Class | Examples in this pipeline |
 |---|---|
-| **Observed / reported** | Annual Meta electricity, withdrawal, location Scope 2; KS39/KRDM weather; OWRD City and POD; EIA-930 PACW hourly; FERC PacifiCorp-West monthly; FERC East+West combined hourly; DEQ backup hours where extractable; CAMPD CEMS; EIA-860/923 where reported |
+| **Observed / reported** | Annual Meta electricity, withdrawal, location Scope 2; KS39/KRDM weather; OWRD City pumping and Vitesse/Facebook POD use (each at its own accounting boundary); GWIS measured well water levels; EIA-930 PACW hourly; FERC PacifiCorp-West monthly; FERC East+West combined hourly; DEQ backup hours where extractable; CAMPD CEMS; EIA-860/923 where reported |
 | **Derived** | PUE, raw evaporation, eGRID tonnes, IWA availability identity, facility-kWh water intensity |
 | **Fitted** | Annual IT-power scale; water multiplicative scale; NNLS water coefficients |
 | **Proxy** | Hourly withdrawal proxy; USGS HUC12 use/IWA; PACW fuel/import score; FERC-constrained PACW-West hourly backcast |
+| **Document context / engineering estimate** | ASR 260 MG/y application citation; GWIS well-log construction and aquifer names. Not inferred groundwater dynamics. |
 | **Simulated / scenario** | Cox arrivals, queue, utilization index, overhead priors, water-shape mixture |
-| **Unavailable** | See section 9 |
+| **Unavailable** | See section 9. A reduced-order groundwater-head model is not fitted. |
 
 ---
 
@@ -1733,6 +1783,7 @@ def main() -> None:
         FIG / "fig05_carbon_benchmark.png",
         FIG / "fig06_graybox_hot_week.png",
         FIG / "fig07_graybox_parameter_sensitivity.png",
+        OUT / "figure1_coverage_status.csv",
         ROOT / "docs" / "PIPELINE_DATA_MODEL_REPORT.md",
     ]
     missing = [p.as_posix() for p in required_out if not p.exists()]

@@ -118,6 +118,8 @@ Water files follow this layout (electricity/emissions paths are unchanged):
 
 ```text
 data/raw/owrd/              untouched OWRD entity exports
+data/raw/gwis_data_new/     local OWRD GWIS well/level exports
+data/raw/permits_pdfs/      Crook County permit PDFs (not the catalogued ASR application)
 data/raw/usgs_nwaa/         untouched USGS NWAA API responses
 data/raw/city/              future City meter/well records
 data/canonical/             Meta/OWRD/OHA identities and crosswalks
@@ -162,13 +164,13 @@ Writes `data/processed/water/water_source_monthly_context.csv`, `data/processed/
 
 ### Stage 3.7 — groundwater observation scaffold (no dynamics)
 
-Compile well identities, accepted pumping histories, hydrogeologic citations, and groundwater-level evidence **from files already in the repository**. Does not fit a groundwater model or acquire GWIS.
+Compile well identities, accepted pumping histories, local GWIS measured water levels, and hydrogeologic citations **from files already in the repository**. Does not fit a groundwater model or download new GWIS/ASR files.
 
 ```bash
 python run_prineville.py groundwater-context
 ```
 
-Writes canonical groundwater inventory/crosswalk/parameter tables, monthly pumping by accounting boundary, a groundwater-level evidence file (numeric heads remain unresolved because ASR PDFs are not local), QA, and `outputs/groundwater/` diagnostics. HUC12 is never treated as an aquifer node. Combined OWRD groups are not split.
+Writes canonical groundwater inventory/crosswalk/parameter tables, monthly pumping by accounting boundary, time-indexed GWIS groundwater-level observations, QA, and `outputs/groundwater/` diagnostics. Duplicate GWIS exports are collapsed by file hash and measurement ID. HUC12 is never treated as an aquifer node. Combined OWRD groups are not split. Catalogued ASR application/attachments PDFs are still not in `data/raw`; local Crook County permit PDFs are scanned and currently add no T/S/Sy values.
 
 ### Stage 3.8 — public quantity extensions (no new models)
 
@@ -402,7 +404,7 @@ Rebuilds registries, diagrams, six figures, and `docs/PIPELINE_DATA_MODEL_REPORT
 python run_prineville.py full
 ```
 
-Thin orchestration only: annual targets/permits/OWRD audit → weather (cached KRDM+KS39, no MADIS download) → USGS panels/crosswalk/audit → grid (EIA-930 then FERC 714 then eGRID) → Oregon generators → DEQ → water-context → groundwater-context → public-extensions → conditional reconstruction/OWRD validation → stochastic simulation → pipeline report. Expects raw source files to already exist and does not intentionally acquire new external data. `conditional` already rebuilds reconstruction, so `validate` is not repeated.
+Thin orchestration only: annual targets/permits/OWRD audit → weather (cached KRDM+KS39, no MADIS download) → USGS panels/crosswalk/audit → grid (EIA-930 then FERC 714 then eGRID) → Oregon generators → DEQ → water-context → groundwater-context → conditional reconstruction/OWRD validation → public-extensions → stochastic simulation → pipeline report. Expects raw source files to already exist and does not intentionally acquire new external data. `conditional` already rebuilds reconstruction, so `validate` is not repeated. Public extensions never read a stale conditional reconstruction because `full` rebuilds `conditional` first.
 
 ## What is missing, and how to fill it
 
@@ -426,6 +428,10 @@ Every final field should be one of:
 - `fitted`: estimated model parameter/state;
 - `proxy`: external series standing in for unavailable site telemetry;
 - `scenario`: counterfactual/assumed input.
+
+Figure 1 coverage statuses additionally include:
+- `not_necessary` (black): additional observations for that source/period are not an acquisition target because a replacement already covers the role, or the quantity is intentionally latent/scenario;
+- `missing` (light gray): the quantity is still scientifically useful and remains an active data gap.
 
 ## Non-negotiable modeling rules
 

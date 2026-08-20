@@ -233,14 +233,14 @@ Calendar-month spine with **separate** columns for accepted City production, Vit
 
 ## Groundwater scaffold (`python run_prineville.py groundwater-context`)
 
-Existing OHA/OWRD/Meta identities remapped to well nodes. HUC12 is a location attribute only, never an aquifer/network node. Combined OWRD PODs are not split across physical wells. ASR PDFs are not present locally, so numeric heads and pumping-test parameters remain unresolved.
+Existing OHA/OWRD/Meta identities remapped to well nodes and joined to local OWRD GWIS exports on official well/tag/log IDs only. HUC12 is a location attribute only, never an aquifer/network node. Combined OWRD PODs are not split across physical wells. Duplicate GWIS files are hash-deduplicated; observations are unique on `gw_measured_water_level_id`.
 
-- `data/canonical/groundwater/groundwater_well_inventory.csv`: one row per identifiable municipal or Vitesse/Facebook well. Official coordinates only.
-- `data/canonical/groundwater/water_source_groundwater_crosswalk.csv`: source/report IDs → `well_node_id` / pumping group.
-- `data/canonical/groundwater/hydrogeologic_parameter_inventory.csv`: quantitative parameters found in-repo (currently the 260 MG/y ASR application statement plus unresolved rows).
+- `data/canonical/groundwater/groundwater_well_inventory.csv`: municipal, Vitesse/Facebook, and unmatched GWIS candidate wells. Official coordinates only (HUC or GWIS).
+- `data/canonical/groundwater/water_source_groundwater_crosswalk.csv`: source/report IDs → `well_node_id` / pumping group. Unmatched GWIS wells are `candidate_unresolved`.
+- `data/canonical/groundwater/hydrogeologic_parameter_inventory.csv`: GWIS well depth / open interval / aquifer unit where reported; 260 MG/y ASR application citation as document context; T/S/Sy and pumping tests unresolved.
 - `data/processed/groundwater/groundwater_pumping_monthly.csv`: accepted City groups, Vitesse/Facebook direct PODs, and Meta annual campus withdrawal as distinct boundaries.
-- `data/processed/groundwater/groundwater_level_observations.csv`: hydrograph evidence registry; numeric levels are unavailable.
-- `outputs/qc/groundwater_context_qa.csv`, `outputs/groundwater/`: feasibility diagnostics. Current class **C**.
+- `data/processed/groundwater/groundwater_level_observations.csv`: time-indexed GWIS measured water levels (ft BLS; AMSL preserved with datum).
+- `outputs/qc/groundwater_context_qa.csv`, `outputs/groundwater/`: feasibility diagnostics recomputed from the integrated evidence.
 
 ## `data/processed/water/meta_water_early_proxy_envelope.csv`
 2011–2013 only. Direct OWRD POD water, 2011-design WUE×IT proxy (`PUE=1.07`, `WUE=0.31 L/kWh_IT`), and the existing train-only statistical backcast. Does not fill Meta-reported water and does not force a center estimate.
@@ -255,7 +255,7 @@ Partial-coverage Oregon cooling EWIF. Missing cooling water is not treated as ze
 Annual-closed monthly reconstruction of reported Meta electricity using flat and conditional (gray-box) shapes from the existing hourly reconstruction. Labeled reconstructed / annual-closed, not meter data. Stochastic hourly shape is not available for 2011–2024.
 
 ## `data/processed/water/meta_campus_monthly_water_scenarios.csv`
-Scenario allocations of reported annual Meta water (2014–2024) using flat, gray-box evaporation, and direct-POD seasonal shapes. Annual closure required. Labeled scenario allocation, not observation or prediction.
+Scenario allocations of reported annual Meta water (2014–2024) using flat, gray-box evaporation, and direct-POD seasonal shapes. Flat and gray-box series annual-close whenever the year has reported Meta water. The direct-POD seasonal scenario is constructed only when all 12 calendar months are observed (including explicit zeros); an incomplete POD year is skipped (`skipped_incomplete_direct_pod_shape`) rather than filling missing months with zero. Labeled scenario allocation, not observation or prediction.
 
 ## `outputs/data_gap_priority_assessment.csv`
 Ranked assessment of GWIS, OpenET, and NHM/NWM/streamflow/recharge. Does not download those datasets.

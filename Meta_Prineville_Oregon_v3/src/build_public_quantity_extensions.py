@@ -64,6 +64,66 @@ def _close_shape(shape: pd.Series, target: float) -> pd.Series:
     return s * (float(target) / tot)
 
 
+def allocate_direct_pod_year(monthly_shape: pd.Series, target: float) -> tuple[pd.Series, str]:
+    """Annual-close a 12-month POD shape only when every month is observed.
+
+    Missing months stay missing and skip the year. Explicit zeros remain zeros.
+    """
+    s = pd.to_numeric(monthly_shape, errors="coerce")
+    if len(s) != 12 or s.isna().any():
+        return pd.Series(np.nan, index=s.index), "skipped_incomplete_direct_pod_shape"
+    tot = float(s.sum())
+    if tot <= 0 or not np.isfinite(tot) or not np.isfinite(target):
+        return (
+            pd.Series(np.nan, index=s.index),
+            "skipped; calendar-year direct POD total is zero or missing",
+        )
+    return s * (float(target) / tot), "scenario allocation using OWRD direct-POD monthly shape"
+
+
+def direct_pod_monthly_calendar(direct: pd.DataFrame) -> pd.DataFrame:
+    """Calendar-month POD totals that distinguish reported zero from missing."""
+    d = direct.copy()
+    d["calendar_month"] = pd.to_datetime(d["calendar_month"], errors="coerce")
+    d["year"] = d["calendar_month"].dt.year
+    d["month"] = d["calendar_month"].dt.month
+    d["reported"] = d["reported_flag"].astype(str).str.lower().eq("true")
+    d["volume_m3"] = pd.to_numeric(d["volume_m3"], errors="coerce")
+    report_ids = sorted(pd.unique(d["report_id"].dropna()))
+    n_expected = len(report_ids)
+    rows = []
+    years = sorted(d["year"].dropna().astype(int).unique())
+    for year in years:
+        for month in range(1, 13):
+            sub = d[(d["year"] == year) & (d["month"] == month)]
+            n_reported = 0
+            vols = []
+            complete = True
+            for rid in report_ids:
+                r = sub[sub["report_id"] == rid]
+                if r.empty or not bool(r["reported"].iloc[0]):
+                    complete = False
+                    continue
+                n_reported += 1
+                vols.append(r["volume_m3"].iloc[0])
+            vol = np.nan
+            if complete and n_reported == n_expected:
+                vol = float(pd.Series(vols).sum(min_count=1)) if vols else np.nan
+            else:
+                complete = False
+            rows.append(
+                {
+                    "calendar_year": int(year),
+                    "month": int(month),
+                    "direct_pod_m3": vol,
+                    "n_reported": n_reported,
+                    "n_expected": n_expected,
+                    "month_complete": complete,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
 def build_early_water_envelope() -> pd.DataFrame:
     meta = pd.read_csv(META)
     direct = pd.read_csv(DIRECT_ANNUAL)
@@ -432,14 +492,7 @@ def build_monthly_water() -> pd.DataFrame | None:
     meta = pd.read_csv(META)
     direct = pd.read_csv(DIRECT_MONTHLY)
     g = _monthly_from_hourly(hourly)
-    direct = direct.copy()
-    direct["year"] = pd.to_datetime(direct["calendar_month"]).dt.year
-    direct["month"] = pd.to_datetime(direct["calendar_month"]).dt.month
-    pod = (
-        direct.groupby(["year", "month"], as_index=False)["volume_m3"]
-        .sum()
-        .rename(columns={"year": "calendar_year", "volume_m3": "direct_pod_m3"})
-    )
+    pod = direct_pod_monthly_calendar(direct)
     g = g.merge(pod, on=["calendar_year", "month"], how="left")
 
     rows = []
@@ -451,13 +504,14 @@ def build_monthly_water() -> pd.DataFrame | None:
         gy = gy.copy()
         gy["water_m3_flat"] = _close_shape(pd.Series(1.0, index=gy.index), target)
         gy["water_m3_graybox_evaporation"] = _close_shape(gy["evap_water_m3"], target)
-        pod_closed = _close_shape(gy["direct_pod_m3"].fillna(0.0), target)
-        if gy["direct_pod_m3"].fillna(0.0).sum() <= 0:
+        gy = gy.sort_values("month")
+        if list(gy["month"].astype(int)) != list(range(1, 13)):
             gy["water_m3_direct_pod_shape"] = np.nan
-            gy["direct_pod_shape_status"] = "skipped; calendar-year direct POD total is zero or missing"
+            gy["direct_pod_shape_status"] = "skipped_incomplete_direct_pod_shape"
         else:
-            gy["water_m3_direct_pod_shape"] = pod_closed
-            gy["direct_pod_shape_status"] = "scenario allocation using OWRD direct-POD monthly shape"
+            closed, status = allocate_direct_pod_year(gy["direct_pod_m3"], target)
+            gy["water_m3_direct_pod_shape"] = closed.to_numpy()
+            gy["direct_pod_shape_status"] = status
         for col in ("water_m3_flat", "water_m3_graybox_evaporation"):
             if abs(float(gy[col].sum()) - target) > 1e-4:
                 raise ValueError(f"{col} did not close in {year}")
@@ -520,25 +574,28 @@ def build_gap_assessment() -> pd.DataFrame:
             "dataset": "OWRD/GWIS groundwater-level records",
             "specific_missing_model_quantity": "Q_HEAD / Q_GW_OBS (time-indexed groundwater head at municipal and ASR wells)",
             "current_substitute_or_proxy": (
-                f"None. Scaffold has {n_head} numeric heads. Heliport/Millican hydrographs are "
-                "registered as unresolved document evidence (ASR PDFs not local)."
+                f"Local GWIS ingest now provides {n_head} numeric well-level observations. "
+                "Catalogued ASR application/attachments PDFs were not found under data/raw; "
+                "local Crook County permit PDFs were scanned and added no T/S/Sy values."
             ),
             "expected_temporal_spatial_coverage": (
                 "OWRD GWIS well-level measurements for Crook County / Prineville municipal and "
                 "nearby wells; typically irregular to monthly, well-specific, with official IDs"
             ),
             "new_information_or_duplicate": (
-                "New information. Existing repo has pumping and well identities but no numeric heads."
+                "GWIS well-level series are now ingested. Remaining gaps are aquifer parameters, "
+                "combined Airport pumping identity, unmatched GWIS wells, and mixed vertical datums."
             ),
             "expected_identification_value": (
                 "Enables at least class B (validation targets) and is a prerequisite for class A "
                 "reduced-order dynamic estimation if pumping–head overlap is adequate."
             ),
             "implementation_effort": "MEDIUM (public query + join to existing well_node_id / wl_id)",
-            "priority": "HIGH" if gwis_high else "MEDIUM",
+            "priority": "HIGH" if gwis_high else "LOW",
             "recommended_next_action": (
-                "Acquire GWIS heads for inventory well_log_id / owrd_wl_id before any groundwater "
-                "dynamics fit. Also copy already-catalogued ASR PDFs if parameter extraction is needed."
+                "Do not re-acquire the current GWIS pull. Remaining reduced-order blockers are "
+                "unresolved T/S/Sy/pumping-test parameters, combined Airport POD identity, and "
+                "datum/unmatched-well limitations. Catalogued ASR PDFs are still not local."
             ),
             "required_before_reduced_order_gw_model": "YES",
             "notes": f"Current feasibility class {feas}.",

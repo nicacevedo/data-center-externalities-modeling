@@ -75,8 +75,8 @@ def full():
     deq()
     water_context()
     groundwater_context()
-    public_extensions()
     conditional()
+    public_extensions()
     simulate()
     report()
 

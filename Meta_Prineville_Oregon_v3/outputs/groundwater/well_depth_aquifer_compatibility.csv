@@ -1,32 +1,35 @@
-well_node_id,source_name,role,well_depth,screen_top,screen_bottom,aquifer_geologic_unit,huc12,depth_aquifer_compatibility,compatibility_reason
-SRC-AA,Stearns Well,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-BB,4th St Deep Well #2,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-CB,Lamonta Well #2,municipal_production,,,,,170703050404,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-DB,Yancey Well #2,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-DC,Yancey Well #3,municipal_production,,,,,171003080306,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-FA,Stadium Well,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-GA,Airport Well #1,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-GB,Airport Well #2,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-GC,Heliport Well (Airport Well #4),ASR,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-HA,Barney Well,municipal_production,,,,,170703050404,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-JA,Millican Well (Airport Well #3),ASR,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KA,Crooked River Park Well #24,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KB,Crooked River Park Well #3 DT1,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KC,Crooked River Park Well #6 DT4,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KD,Crooked River Park Well #7 DT5,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KE,Crooked River Park Well #8 DT2,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KF,Crooked River Park Well #9 DT6,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KG,Crooked River Park Well #10 DT7,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KH,Crooked River Park Well #11 DT8,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KI,Crooked River Park Well #13 DT9,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KJ,Crooked River Park Well #15 DT10,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KK,Crooked River Park Well #16 DT11,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KL,Crooked River Park Well #17 DT12,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KM,Crooked River Park Well #18 DT13,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KN,Crooked River Park Well #19 DT14,municipal_production,,,,,170703051002,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KO,Crooked River Park Well #22 DT15,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KP,Crooked River Park Well #26 DT18,municipal_production,,,,,170703051001,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-SRC-KQ,Crooked River Park Well #5 DT-3A,municipal_production,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-VITESSE:64500,Meta/Vitesse Well 3,Vitesse_Facebook_direct,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-VITESSE:64845,Meta/Vitesse Secondary Well / Well 1,Vitesse_Facebook_direct,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
-VITESSE:64846,Meta/Vitesse Production Well 1 / Well 2,Vitesse_Facebook_direct,,,,,,unknown,"No well depth, screen interval, or aquifer unit is present in repository inventories; HUC12 is not used as an aquifer assignment."
+well_node_id,source_name,role,well_depth,screen_top,screen_bottom,aquifer_geologic_unit,huc12,identity_status,depth_aquifer_compatibility,compatibility_reason
+SRC-AA,Stearns Well,municipal_production,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-BB,4th St Deep Well #2,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-CB,Lamonta Well #2,municipal_production,,,,,170703050404,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-DB,Yancey Well #2,municipal_production,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-DC,Yancey Well #3,municipal_production,,,,,171003080306,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-FA,Stadium Well,municipal_production,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-GA,Airport Well #1,municipal_production,575.0,,,,,confirmed_official_id,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-GB,Airport Well #2,municipal_production,546.0,447.0,539.0,Quaternary-Late Tertiary Vol & Volcaniclastic Aq,,confirmed_official_id,gwis_unit_as_reported,Aquifer/geologic unit copied from GWIS; HUC12 is not used as an aquifer assignment.
+SRC-GC,Heliport Well (Airport Well #4),ASR,607.0,472.0,607.0,,,confirmed_official_id,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-HA,Barney Well,municipal_production,,,,,170703050404,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-JA,Millican Well (Airport Well #3),ASR,700.0,535.0,703.0,Deschutes Formation,,confirmed_official_id,gwis_unit_as_reported,Aquifer/geologic unit copied from GWIS; HUC12 is not used as an aquifer assignment.
+SRC-KA,Crooked River Park Well #24,municipal_production,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KB,Crooked River Park Well #3 DT1,municipal_production,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KC,Crooked River Park Well #6 DT4,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KD,Crooked River Park Well #7 DT5,municipal_production,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KE,Crooked River Park Well #8 DT2,municipal_production,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KF,Crooked River Park Well #9 DT6,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KG,Crooked River Park Well #10 DT7,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KH,Crooked River Park Well #11 DT8,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KI,Crooked River Park Well #13 DT9,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KJ,Crooked River Park Well #15 DT10,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KK,Crooked River Park Well #16 DT11,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KL,Crooked River Park Well #17 DT12,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KM,Crooked River Park Well #18 DT13,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KN,Crooked River Park Well #19 DT14,municipal_production,,,,,170703051002,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KO,Crooked River Park Well #22 DT15,municipal_production,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KP,Crooked River Park Well #26 DT18,municipal_production,,,,,170703051001,documented,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+SRC-KQ,Crooked River Park Well #5 DT-3A,municipal_production,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+VITESSE:64500,Meta/Vitesse Well 3,Vitesse_Facebook_direct,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+VITESSE:64845,Meta/Vitesse Secondary Well / Well 1,Vitesse_Facebook_direct,,,,,,unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.
+VITESSE:64846,Meta/Vitesse Production Well 1 / Well 2,Vitesse_Facebook_direct,713.0,488.0,713.0,Deschutes Formation,,confirmed_official_id,gwis_unit_as_reported,Aquifer/geologic unit copied from GWIS; HUC12 is not used as an aquifer assignment.
+GWIS:16240,CROO0053969,other,678.0,20.5,678.0,Deschutes Formation,,candidate_unresolved,gwis_unit_as_reported,Aquifer/geologic unit copied from GWIS; HUC12 is not used as an aquifer assignment.
+GWIS:15341,CD ADVISORS CROO0053361,other,555.0,18.0,555.0,Quaternary-Late Tertiary Vol & Volcaniclastic Aq,,candidate_unresolved,gwis_unit_as_reported,Aquifer/geologic unit copied from GWIS; HUC12 is not used as an aquifer assignment.
+GWIS:11935,JOHN RYAN CROO0000532,other,505.0,20.0,505.0,,,candidate_unresolved,unknown,No aquifer unit in GWIS/site history for this node; HUC12 is not used as an aquifer assignment.

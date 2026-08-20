@@ -147,6 +147,19 @@ Use for:
 
 These are regional water-system priors/validation evidence, **not Meta-specific meter readings**.
 
+The catalogued filenames `PrinevilleASR_Application.pdf` and `PrinevilleASR_Attachments.pdf` were not present under `data/raw/` (including `data/raw/permits_pdfs/`) at the GWIS integration stage. Local Crook County permit PDFs were scanned with machine-readable text extraction; they are inspection-summary documents and currently add no transmissivity, storativity, specific yield, or pumping-test values. Do not re-download in the no-download pipeline. Prefer tabular GWIS water levels over digitizing ASR hydrograph figures.
+
+### Local GWIS well/level exports
+- Source ID: `OWRD_GWIS`
+- Local files: `data/raw/gwis_data_new/`
+
+Use for:
+- official well/tag/log identifiers and coordinates;
+- measured water levels (ft below land surface and GWIS-reported AMSL with datum);
+- well depth, open-interval construction, lithology/aquifer names as reported.
+
+Do not map a Vitesse-named GWIS well to POD reports 64500/64845/64846 unless the official well/tag/log ID matches. Duplicate export files must not double-count observations. Mixed vertical datums are not converted. This is not a groundwater dynamics model.
+
 ## 8. City utility records — highest-value missing site water data
 
 - Official public-record page: `https://www.cityofprineville.com/1294/Public-Records`

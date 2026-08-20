@@ -1,11 +1,13 @@
 """Focused tests for early-water, 2011 Scope-2 proxy, EWIF, and monthly reconstructions."""
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 META = ROOT / "data" / "canonical" / "meta_prineville_annual.csv"
 ENVELOPE = ROOT / "data" / "processed" / "water" / "meta_water_early_proxy_envelope.csv"
 SCOPE2 = ROOT / "data" / "processed" / "egrid_2011_location_based_scope2_proxy.csv"
@@ -107,4 +109,35 @@ def test_monthly_water_scenarios_close_and_are_not_observations():
         assert abs(float(gy["water_m3_graybox_evaporation"].sum()) - target) < 1e-3
         if gy["water_m3_direct_pod_shape"].notna().all():
             assert abs(float(gy["water_m3_direct_pod_shape"].sum()) - target) < 1e-3
+            assert gy["direct_pod_shape_status"].str.contains("scenario allocation").all()
+        else:
+            assert gy["water_m3_direct_pod_shape"].isna().all()
+            assert gy["direct_pod_shape_status"].eq("skipped_incomplete_direct_pod_shape").all()
     assert set(w.calendar_year.astype(int)).isdisjoint({2011, 2012, 2013})
+
+
+def test_missing_direct_pod_month_is_not_treated_as_zero():
+    from build_public_quantity_extensions import allocate_direct_pod_year
+
+    missing = pd.Series([10.0] * 11 + [float("nan")])
+    out, status = allocate_direct_pod_year(missing, 120.0)
+    assert out.isna().all()
+    assert status == "skipped_incomplete_direct_pod_shape"
+    assert not (out.fillna(999) == 0).any()
+
+    zeros = pd.Series([0.0] * 11 + [12.0])
+    out, status = allocate_direct_pod_year(zeros, 120.0)
+    assert status.startswith("scenario allocation")
+    assert abs(float(out.iloc[-1]) - 120.0) < 1e-9
+    assert (out.iloc[:11] == 0).all()
+
+    incomplete_year = pd.read_csv(WATER_M) if WATER_M.exists() else pd.DataFrame()
+    if not incomplete_year.empty:
+        skipped = incomplete_year[
+            incomplete_year["direct_pod_shape_status"].eq("skipped_incomplete_direct_pod_shape")
+        ]
+        if not skipped.empty:
+            assert skipped["water_m3_direct_pod_shape"].isna().all()
+            src = SRC_EXT.read_text(encoding="utf-8")
+            assert "fillna(0.0)" not in src.split("def build_monthly_water")[1].split("def _usgs_end_dates")[0]
+            assert "skipped_incomplete_direct_pod_shape" in src

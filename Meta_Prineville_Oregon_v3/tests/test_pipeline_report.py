@@ -219,3 +219,57 @@ def test_validation_terminology_in_scorecard_if_built():
     assert "not meta prediction error" in joined or "boundary/context consistency" in joined
     assert "methodology/accounting consistency" in joined
     assert "design/assumption consistency" in joined or "falsification check" in joined
+
+
+def test_not_necessary_is_distinct_from_missing_and_figure1_uses_both():
+    from pipeline_report_catalog import COVERAGE_STATUSES
+    from build_pipeline_report import COLORS
+
+    assert "not_necessary" in COVERAGE_STATUSES
+    assert "missing" in COVERAGE_STATUSES
+    assert COLORS["not_necessary"] == "#000000"
+    assert COLORS["missing"] == "#d9d9d9"
+    path = REPORT / "figure1_coverage_status.csv"
+    if not path.exists():
+        return
+    cov = pd.read_csv(path)
+    assert set(cov.coverage_status).issubset(set(COVERAGE_STATUSES))
+    assert "not_necessary" in set(cov.coverage_status)
+    assert "missing" in set(cov.coverage_status)
+    eia = cov[cov.series.eq("EIA-930 PACW hourly demand")]
+    assert eia.loc[eia.year.isin([2011, 2012, 2013, 2014]), "coverage_status"].eq("not_necessary").all()
+    ferc_m = cov[cov.series.eq("FERC PacifiCorp-West monthly")]
+    assert ferc_m.loc[ferc_m.year.ge(2019), "coverage_status"].eq("not_necessary").all()
+    ferc_h = cov[cov.series.eq("FERC PACW-West hourly proxy")]
+    assert ferc_h.loc[ferc_h.year.ge(2019), "coverage_status"].eq("not_necessary").all()
+    it = cov[cov.series.eq("Hourly IT telemetry")]
+    assert it["coverage_status"].eq("not_necessary").all()
+    water = cov[cov.series.eq("Meta water withdrawal")]
+    assert water.loc[water.year.isin([2011, 2012, 2013]), "coverage_status"].eq("missing").all()
+    meters = cov[cov.series.eq("Monthly Meta water/electricity meters")]
+    assert meters["coverage_status"].eq("missing").all()
+    s2 = cov[cov.series.eq("Meta location Scope 2")]
+    assert s2.loc[s2.year.eq(2011), "coverage_status"].eq("missing").all()
+    gw = cov[cov.series.eq("Groundwater head observations")]
+    assert not gw.empty
+    lv = ROOT / "data" / "processed" / "groundwater" / "groundwater_level_observations.csv"
+    if lv.exists():
+        levels = pd.read_csv(lv)
+        bls = pd.to_numeric(levels["water_level_below_land_surface"], errors="coerce")
+        dt = pd.to_datetime(levels["measurement_datetime"], errors="coerce")
+        years = set(dt[bls.notna()].dt.year.dropna().astype(int))
+        for r in gw.itertuples(index=False):
+            expected = "measured" if int(r.year) in years else "missing"
+            assert r.coverage_status == expected
+
+
+def test_full_rebuilds_conditional_before_public_extensions():
+    src = (ROOT / "run_prineville.py").read_text(encoding="utf-8")
+    start = src.index("def full():")
+    end = src.index("\ndef ", start + 1)
+    body = src[start:end]
+    assert body.index("groundwater_context()") < body.index("conditional()")
+    assert body.index("conditional()") < body.index("public_extensions()")
+    assert body.index("public_extensions()") < body.index("simulate()")
+    assert body.index("simulate()") < body.index("report()")
+
