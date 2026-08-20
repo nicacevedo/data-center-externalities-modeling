@@ -56,7 +56,9 @@ Use these immediately as groundwater/ASR priors and event evidence:
 - 2020 OWRD ASR application: `https://www.oregon.gov/owrd/programs/FundingOpportunities/WaterProjectGrantAndLoans/Documents/Applications%20Received%202020%20Cycle/PrinevilleASR_Application.pdf`
 - 2018 feasibility study / 2020 attachments: `https://www.oregon.gov/owrd/programs/FundingOpportunities/WaterProjectGrantAndLoans/Documents/Applications%20Received%202020%20Cycle/PrinevilleASR_Attachments.pdf`
 
-They include aquifer/hydrogeologic characterization, Heliport/Millican context, ASR design and pilot-test chronology, source-water rights context, and storage/recovery assumptions. They do **not** replace actual monthly operational injection/recovery or groundwater-head time series.
+They include aquifer/hydrogeologic characterization, Heliport/Millican context, ASR design and pilot-test chronology, source-water rights context, and storage/recovery assumptions. They do **not** replace actual monthly operational injection/recovery or City/ASR operational groundwater-head series.
+
+The catalogued PDFs are still not under `data/raw/`. Local OWRD GWIS well-level exports are already at `data/raw/gwis_data_new/` and are the measured well-head series used by the current freeze. Do not re-download GWIS for this freeze. Prefer those tables over digitizing ASR hydrograph figures.
 
 ## 3. City of Prineville public-record request — highest-value request
 
@@ -72,6 +74,8 @@ Save all responses/raw files under `data/raw/city/` and then map them into:
 - `city_meta_monthly_meter.csv`
 - `city_well_production_monthly.csv`
 - `asr_monthly.csv`
+
+Item (6) is for City/ASR operational hydrographs. Local GWIS well levels are already bundled and are a different series.
 
 Do not overwrite raw records.
 
@@ -125,16 +129,18 @@ python run_prineville.py oregon
 
 This is pipeline validation of plant/unit joins and coverage. It does not identify generators serving the Prineville campus.
 
-## 7. NOAA weather — scripted, but this environment could not bundle the remote CSVs
+## 7. NOAA weather — scripted refresh only if raw files are missing
 
-The package already contains the official NCEI downloader and cleaner. Run locally:
+Canonical processed weather is already at `data/processed/weather_hourly.csv` (KRDM backbone plus KS39 from 2015-09-01 local). `python run_prineville.py weather` rebuilds from cached NOAA/MADIS files and does not download MADIS. `python run_prineville.py full` uses that cached path.
+
+Re-run the downloaders only if refreshing raw files:
 
 ```bash
 python src/download_noaa_global_hourly.py --start 2011 --end 2024
 python src/prepare_weather.py
 ```
 
-Baseline station: KRDM / Roberts Field (`72692024230`). Because it is not on campus, also search NOAA/MADIS for a complete Prineville Airport/S39-AWOS historical hourly archive. If obtained, do not blindly splice it: quantify overlap bias by month and weather variable first.
+Baseline station: KRDM / Roberts Field (`72692024230`). KS39 / Prineville Airport MADIS is the preferred near-site station from 2015-09-01 local when QC-usable. Do not blindly splice stations: quantify overlap bias by month and weather variable first.
 
 ## 8. Truly unavailable without cooperation
 

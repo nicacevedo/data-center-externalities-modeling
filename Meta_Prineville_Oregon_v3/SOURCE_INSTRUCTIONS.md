@@ -149,18 +149,23 @@ Use for:
 
 These are regional water-system priors/validation evidence, **not Meta-specific meter readings**.
 
-The catalogued filenames `PrinevilleASR_Application.pdf` and `PrinevilleASR_Attachments.pdf` were not present under `data/raw/` (including `data/raw/permits_pdfs/`) at the GWIS integration stage. Local Crook County permit PDFs were scanned with machine-readable text extraction; they are inspection-summary documents and currently add no transmissivity, storativity, specific yield, or pumping-test values. Do not re-download in the no-download pipeline. Prefer tabular GWIS water levels over digitizing ASR hydrograph figures. `python run_prineville.py groundwater-identifiability` audits pumping↔head overlap for a possible small empirical subsystem; it does not fit a groundwater-response model.
+The catalogued filenames `PrinevilleASR_Application.pdf` and `PrinevilleASR_Attachments.pdf` were not present under `data/raw/` (including `data/raw/permits_pdfs/`) at the GWIS integration stage. Local Crook County permit PDFs were scanned with machine-readable text extraction; they are inspection-summary documents and currently add no transmissivity, storativity, specific yield, or pumping-test values. Do not re-download in the no-download pipeline. Prefer tabular GWIS water levels over digitizing ASR hydrograph figures.
 
 ### Local GWIS well/level exports
 - Source ID: `OWRD_GWIS`
 - Local files: `data/raw/gwis_data_new/`
+- Acquisition: already placed locally. This pipeline stage does not download GWIS. The catalog does not store a public query URL.
 
 Use for:
 - official well/tag/log identifiers and coordinates;
 - measured water levels (ft below land surface and GWIS-reported AMSL with datum);
 - well depth, open-interval construction, lithology/aquifer names as reported.
 
-Do not map a Vitesse-named GWIS well to POD reports 64500/64845/64846 unless the official well/tag/log ID matches. Duplicate export files must not double-count observations. Mixed vertical datums are not converted. This is not a groundwater dynamics model.
+BLS and AMSL are two representations of the same measurement, not independent observations. Mixed NGVD29/NAVD88 datums are not converted and are not compared as absolute heads. Within-well `head_anomaly_ft = -(BLS − well-mean BLS)`.
+
+`python run_prineville.py groundwater-identifiability` first applies measurement QC, then audits pumping↔head overlap. Eligibility uses explicit method/status only (exclude `NOT MEASURED`, `PUMPING`, `INJECTING`, `FLOWING`, `DRY`, and missing numeric BLS). `STATIC` is clearly eligible. `UNKNOWN` status (and other ambiguous labels such as `REPORTED`) is retained and labeled `unknown_ambiguous`; there is no local codebook beyond the field label. Do not delete surprising values for magnitude. Current `ESTIMATION_CANDIDATE` wells are SRC-GC (Heliport), SRC-JA (Millican), and SRC-GB (Airport #2). That class means enough overlap to attempt a validated empirical response benchmark, not identified dynamics. Combined Airport pumping stays SRC-GA+SRC-GB. This is not a groundwater dynamics model.
+
+Do not map a Vitesse-named GWIS well to POD reports 64500/64845/64846 unless the official well/tag/log ID matches. Duplicate export files must not double-count observations.
 
 ## 8. City utility records — highest-value missing site water data
 
@@ -172,7 +177,7 @@ Use the ready-to-copy request in `MANUAL_ACQUISITION.md` for:
 - monthly wastewater/sewer discharge if separately metered;
 - municipal well production by well;
 - ASR injection/recovery;
-- groundwater-head observations;
+- municipal/ASR operational groundwater-head series (local GWIS well levels are already bundled and are not this series);
 - meter methodology/change dates.
 
 Raw responses go under `data/raw/city/` and are never overwritten.

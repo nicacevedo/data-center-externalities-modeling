@@ -240,7 +240,12 @@ Existing OHA/OWRD/Meta identities remapped to well nodes and joined to local OWR
 - `data/canonical/groundwater/hydrogeologic_parameter_inventory.csv`: GWIS well depth / open interval / aquifer unit where reported; 260 MG/y ASR application citation as document context; T/S/Sy and pumping tests unresolved.
 - `data/processed/groundwater/groundwater_pumping_monthly.csv`: accepted City groups, Vitesse/Facebook direct PODs, and Meta annual campus withdrawal as distinct boundaries.
 - `data/processed/groundwater/groundwater_level_observations.csv`: time-indexed GWIS measured water levels (ft BLS; AMSL preserved with datum as a paired representation of the same measurement, not an independent observation).
-- `outputs/qc/groundwater_context_qa.csv`, `outputs/groundwater/`: feasibility diagnostics plus identifiability audit tables/figures (`groundwater_identifiability_by_well.csv`, `groundwater_identifiability_summary.csv`) and measurement-QC tables (`gwis_measurement_model_qc.csv`, `gwis_measurement_qc_summary.csv`, `gwis_large_change_audit.csv`). Identifiability uses the measurement-QC eligible subset. `bls_anomaly_ft` = BLS − well-mean BLS; `head_anomaly_ft` = −`bls_anomaly_ft`. `ESTIMATION_CANDIDATE` means sufficient data to attempt a validated empirical response model, not identified dynamics. No groundwater-response model is fitted. Mixed datums are compared only as within-well anomaly/Δh. Combined Airport pumping is not split.
+- `outputs/qc/groundwater_context_qa.csv`, `outputs/groundwater/`: feasibility diagnostics plus identifiability audit tables/figures (`groundwater_identifiability_by_well.csv`, `groundwater_identifiability_summary.csv`) and measurement-QC tables (`gwis_measurement_model_qc.csv`, `gwis_measurement_qc_summary.csv`, `gwis_large_change_audit.csv`, `gwis_measurement_qc_hydrograph.png`). Identifiability uses the measurement-QC eligible subset. `bls_anomaly_ft` = BLS − well-mean BLS; `head_anomaly_ft` = −`bls_anomaly_ft`. `ESTIMATION_CANDIDATE` means enough overlap to attempt a validated empirical response benchmark, not identified dynamics. Current candidates: SRC-GC, SRC-JA, SRC-GB. No groundwater-response model is fitted. Mixed datums are compared only as within-well anomaly/Δh. Combined Airport pumping is not split.
+
+## Advisor meeting brief
+
+- `docs/pipeline_report.tex` / `docs/pipeline_report.pdf`: advisor-length writeup of the current freeze. Maintained separately from `python run_prineville.py report`.
+- `outputs/pipeline_report/figures/fig_advisor_gwis_estimation_candidates.png`: SRC-GC / SRC-JA / SRC-GB hydrographs for that brief. Not overwritten by the generated registry report.
 
 ## `data/canonical/facility/prn1_addition_facts.csv`
 High-confidence PRN1 addition facts from `data/raw/prineville_strictly_valuable_permits_v2/`. Provenance `reported_permit_document_evidence`. Area is a range/proxy (~82.7k ft²); `exact_final_area` and `electrical_capacity_mw` are missing. Circuit counts are not converted to MW. Not a gray-box or water-holdout input.
@@ -285,3 +290,5 @@ Exact coverage: `outputs/ks39_coverage_monthly.csv`, `outputs/ks39_coverage_annu
 - `proxy`: external observed series standing in for unavailable site telemetry.
 - `scenario`: counterfactual or assumed input.
 - `gap_filled`: substituted/interpolated observation; preserve method/source.
+
+Figure 1 coverage statuses also use `not_necessary` (a replacement already covers the role, or the quantity is intentionally latent/scenario) and `missing` (still scientifically useful and still an acquisition gap).

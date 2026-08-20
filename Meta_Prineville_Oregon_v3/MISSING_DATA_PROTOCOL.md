@@ -86,3 +86,6 @@ At minimum propagate uncertainty in:
 - any station/reanalysis weather gap fill.
 
 Report median plus 5/95 or 2.5/97.5 percentiles for inferred hourly/seasonal quantities. Report the actual Meta annual observations without artificial uncertainty unless the source itself provides it.
+
+## J. GWIS groundwater levels
+Do not interpolate missing well-level dates. Do not convert mixed NGVD29/NAVD88 datums. Do not compare absolute AMSL heads across datums. Do not delete surprising BLS values for magnitude. Exclude only explicit method/status cases (`NOT MEASURED`, `PUMPING`, `INJECTING`, `FLOWING`, `DRY`, missing numeric BLS). Retain `UNKNOWN` / other ambiguous labels and keep them labeled. City/ASR operational hydrographs, if obtained later, stay a separate series from these GWIS well levels.

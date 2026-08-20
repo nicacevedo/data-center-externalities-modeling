@@ -1,13 +1,18 @@
 Meta Prineville high-confidence project
 Canonical v3 package at repository root
-Build date: 2026-08-17
+Build date: 2026-08-20
+Freeze: Prineville Public-Data Baseline v1
+
 Key changes:
-- audit now validates campus_buildings.csv, campus_permit_evidence.csv, and campus_permit_events.csv
-- audit writes outputs/campus_permit_audit.csv
-- change-point audit now writes exploratory all-years and train-only (through 2022) rankings separately
-- candidate_annual_breaks.csv retained as backward-compatible exploratory alias
+- public-data pipeline integrated through weather, water, grid, permits, GWIS, measurement QC, and groundwater identifiability
+- no groundwater-response model is fitted
+- GWIS eligibility uses explicit method/status only; UNKNOWN/REPORTED retained as unknown_ambiguous
+- ESTIMATION_CANDIDATE wells: SRC-GC (Heliport), SRC-JA (Millican), SRC-GB (Airport #2)
+- within-well head_anomaly_ft = -(BLS − well-mean BLS); BLS and AMSL are paired, not independent
+- advisor brief: docs/pipeline_report.tex / docs/pipeline_report.pdf
+- generated registries: python run_prineville.py report → docs/PIPELINE_DATA_MODEL_REPORT.md
+- annual electricity is closure to Meta totals, not a forecast; 2023–2024 is the water-model holdout only
 - OWRD is an external water-model validation layer (not a calibration target)
-- unified command set: audit, water, conditional, simulate, calibrate, validate, owrd-validate, eia, egrid, grid
 - canonical PACW EIA-930 history is data/raw/eia930/historical/PACW.xlsx; API is overlap/update only
-- EPA eGRID 2010-2023 US-customary workbooks organized under data/raw/egrid/; python run_prineville.py egrid joins NWPP output rates to Meta campus MWh
-- Prineville eGRID subregion is EPA Power Profiler ZIP 97754 → NWPP; plant files are corroboration only
+- EPA eGRID NWPP output rates × Meta campus MWh; ZIP 97754 → NWPP
+- working env for this freeze: conda env dc_externalities with PYTHONNOUSERSITE=1
