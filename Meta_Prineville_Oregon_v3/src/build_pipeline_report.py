@@ -691,7 +691,23 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
     year_status("Hourly IT telemetry", {y: "missing" for y in years})
     year_status("Monthly Meta water/electricity meters", {y: "missing" for y in years})
     year_status("Groundwater head / storage", {y: "missing" for y in years})
-    year_status("Indirect electricity water (EWIF)", {y: "missing" for y in years})
+    ewif_path = ROOT / "data" / "processed" / "water" / "regional_electricity_water_intensity.csv"
+    if ewif_path.exists():
+        ew = pd.read_csv(ewif_path)
+        ewif_map = {}
+        for r in ew.itertuples(index=False):
+            yr = int(r.year)
+            if str(getattr(r, "partial_coverage_cooling_ewif_usable", "")).lower() in {"true", "1"} and pd.notna(
+                getattr(r, "EWIF_withdrawal", None)
+            ):
+                ewif_map[yr] = "proxy"
+            elif pd.notna(getattr(r, "EWIF_withdrawal", None)):
+                ewif_map[yr] = "derived"
+            else:
+                ewif_map[yr] = "missing"
+        year_status("Indirect electricity water (EWIF)", {y: ewif_map.get(y, "missing") for y in years})
+    else:
+        year_status("Indirect electricity water (EWIF)", {y: "missing" for y in years})
 
     labels = [r[0] for r in rows_spec]
     code = {
@@ -1359,9 +1375,9 @@ def write_markdown(
 | Monthly campus electricity and water | Canonical table is annual; monthly Meta values are not inferred | Utility/Meta monthly meters |
 | Site water consumption vs withdrawal | No discharge/CoC series | Sewer/discharge or documented consumptive fraction on the campus boundary |
 | Campus source-share θ / groundwater extraction q_dc | City production and POD totals are different boundaries | Campus well/utility delivery meters with source IDs |
-| Generator-to-Meta attribution | Oregon CAMPD/EIA are state tables only | Contract/path/pseudo-tie evidence or a documented BA-average EWIF used *as such* |
-| Indirect electricity water | No EWIF×E_fac coupling | Documented EWIF or generator-resolved water with attribution |
-| Groundwater head/storage/recharge | ASR PDFs unused numerically; IWA is surface routing | Well hydrographs + a calibrated groundwater model (out of current scope) |
+| Generator-to-Meta attribution | Oregon CAMPD/EIA are state tables only | Contract/path/pseudo-tie evidence |
+| Indirect electricity water | Only a regional-average cooling EWIF × Meta MWh proxy exists | Generator-resolved water with attribution, or a documented BA-average used as such |
+| Groundwater head/storage/recharge | No numeric heads recovered; ASR PDFs not local; IWA is surface routing | GWIS/City well hydrographs + aquifer parameters; a calibrated GW model remains out of scope until heads exist |
 | ISO WUE | Withdrawal/facility-kWh is not consumption/IT-kWh | Consumption and IT energy on ISO boundaries |
 | Cost variables | No tariffs/bills | PacifiCorp / City rate schedules and bills |
 | Campus footprint polygon | Site HUC12 is a point-in-polygon designation | Surveyed campus polygon |
@@ -1488,6 +1504,8 @@ Classification avoids calling every unit conversion a predictive model. Full tab
 | M_IWA_IDENTITY | availab = strflow − consum | physics/accounting | no; not validation |
 | M_OWRD_EXTERNAL | OWRD external consistency | external-consistency check | no |
 | M_OR_GEN_QC | Oregon generator QC | external-consistency check | no |
+| M_GW_SCAFFOLD | Groundwater observation scaffold | physics/accounting | no; no dynamics |
+| M_EWIF_PARTIAL | Partial-coverage Oregon cooling EWIF | physics/accounting | no; not Meta attribution |
 
 ---
 

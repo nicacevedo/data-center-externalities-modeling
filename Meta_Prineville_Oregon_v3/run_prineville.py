@@ -26,6 +26,16 @@ def usgs():
 def water_context():
     subprocess.run([sys.executable, str(ROOT/'src'/'build_water_context.py')], check=True, cwd=ROOT)
 
+def groundwater_context():
+    subprocess.run([sys.executable, str(ROOT / "src" / "build_groundwater_context.py")], check=True, cwd=ROOT)
+
+def public_extensions():
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "build_public_quantity_extensions.py"), *sys.argv[2:]],
+        check=True,
+        cwd=ROOT,
+    )
+
 def ferc():
     subprocess.run([sys.executable, str(ROOT / "src" / "prepare_ferc714.py")], check=True, cwd=ROOT)
 
@@ -64,6 +74,8 @@ def full():
     oregon()
     deq()
     water_context()
+    groundwater_context()
+    public_extensions()
     conditional()
     simulate()
     report()
@@ -168,10 +180,12 @@ def main():
     elif cmd=='deq': deq()
     elif cmd=='usgs': usgs()
     elif cmd=='water-context': water_context()
+    elif cmd=='groundwater-context': groundwater_context()
+    elif cmd=='public-extensions': public_extensions()
     elif cmd=='report': report()
     elif cmd=='weather': weather()
     elif cmd=='weather-ks39': weather_ks39()
     elif cmd=='full': full()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|weather|water-context|conditional|simulate|calibrate|validate|owrd-validate|eia|ferc|egrid|oregon|grid|deq|usgs|report|weather-ks39|full]')
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|weather|water-context|groundwater-context|public-extensions|conditional|simulate|calibrate|validate|owrd-validate|eia|ferc|egrid|oregon|grid|deq|usgs|report|weather-ks39|full]')
 
 if __name__=='__main__': main()

@@ -11,6 +11,8 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from prepare_ferc714 import (  # noqa: E402
     EIA_CANONICAL,
+    EIA_REPORTED_MAX_MW,
+    EIA_REPORTED_MIN_MW,
     EXTENDED,
     OUT,
     OUT_PNG,
@@ -18,6 +20,7 @@ from prepare_ferc714 import (  # noqa: E402
     OUT_VAL,
     RAW,
     discover_filings,
+    eia_reported_usable,
     nel_identity_table,
 )
 
@@ -97,17 +100,61 @@ def test_ferc_never_overwrites_eia_pacw():
     assert 'EIA_CANONICAL).to_csv' not in text.replace(" ", "")
     assert "pacw_hourly.csv" in text
     assert EIA_CANONICAL.exists()
-    # The preparer may only read the EIA file; writes go to ferc714/ and extended.
     assert "OUT / \"pacw_hourly.csv\"" not in text
     eia = pd.read_csv(EIA_CANONICAL, nrows=5)
     assert "demand_reported_mwh" in eia.columns
-    if EXTENDED.exists():
-        ext = pd.read_csv(EXTENDED)
-        assert set(ext["source"]).issubset({"eia930_pacw", "ferc714_backcast"})
-        eia_first = pd.to_datetime(pd.read_csv(EIA_CANONICAL, usecols=["timestamp_utc"])["timestamp_utc"], utc=True).min()
-        pre = ext[ext["source"].eq("ferc714_backcast")]
-        if len(pre):
-            assert pd.to_datetime(pre["timestamp_utc"], utc=True).max() < eia_first
+
+
+def test_extended_series_usable_hierarchy():
+    ext = pd.read_csv(EXTENDED)
+    eia = pd.read_csv(EIA_CANONICAL, usecols=["timestamp_utc", "demand_reported_mwh"])
+    required = {
+        "demand_reported_raw_mwh",
+        "demand_reported_usable_mwh",
+        "demand_adjusted_mwh",
+        "demand_ferc_proxy_mwh",
+        "demand_best_available_mwh",
+        "provenance",
+        "provenance_class",
+    }
+    assert required.issubset(ext.columns)
+    best = pd.to_numeric(ext["demand_best_available_mwh"], errors="coerce")
+    usable = pd.to_numeric(ext["demand_reported_usable_mwh"], errors="coerce")
+    raw = pd.to_numeric(ext["demand_reported_raw_mwh"], errors="coerce")
+    proxy = pd.to_numeric(ext["demand_ferc_proxy_mwh"], errors="coerce")
+    assert not ((best <= EIA_REPORTED_MIN_MW) | (best > EIA_REPORTED_MAX_MW)).any()
+    filled = best.notna()
+    assert ((usable.notna() & (best == usable)) | (usable.isna() & filled & (best == proxy)) | (~filled)).all()
+    first_usable = pd.to_datetime(ext.loc[usable.notna(), "timestamp_utc"], utc=True).min()
+    ts = pd.to_datetime(ext["timestamp_utc"], utc=True)
+    assert not (proxy.notna() & (ts >= first_usable)).any()
+    assert not (ext["provenance"].eq("FERC constrained proxy") & (ts >= first_usable)).any()
+    assert ext.loc[usable.notna(), "provenance"].eq("EIA-930 reported usable").all()
+    assert ext.loc[ext["provenance"].eq("FERC constrained proxy"), "provenance_class"].eq("proxy").all()
+    assert not ext["provenance"].str.contains("observed PACW", case=False).any()
+    eia_ts = pd.to_datetime(eia["timestamp_utc"], utc=True)
+    eia_usable = eia_reported_usable(eia["demand_reported_mwh"])
+    overlap = pd.DataFrame(
+        {
+            "timestamp_utc": ts,
+            "best": best,
+            "provenance": ext["provenance"],
+            "proxy": proxy,
+        }
+    ).merge(
+        pd.DataFrame({"timestamp_utc": eia_ts, "eia_usable": eia_usable}),
+        on="timestamp_utc",
+        how="inner",
+    )
+    both = overlap["eia_usable"].notna()
+    assert overlap.loc[both, "provenance"].eq("EIA-930 reported usable").all()
+    assert (overlap.loc[both, "best"] == overlap.loc[both, "eia_usable"]).all()
+    assert overlap.loc[both, "proxy"].isna().all()
+    assert raw.notna().any()
+    unusable_raw = raw.notna() & ((raw <= EIA_REPORTED_MIN_MW) | (raw > EIA_REPORTED_MAX_MW))
+    assert unusable_raw.any()
+    assert usable[unusable_raw].isna().all()
+    assert best[unusable_raw & (ts >= first_usable)].isna().all()
 
 
 def test_ferc_is_regional_not_campus_electricity():

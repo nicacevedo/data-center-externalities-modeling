@@ -83,8 +83,10 @@ flowchart TB
   %% Remaining canonical model_io edges (same table; IDs not duplicated above)
   subgraph REST[Other canonical model I/O from model_io_edges.csv]
     M_CHANGEPOINT[M_CHANGEPOINT]
+    M_EWIF_PARTIAL[M_EWIF_PARTIAL]
     M_FERC714_BACKCAST[M_FERC714_BACKCAST]
     M_FUEL_IMPORT[M_FUEL_IMPORT]
+    M_GW_SCAFFOLD[M_GW_SCAFFOLD]
     M_OR_GEN_QC[M_OR_GEN_QC]
     M_PACW_CI[M_PACW_CI]
     M_WATER_SCALE_ONEBREAK[M_WATER_SCALE_ONEBREAK]
@@ -92,6 +94,7 @@ flowchart TB
     Q_CI_PACW[Q_CI_PACW]
     Q_COOLING_MODE[Q_COOLING_MODE]
     Q_COOL_LOAD[Q_COOL_LOAD]
+    Q_EWIF[Q_EWIF]
     Q_EXECUTED[Q_EXECUTED]
     Q_E_FAC[Q_E_FAC]
     Q_E_IT[Q_E_IT]
@@ -102,6 +105,7 @@ flowchart TB
     Q_GEN_OR[Q_GEN_OR]
     Q_GEN_WATER[Q_GEN_WATER]
     Q_GRID_DEMAND[Q_GRID_DEMAND]
+    Q_GW_OBS[Q_GW_OBS]
     Q_HEAT_RATE[Q_HEAT_RATE]
     Q_IT_HEAT[Q_IT_HEAT]
     Q_PUE[Q_PUE]
@@ -113,6 +117,7 @@ flowchart TB
     Q_WEATHER[Q_WEATHER]
     Q_WUE_DIR[Q_WUE_DIR]
     Q_W_EVAP[Q_W_EVAP]
+    Q_W_IND[Q_W_IND]
     Q_W_WITH[Q_W_WITH]
     Q_XI[Q_XI]
   end
@@ -149,3 +154,10 @@ flowchart TB
   M_OR_GEN_QC -->|input| Q_GEN_OR
   M_OR_GEN_QC -->|input| Q_GEN_WATER
   M_OR_GEN_QC -->|input| Q_HEAT_RATE
+  M_GW_SCAFFOLD -->|input| Q_CITY_PROD
+  M_GW_SCAFFOLD -->|input| Q_DIRECT_POD
+  M_GW_SCAFFOLD -->|output| Q_GW_OBS
+  M_EWIF_PARTIAL -->|input| Q_GEN_WATER
+  M_EWIF_PARTIAL -->|input| Q_E_FAC
+  M_EWIF_PARTIAL -->|output| Q_EWIF
+  M_EWIF_PARTIAL -->|output| Q_W_IND

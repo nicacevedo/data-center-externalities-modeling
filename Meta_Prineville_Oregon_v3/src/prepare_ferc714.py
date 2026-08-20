@@ -629,36 +629,75 @@ def plot_validation(backcast: pd.DataFrame, eia: pd.DataFrame, path: Path) -> No
 
 
 def build_extended_demand(eia: pd.DataFrame, backcast: pd.DataFrame) -> pd.DataFrame:
+    """Auditable PACW demand series: usable EIA reported, else FERC proxy before EIA.
+
+    Does not overwrite data/processed/pacw_hourly.csv. Adjusted EIA is retained
+    as a sensitivity column only and never enters demand_best_available_mwh.
+    """
     e = eia.copy()
     e["timestamp_utc"] = pd.to_datetime(e["timestamp_utc"], utc=True)
     e = e.sort_values("timestamp_utc")
-    first_eia = e.loc[e["demand_reported_mwh"].notna(), "timestamp_utc"].min()
-    b = backcast.copy()
-    b["timestamp_utc"] = pd.to_datetime(b["timestamp_utc"], utc=True)
-    pre = b.loc[b["timestamp_utc"] < first_eia, ["timestamp_utc", "west_hourly_backcast_mw", "year_local", "month_local"]].copy()
-    pre = pre.rename(columns={"west_hourly_backcast_mw": "demand_mwh"})
-    pre["provenance"] = (
-        "FERC-constrained PACW-West hourly proxy before EIA-930 coverage; "
-        "not reported PACW hourly demand; not campus electricity"
-    )
-    pre["provenance_class"] = "proxy"
-    pre["source"] = "ferc714_backcast"
+    raw = pd.to_numeric(e["demand_reported_mwh"], errors="coerce")
+    usable = eia_reported_usable(raw)
+    if "demand_adjusted_mwh" in e.columns:
+        adj = pd.to_numeric(e["demand_adjusted_mwh"], errors="coerce")
+    else:
+        adj = pd.Series(np.nan, index=e.index)
+    if "local_date" in e.columns:
+        loc = pd.to_datetime(e["local_date"], errors="coerce")
+        year_e = loc.dt.year
+        month_e = loc.dt.month
+    else:
+        loc = e["timestamp_utc"].dt.tz_convert(TZ_PACIFIC)
+        year_e = loc.dt.year
+        month_e = loc.dt.month
     eia_part = pd.DataFrame(
         {
-            "timestamp_utc": e["timestamp_utc"],
-            "demand_mwh": e["demand_reported_mwh"],
-            "year_local": pd.to_datetime(e["local_date"]).dt.year if "local_date" in e.columns else e["timestamp_utc"].dt.tz_convert(TZ_PACIFIC).dt.year,
-            "month_local": pd.to_datetime(e["local_date"]).dt.month if "local_date" in e.columns else e["timestamp_utc"].dt.tz_convert(TZ_PACIFIC).dt.month,
-            "provenance": "reported EIA-930 PACW demand; balancing-authority operations; not campus electricity",
-            "provenance_class": "reported",
-            "source": "eia930_pacw",
+            "timestamp_utc": e["timestamp_utc"].to_numpy(),
+            "year_local": year_e.to_numpy(),
+            "month_local": month_e.to_numpy(),
+            "demand_reported_raw_mwh": raw.to_numpy(),
+            "demand_reported_usable_mwh": usable.to_numpy(),
+            "demand_adjusted_mwh": adj.to_numpy(),
         }
     )
-    out = pd.concat([pre, eia_part], ignore_index=True).sort_values("timestamp_utc")
-    out = out.drop_duplicates("timestamp_utc", keep="last")
+    first_usable = eia_part.loc[eia_part["demand_reported_usable_mwh"].notna(), "timestamp_utc"].min()
+    b = backcast.copy()
+    b["timestamp_utc"] = pd.to_datetime(b["timestamp_utc"], utc=True)
+    pre = b.loc[b["timestamp_utc"] < first_usable, ["timestamp_utc", "west_hourly_backcast_mw", "year_local", "month_local"]].copy()
+    pre = pre.rename(columns={"west_hourly_backcast_mw": "demand_ferc_proxy_mwh"})
+    eia_idx = eia_part.set_index("timestamp_utc")
+    pre_idx = pre.set_index("timestamp_utc")
+    out = eia_idx.combine_first(pre_idx).reset_index()
     if out["timestamp_utc"].duplicated().any():
         raise ValueError("Extended PACW demand has duplicate UTC timestamps")
-    return out.reset_index(drop=True)
+    if "demand_ferc_proxy_mwh" not in out.columns:
+        out["demand_ferc_proxy_mwh"] = np.nan
+    out.loc[out["timestamp_utc"] >= first_usable, "demand_ferc_proxy_mwh"] = np.nan
+    out["demand_best_available_mwh"] = out["demand_reported_usable_mwh"]
+    proxy_ok = out["demand_best_available_mwh"].isna() & (out["timestamp_utc"] < first_usable)
+    out.loc[proxy_ok, "demand_best_available_mwh"] = out.loc[proxy_ok, "demand_ferc_proxy_mwh"]
+    out["provenance"] = "missing"
+    out["provenance_class"] = "missing"
+    usable_mask = out["demand_reported_usable_mwh"].notna()
+    out.loc[usable_mask, "provenance"] = "EIA-930 reported usable"
+    out.loc[usable_mask, "provenance_class"] = "reported"
+    proxy_mask = (~usable_mask) & out["demand_best_available_mwh"].notna()
+    out.loc[proxy_mask, "provenance"] = "FERC constrained proxy"
+    out.loc[proxy_mask, "provenance_class"] = "proxy"
+    cols = [
+        "timestamp_utc",
+        "year_local",
+        "month_local",
+        "demand_reported_raw_mwh",
+        "demand_reported_usable_mwh",
+        "demand_adjusted_mwh",
+        "demand_ferc_proxy_mwh",
+        "demand_best_available_mwh",
+        "provenance",
+        "provenance_class",
+    ]
+    return out[cols].sort_values("timestamp_utc").reset_index(drop=True)
 
 
 def _qa_rows(items: dict) -> pd.DataFrame:

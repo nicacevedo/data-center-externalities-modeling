@@ -160,6 +160,26 @@ python run_prineville.py water-context
 
 Writes `data/processed/water/water_source_monthly_context.csv`, `data/processed/water/prineville_water_monthly_context.csv`, and `outputs/qc/water_context_qa.csv`. City production is not Meta delivery. Vitesse/Facebook PODs are not total Meta withdrawal. USGS values go missing after their official end dates. Unverified wells do not receive a guessed HUC12.
 
+### Stage 3.7 — groundwater observation scaffold (no dynamics)
+
+Compile well identities, accepted pumping histories, hydrogeologic citations, and groundwater-level evidence **from files already in the repository**. Does not fit a groundwater model or acquire GWIS.
+
+```bash
+python run_prineville.py groundwater-context
+```
+
+Writes canonical groundwater inventory/crosswalk/parameter tables, monthly pumping by accounting boundary, a groundwater-level evidence file (numeric heads remain unresolved because ASR PDFs are not local), QA, and `outputs/groundwater/` diagnostics. HUC12 is never treated as an aquifer node. Combined OWRD groups are not split.
+
+### Stage 3.8 — public quantity extensions (no new models)
+
+Early 2011–2013 Meta water envelope, 2011 eGRID location-based Scope 2 proxy, regional cooling EWIF, and annual-closed monthly reconstructions from current outputs.
+
+```bash
+python run_prineville.py public-extensions
+```
+
+Does not overwrite later Meta-reported water or 2011 Meta-reported Scope 2 (the latter remains undisclosed). Regional EWIF is not Meta generator attribution. Monthly water products are scenario allocations, not observations.
+
 ### Stage 4 — build the campus chronology
 
 Use `data/canonical/campus_events_seed.csv` as the seed, then complete `data/manual_templates/campus_buildings.csv` from Crook County/City permit records.
@@ -382,7 +402,7 @@ Rebuilds registries, diagrams, six figures, and `docs/PIPELINE_DATA_MODEL_REPORT
 python run_prineville.py full
 ```
 
-Thin orchestration only: annual targets/permits/OWRD audit → weather (cached KRDM+KS39, no MADIS download) → USGS panels/crosswalk/audit → grid (EIA-930 then FERC 714 then eGRID) → Oregon generators → DEQ → water-context → conditional reconstruction/OWRD validation → stochastic simulation → pipeline report. Expects raw source files to already exist and does not intentionally acquire new external data. `conditional` already rebuilds reconstruction, so `validate` is not repeated.
+Thin orchestration only: annual targets/permits/OWRD audit → weather (cached KRDM+KS39, no MADIS download) → USGS panels/crosswalk/audit → grid (EIA-930 then FERC 714 then eGRID) → Oregon generators → DEQ → water-context → groundwater-context → public-extensions → conditional reconstruction/OWRD validation → stochastic simulation → pipeline report. Expects raw source files to already exist and does not intentionally acquire new external data. `conditional` already rebuilds reconstruction, so `validate` is not repeated.
 
 ## What is missing, and how to fill it
 

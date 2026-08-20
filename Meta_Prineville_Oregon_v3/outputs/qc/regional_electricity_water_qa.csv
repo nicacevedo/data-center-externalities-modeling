@@ -1,0 +1,6 @@
+item,value,status,detail
+negative_generation_excluded_from_intensity,0,PASS,intensities require generation_mwh > 0; no division by zero/negative
+eligible_plant_months_missing_withdrawal_excluded,6,PASS,missing cooling water is not treated as zero
+years_with_usable_partial_cooling_ewif,11,PASS,usable as cooling-plant diagnostic only; scientifically_meaningful_grid_ewif is always false
+meta_generator_attribution,False,PASS,regional average proxy only
+2011_2012_ewif,unavailable,PASS,Schedule 8 units not volume-comparable; cooling_intensity_eligible is false

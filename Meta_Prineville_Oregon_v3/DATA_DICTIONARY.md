@@ -77,9 +77,15 @@ Reported FERC Form 714 Schedule 2 hourly demand for the **PacifiCorp East+West c
 FERC-only PACW-West hourly **proxy**: East+West intramonth shape scaled to West monthly NEL with a nonnegative monthly `b_m` chosen against West peak and minimum. Monthly energy closes to West NEL. Not reported PACW hourly demand and not campus electricity. EIA-930 is not used to fit this series.
 
 ## `data/processed/pacw_demand_hourly_extended.csv`
-Concatenation with explicit row-level `provenance` / `provenance_class` / `source`: EIA-reported PACW demand where EIA-930 exists, and the FERC proxy **only** before the first EIA timestamp. Does not replace `pacw_hourly.csv`.
+Separate from `pacw_hourly.csv`, which remains the pure EIA-930 source and is never overwritten.
 
-Validation: `outputs/ferc714_qa.csv`, `outputs/ferc714_eia930_validation.csv`, `outputs/ferc714_eia930_monthly_compare.csv`. Primary EIA comparison uses physically possible `demand_reported_mwh`; adjusted EIA demand is sensitivity only.
+Columns: `demand_reported_raw_mwh` (EIA reported as published, including unusable points), `demand_reported_usable_mwh` (same physical screen as FERC↔EIA validation: reported in (0, 8000] MW), `demand_adjusted_mwh` (EIA adjusted; sensitivity/reference only), `demand_ferc_proxy_mwh` (FERC-constrained hourly proxy **only** before first usable EIA coverage), `demand_best_available_mwh`, `provenance`, `provenance_class`.
+
+`demand_best_available_mwh` hierarchy: usable EIA-930 reported demand where available; otherwise FERC hourly proxy only before EIA coverage; otherwise missing. Adjusted/imputed EIA is **not** substituted into `best_available`.
+
+Row-level `provenance` is one of `EIA-930 reported usable`, `FERC constrained proxy`, or `missing`. FERC proxy is never labeled as observed PACW demand.
+
+Validation: `outputs/ferc714_qa.csv`, `outputs/ferc714_eia930_validation.csv`, `outputs/ferc714_eia930_monthly_compare.csv`.
 
 ## `data/processed/egrid_prineville_annual.csv`
 EPA eGRID subregion **total output emission rates** mapped to Prineville model years 2011-2024. Observed eGRID fields; CH4/N2O may be unit-converted from lb/GWh; fuel shares are stored as 0-1 fractions. This is not a campus meter series.
@@ -224,6 +230,35 @@ Finest defensible OWRD source/reporting-group × month table with USGS HUC12 con
 
 ## `data/processed/water/prineville_water_monthly_context.csv`
 Calendar-month spine with **separate** columns for accepted City production, Vitesse/Facebook direct POD use, Meta annual campus withdrawal (labeled annual, not monthly), site-HUC12 USGS variables, and canonical KS39/KRDM monthly weather. USGS values are missing after their official coverage ends.
+
+## Groundwater scaffold (`python run_prineville.py groundwater-context`)
+
+Existing OHA/OWRD/Meta identities remapped to well nodes. HUC12 is a location attribute only, never an aquifer/network node. Combined OWRD PODs are not split across physical wells. ASR PDFs are not present locally, so numeric heads and pumping-test parameters remain unresolved.
+
+- `data/canonical/groundwater/groundwater_well_inventory.csv`: one row per identifiable municipal or Vitesse/Facebook well. Official coordinates only.
+- `data/canonical/groundwater/water_source_groundwater_crosswalk.csv`: source/report IDs → `well_node_id` / pumping group.
+- `data/canonical/groundwater/hydrogeologic_parameter_inventory.csv`: quantitative parameters found in-repo (currently the 260 MG/y ASR application statement plus unresolved rows).
+- `data/processed/groundwater/groundwater_pumping_monthly.csv`: accepted City groups, Vitesse/Facebook direct PODs, and Meta annual campus withdrawal as distinct boundaries.
+- `data/processed/groundwater/groundwater_level_observations.csv`: hydrograph evidence registry; numeric levels are unavailable.
+- `outputs/qc/groundwater_context_qa.csv`, `outputs/groundwater/`: feasibility diagnostics. Current class **C**.
+
+## `data/processed/water/meta_water_early_proxy_envelope.csv`
+2011–2013 only. Direct OWRD POD water, 2011-design WUE×IT proxy (`PUE=1.07`, `WUE=0.31 L/kWh_IT`), and the existing train-only statistical backcast. Does not fill Meta-reported water and does not force a center estimate.
+
+## `data/processed/egrid_2011_location_based_scope2_proxy.csv`
+2011 location-based accounting proxy = Meta 2011 MWh × eGRID2010 NWPP CO2e factor. Provenance `eGRID_location_based_accounting_proxy`. Not Meta-reported Scope 2.
+
+## `data/processed/water/regional_electricity_water_intensity.csv`
+Partial-coverage Oregon cooling EWIF. Missing cooling water is not treated as zero. `regional_average_indirect_water_proxy_m3` is a regional average, not Meta generator attribution. QA: `outputs/qc/regional_electricity_water_qa.csv`.
+
+## `data/processed/electricity/meta_campus_monthly_electricity_reconstruction.csv`
+Annual-closed monthly reconstruction of reported Meta electricity using flat and conditional (gray-box) shapes from the existing hourly reconstruction. Labeled reconstructed / annual-closed, not meter data. Stochastic hourly shape is not available for 2011–2024.
+
+## `data/processed/water/meta_campus_monthly_water_scenarios.csv`
+Scenario allocations of reported annual Meta water (2014–2024) using flat, gray-box evaporation, and direct-POD seasonal shapes. Annual closure required. Labeled scenario allocation, not observation or prediction.
+
+## `outputs/data_gap_priority_assessment.csv`
+Ranked assessment of GWIS, OpenET, and NHM/NWM/streamflow/recharge. Does not download those datasets.
 
 ## `data/processed/weather_krdm_hourly.csv`
 
