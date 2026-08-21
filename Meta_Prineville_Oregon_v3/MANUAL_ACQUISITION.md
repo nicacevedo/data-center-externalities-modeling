@@ -77,19 +77,31 @@ Save all responses/raw files under `data/raw/city/` and then map them into:
 
 Item (6) is for City/ASR operational hydrographs. Local GWIS well levels are already bundled and are a different series.
 
+The City utility portal can show monthly consumption to account holders (`CITY_UTILITY_INFO_FY26`). That supports this request. It is not Meta monthly water data and does not make those account records public.
+
 Do not overwrite raw records.
 
-## 4. Crook County / City building-permit request
+## 4. Crook County / City building-permit request — substantially complete
 
-Goal: obtain the **actual commissioning/retrofit chronology** rather than infer it from press announcements.
+Broad permit collection for the early campus and the prioritized 2015-2025 set is already in the repository (`data/canonical/campus_permit_evidence.csv`, `data/manual_templates/campus_buildings.csv`, and `data/raw/prineville_strictly_valuable_permits_v2/`). Do not repeat a wide archival browse. Remaining permit value is narrow (for example a PRN1 electrical one-line or chiller equipment schedule only if it is trivially obtainable). Announcement/planning dates are not commissioning dates; current permit finals remain the commissioning authority.
 
-### Ready-to-copy request
+The documentary/regulatory bundle now supplies PRN/CCO identity and legal/network context. It does not replace permit finals.
+
+### Optional remaining request
 
 > I request an electronic index/export of commercial building, electrical, mechanical and plumbing permits associated with Facebook/Meta data-center facilities in or near Prineville from January 2010 through December 2025. For each permit, please provide the permit number, project/site identifier or address, permit type, issue date, final inspection/closure/certificate-of-occupancy date if applicable, project description, building square footage, and any non-security-sensitive description of electrical capacity or cooling/mechanical system. I am especially interested in records identifying new data-center buildings, major expansions, cooling-system changes, or server/electrical-capacity upgrades. I do not request security drawings, detailed site-security plans, or other sensitive records.
 
-Populate `data/manual_templates/campus_buildings.csv`.
+Populate `data/manual_templates/campus_buildings.csv` only if a new final/CO record is obtained.
 
 A building becomes a model capacity breakpoint only when a completion/final/CO/operation date is supported; an announcement date is not enough.
+
+## 4b. Executed City–Vitesse water/sewer agreement (targeted legal request)
+
+Highest remaining legal gap after the documentary bundle: the executed documents behind City Ordinances 1234/1242/1243.
+
+> I request existing electronic copies of: (1) the executed December 5, 2017 Development, Water and Sewer Service Agreement between the City of Prineville and Vitesse, LLC; (2) the executed First Amendment and executed Second Amendment to that agreement; and (3) Exhibit C and any attached capacity, SDC, or design-flow schedules. I do not request security-sensitive facility details.
+
+Save responses under `data/raw/city/`. These would constrain legal capacity language. They still would not be campus water meters.
 
 ## 5. EIA-930 PACW historical workbook (canonical) and optional API overlap
 

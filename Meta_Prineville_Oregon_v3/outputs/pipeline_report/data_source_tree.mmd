@@ -19,6 +19,7 @@ flowchart TB
   end
   subgraph G_onsite_generation_permits[onsite_generation_permits]
     CROOK_COUNTY_PERMITS[CROOK_COUNTY_PERMITS]
+    DOCUMENTARY_EVIDENCE_BUNDLE_V1[DOCUMENTARY_EVIDENCE_BUNDLE_V1]
     ODEQ_AIR_07_0037[ODEQ_AIR_07_0037]
   end
   subgraph G_grid_carbon[grid_carbon]
@@ -146,6 +147,7 @@ flowchart TB
   ODEQ_AIR_07_0037 -->|primary| Q_BACKUP_EMIS
   OREGON_BER_RENEWABLE -->|context| Q_OP_GHG
   CROOK_COUNTY_PERMITS -->|context| Q_SPATIAL_M
+  DOCUMENTARY_EVIDENCE_BUNDLE_V1 -->|context| Q_SPATIAL_M
   EPA_EGRID -->|benchmark| Q_SCOPE2_META
   META_2016_DISCLOSURE -->|calibration_target| Q_E_FAC
   META_2019_DISCLOSURE -->|calibration_target| Q_E_FAC

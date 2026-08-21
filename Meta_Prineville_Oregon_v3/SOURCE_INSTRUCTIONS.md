@@ -90,6 +90,31 @@ Populate `data/manual_templates/campus_buildings.csv`.
 
 A high-value local package is already present at `data/raw/prineville_strictly_valuable_permits_v2/`. Integrate it with `src/integrate_prn1_permit_evidence.py` (called from `python run_prineville.py audit`). Do not rescan unrelated `permits_pdfs/` for this package. Do not convert amp/circuit counts to MW or pipe diameter to consumption. The PRN1 late-2023/early-2024 transition is interpretation/scenario evidence and is not used to retune gray-box or the 2023–2024 water holdout.
 
+## 4b. Documentary / regulatory evidence (identity and legal context)
+
+Tracked seeds: `config/prineville_documentary_sources.csv`, `config/prineville_documentary_evidence.csv`, `config/prineville_documentary_aliases.csv`, `config/prineville_documentary_events.csv`. Raw PDFs, if present, live under `data/raw/documentary_evidence/` and are SHA-256 checked; they are not OCR'd on each run.
+
+Use for:
+- PRN vs CCO campus identity and PRN1–PRN6 / CCO1&2 aliases;
+- interconnection/service-capacity and regional transmission context;
+- City water/sewer/resiliency legal chronology.
+
+Do **not** use for campus electricity or water meters, calibration targets, or commissioning dates. Existing permit finals remain the commissioning authority. The permit v2 package is already integrated and should not be copied into this directory or rescanned.
+
+Prohibited inferences (exact meanings):
+- ~120 MW is excess transmission capability above Vitesse contracted capacity, not campus/IT/contracted/observed load.
+- 220 MW is CCO interconnection/service capability, not realized demand or IT capacity.
+- 180 MW is the subject new large load in the direct-access application, not realized load.
+- 437 MW is Schedule 272 renewable-resource/REC capacity, not campus demand or physically traced hourly generation.
+- >3.2 million ft2 is a projected combined PRN+initial-CCO completed footprint, not occupied 2018 floor area.
+- CU-2018-105 is regional/multi-customer transmission context; do not label all facilities Meta-only.
+- 16-inch ASR/reuse/brine lines, 21-to-30-inch wastewater line, pipe lengths/diameters, and infrastructure costs are not campus water delivery, discharge, or entitlement.
+- 2022 staff report: no additional capacity authorized. 2023 staff report: no additional capacity reservation.
+- Meta/Vitesse ASR funding is not Meta pumping or a dedicated campus-water volume.
+- UE 463 class-average load factors and Large Energy Use Facility classification are not customer-specific Meta telemetry.
+- City portal monthly-consumption viewing supports the acquisition request; it is not Meta monthly water data.
+- Meta annual `Prineville` totals remain as reported; the PRN-vs-CCO reporting boundary is unresolved. Do not allocate annual totals across campuses/buildings.
+
 ## 5. Official Prineville municipal water-source inventory
 
 - Source ID: `OHA_PWS_00682`

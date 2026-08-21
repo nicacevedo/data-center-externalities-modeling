@@ -1,0 +1,19 @@
+canonical_entity_id,alias,alias_type,valid_from,valid_to,source_doc_id,source_locator,confidence,notes
+VITESSE_LLC,Project Vitesse,historical_project_name,,2009-11-24,CITY_RES1117_2009,Recitals,VERY_HIGH,"City resolution says Project Vitesse is now Vitesse, LLC."
+VITESSE_LLC,"Vitesse, LLC",legal_name,2009-11-24,,CITY_RES1117_2009,Recitals,VERY_HIGH,Legal project/operator entity used in City/OPUC records.
+VITESSE_LLC,Vitesse LLC,legal_name_variant,2009-11-24,,OPUC_UM1989_VITESSE_2018,throughout,VERY_HIGH,Punctuation variant.
+META_PLATFORMS_INC,"Facebook, Inc.",historical_parent_name,,2021-10-28,OPUC_UM1989_VITESSE_2018,cover/application,VERY_HIGH,2018 source identifies Facebook as parent through Vitesse; do not use this row to infer exact corporate legal dates.
+META_PLATFORMS_INC,"Meta Platforms, Inc.",current_parent_name,2021-10-28,,OPUC_UE463_VITESSE_2026,Coyle/4,VERY_HIGH,2026 Vitesse testimony states Vitesse is wholly owned by Meta.
+PRN_CAMPUS,Prineville Campus,formal_campus_name,,,OPUC_UM1989_VITESSE_2018,application p.3-7,VERY_HIGH,Six-building PRN campus in 2018 filing.
+CCO_CAMPUS,Crook County Campus,formal_campus_name,2018-09-20,,OPUC_UM1989_VITESSE_2018,"application p.3, p.6",VERY_HIGH,Adjacent campus initially two buildings.
+PRN1,PRN1,building_code,,,CITY_ORD1246_2018,Exhibit A,VERY_HIGH,Official City map.
+PRN2,PRN2,building_code,,,CITY_ORD1246_2018,Exhibit A,VERY_HIGH,Official City map.
+PRN3,PRN3,building_code,,,CITY_ORD1246_2018,Exhibit A,VERY_HIGH,Official City map.
+PRN4,PRN4,building_code,,,CITY_ORD1246_2018,Exhibit A,VERY_HIGH,Official City map directly confirms PRN4.
+PRN5,PRN5,building_code,,,CITY_ORD1246_2018,Exhibit A,VERY_HIGH,Official City map.
+PRN6,PRN6,building_code,,,CITY_ORD1246_2018,Exhibit A,VERY_HIGH,Official City map.
+CCO1_CCO2,CCO 1&2,source_building_label,,,CITY_CU2019_111,site description,VERY_HIGH,Use source wording; do not infer whether one H-shaped structure or two independently separable structures without drawings.
+PRN1_MODERNIZATION,Data Center Modernization - Network Core Addition,project_alias,2021,,CITY_CU2021_110_APP,drawing title blocks,VERY_HIGH,PRN1 addition project.
+PRN1_MODERNIZATION,C210083-001,project_number,2021,,CITY_CU2021_110_APP,drawing title blocks,VERY_HIGH,High-value search identifier.
+VITESSE_PRINEVILLE_PROPERTY,735 SW Vitesse Ave,historical_address,,2010-04-27,CITY_ORD1170_2010,ordinance text,VERY_HIGH,Historical address before street rename.
+VITESSE_PRINEVILLE_PROPERTY,735 SW Connect Way,address,2010-04-27,,CITY_ORD1170_2010,ordinance text,VERY_HIGH,Renamed street/address context; later permit records use Connect Way.

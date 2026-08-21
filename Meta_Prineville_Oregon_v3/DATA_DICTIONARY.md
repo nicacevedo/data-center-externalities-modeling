@@ -247,6 +247,17 @@ Existing OHA/OWRD/Meta identities remapped to well nodes and joined to local OWR
 - `docs/pipeline_report.tex` / `docs/pipeline_report.pdf`: advisor-length writeup of the current freeze. Maintained separately from `python run_prineville.py report`.
 - `outputs/pipeline_report/figures/fig_advisor_gwis_estimation_candidates.png`: SRC-GC / SRC-JA / SRC-GB hydrographs for that brief. Not overwritten by the generated registry report.
 
+## Documentary / regulatory evidence (`python run_prineville.py audit`)
+
+Curated identity and legal/network facts. Not campus meters and not a calibration dataset. Seeds are under `config/prineville_documentary_*.csv`. Raw PDFs, if present, are provenance artifacts under `data/raw/documentary_evidence/`.
+
+- `data/canonical/campus_documentary_evidence.csv`: high-confidence documentary rows (`evidence_id`, source locator, date precision, entity/boundary/building IDs, `fact_key`, numeric value, `value_relation` such as `up_to` / `at_least` / `approximately` / `greater_than`, unit, `model_role`, `prohibited_use`). Bounds stay bounds.
+- `data/canonical/campus_identity_crosswalk.csv`: PRN vs CCO campus names, PRN1–PRN6, CCO1&2, Vitesse/Meta aliases, and Connect Way / Vitesse Ave address history. The 2015 ~200,000-ft2 facility stays `UNRESOLVED`.
+- `data/canonical/campus_regulatory_events.csv`: dated legal/planning events only. Separate from `campus_events_seed.csv`. Announcement/planning dates are not commissioning dates.
+- `outputs/documentary_evidence_audit.csv`: schema, SHA-256, and semantic-guardrail checks. Missing raw PDFs are `NOT_VERIFIED_RAW_MISSING`, not a silent pass.
+
+Key semantics: ~120 MW excess transmission, 220 MW CCO interconnection, 180 MW subject new large load, and 437 MW Schedule 272 REC/resource capacity are not campus load. Pipe diameter/cost/ASR funding is not campus water. Meta reporting-boundary status is `unresolved_prn_vs_prn_plus_cco`.
+
 ## `data/canonical/facility/prn1_addition_facts.csv`
 High-confidence PRN1 addition facts from `data/raw/prineville_strictly_valuable_permits_v2/`. Provenance `reported_permit_document_evidence`. Area is a range/proxy (~82.7k ft²); `exact_final_area` and `electrical_capacity_mw` are missing. Circuit counts are not converted to MW. Not a gray-box or water-holdout input.
 

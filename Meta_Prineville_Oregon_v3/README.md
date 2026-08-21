@@ -15,7 +15,7 @@ It is **not** a claim that public data identify Meta's private hourly IT workloa
 
 **Freeze:** Prineville Public-Data Baseline v1 (git `main`).
 
-The public-data pipeline is integrated through weather, water, grid, permits, GWIS groundwater observations, measurement QC, and a groundwater identifiability screen. No groundwater-response model is fitted. Annual electricity is closed to Meta totals (not a forecast). 2023–2024 is the water-model holdout only.
+The public-data pipeline is integrated through weather, water, grid, permits, GWIS groundwater observations, measurement QC, and a groundwater identifiability screen. A documentary/regulatory layer adds PRN vs CCO identity, interconnection/service-capacity context, and City water-infrastructure legal chronology. Those documents are **not** meters and do not retune the model. Meta annual `Prineville` totals stay as reported; the PRN-vs-CCO inclusion boundary by reporting vintage is unresolved (`unresolved_prn_vs_prn_plus_cco`). No groundwater-response model is fitted. Annual electricity is closed to Meta totals (not a forecast). 2023–2024 is the water-model holdout only.
 
 | Read this | For |
 |---|---|
@@ -226,6 +226,8 @@ The highest-value fields are:
 - retrofit dates.
 
 Do **not** assign a technology epoch merely because an expansion was announced. Use commissioning/final dates or statistically detected structural breaks, then interpret those breaks against the permit chronology.
+
+A complementary documentary/regulatory layer is rebuilt by `python run_prineville.py audit` **before** the permit audit (`src/integrate_prineville_documentary_evidence.py`). It writes campus identity aliases, regulatory events, and high-confidence legal/network facts. It does not OCR PDFs, does not change annual Meta totals, and does not create commissioning dates from announcements.
 
 ### Stage 5 — grid/emissions series
 

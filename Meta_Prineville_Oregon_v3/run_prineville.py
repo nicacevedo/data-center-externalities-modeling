@@ -95,6 +95,11 @@ def owrd_validate():
 def audit():
     subprocess.run([sys.executable,str(ROOT/'src'/'build_targets.py')],check=True)
     water()
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "integrate_prineville_documentary_evidence.py")],
+        check=True,
+        cwd=ROOT,
+    )
     subprocess.run([sys.executable, str(ROOT / "src" / "integrate_prn1_permit_evidence.py")], check=True, cwd=ROOT)
     subprocess.run([sys.executable,str(ROOT/'src'/'audit_campus_permits.py')],check=True)
     subprocess.run([sys.executable,str(ROOT/'src'/'change_point_seed.py')],check=True)

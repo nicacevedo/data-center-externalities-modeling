@@ -8,6 +8,8 @@ site:
   city: Prineville
   state: Oregon
   timezone: America/Los_Angeles
+  meta_reporting_boundary_status: unresolved_prn_vs_prn_plus_cco
+  meta_reporting_boundary_note: 'PRN and CCO are distinct named campuses in the 2018 Vitesse OPUC record. Meta annual Prineville site totals remain hard observations as reported. The PRN-vs-CCO inclusion boundary by reporting vintage is unresolved. Do not allocate annual totals across campuses or buildings, and do not change the annual values.'
 
 weather:
   primary_station_name: Redmond Roberts Field

@@ -888,6 +888,23 @@ def source_inventory() -> list[dict]:
             branch_group="onsite_generation_permits",
             in_source_manifest=False,
         ),
+        _s(
+            source_id="DOCUMENTARY_EVIDENCE_BUNDLE_V1",
+            provider_institution="City of Prineville / Oregon PUC / Vitesse LLC",
+            dataset_product="Prineville documentary/regulatory evidence bundle v1 (21 PDFs; curated seed CSVs)",
+            source_url_or_acquisition_route="Tracked seeds in config/prineville_documentary_*.csv; individual source IDs/URLs also listed in data/source_manifest.csv. Raw PDFs under data/raw/documentary_evidence/ are local provenance artifacts and are not OCR'd by the pipeline.",
+            local_raw_files="config/prineville_documentary_sources.csv; config/prineville_documentary_evidence.csv; config/prineville_documentary_aliases.csv; config/prineville_documentary_events.csv; data/raw/documentary_evidence/",
+            spatial_resolution="PRN campus, CCO campus, City service, regional transmission",
+            temporal_resolution="event / legal chronology 2009-2026",
+            coverage="21 unique documents; 48 curated evidence rows",
+            reported_measured_modeled_status="reported documentary/regulatory facts; not meters",
+            processing_script="src/integrate_prineville_documentary_evidence.py",
+            processed_outputs="data/canonical/campus_documentary_evidence.csv; data/canonical/campus_identity_crosswalk.csv; data/canonical/campus_regulatory_events.csv; outputs/documentary_evidence_audit.csv",
+            model_role="identity/boundary, interconnection/service-capacity, transmission topology, and water-infrastructure/legal context; not calibration",
+            known_limitations="PRN vs CCO Meta reporting boundary is unresolved. MW quantities are not campus load. Pipe diameter/cost/funding is not campus water. Permit v2 package is already integrated separately and is not rescanned here.",
+            branch_group="onsite_generation_permits",
+            in_source_manifest=True,
+        ),
     ]
     ids = [r["source_id"] for r in rows]
     if len(ids) != len(set(ids)):
@@ -3095,6 +3112,23 @@ def model_registry() -> list[dict]:
             is_prediction="no",
             notes="Not Meta generator attribution. scientifically_meaningful_grid_ewif is false by construction.",
         ),
+        _m(
+            model_id="M_DOCUMENTARY_EVIDENCE",
+            model_name="Documentary/regulatory evidence integration",
+            model_class="external-consistency check",
+            code_path="src/integrate_prineville_documentary_evidence.py",
+            what_it_does="Validates curated documentary seeds, verifies raw PDF SHA-256 when files exist, and writes identity/event/evidence tables. Does not OCR PDFs and does not retune electricity/water models.",
+            equations="none; identity-preserving copy of curated facts plus SHA-256 provenance checks",
+            inputs="config/prineville_documentary_*.csv; config/prineville.yaml meta_reporting_boundary_status",
+            outputs="campus_documentary_evidence.csv; campus_identity_crosswalk.csv; campus_regulatory_events.csv; documentary_evidence_audit.csv",
+            parameters_priors="none fitted",
+            parameter_provenance="n/a",
+            training_period="n/a",
+            holdout_period="n/a",
+            selection_rule="n/a",
+            is_prediction="no",
+            notes="PRN and CCO remain distinct. 120/220/180/437 MW are not campus load. Water-infrastructure facts are not campus water observations. Meta annual Prineville totals are unchanged; reporting-boundary status is unresolved_prn_vs_prn_plus_cco.",
+        ),
     ]
 
 
@@ -3324,6 +3358,7 @@ def source_quantity_edges() -> list[dict]:
         _sq("ODEQ_AIR_07_0037", "Q_BACKUP_EMIS", "primary"),
         _sq("OREGON_BER_RENEWABLE", "Q_OP_GHG", "context"),
         _sq("CROOK_COUNTY_PERMITS", "Q_SPATIAL_M", "context"),
+        _sq("DOCUMENTARY_EVIDENCE_BUNDLE_V1", "Q_SPATIAL_M", "context"),
         _sq("EPA_EGRID", "Q_SCOPE2_META", "benchmark"),
         _sq("META_2016_DISCLOSURE", "Q_E_FAC", "calibration_target"),
         _sq("META_2019_DISCLOSURE", "Q_E_FAC", "calibration_target"),

@@ -1395,6 +1395,22 @@ def write_markdown(
             "No groundwater-response model is fitted."
         )
 
+    doc_audit = ROOT / "outputs" / "documentary_evidence_audit.csv"
+    if doc_audit.exists():
+        doc_md = (
+            "**Documentary/regulatory evidence:** curated identity and legal/network facts from "
+            "`config/prineville_documentary_*.csv`. PRN and CCO are distinct named campuses. "
+            "Meta annual Prineville totals remain hard observations; "
+            "`meta_reporting_boundary_status` is `unresolved_prn_vs_prn_plus_cco`. "
+            "120/220/180/437 MW facts are interconnection/REC/new-load constraints, not campus load. "
+            "Water-infrastructure facts are not campus water meters. No model retuning."
+        )
+    else:
+        doc_md = (
+            "**Documentary/regulatory evidence:** audit outputs not present. "
+            "This layer is identity/legal context only."
+        )
+
     disc = "\n".join(
         f"- **{d['item']}.** Documentation: {d['documentation']} Code/files: {d['code_or_files']} "
         f"Resolution: {d['resolution']}"
@@ -1502,7 +1518,7 @@ Layers actually executed:
 3. **Gray-box physics.** `src/prineville_graybox.py` maps IT power + weather → cooling mode, PUE, raw evaporation.
 4. **Conditional reconstruction.** `src/conditional_reconstruction.py` closes annual facility electricity with one latent IT-power scale per year and predicts water with a train-only multiplicative scale on raw evaporation.
 5. **Stochastic proxy.** `src/stochastic_conditional_simulation.py` is a **generative scenario** with a separate annual water **prediction** horse-race (energy-only selected).
-6. **Context, not coupling.** OWRD City/POD, USGS HUC12 IWA/use, EIA-930 PACW, FERC Form 714 PacifiCorp-West monthly / East+West shape, eGRID NWPP, Oregon CAMPD/EIA, DEQ backup, Crook County permits.
+6. **Context, not coupling.** OWRD City/POD, USGS HUC12 IWA/use, EIA-930 PACW, FERC Form 714 PacifiCorp-West monthly / East+West shape, eGRID NWPP, Oregon CAMPD/EIA, DEQ backup, Crook County permits, documentary/regulatory identity and legal/network context.
 
 Annual electricity agreement is **closure, not prediction**. IWA `availab = strflow - consum` is an **identity, not hydrologic validation**. City production is **not** Meta delivery. Direct POD is **not** total Meta withdrawal.
 
@@ -1515,6 +1531,8 @@ See the diagram ([PNG](../outputs/pipeline_report/data_source_tree.png), [Mermai
 **{n_src} sources** are listed. `{int((sources.in_source_manifest=="no").sum())}` of them exist in the executable pipeline but are **absent from `data/source_manifest.csv`** (CAMPD, EIA-860/923/cooling, EPA/EIA crosswalk, Oregon DEQ, Crook County permits). Code behavior wins: they are inventoried here.
 
 {gw_id_md}
+
+{doc_md}
 
 The diagrams distinguish:
 
