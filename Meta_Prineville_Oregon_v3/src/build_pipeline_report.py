@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.colors import ListedColormap
+from matplotlib.lines import Line2D
 from matplotlib.patches import FancyBboxPatch, Patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -86,6 +87,81 @@ COLORS = {
     "holdout": "#d73027",
     "train": "#4575b4",
 }
+
+FIGURE3_DISPLAY_PREDICTORS = (
+    "training_mean",
+    "conditional_global_scale",
+    "energy_null_frozen_nnls",
+)
+FIGURE3_FULL_AUDIT_PREDICTORS = (
+    "training_mean",
+    "training_median",
+    "persistence_2022",
+    "conditional_global_scale",
+    "energy_null_frozen_nnls",
+    "energy_null_ensemble_median",
+    "evap_physics_frozen_nnls",
+    "two_component_frozen_nnls",
+)
+
+FIGURE2_DOC_INCLUDE_TYPES = {
+    "electric_service": ("power/cooling", "First MESA / Schedule 48 service"),
+    "campus_buildout": ("campus/buildout", "Four initial PRN buildings coming online"),
+    "planned_facility": ("campus/buildout", "LTEZ ~200k ft² data-center agreement"),
+    "infrastructure_agreement": ("campus/buildout", "City/County/Vitesse infrastructure agreement"),
+    "water_sewer_agreement": ("water/infrastructure", "Water/sewer service agreement"),
+    "water_sewer_amendment": ("water/infrastructure", "Water/sewer agreement amendment"),
+    "campus_announcement": ("campus/buildout", "CCO campus announced"),
+    "construction_state": ("campus/buildout", "CCO1&2 under construction"),
+    "planning": ("campus/buildout", "PRN1 network-core addition (planning)"),
+    "water_resiliency_agreement": ("water/infrastructure", "Waterline resiliency agreement"),
+    "water_resiliency_amendment": ("water/infrastructure", "Waterline resiliency 70/30 amendment"),
+}
+FIGURE2_PERMIT_INCLUDE_TYPES = {
+    "infrastructure_final": ("water/infrastructure", "Pump house final"),
+    "building_final": ("campus/buildout", "Building final"),
+    "partial_building_final": ("campus/buildout", "Partial building final"),
+    "partial_mechanical_final": ("power/cooling", "Partial mechanical final"),
+    "site_utilities_final": ("water/infrastructure", "Water/sewer/storm finals"),
+    "fire_life_safety_final": ("campus/buildout", "Fire/life-safety final"),
+    "mechanical_final": ("power/cooling", "Mechanical final"),
+    "mechanical_commissioning_test": ("power/cooling", "PRN1 hydronic test (chillers/CRAH excluded)"),
+    "mechanical_pre_tco_walk": ("power/cooling", "PRN1 mechanical pre-TCO walk"),
+    "chiller_operational": ("power/cooling", "PRN1 additional chiller operational"),
+    "electrical_final": ("power/cooling", "Electrical final"),
+    "plumbing_final": ("water/infrastructure", "PRN1 plumbing final"),
+    "phase2_electrical_rough_in": ("power/cooling", "PRN1 Phase 2 electrical rough-in (pending)"),
+}
+FIGURE2_PERMIT_LABEL_BY_DATE_TYPE = {
+    ("2010-12-16", "infrastructure_final"): "Pump house final",
+    ("2011-04-14", "building_final"): "Initial campus building finals",
+    ("2011-08-24", "building_final"): "Campus sections C&D finals",
+    ("2020-03-18", "partial_mechanical_final"): "CCO1 partial mechanical (Admin/E)",
+    ("2020-03-20", "partial_building_final"): "CCO1 partial building (Admin/E-core)",
+    ("2020-03-24", "partial_mechanical_final"): "CCO1 data halls A&B partial mechanical",
+    ("2020-08-03", "site_utilities_final"): "CCO1/2 water/sewer/storm finals",
+    ("2020-08-05", "fire_life_safety_final"): "CCO1/2 fire/life-safety final",
+    ("2020-08-14", "partial_building_final"): "CCO1/2 partial building A&B",
+    ("2020-10-21", "partial_building_final"): "CCO1 area D partial building",
+    ("2020-10-23", "partial_building_final"): "CCO1 area C partial building",
+    ("2021-06-28", "building_final"): "CCO1&2 full building final",
+    ("2021-07-08", "mechanical_final"): "CCO1&2 full mechanical final",
+    ("2023-09-21", "mechanical_commissioning_test"): "PRN1 hydronic test (chillers/CRAH excluded)",
+    ("2023-12-11", "mechanical_pre_tco_walk"): "PRN1 mechanical pre-TCO walk",
+    ("2024-02-02", "chiller_operational"): "PRN1 additional chiller operational",
+    ("2024-02-13", "electrical_final"): "PRN1 addition electrical/mechanical finals",
+    ("2024-02-13", "mechanical_final"): "PRN1 addition electrical/mechanical finals",
+    ("2024-02-20", "building_final"): "PRN1 addition building final",
+    ("2024-02-22", "plumbing_final"): "PRN1 plumbing final",
+    ("2024-03-14", "phase2_electrical_rough_in"): "PRN1 Phase 2 electrical rough-in (pending)",
+}
+FIGURE2_GROUP_LABELS = {
+    ("2011-04-14", "campus/buildout"): "Initial campus building finals",
+    ("2018-08-07", "water/infrastructure"): "Water/sewer agreement amendments",
+    ("2024-02-13", "power/cooling"): "PRN1 addition electrical/mechanical finals",
+}
+FIGURE2_EVENT_CATEGORIES = ("campus/buildout", "water/infrastructure", "power/cooling")
+HIGH_CONFIDENCE = {"high", "very_high"}
 
 
 def check_prerequisites() -> None:
@@ -298,6 +374,8 @@ def write_water_holdout_baseline_compare() -> pd.DataFrame:
         }
         rows.append(rec)
     df = pd.DataFrame(rows)
+    if list(df["predictor"]) != list(FIGURE3_FULL_AUDIT_PREDICTORS):
+        raise ValueError("water_holdout_baseline_compare.csv predictor set changed unexpectedly")
     df.to_csv(OUT / "water_holdout_baseline_compare.csv", index=False)
     return df
 
@@ -659,6 +737,133 @@ def render_quantity_png() -> Path:
     return _diagrams.render_quantity_png(OUT / "model_quantity_dependency.png")
 
 
+def _high_confidence(value) -> bool:
+    return str(value).strip().lower().replace(" ", "_") in HIGH_CONFIDENCE
+
+
+def _event_x(date_start: str, precision: str) -> float:
+    raw = str(date_start).strip()
+    prec = str(precision).strip().lower()
+    ts = pd.to_datetime(raw, errors="coerce")
+    if pd.isna(ts):
+        year = int(str(raw)[:4])
+        return year + (0.2 if prec in {"early_year"} else 0.5)
+    year = int(ts.year)
+    if prec in {"year"}:
+        return year + 0.5
+    if prec in {"early_year"}:
+        return year + 0.2
+    doy = int(ts.dayofyear)
+    return year + (doy - 1) / 365.25
+
+
+def _normalize_confidence(value) -> str:
+    token = str(value).strip().lower().replace(" ", "_")
+    if token == "very_high":
+        return "VERY_HIGH"
+    if token == "high":
+        return "HIGH"
+    return str(value).strip()
+
+
+def select_figure2_operational_timeline(write: bool = True) -> pd.DataFrame:
+    """Presentation selection of existing high-confidence operational events.
+
+    Does not invent events. Same-date, same-category rows may be grouped for
+    display while retaining every underlying event and source ID.
+    """
+    doc_path = ROOT / "config" / "prineville_documentary_events.csv"
+    permit_path = ROOT / "data" / "canonical" / "campus_permit_events.csv"
+    doc = pd.read_csv(doc_path)
+    permit = pd.read_csv(permit_path)
+    rows = []
+
+    for r in doc.itertuples(index=False):
+        if not _high_confidence(r.confidence):
+            continue
+        etype = str(r.event_type).strip()
+        if etype not in FIGURE2_DOC_INCLUDE_TYPES:
+            continue
+        category, label = FIGURE2_DOC_INCLUDE_TYPES[etype]
+        date_start = str(r.date_start).strip()
+        rows.append(
+            {
+                "displayed_date": date_start[:10],
+                "displayed_year": int(str(date_start)[:4]),
+                "display_x": _event_x(date_start, r.date_precision),
+                "display_label": label,
+                "category": category,
+                "underlying_event_ids": str(r.event_id),
+                "source_doc_ids": str(r.source_doc_id),
+                "confidence": _normalize_confidence(r.confidence),
+                "date_precision": str(r.date_precision),
+            }
+        )
+
+    for r in permit.itertuples(index=False):
+        if not _high_confidence(r.confidence):
+            continue
+        etype = str(r.event_type).strip()
+        if etype not in FIGURE2_PERMIT_INCLUDE_TYPES:
+            continue
+        date = str(r.date).strip()[:10]
+        year = int(date[:4])
+        if year > 2024:
+            continue
+        category, default_label = FIGURE2_PERMIT_INCLUDE_TYPES[etype]
+        label = FIGURE2_PERMIT_LABEL_BY_DATE_TYPE.get((date, etype), default_label)
+        rows.append(
+            {
+                "displayed_date": date,
+                "displayed_year": year,
+                "display_x": _event_x(date, r.date_precision),
+                "display_label": label,
+                "category": category,
+                "underlying_event_ids": f"CAMPUS_PERMIT:{date}:{etype}:{r.source_id}",
+                "source_doc_ids": str(r.source_id),
+                "confidence": _normalize_confidence(r.confidence),
+                "date_precision": str(r.date_precision),
+            }
+        )
+
+    if not rows:
+        raise RuntimeError("Figure 2 event timeline selected zero high-confidence operational events")
+
+    raw = pd.DataFrame(rows)
+    grouped = []
+    for (date, category), g in raw.groupby(["displayed_date", "category"], sort=False):
+        g = g.sort_values(["display_x", "underlying_event_ids"])
+        label = FIGURE2_GROUP_LABELS.get((date, category), g["display_label"].iloc[0])
+        confs = set(g["confidence"])
+        grouped.append(
+            {
+                "displayed_date": date,
+                "displayed_year": int(g["displayed_year"].iloc[0]),
+                "display_x": float(g["display_x"].mean()),
+                "display_label": label,
+                "category": category,
+                "underlying_event_ids": " | ".join(g["underlying_event_ids"].tolist()),
+                "source_doc_ids": ";".join(dict.fromkeys(g["source_doc_ids"].tolist())),
+                "confidence": "VERY_HIGH" if "VERY_HIGH" in confs else next(iter(confs)),
+                "date_precision": g["date_precision"].iloc[0],
+            }
+        )
+    out = pd.DataFrame(grouped).sort_values(["display_x", "category", "display_label"]).reset_index(drop=True)
+    if write:
+        OUT.mkdir(parents=True, exist_ok=True)
+        keep = [
+            "displayed_date",
+            "displayed_year",
+            "display_label",
+            "category",
+            "underlying_event_ids",
+            "source_doc_ids",
+            "confidence",
+        ]
+        out[keep].to_csv(OUT / "figure2_event_timeline.csv", index=False)
+    return out
+
+
 def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.DataFrame) -> Path:
     years = list(range(2011, 2025))
     rows_spec = []
@@ -675,7 +880,7 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
     year_status("Meta facility electricity", {y: e.get(y, "missing") for y in years})
     year_status("Meta water withdrawal", {y: w.get(y, "missing") for y in years})
     year_status("Meta location Scope 2", {y: s2.get(y, "missing") for y in years})
-    year_status("Canonical KS39/KRDM weather", {y: "measured" for y in years})
+    year_status("Canonical weather (KS39/KRDM + KBDN fallback)", {y: "measured" for y in years})
     year_status("Conditional IT/facility power", {y: "fitted" for y in years})
     year_status("Water proxy (evap × scale)", {y: "proxy" if y >= 2014 else "fitted" for y in years})
 
@@ -715,7 +920,9 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
     year_status("USGS PS / irrigation", {y: ("proxy" if y in wd_years else "missing") for y in years})
     year_status("Oregon CAMPD/EIA generators", {y: "measured" for y in years})
     year_status("Hourly IT telemetry", {y: "not_necessary" for y in years})
-    year_status("Monthly Meta water/electricity meters", {y: "missing" for y in years})
+    year_status("Monthly campus water delivery", {y: "missing" for y in years})
+    year_status("Monthly campus wastewater/sewer discharge", {y: "missing" for y in years})
+    year_status("Monthly/hourly campus electricity meter", {y: "missing" for y in years})
 
     gw_years = {y: "missing" for y in years}
     gw_path = ROOT / "data" / "processed" / "groundwater" / "groundwater_level_observations.csv"
@@ -781,7 +988,7 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
             COLORS["missing"],
         ]
     )
-    fig, ax = plt.subplots(figsize=(11.5, 8.4))
+    fig, ax = plt.subplots(figsize=(11.6, 9.0))
     ax.imshow(Z, aspect="auto", cmap=cmap, vmin=0, vmax=7)
     ax.set_xticks(range(len(years)))
     ax.set_xticklabels(years, rotation=0, fontsize=8)
@@ -795,39 +1002,41 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
             Patch(facecolor=COLORS["derived"], label="derived"),
             Patch(facecolor=COLORS["fitted"], label="fitted"),
             Patch(facecolor=COLORS["proxy"], label="proxy"),
-            Patch(facecolor=COLORS["not_necessary"], label="not necessary"),
+            Patch(facecolor=COLORS["not_necessary"], label="not an active target"),
             Patch(facecolor=COLORS["missing"], label="missing"),
         ],
         loc="upper center",
-        bbox_to_anchor=(0.5, -0.08),
+        bbox_to_anchor=(0.5, -0.07),
         ncol=6,
         frameon=False,
         fontsize=8,
     )
     fig.tight_layout()
-    fig.text(
-        0.0,
-        -0.02,
-        "Groundwater head observations: Measured indicates at least one valid GWIS groundwater-level observation "
-        "in that calendar year; it does not imply continuous monthly coverage or complete spatial-network coverage. "
-        "Hourly IT telemetry not_necessary means not an active acquisition target for the current public-data pipeline, "
-        "not that hourly IT data are scientifically useless.",
-        ha="left",
-        va="top",
-        fontsize=7,
-        wrap=True,
-        transform=ax.transAxes,
-    )
     path = FIG / "fig01_data_coverage_provenance.png"
     fig.savefig(path, dpi=170, bbox_inches="tight")
     plt.close(fig)
     return path
 
 
-def figure2_ground_truth(meta: pd.DataFrame, events: pd.DataFrame) -> Path:
+def figure2_ground_truth(meta: pd.DataFrame, events: pd.DataFrame | None = None) -> Path:
+    del events
     z = meta.copy()
     z["intensity"] = z["water_intensity_L_per_kWh_facility_derived"]
-    fig, axes = plt.subplots(4, 1, figsize=(10.8, 9.2), sharex=True)
+    timeline = select_figure2_operational_timeline(write=True)
+    cat_y = {cat: i for i, cat in enumerate(reversed(FIGURE2_EVENT_CATEGORIES))}
+    cat_color = {
+        "campus/buildout": "#1d4ed8",
+        "water/infrastructure": "#0e7490",
+        "power/cooling": "#b45309",
+    }
+
+    fig, axes = plt.subplots(
+        6,
+        1,
+        figsize=(11.6, 12.4),
+        sharex=False,
+        gridspec_kw={"height_ratios": [1.0, 1.0, 1.0, 1.0, 0.72, 1.55], "hspace": 0.16},
+    )
     years = z.year.to_numpy(int)
 
     axes[0].plot(years, z.electricity_mwh_reported / 1000.0, "-o", color="#1d4ed8", ms=4)
@@ -842,24 +1051,13 @@ def figure2_ground_truth(meta: pd.DataFrame, events: pd.DataFrame) -> Path:
 
     axes[3].plot(years, z.intensity, "-o", color="#7e22ce", ms=4)
     axes[3].set_ylabel("Withdrawal / electricity\n(L/kWh facility)")
-    axes[3].set_xlabel("Year")
 
-    event_years = {}
-    for r in events.itertuples(index=False):
-        try:
-            yr = int(str(r.date)[:4])
-        except (TypeError, ValueError):
-            continue
-        short = str(r.event_type).replace("_", " ")
-        event_years[yr] = short
-
-    for i, ax in enumerate(axes):
+    for i, ax in enumerate(axes[:4]):
         if i in (1, 3):
             ax.axvspan(2022.5, 2024.5, color="#fee2e2", alpha=0.5, zorder=0)
-        for yr in event_years:
-            ax.axvline(yr, color="#9ca3af", lw=0.8, ls="--", zorder=0)
-        ax.set_xlim(2009.5, 2024.5)
+        ax.set_xlim(2009.5, 2024.8)
         ax.grid(True, axis="y", alpha=0.3)
+        ax.sharex(axes[0])
 
     axes[1].text(
         2023.5,
@@ -870,13 +1068,68 @@ def figure2_ground_truth(meta: pd.DataFrame, events: pd.DataFrame) -> Path:
         fontsize=7,
         color="#991b1b",
     )
-    ymax0 = axes[0].get_ylim()[1]
-    for i, (yr, lab) in enumerate(sorted(event_years.items())):
-        axes[0].text(yr, ymax0 * (0.72 - 0.12 * (i % 2)), lab, ha="center", va="top", fontsize=6.5, color="#374151")
 
-    fig.tight_layout()
+    ev_ax = axes[4]
+    for n, r in enumerate(timeline.itertuples(index=False), start=1):
+        x = float(r.display_x)
+        y = cat_y[str(r.category)]
+        color = cat_color[str(r.category)]
+        ev_ax.scatter([x], [y], s=28, color=color, zorder=3, clip_on=False)
+        ev_ax.annotate(
+            str(n),
+            (x, y),
+            xytext=(0, 6),
+            textcoords="offset points",
+            fontsize=6.2,
+            ha="center",
+            va="bottom",
+            color="#111827",
+            clip_on=False,
+        )
+    ev_ax.set_xlim(2009.5, 2024.8)
+    ev_ax.set_yticks(list(cat_y.values()))
+    ev_ax.set_yticklabels(list(reversed(FIGURE2_EVENT_CATEGORIES)), fontsize=8)
+    ev_ax.set_ylim(-0.55, 2.7)
+    ev_ax.set_xlabel("Year")
+    ev_ax.grid(True, axis="x", alpha=0.25)
+    for name, spine in ev_ax.spines.items():
+        if name != "bottom":
+            spine.set_visible(False)
+    ev_ax.tick_params(axis="y", length=0)
+    handles = [
+        Line2D([0], [0], marker="o", color="none", markerfacecolor=cat_color[c], markersize=7, label=c)
+        for c in FIGURE2_EVENT_CATEGORIES
+    ]
+    ev_ax.legend(handles=handles, loc="upper left", frameon=False, fontsize=7, ncol=3)
+    ev_ax.set_ylabel("Documentary /\npermit events")
+
+    key_ax = axes[5]
+    key_ax.set_xlim(0, 1)
+    key_ax.set_ylim(0, 1)
+    key_ax.axis("off")
+    key_ax.set_title("Event key (source IDs in figure2_event_timeline.csv; not causal water annotations)", loc="left", fontsize=8)
+    n = len(timeline)
+    ncols = 3
+    nrows = int(np.ceil(n / ncols))
+    for i, r in enumerate(timeline.itertuples(index=False), start=1):
+        col = (i - 1) // nrows
+        row = (i - 1) % nrows
+        x = 0.02 + col / ncols
+        y = 0.96 - row * (0.90 / max(nrows, 1))
+        key_ax.text(
+            x,
+            y,
+            f"{i}. {r.display_label}",
+            fontsize=6.1,
+            ha="left",
+            va="top",
+            color=cat_color[str(r.category)],
+            transform=key_ax.transAxes,
+        )
+
+    fig.subplots_adjust(left=0.14, right=0.98, top=0.96, bottom=0.04)
     path = FIG / "fig02_observed_ground_truth.png"
-    fig.savefig(path, dpi=170)
+    fig.savefig(path, dpi=170, bbox_inches="tight")
     plt.close(fig)
     return path
 
@@ -890,153 +1143,86 @@ def figure3_water_accuracy(
     c = cond.dropna(subset=["water_withdrawal_m3_reported"]).copy()
     train_c = c[c.split.eq("train")]
     hold_c = c[c.split.eq("holdout")]
-    hold_s = stoch[stoch.split.eq("holdout")].copy()
+    del stoch
     sel = diag[diag.selected.astype(str).str.lower().eq("true")].iloc[0]
     bmap = baselines.set_index("predictor")
+    beta_e = json.loads(str(sel["coefficients"]))["electricity_mwh_reported"]
+    e_all = c["electricity_mwh_reported"].to_numpy(float)
+    energy_pred = beta_e * e_all
+    train_mean = float(
+        cond.loc[cond.split.eq("train") & cond.water_withdrawal_m3_reported.notna(), "water_withdrawal_m3_reported"].mean()
+    )
 
-    fig = plt.figure(figsize=(12.2, 10.4))
-    gs = fig.add_gridspec(2, 1, height_ratios=[1.55, 1.15], hspace=0.38)
+    fig = plt.figure(figsize=(11.2, 8.6))
+    gs = fig.add_gridspec(2, 1, height_ratios=[1.7, 0.85], hspace=0.28)
     ax = fig.add_subplot(gs[0])
     ax2 = fig.add_subplot(gs[1])
 
-    ax.plot(c.year, c.water_withdrawal_m3_reported / 1e3, "o", color="black", ms=7, zorder=5, label="Observed Meta withdrawal")
-    ax.plot(
-        train_c.year,
-        train_c.water_pred_m3 / 1e3,
-        "s--",
-        color="#e66101",
-        ms=5,
-        label="Conditional in-sample fitted (frozen train scale; not expanding-window)",
-    )
-    ax.plot(
-        hold_c.year,
-        hold_c.water_pred_m3 / 1e3,
-        "s-",
-        color="#c2410c",
-        ms=8,
-        label="Conditional holdout prediction (same frozen scale)",
-    )
-    # Frozen NNLS point for selected energy-only on holdout only — not the train fitted line.
-    e_hold = hold_c["electricity_mwh_reported"].to_numpy(float)
-    beta_e = json.loads(str(sel["coefficients"]))["electricity_mwh_reported"]
-    ax.plot(
-        hold_c.year,
-        (beta_e * e_hold) / 1e3,
-        "^",
-        color="#5e3c99",
-        ms=9,
-        label="Energy-only frozen NNLS holdout (β_E×E; evaporation not an input)",
-    )
-    ax.plot(
-        hold_s.year,
-        hold_s.water_train_only_pred_m3_median / 1e3,
-        "v",
-        color="#7c3aed",
-        ms=7,
-        label="Energy-only published ensemble-median diagnostic (holdout)",
-    )
-    ax.plot(
-        hold_c.year,
-        np.full(len(hold_c), float(
-            cond.loc[cond.split.eq("train") & cond.water_withdrawal_m3_reported.notna(), "water_withdrawal_m3_reported"].mean()
-        )) / 1e3,
-        "D",
-        color="#6b7280",
-        ms=6,
-        label="Training-mean baseline (frozen)",
-    )
-    ax.plot(
-        hold_c.year,
-        np.full(len(hold_c), float(
-            cond.loc[cond.split.eq("train") & cond.water_withdrawal_m3_reported.notna(), "water_withdrawal_m3_reported"].median()
-        )) / 1e3,
-        "P",
-        color="#9ca3af",
-        ms=7,
-        label="Training-median baseline (frozen)",
-    )
-    persist = float(
-        cond.loc[cond.year.eq(2022), "water_withdrawal_m3_reported"].iloc[0]
-    )
-    ax.plot(
-        hold_c.year,
-        np.full(len(hold_c), persist) / 1e3,
-        "X",
-        color="#374151",
-        ms=8,
-        label="2022 persistence baseline (frozen)",
-    )
+    ax.plot(c.year, c.water_withdrawal_m3_reported / 1e3, "o", color="black", ms=7, zorder=5)
+    ax.plot(train_c.year, train_c.water_pred_m3 / 1e3, "s--", color="#c2410c", ms=5)
+    ax.plot(hold_c.year, hold_c.water_pred_m3 / 1e3, "s-", color="#c2410c", ms=8)
+    ax.plot(train_c.year, (beta_e * train_c["electricity_mwh_reported"].to_numpy(float)) / 1e3, "^--", color="#5e3c99", ms=5)
+    ax.plot(hold_c.year, (beta_e * hold_c["electricity_mwh_reported"].to_numpy(float)) / 1e3, "^-", color="#5e3c99", ms=8)
+    ax.plot(c.year, np.full(len(c), train_mean) / 1e3, "D--", color="#6b7280", ms=4)
+
     ax.axvspan(2022.5, 2024.5, color="#fee2e2", alpha=0.55, zorder=0)
     ax.axvline(2022.5, color="#991b1b", lw=1.0, ls="--")
     ax.set_ylabel("Annual water (thousand m³)")
-    ax.set_title("Figure 3 — Water-model holdout vs frozen naive baselines (N=2 years)", loc="left")
+    ax.set_title("Figure 3 — Water-model holdout vs frozen naive baseline (N=2 years)", loc="left")
     ax.set_xlim(2013.5, 2024.5)
     ax.grid(True, axis="y", alpha=0.3)
     ymax = max(
         float(c.water_withdrawal_m3_reported.max()),
         float(c.water_pred_m3.max()),
-        float(beta_e * e_hold.max()),
-        persist,
+        float(np.nanmax(energy_pred)),
+        train_mean,
     ) / 1e3
     ax.set_ylim(0, ymax * 1.18)
-    ax.legend(loc="upper left", fontsize=6.6, frameon=False, ncol=1)
+    ax.legend(
+        handles=[
+            Line2D([0], [0], marker="o", color="black", ls="none", ms=7, label="Observed Meta withdrawal"),
+            Line2D([0], [0], marker="s", color="#c2410c", ls="-", ms=6, label="Conditional evap × scale"),
+            Line2D([0], [0], marker="^", color="#5e3c99", ls="-", ms=7, label="Energy-only frozen NNLS"),
+            Line2D([0], [0], marker="D", color="#6b7280", ls="--", ms=5, label="Training-mean baseline"),
+        ],
+        loc="upper left",
+        fontsize=8,
+        frameon=False,
+    )
     ax.text(2023.5, ymax * 1.12, "2023–2024 water-model holdout", ha="center", color="#991b1b", fontsize=8)
 
-    order = [
-        "training_mean",
-        "training_median",
-        "persistence_2022",
-        "conditional_global_scale",
-        "energy_null_frozen_nnls",
-        "energy_null_ensemble_median",
-        "evap_physics_frozen_nnls",
-        "two_component_frozen_nnls",
-    ]
+    display_order = list(FIGURE3_DISPLAY_PREDICTORS)
     labels = {
-        "training_mean": "Training mean (naive)",
-        "training_median": "Training median (naive)",
-        "persistence_2022": "2022 persistence (naive)",
-        "conditional_global_scale": "Conditional evap×scale",
-        "energy_null_frozen_nnls": "Energy-only frozen NNLS",
-        "energy_null_ensemble_median": "Energy-only ensemble median*",
-        "evap_physics_frozen_nnls": "Evap-only frozen NNLS",
-        "two_component_frozen_nnls": "Two-component frozen NNLS",
+        "training_mean": "Training mean",
+        "conditional_global_scale": "Conditional evap × scale",
+        "energy_null_frozen_nnls": "Energy-only NNLS",
     }
-    table = [["Predictor", "MAE m³", "MAPE", "2023 %err", "2024 %err", "skill_MAE vs mean"]]
-    for key in order:
+    table = [["Predictor", "Holdout MAPE", "2023 % error", "2024 % error"]]
+    for key in display_order:
         r = bmap.loc[key]
-        table.append([
-            labels[key],
-            f"{float(r.MAE_m3):,.0f}",
-            f"{float(r.MAPE_pct):.1f}%",
-            f"{float(r.pct_error_2023):+.1f}%",
-            f"{float(r.pct_error_2024):+.1f}%",
-            f"{float(r.skill_MAE_vs_training_mean):+.2f}",
-        ])
+        table.append(
+            [
+                labels[key],
+                f"{float(r.MAPE_pct):.1f}%",
+                f"{float(r.pct_error_2023):+.1f}%",
+                f"{float(r.pct_error_2024):+.1f}%",
+            ]
+        )
     ax2.axis("off")
     tbl = ax2.table(cellText=table, loc="center", cellLoc="center")
     tbl.auto_set_font_size(False)
-    tbl.set_fontsize(7.2)
-    tbl.scale(1.0, 1.35)
-    for j in range(6):
+    tbl.set_fontsize(8.5)
+    tbl.scale(1.0, 1.55)
+    for j in range(4):
         tbl[0, j].set_facecolor("#e5e7eb")
-        for i in range(1, 4):
-            tbl[i, j].set_facecolor("#f3f4f6")
-        tbl[4, j].set_facecolor("#fff7ed")
-        tbl[5, j].set_facecolor("#f5f3ff")
-        tbl[6, j].set_facecolor("#f5f3ff")
-        tbl[7, j].set_facecolor("#faf5ff")
-        tbl[8, j].set_facecolor("#faf5ff")
+        tbl[1, j].set_facecolor("#f3f4f6")
+        tbl[2, j].set_facecolor("#fff7ed")
+        tbl[3, j].set_facecolor("#f5f3ff")
     ax2.set_title(
-        f"Holdout N=2: metrics are diagnostics, not strong statistical evidence. "
-        f"Energy-only expanding-window one-step train MAPE = {float(sel['rolling_one_step_mape_pct']):.1f}% "
-        "(selection metric only; not the train-year line). "
-        "Conditional train-year line is in-sample fit of the frozen global scale. "
-        "*ensemble median is the previously published diagnostic, not a new model. "
-        "Naive baselines were not entered into model selection.",
-        fontsize=7.2,
+        "Train: 2014–2022. Holdout: 2023–2024 (N=2).\nNaive baseline was not used in mechanistic model selection.",
+        fontsize=8.5,
         loc="left",
-        pad=6,
+        pad=4,
     )
 
     path = FIG / "fig03_water_model_accuracy.png"
@@ -1106,13 +1292,7 @@ def figure4_external_water(ctx: pd.DataFrame, meta: pd.DataFrame) -> Path:
         ax.axvline(pd.Timestamp("2020-12-01"), color="#d1d5db", ls=":", lw=0.8)
     axes[3].text(pd.Timestamp("2018-01-01"), 0.02, "IWA ends 2020-09; WD/irrigation end 2020-12", fontsize=7, color="#6b7280")
 
-    notes = (
-        "City production is not Meta delivery. Direct POD is not total Meta withdrawal. "
-        "Meta annual withdrawal is repeated across months for alignment only — not a monthly meter. "
-        "USGS series are modeled HUC12 context and are omitted after documented coverage."
-    )
-    fig.text(0.01, 0.005, notes, fontsize=7.5)
-    fig.tight_layout(rect=(0, 0.03, 1, 1))
+    fig.tight_layout()
     path = FIG / "fig04_external_water_context.png"
     fig.savefig(path, dpi=170)
     plt.close(fig)
@@ -1230,14 +1410,7 @@ def figure6_graybox_week(week: pd.DataFrame, meta: dict) -> Path:
     axes[3].set_xlabel("Local time (America/Los_Angeles)")
     for ax in axes:
         ax.grid(True, axis="y", alpha=0.3)
-    fig.text(
-        0.01,
-        0.01,
-        "Weather-shaped reconstruction closed to annual reported electricity; not measured hourly campus load/IT telemetry. "
-        "Water proxy is not a meter. Selection rule is deterministic (hottest complete week), not cherry-picked.",
-        fontsize=7.5,
-    )
-    fig.tight_layout(rect=(0, 0.04, 1, 1))
+    fig.tight_layout()
     path = FIG / "fig06_graybox_hot_week.png"
     fig.savefig(path, dpi=170)
     plt.close(fig)
@@ -1380,15 +1553,7 @@ def figure_graybox_sensitivity(sens: pd.DataFrame, base: dict) -> Path:
     axes[-1].plot([], [], "o", color="#1d4ed8", label="documented-range low")
     axes[-1].plot([], [], "o", color="#c2410c", label="documented-range high")
     axes[-1].legend(frameon=False, fontsize=8, loc="lower right")
-    fig.text(
-        0.01,
-        0.01,
-        "Only fan_fraction_of_it and other_facility_fraction_of_it have a repository-documented numeric range "
-        "(stochastic sampled_facility_priors). Other gray-box parameters: range_not_established; not perturbed. "
-        "Electricity closure recouples IT scale when overhead fractions change.",
-        fontsize=7.5,
-    )
-    fig.tight_layout(rect=(0, 0.06, 1, 0.96))
+    fig.tight_layout(rect=(0, 0.02, 1, 0.96))
     path = FIG / "fig07_graybox_parameter_sensitivity.png"
     fig.savefig(path, dpi=170)
     plt.close(fig)
@@ -1542,6 +1707,7 @@ Registries and figures:
 - [`outputs/pipeline_report/model_parameter_registry.csv`](../outputs/pipeline_report/model_parameter_registry.csv)
 - [`outputs/pipeline_report/validation_scorecard.csv`](../outputs/pipeline_report/validation_scorecard.csv)
 - [`outputs/pipeline_report/water_holdout_baseline_compare.csv`](../outputs/pipeline_report/water_holdout_baseline_compare.csv)
+- [`outputs/pipeline_report/figure2_event_timeline.csv`](../outputs/pipeline_report/figure2_event_timeline.csv)
 - [`outputs/pipeline_report/result_claims.csv`](../outputs/pipeline_report/result_claims.csv)
 - [`outputs/pipeline_report/report_consistency_audit.csv`](../outputs/pipeline_report/report_consistency_audit.csv)
 - [`outputs/pipeline_report/weather_finite_driver_audit.csv`](../outputs/pipeline_report/weather_finite_driver_audit.csv)
@@ -1599,7 +1765,7 @@ Hard observations that exist:
 - Campus **electricity**: annual 2011–2024 (reported).
 - Campus **withdrawal**: annual 2014–2024 (reported); 2011–2013 not disclosed at site level.
 - **Location Scope 2**: annual 2012–2024 (reported); 2011 not separately disclosed.
-- **Canonical KS39/KRDM weather**: hourly 2011–2024 (measured stations; not on-campus). KS39 preferred from 2015-09-01 local when QC-usable. KBDN is a tertiary observational fallback only.
+- **Canonical weather (KS39/KRDM + KBDN fallback)**: hourly 2011–2024 (measured stations; not on-campus). KS39 preferred from 2015-09-01 local when QC-usable. KBDN is a tertiary observational fallback only. Figure 1 provenance for this row remains `measured`.
 - **PACW EIA-930**: reported hourly BA demand from 2015-07 (not campus). Consumed CO2 intensity from **2018-07**. 2011–2014 have no EIA-930 PACW hours.
 - **FERC Form 714 PacifiCorp-West monthly**: reported 2011–2018 NEL/generation/interchange/peak/minimum.
 - **FERC PACW-West hourly**: reconstructed proxy (West monthly level × East+West shape), 2011–2018. Not observed hourly PACW demand.
@@ -1610,13 +1776,13 @@ Hard observations that exist:
 - **USGS NWAA**: IWA through **2020-09**; public-supply CU through 2020-12; WD/irrigation through **2020-12**. Later years are missing, not zero.
 - **Oregon generators / DEQ backup / permits**: present as documented in the inventory; not campus IT meters.
 
-Coverage statuses in Figure 1 are distinct from quantity provenance. **not necessary** (black) means additional observations are not an acquisition target for that source/period because a replacement already covers the role or the quantity is intentionally latent/scenario. **missing** (light gray) remains an active data gap. EIA-930 PACW hourly demand before native availability, FERC PacifiCorp-West monthly after 2018, the FERC PACW-West hourly proxy after the proxy window, and hourly IT telemetry are `not_necessary`. Hourly IT telemetry `not_necessary` means **not an active acquisition target for the current public-data pipeline**, not that hourly IT data are scientifically useless. 2011–2013 Meta water, monthly Meta meters, early PACW consumed-CO2 intensity, post-2020 USGS hydrologic context, and 2011 Meta-reported Scope 2 remain `missing`.
+Coverage statuses in Figure 1 are distinct from quantity provenance. **not an active target** (internal status `not_necessary`, black) means additional observations are not an acquisition target for that source/period because a replacement already covers the role or the quantity is intentionally latent/scenario. It does **not** mean the quantity would have no scientific value. **missing** (light gray) remains an active data gap. EIA-930 PACW hourly demand before native availability, FERC PacifiCorp-West monthly after 2018, the FERC PACW-West hourly proxy after the proxy window, and hourly IT telemetry are `not_necessary`. Hourly IT telemetry `not_necessary` means **not an active acquisition target for the current public-data pipeline**, not that hourly IT data are scientifically useless. 2011–2013 Meta water, monthly campus water delivery, monthly campus wastewater/sewer discharge, monthly/hourly campus electricity meter, early PACW consumed-CO2 intensity, post-2020 USGS hydrologic context, and 2011 Meta-reported Scope 2 remain `missing`. Those three campus-meter rows are absent as public time series in the current repository; they are not inferred from annual totals or OWRD City/POD series.
 
 **Groundwater head observations** are `measured` for a calendar year when **at least one** valid GWIS groundwater-level observation exists in that year. That status does **not** imply continuous monthly coverage or complete spatial-network coverage. Well×year density and identifiability classifications in `outputs/groundwater/` remain authoritative.
 
 **Permit events** from Crook County inspection summaries (including the PRN1 2021–2024 strictly-valuable package) are facility technology/commissioning evidence. They are **not** measured groundwater heads, **not** OWRD pumping, and **not** a fitted groundwater-response model.
 
-[Figure 2](../outputs/pipeline_report/figures/fig02_observed_ground_truth.png) shows the campus ground-truth evolution. The pink band is labeled **2023–2024 water-model holdout** on the water and intensity panels only; electricity and Scope 2 are **not** held-out predictions.
+[Figure 2](../outputs/pipeline_report/figures/fig02_observed_ground_truth.png) shows the campus ground-truth evolution plus a compact documentary/permit event strip. Observed annual series are unchanged. The pink band is labeled **2023–2024 water-model holdout** on the water and intensity panels only; electricity and Scope 2 are **not** held-out predictions. Displayed events are a presentation selection of existing HIGH/VERY_HIGH documentary facts (`config/prineville_documentary_events.csv`) and Crook County permit chronology (`data/canonical/campus_permit_events.csv`). Same-year events are not collapsed; same-date, same-category facts may share one display label while retaining all event/source IDs in [`figure2_event_timeline.csv`](../outputs/pipeline_report/figure2_event_timeline.csv). Identity-only, road/name, and renewable-accounting seed rows are excluded. The event strip is chronological context only: it does **not** attribute the 2020 water peak or later decline to any documentary event.
 
 ---
 
@@ -1734,6 +1900,16 @@ Scorecard: [`validation_scorecard.csv`](../outputs/pipeline_report/validation_sc
 
 **Water — primary predictive figure:** [Figure 3](../outputs/pipeline_report/figures/fig03_water_model_accuracy.png).
 
+The main figure shows observed Meta annual withdrawal, the conditional evaporation × frozen scale model, the selected energy-only frozen NNLS mechanistic candidate, and the frozen training-mean naive baseline. The complete eight-predictor comparison remains in [`water_holdout_baseline_compare.csv`](../outputs/pipeline_report/water_holdout_baseline_compare.csv).
+
+Displayed models:
+
+- Conditional: `W_hat_y = s * V_raw_evap_y`, with frozen `s = {float(cmap['cond_water_scale']):.6f}`.
+- Selected mechanistic energy-only: `W_hat_y = beta_E * E_fac_y`.
+- Frozen training mean: mean 2014–2022 observed withdrawal; not entered into mechanistic selection.
+
+The first two are **not** dynamic time-series models. 2023–2024 was unused in fitting/selection. Holdout \(N=2\) is a diagnostic, not strong statistical evidence. The naive mean currently performs much better on holdout.
+
 The current water specifications **perform poorly** on the pre-specified 2023–2024 holdout and are **not validated predictors** of the recent operating regime. With only two holdout years, this is a **strong predictive diagnostic failure**, not a formal statistical proof or falsification test.
 
 The **selected mechanistic candidate** is `{cmap['selected_mechanistic_candidate']}` (expanding-window train MAPE **{float(cmap['selected_rolling_mape']):.2f}%**; frozen-NNLS holdout MAPE **{float(cmap['selected_holdout_mape']):.1f}%**). That label means it won among the pre-registered mechanistic/covariate candidates. It is **not** a claim that it is the best predictor overall. The frozen training-mean baseline was **not** entered into selection and currently has holdout MAPE **{float(cmap['training_mean_holdout_mape']):.1f}%**, much better on these two years.
@@ -1760,13 +1936,13 @@ Selected annual energy-only model published ensemble-median diagnostic:
 
 Train-period water fit is mixed (conditional 2020 **−50%**, 2022 **+70%**). Retrospective stochastic water **closure** to reported annual withdrawal is **not** predictive accuracy.
 
-**External water:** [Figure 4](../outputs/pipeline_report/figures/fig04_external_water_context.png). Series are aligned, never stacked as a single campus total. OWRD City/POD comparisons are **boundary/context consistency, not Meta prediction error**. USGS `availab = strflow - consum` is **structural QA, not hydrologic validation**.
+**External water:** [Figure 4](../outputs/pipeline_report/figures/fig04_external_water_context.png). Series are aligned, never stacked as a single campus total. OWRD City/POD comparisons are **boundary/context consistency, not Meta prediction error**. USGS `availab = strflow - consum` is **structural QA, not hydrologic validation**. City production is not Meta delivery. Direct POD is not total Meta withdrawal. Meta annual withdrawal is repeated across months for alignment only — not a monthly meter. USGS series are modeled HUC12 context and are omitted after documented coverage.
 
 **Carbon:** [Figure 5](../outputs/pipeline_report/figures/fig05_carbon_benchmark.png). eGRID × Meta MWh vs Meta location Scope 2 is a **methodology/accounting consistency benchmark**, not fully independent external validation. 2024 percentage difference is about **−0.036%**. PACW hourly intensity is coverage, not campus telemetry.
 
-**Gray-box week:** [Figure 6](../outputs/pipeline_report/figures/fig06_graybox_hot_week.png). Weather-shaped reconstruction closed to annual reported electricity; **not measured hourly campus load/IT telemetry**. Selection: {week_meta['rule']}. Selected week start: **{week_meta['week_start_local'][:10]}**, mean dry-bulb **{week_meta['mean_t_db_C']:.2f} °C**, complete weeks considered: {week_meta['n_complete_weeks_considered']}.
+**Gray-box week:** [Figure 6](../outputs/pipeline_report/figures/fig06_graybox_hot_week.png). Weather-shaped reconstruction closed to annual reported electricity; **not measured hourly campus load/IT telemetry**. Water proxy is not a meter. Selection rule is deterministic (hottest complete week), not cherry-picked. Selection: {week_meta['rule']}. Selected week start: **{week_meta['week_start_local'][:10]}**, mean dry-bulb **{week_meta['mean_t_db_C']:.2f} °C**, complete weeks considered: {week_meta['n_complete_weeks_considered']}.
 
-**Gray-box assumption sensitivity:** [Figure 7](../outputs/pipeline_report/figures/fig07_graybox_parameter_sensitivity.png). Only parameters with a repository-documented range are perturbed. This is not a confidence interval and not a new calibration.
+**Gray-box assumption sensitivity:** [Figure 7](../outputs/pipeline_report/figures/fig07_graybox_parameter_sensitivity.png). Only `fan_fraction_of_it` and `other_facility_fraction_of_it` have a repository-documented numeric range (stochastic `sampled_facility_priors`). Other gray-box parameters have `range_not_established` and are not perturbed. Electricity closure recouples IT scale when overhead fractions change. This is not a confidence interval and not a new calibration.
 
 ---
 
@@ -1897,6 +2073,7 @@ def main() -> None:
         OUT / "model_parameter_registry.csv",
         OUT / "validation_scorecard.csv",
         OUT / "water_holdout_baseline_compare.csv",
+        OUT / "figure2_event_timeline.csv",
         OUT / "result_claims.csv",
         OUT / "report_consistency_audit.csv",
         OUT / "weather_finite_driver_audit.csv",

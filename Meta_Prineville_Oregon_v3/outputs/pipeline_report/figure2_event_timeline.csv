@@ -1,0 +1,32 @@
+displayed_date,displayed_year,display_label,category,underlying_event_ids,source_doc_ids,confidence
+2009-12-16,2009,City/County/Vitesse infrastructure agreement,campus/buildout,EV002,CITY_RES1122_2009,VERY_HIGH
+2010-01-01,2010,First MESA / Schedule 48 service,power/cooling,EV003,OPUC_UE463_VITESSE_2026,VERY_HIGH
+2010-12-16,2010,Pump house final,water/infrastructure,CAMPUS_PERMIT:2010-12-16:infrastructure_final:217-QS10-00872 PUMP HOUSE,217-QS10-00872 PUMP HOUSE,HIGH
+2011-04-14,2011,Initial campus building finals,campus/buildout,CAMPUS_PERMIT:2011-04-14:building_final:217-C+10-00063 CORE SHELL | CAMPUS_PERMIT:2011-04-14:building_final:217-T+10-00225A/B,217-C+10-00063 CORE SHELL;217-T+10-00225A/B,HIGH
+2011-08-24,2011,Campus sections C&D finals,campus/buildout,CAMPUS_PERMIT:2011-08-24:building_final:217-C+10-00705/SEC#C&D,217-C+10-00705/SEC#C&D,HIGH
+2014,2014,Four initial PRN buildings coming online,campus/buildout,EV004,OPUC_UM1989_VITESSE_2018,VERY_HIGH
+2015-08-26,2015,LTEZ ~200k ft² data-center agreement,campus/buildout,EV005,CITY_RES1271_2015,VERY_HIGH
+2017-12-05,2017,Water/sewer service agreement,water/infrastructure,EV006,CITY_ORD1242_2018,VERY_HIGH
+2018-08-07,2018,Water/sewer agreement amendments,water/infrastructure,EV007 | EV014,CITY_ORD1242_2018;CITY_ORD1243_2018,VERY_HIGH
+2018-09-20,2018,CCO campus announced,campus/buildout,EV008,OPUC_UM1989_VITESSE_2018,VERY_HIGH
+2019-10-15,2019,CCO1&2 under construction,campus/buildout,EV010,CITY_CU2019_111,VERY_HIGH
+2020-03-18,2020,CCO1 partial mechanical (Admin/E),power/cooling,CAMPUS_PERMIT:2020-03-18:partial_mechanical_final:217-19-000276-MECH,217-19-000276-MECH,HIGH
+2020-03-20,2020,CCO1 partial building (Admin/E-core),campus/buildout,CAMPUS_PERMIT:2020-03-20:partial_building_final:217-18-001459-STR-01,217-18-001459-STR-01,HIGH
+2020-03-24,2020,CCO1 data halls A&B partial mechanical,power/cooling,CAMPUS_PERMIT:2020-03-24:partial_mechanical_final:217-19-000276-MECH,217-19-000276-MECH,HIGH
+2020-08-03,2020,CCO1/2 water/sewer/storm finals,water/infrastructure,CAMPUS_PERMIT:2020-08-03:site_utilities_final:217-18-002076-PLM;217-18-002077-PLM;217-18-002082-PLM;217-18-001459-STR-01,217-18-002076-PLM;217-18-002077-PLM;217-18-002082-PLM;217-18-001459-STR-01,HIGH
+2020-08-05,2020,CCO1/2 fire/life-safety final,campus/buildout,CAMPUS_PERMIT:2020-08-05:fire_life_safety_final:217-18-001459-STR-02,217-18-001459-STR-02,HIGH
+2020-08-14,2020,CCO1/2 partial building A&B,campus/buildout,CAMPUS_PERMIT:2020-08-14:partial_building_final:217-18-001459-STR,217-18-001459-STR,HIGH
+2020-10-21,2020,CCO1 area D partial building,campus/buildout,CAMPUS_PERMIT:2020-10-21:partial_building_final:217-18-001459-STR-01,217-18-001459-STR-01,HIGH
+2020-10-23,2020,CCO1 area C partial building,campus/buildout,CAMPUS_PERMIT:2020-10-23:partial_building_final:217-18-001459-STR-01,217-18-001459-STR-01,HIGH
+2021-06-28,2021,CCO1&2 full building final,campus/buildout,CAMPUS_PERMIT:2021-06-28:building_final:217-18-001459-STR,217-18-001459-STR,VERY_HIGH
+2021-07-08,2021,CCO1&2 full mechanical final,power/cooling,CAMPUS_PERMIT:2021-07-08:mechanical_final:217-19-000276-MECH,217-19-000276-MECH,VERY_HIGH
+2021-09-21,2021,PRN1 network-core addition (planning),campus/buildout,EV011,CITY_CU2021_110_APP,VERY_HIGH
+2022-04-12,2022,Waterline resiliency agreement,water/infrastructure,EV012,CITY_RES1518_STAFF_2022,VERY_HIGH
+2023-07-11,2023,Waterline resiliency 70/30 amendment,water/infrastructure,EV013,CITY_RES1570_STAFF_2023,VERY_HIGH
+2023-09-21,2023,PRN1 hydronic test (chillers/CRAH excluded),power/cooling,CAMPUS_PERMIT:2023-09-21:mechanical_commissioning_test:217-21-003734-MECH,217-21-003734-MECH,HIGH
+2023-12-11,2023,PRN1 mechanical pre-TCO walk,power/cooling,CAMPUS_PERMIT:2023-12-11:mechanical_pre_tco_walk:217-21-003734-MECH,217-21-003734-MECH,HIGH
+2024-02-02,2024,PRN1 additional chiller operational,power/cooling,CAMPUS_PERMIT:2024-02-02:chiller_operational:217-24-000066-MECH,217-24-000066-MECH,VERY_HIGH
+2024-02-13,2024,PRN1 addition electrical/mechanical finals,power/cooling,CAMPUS_PERMIT:2024-02-13:electrical_final:217-21-003727-ELEC | CAMPUS_PERMIT:2024-02-13:mechanical_final:217-21-003734-MECH | CAMPUS_PERMIT:2024-02-13:mechanical_final:217-24-000066-MECH,217-21-003727-ELEC;217-21-003734-MECH;217-24-000066-MECH,VERY_HIGH
+2024-02-20,2024,PRN1 addition building final,campus/buildout,CAMPUS_PERMIT:2024-02-20:building_final:217-21-003723-STR,217-21-003723-STR,VERY_HIGH
+2024-02-22,2024,PRN1 plumbing final,water/infrastructure,CAMPUS_PERMIT:2024-02-22:plumbing_final:217-21-003731-PLM,217-21-003731-PLM,VERY_HIGH
+2024-03-14,2024,PRN1 Phase 2 electrical rough-in (pending),power/cooling,CAMPUS_PERMIT:2024-03-14:phase2_electrical_rough_in:217-22-000286-ELEC,217-22-000286-ELEC,HIGH

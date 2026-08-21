@@ -1001,38 +1001,77 @@ def write_qa(
     return pd.DataFrame(rows, columns=["item", "value", "status", "detail"])
 
 
+def _in_study_mask(df: pd.DataFrame) -> pd.Series:
+    val = df["in_study_geography"]
+    if pd.api.types.is_bool_dtype(val):
+        return val.fillna(False)
+    return val.astype(str).str.strip().str.lower().isin({"true", "1", "yes"})
+
+
+def numeric_bls_observations(levels: pd.DataFrame) -> pd.DataFrame:
+    numeric = levels.copy()
+    numeric["bls"] = pd.to_numeric(numeric["water_level_below_land_surface"], errors="coerce")
+    numeric["dt"] = pd.to_datetime(numeric["measurement_datetime"], errors="coerce")
+    if numeric["dt"].isna().all() and "measurement_date" in numeric.columns:
+        numeric["dt"] = pd.to_datetime(numeric["measurement_date"], errors="coerce")
+    numeric = numeric[numeric["bls"].notna() & numeric["dt"].notna()].copy()
+    return numeric.sort_values(["well_node_id", "dt"], kind="mergesort")
+
+
+def coverage_wells_with_numeric_bls(levels: pd.DataFrame) -> list[str]:
+    numeric = numeric_bls_observations(levels)
+    if numeric.empty:
+        return []
+    totals = numeric.groupby("well_node_id").size()
+    totals.index = totals.index.astype(str)
+    wells = sorted(totals.index, key=lambda w: (-int(totals.loc[w]), w))
+    return list(wells)
+
+
+def study_area_map_points(inv: pd.DataFrame) -> tuple[pd.DataFrame, int, int]:
+    lat = pd.to_numeric(inv["latitude"], errors="coerce")
+    lon = pd.to_numeric(inv["longitude"], errors="coerce")
+    finite = np.isfinite(lat) & np.isfinite(lon)
+    in_study = _in_study_mask(inv)
+    n_unresolved = int((~finite).sum())
+    n_out = int((finite & ~in_study).sum())
+    mapped = inv.loc[finite & in_study].copy()
+    mapped["latitude"] = lat.loc[mapped.index].to_numpy()
+    mapped["longitude"] = lon.loc[mapped.index].to_numpy()
+    return mapped, n_unresolved, n_out
+
+
 def write_diagnostics(
     inv: pd.DataFrame,
     pump: pd.DataFrame,
     levels: pd.DataFrame,
     feas: dict,
 ) -> None:
-    mapped = inv[inv.latitude.notna() & inv.longitude.notna()].copy()
+    mapped, n_unres, n_out = study_area_map_points(inv)
     fig, ax = plt.subplots(figsize=(8.2, 6.4))
     if mapped.empty:
-        ax.text(0.5, 0.5, "No official coordinates", ha="center")
+        ax.text(0.5, 0.5, "No official in-study coordinates", ha="center")
     else:
         for role, sub in mapped.groupby("role"):
             ax.scatter(sub.longitude, sub.latitude, s=36, label=role, alpha=0.85)
         ax.set_xlabel("Longitude")
         ax.set_ylabel("Latitude")
         ax.legend(fontsize=8, loc="best")
-    n_unres = int(inv.latitude.isna().sum())
+        ax.set_aspect("equal", adjustable="datalim")
     ax.set_title(
-        f"Groundwater well/source map (official coordinates only; {n_unres} unresolved omitted)",
+        f"Groundwater well/source map — Prineville study geography "
+        f"({len(mapped)} points; {n_unres} unresolved coordinates omitted; "
+        f"{n_out} out-of-study coordinates omitted)",
         loc="left",
-        fontsize=10,
+        fontsize=9,
     )
     fig.tight_layout()
     fig.savefig(OUT_GW / "well_source_map.png", dpi=140)
     plt.close(fig)
 
     years = list(range(2011, 2025))
-    wells = inv["well_node_id"].tolist()
-    numeric = levels.copy()
-    numeric["bls"] = pd.to_numeric(numeric["water_level_below_land_surface"], errors="coerce")
-    numeric["dt"] = pd.to_datetime(numeric["measurement_datetime"], errors="coerce")
-    numeric = numeric[numeric["bls"].notna() & numeric["dt"].notna()]
+    inventory_wells = inv["well_node_id"].tolist()
+    numeric = numeric_bls_observations(levels)
     counts = (
         numeric.assign(year=numeric["dt"].dt.year)
         .groupby(["well_node_id", "year"])
@@ -1041,32 +1080,51 @@ def write_diagnostics(
         if not numeric.empty
         else pd.DataFrame()
     )
-    Z = np.zeros((len(wells), len(years)))
-    for i, w in enumerate(wells):
+    plot_wells = coverage_wells_with_numeric_bls(levels)
+    if not counts.empty:
+        counts.index = counts.index.astype(str)
+        counts.columns = counts.columns.astype(int)
+    totals = (
+        numeric.groupby("well_node_id").size()
+        if not numeric.empty
+        else pd.Series(dtype=int)
+    )
+    totals.index = totals.index.astype(str)
+    Z = np.zeros((len(plot_wells), len(years)))
+    for i, w in enumerate(plot_wells):
         for j, y in enumerate(years):
             if not counts.empty and w in counts.index and y in counts.columns:
                 Z[i, j] = float(counts.loc[w, y])
-    fig, ax = plt.subplots(figsize=(11.5, max(5.5, 0.18 * len(wells) + 1.8)))
+    fig, ax = plt.subplots(figsize=(11.5, max(5.0, 0.32 * len(plot_wells) + 1.8)))
     im = ax.imshow(Z, aspect="auto", cmap="Blues", vmin=0)
     ax.set_xticks(range(len(years)))
     ax.set_xticklabels(years, fontsize=8)
-    ax.set_yticks(range(len(wells)))
-    ax.set_yticklabels(wells, fontsize=6)
-    ax.set_title("Groundwater-level observation coverage (numeric GWIS BLS counts)", loc="left")
+    ax.set_yticks(range(len(plot_wells)))
+    ylabels = [f"{w} (n={int(totals.loc[w])})" if w in totals.index else w for w in plot_wells]
+    ax.set_yticklabels(ylabels, fontsize=8)
+    ax.set_title(
+        f"Groundwater-level observation coverage — wells with numeric GWIS BLS (n={len(plot_wells)})",
+        loc="left",
+    )
     ax.set_xlabel("Calendar year")
     fig.colorbar(im, ax=ax, fraction=0.02, pad=0.02, label="n observations")
     fig.tight_layout()
     fig.savefig(OUT_GW / "groundwater_observation_coverage_matrix.png", dpi=140)
     plt.close(fig)
 
-    fig, ax = plt.subplots(figsize=(11.0, 5.4))
+    fig, ax = plt.subplots(figsize=(11.0, 5.6))
     plotted = False
-    for node, g in numeric.groupby("well_node_id"):
-        ax.plot(g["dt"], g["bls"], lw=0.9, marker="o", ms=2, label=str(node)[:28])
+    for node, g in numeric.groupby("well_node_id", sort=True):
+        gg = g.sort_values("dt")
+        ax.scatter(gg["dt"], gg["bls"], s=14, label=str(node)[:28], alpha=0.85, linewidths=0)
         plotted = True
     ax.invert_yaxis()
     ax.set_ylabel("water level below land surface (ft)")
-    ax.set_title("GWIS measured groundwater levels (not a fitted head model)", loc="left", fontsize=10)
+    ax.set_title(
+        "GWIS groundwater-level observations — measured points, not fitted head",
+        loc="left",
+        fontsize=10,
+    )
     if plotted:
         ax.legend(fontsize=6, ncol=2, loc="best")
     fig.tight_layout()
@@ -1074,11 +1132,11 @@ def write_diagnostics(
     plt.close(fig)
 
     dens_rows = []
-    for w in wells:
+    for w in inventory_wells:
         for y in years:
             n = 0
-            if not counts.empty and w in counts.index and y in counts.columns:
-                n = int(counts.loc[w, y])
+            if not counts.empty and str(w) in counts.index and y in counts.columns:
+                n = int(counts.loc[str(w), y])
             dens_rows.append({"well_node_id": w, "year": y, "n_numeric_observations": n})
     pd.DataFrame(dens_rows).to_csv(OUT_GW / "observation_density_by_well_year.csv", index=False)
 
@@ -1155,15 +1213,16 @@ def write_diagnostics(
             transform=axes[0].transAxes,
         )
     for ax, node in zip(axes, one_to_one):
-        heads = numeric[numeric.well_node_id.eq(node)]
-        ax.plot(heads["dt"], heads["bls"], color="#1d4ed8", lw=0.9, label="GWIS BLS (ft)")
+        heads = numeric[numeric.well_node_id.eq(node)].sort_values("dt")
+        ax.scatter(heads["dt"], heads["bls"], s=16, color="#1d4ed8", label="GWIS BLS (ft)", zorder=3)
         ax.set_ylabel("BLS ft")
         ax.invert_yaxis()
         ax2 = ax.twinx()
         psub = pump[pump.node_or_reporting_group_id.eq(node)].dropna(subset=["pump_m3"]).copy()
         if not psub.empty:
             psub["t"] = pd.to_datetime(psub["year_month"] + "-01")
-            ax2.plot(psub["t"], psub["pump_m3"], color="#b45309", lw=0.9, label="OWRD pump_m3")
+            psub = psub.sort_values("t")
+            ax2.step(psub["t"], psub["pump_m3"], where="post", color="#b45309", lw=0.9, label="OWRD pump_m3")
             ax2.set_ylabel("pump_m3")
         ax.set_title(f"{node} — alignment only; not a fitted groundwater model", loc="left", fontsize=9)
     fig.tight_layout()

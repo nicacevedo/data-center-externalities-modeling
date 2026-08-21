@@ -20,6 +20,7 @@ Registries and figures:
 - [`outputs/pipeline_report/model_parameter_registry.csv`](../outputs/pipeline_report/model_parameter_registry.csv)
 - [`outputs/pipeline_report/validation_scorecard.csv`](../outputs/pipeline_report/validation_scorecard.csv)
 - [`outputs/pipeline_report/water_holdout_baseline_compare.csv`](../outputs/pipeline_report/water_holdout_baseline_compare.csv)
+- [`outputs/pipeline_report/figure2_event_timeline.csv`](../outputs/pipeline_report/figure2_event_timeline.csv)
 - [`outputs/pipeline_report/result_claims.csv`](../outputs/pipeline_report/result_claims.csv)
 - [`outputs/pipeline_report/report_consistency_audit.csv`](../outputs/pipeline_report/report_consistency_audit.csv)
 - [`outputs/pipeline_report/weather_finite_driver_audit.csv`](../outputs/pipeline_report/weather_finite_driver_audit.csv)
@@ -77,7 +78,7 @@ Hard observations that exist:
 - Campus **electricity**: annual 2011–2024 (reported).
 - Campus **withdrawal**: annual 2014–2024 (reported); 2011–2013 not disclosed at site level.
 - **Location Scope 2**: annual 2012–2024 (reported); 2011 not separately disclosed.
-- **Canonical KS39/KRDM weather**: hourly 2011–2024 (measured stations; not on-campus). KS39 preferred from 2015-09-01 local when QC-usable. KBDN is a tertiary observational fallback only.
+- **Canonical weather (KS39/KRDM + KBDN fallback)**: hourly 2011–2024 (measured stations; not on-campus). KS39 preferred from 2015-09-01 local when QC-usable. KBDN is a tertiary observational fallback only. Figure 1 provenance for this row remains `measured`.
 - **PACW EIA-930**: reported hourly BA demand from 2015-07 (not campus). Consumed CO2 intensity from **2018-07**. 2011–2014 have no EIA-930 PACW hours.
 - **FERC Form 714 PacifiCorp-West monthly**: reported 2011–2018 NEL/generation/interchange/peak/minimum.
 - **FERC PACW-West hourly**: reconstructed proxy (West monthly level × East+West shape), 2011–2018. Not observed hourly PACW demand.
@@ -88,13 +89,13 @@ Hard observations that exist:
 - **USGS NWAA**: IWA through **2020-09**; public-supply CU through 2020-12; WD/irrigation through **2020-12**. Later years are missing, not zero.
 - **Oregon generators / DEQ backup / permits**: present as documented in the inventory; not campus IT meters.
 
-Coverage statuses in Figure 1 are distinct from quantity provenance. **not necessary** (black) means additional observations are not an acquisition target for that source/period because a replacement already covers the role or the quantity is intentionally latent/scenario. **missing** (light gray) remains an active data gap. EIA-930 PACW hourly demand before native availability, FERC PacifiCorp-West monthly after 2018, the FERC PACW-West hourly proxy after the proxy window, and hourly IT telemetry are `not_necessary`. Hourly IT telemetry `not_necessary` means **not an active acquisition target for the current public-data pipeline**, not that hourly IT data are scientifically useless. 2011–2013 Meta water, monthly Meta meters, early PACW consumed-CO2 intensity, post-2020 USGS hydrologic context, and 2011 Meta-reported Scope 2 remain `missing`.
+Coverage statuses in Figure 1 are distinct from quantity provenance. **not an active target** (internal status `not_necessary`, black) means additional observations are not an acquisition target for that source/period because a replacement already covers the role or the quantity is intentionally latent/scenario. It does **not** mean the quantity would have no scientific value. **missing** (light gray) remains an active data gap. EIA-930 PACW hourly demand before native availability, FERC PacifiCorp-West monthly after 2018, the FERC PACW-West hourly proxy after the proxy window, and hourly IT telemetry are `not_necessary`. Hourly IT telemetry `not_necessary` means **not an active acquisition target for the current public-data pipeline**, not that hourly IT data are scientifically useless. 2011–2013 Meta water, monthly campus water delivery, monthly campus wastewater/sewer discharge, monthly/hourly campus electricity meter, early PACW consumed-CO2 intensity, post-2020 USGS hydrologic context, and 2011 Meta-reported Scope 2 remain `missing`. Those three campus-meter rows are absent as public time series in the current repository; they are not inferred from annual totals or OWRD City/POD series.
 
 **Groundwater head observations** are `measured` for a calendar year when **at least one** valid GWIS groundwater-level observation exists in that year. That status does **not** imply continuous monthly coverage or complete spatial-network coverage. Well×year density and identifiability classifications in `outputs/groundwater/` remain authoritative.
 
 **Permit events** from Crook County inspection summaries (including the PRN1 2021–2024 strictly-valuable package) are facility technology/commissioning evidence. They are **not** measured groundwater heads, **not** OWRD pumping, and **not** a fitted groundwater-response model.
 
-[Figure 2](../outputs/pipeline_report/figures/fig02_observed_ground_truth.png) shows the campus ground-truth evolution. The pink band is labeled **2023–2024 water-model holdout** on the water and intensity panels only; electricity and Scope 2 are **not** held-out predictions.
+[Figure 2](../outputs/pipeline_report/figures/fig02_observed_ground_truth.png) shows the campus ground-truth evolution plus a compact documentary/permit event strip. Observed annual series are unchanged. The pink band is labeled **2023–2024 water-model holdout** on the water and intensity panels only; electricity and Scope 2 are **not** held-out predictions. Displayed events are a presentation selection of existing HIGH/VERY_HIGH documentary facts (`config/prineville_documentary_events.csv`) and Crook County permit chronology (`data/canonical/campus_permit_events.csv`). Same-year events are not collapsed; same-date, same-category facts may share one display label while retaining all event/source IDs in [`figure2_event_timeline.csv`](../outputs/pipeline_report/figure2_event_timeline.csv). Identity-only, road/name, and renewable-accounting seed rows are excluded. The event strip is chronological context only: it does **not** attribute the 2020 water peak or later decline to any documentary event.
 
 ---
 
@@ -392,6 +393,16 @@ Scorecard: [`validation_scorecard.csv`](../outputs/pipeline_report/validation_sc
 
 **Water — primary predictive figure:** [Figure 3](../outputs/pipeline_report/figures/fig03_water_model_accuracy.png).
 
+The main figure shows observed Meta annual withdrawal, the conditional evaporation × frozen scale model, the selected energy-only frozen NNLS mechanistic candidate, and the frozen training-mean naive baseline. The complete eight-predictor comparison remains in [`water_holdout_baseline_compare.csv`](../outputs/pipeline_report/water_holdout_baseline_compare.csv).
+
+Displayed models:
+
+- Conditional: `W_hat_y = s * V_raw_evap_y`, with frozen `s = 8.246503`.
+- Selected mechanistic energy-only: `W_hat_y = beta_E * E_fac_y`.
+- Frozen training mean: mean 2014–2022 observed withdrawal; not entered into mechanistic selection.
+
+The first two are **not** dynamic time-series models. 2023–2024 was unused in fitting/selection. Holdout \(N=2\) is a diagnostic, not strong statistical evidence. The naive mean currently performs much better on holdout.
+
 The current water specifications **perform poorly** on the pre-specified 2023–2024 holdout and are **not validated predictors** of the recent operating regime. With only two holdout years, this is a **strong predictive diagnostic failure**, not a formal statistical proof or falsification test.
 
 The **selected mechanistic candidate** is `energy_null` (expanding-window train MAPE **34.25%**; frozen-NNLS holdout MAPE **135.2%**). That label means it won among the pre-registered mechanistic/covariate candidates. It is **not** a claim that it is the best predictor overall. The frozen training-mean baseline was **not** entered into selection and currently has holdout MAPE **24.5%**, much better on these two years.
@@ -427,13 +438,13 @@ Selected annual energy-only model published ensemble-median diagnostic:
 
 Train-period water fit is mixed (conditional 2020 **−50%**, 2022 **+70%**). Retrospective stochastic water **closure** to reported annual withdrawal is **not** predictive accuracy.
 
-**External water:** [Figure 4](../outputs/pipeline_report/figures/fig04_external_water_context.png). Series are aligned, never stacked as a single campus total. OWRD City/POD comparisons are **boundary/context consistency, not Meta prediction error**. USGS `availab = strflow - consum` is **structural QA, not hydrologic validation**.
+**External water:** [Figure 4](../outputs/pipeline_report/figures/fig04_external_water_context.png). Series are aligned, never stacked as a single campus total. OWRD City/POD comparisons are **boundary/context consistency, not Meta prediction error**. USGS `availab = strflow - consum` is **structural QA, not hydrologic validation**. City production is not Meta delivery. Direct POD is not total Meta withdrawal. Meta annual withdrawal is repeated across months for alignment only — not a monthly meter. USGS series are modeled HUC12 context and are omitted after documented coverage.
 
 **Carbon:** [Figure 5](../outputs/pipeline_report/figures/fig05_carbon_benchmark.png). eGRID × Meta MWh vs Meta location Scope 2 is a **methodology/accounting consistency benchmark**, not fully independent external validation. 2024 percentage difference is about **−0.036%**. PACW hourly intensity is coverage, not campus telemetry.
 
-**Gray-box week:** [Figure 6](../outputs/pipeline_report/figures/fig06_graybox_hot_week.png). Weather-shaped reconstruction closed to annual reported electricity; **not measured hourly campus load/IT telemetry**. Selection: hottest complete America/Los_Angeles Monday-Sunday week with 168 finite dry/wet-bulb hours in 2011-2024 reconstruction. Selected week start: **2022-07-25**, mean dry-bulb **27.72 °C**, complete weeks considered: 716.
+**Gray-box week:** [Figure 6](../outputs/pipeline_report/figures/fig06_graybox_hot_week.png). Weather-shaped reconstruction closed to annual reported electricity; **not measured hourly campus load/IT telemetry**. Water proxy is not a meter. Selection rule is deterministic (hottest complete week), not cherry-picked. Selection: hottest complete America/Los_Angeles Monday-Sunday week with 168 finite dry/wet-bulb hours in 2011-2024 reconstruction. Selected week start: **2022-07-25**, mean dry-bulb **27.72 °C**, complete weeks considered: 716.
 
-**Gray-box assumption sensitivity:** [Figure 7](../outputs/pipeline_report/figures/fig07_graybox_parameter_sensitivity.png). Only parameters with a repository-documented range are perturbed. This is not a confidence interval and not a new calibration.
+**Gray-box assumption sensitivity:** [Figure 7](../outputs/pipeline_report/figures/fig07_graybox_parameter_sensitivity.png). Only `fan_fraction_of_it` and `other_facility_fraction_of_it` have a repository-documented numeric range (stochastic `sampled_facility_priors`). Other gray-box parameters have `range_not_established` and are not perturbed. Electricity closure recouples IT scale when overhead fractions change. This is not a confidence interval and not a new calibration.
 
 ---
 

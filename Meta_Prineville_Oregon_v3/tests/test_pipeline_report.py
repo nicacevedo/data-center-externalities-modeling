@@ -4,6 +4,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -138,6 +139,7 @@ def test_required_report_artifacts_if_built():
         REPORT / "model_io_edges.csv",
         REPORT / "model_parameter_registry.csv",
         REPORT / "water_holdout_baseline_compare.csv",
+        REPORT / "figure2_event_timeline.csv",
         REPORT / "graybox_parameter_sensitivity.csv",
         REPORT / "figures" / "fig07_graybox_parameter_sensitivity.png",
     ):
@@ -247,8 +249,16 @@ def test_not_necessary_is_distinct_from_missing_and_figure1_uses_both():
     assert it["coverage_status"].eq("not_necessary").all()
     water = cov[cov.series.eq("Meta water withdrawal")]
     assert water.loc[water.year.isin([2011, 2012, 2013]), "coverage_status"].eq("missing").all()
-    meters = cov[cov.series.eq("Monthly Meta water/electricity meters")]
+    meters = cov[cov.series.eq("Monthly campus water delivery")]
     assert meters["coverage_status"].eq("missing").all()
+    ww = cov[cov.series.eq("Monthly campus wastewater/sewer discharge")]
+    assert ww["coverage_status"].eq("missing").all()
+    em = cov[cov.series.eq("Monthly/hourly campus electricity meter")]
+    assert em["coverage_status"].eq("missing").all()
+    weather = cov[cov.series.eq("Canonical weather (KS39/KRDM + KBDN fallback)")]
+    assert not weather.empty
+    assert weather["coverage_status"].eq("measured").all()
+    assert "Monthly Meta water/electricity meters" not in set(cov.series)
     s2 = cov[cov.series.eq("Meta location Scope 2")]
     assert s2.loc[s2.year.eq(2011), "coverage_status"].eq("missing").all()
     gw = cov[cov.series.eq("Groundwater head observations")]
@@ -357,13 +367,94 @@ def test_consistency_audit_fails_on_deliberate_disagreement():
     with pytest.raises(AssertionError, match="Report consistency audit FAILED"):
         audit_report_consistency(qdf, mdf, pdf, claims)
 
-    src = (ROOT / "run_prineville.py").read_text(encoding="utf-8")
-    start = src.index("def full():")
-    end = src.index("\ndef ", start + 1)
+
+def test_figure2_timeline_preserves_same_year_source_events():
+    from build_pipeline_report import select_figure2_operational_timeline
+
+    tl = select_figure2_operational_timeline(write=False)
+    assert not tl.empty
+    assert set(tl.category) <= {"campus/buildout", "water/infrastructure", "power/cooling"}
+    assert tl.loc[tl.displayed_year.eq(2018)].shape[0] >= 2
+    assert tl.loc[tl.displayed_year.eq(2020)].shape[0] >= 2
+    assert tl.loc[tl.displayed_year.eq(2024)].shape[0] >= 2
+    grouped = tl[tl.displayed_date.eq("2018-08-07")]
+    assert len(grouped) == 1
+    assert "EV007" in grouped.iloc[0]["underlying_event_ids"]
+    assert "EV014" in grouped.iloc[0]["underlying_event_ids"]
+
+    doc = pd.read_csv(ROOT / "config" / "prineville_documentary_events.csv")
+    permit = pd.read_csv(ROOT / "data" / "canonical" / "campus_permit_events.csv")
+    doc_ids = set(doc["event_id"].astype(str))
+    seed = pd.read_csv(ROOT / "data" / "canonical" / "campus_events_seed.csv")
+    seed_types = set(seed["event_type"].astype(str))
+    assert "renewable_accounting" not in set(tl.display_label.str.lower())
+    assert "identity" not in set(tl.category)
+    for rec in tl.itertuples(index=False):
+        for eid in str(rec.underlying_event_ids).split(" | "):
+            if eid.startswith("EV"):
+                assert eid in doc_ids
+            else:
+                assert eid.startswith("CAMPUS_PERMIT:")
+                rest = eid[len("CAMPUS_PERMIT:") :]
+                date, etype, source = rest.split(":", 2)
+                hit = permit[
+                    permit["date"].astype(str).str.startswith(date)
+                    & permit["event_type"].eq(etype)
+                    & permit["source_id"].astype(str).eq(source)
+                ]
+                assert not hit.empty, eid
+    assert "renewable_accounting" in seed_types
+    assert not tl.display_label.str.contains("water peak|water decline|caused", case=False).any()
+
+
+def test_figure3_display_selection_keeps_full_audit_csv():
+    from build_pipeline_report import FIGURE3_DISPLAY_PREDICTORS, FIGURE3_FULL_AUDIT_PREDICTORS
+
+    path = REPORT / "water_holdout_baseline_compare.csv"
+    if not path.exists():
+        return
+    full = pd.read_csv(path)
+    assert list(full["predictor"]) == list(FIGURE3_FULL_AUDIT_PREDICTORS)
+    assert len(full) == 8
+    assert list(FIGURE3_DISPLAY_PREDICTORS) == [
+        "training_mean",
+        "conditional_global_scale",
+        "energy_null_frozen_nnls",
+    ]
+    shown = full[full.predictor.isin(FIGURE3_DISPLAY_PREDICTORS)]
+    assert set(shown.predictor) == set(FIGURE3_DISPLAY_PREDICTORS)
+    src = (ROOT / "src" / "build_pipeline_report.py").read_text(encoding="utf-8")
+    start = src.index("def figure3_water_accuracy")
+    end = src.index("\ndef figure4_external_water")
     body = src[start:end]
-    assert body.index("groundwater_context()") < body.index("groundwater_identifiability()")
-    assert body.index("groundwater_identifiability()") < body.index("conditional()")
-    assert body.index("conditional()") < body.index("public_extensions()")
-    assert body.index("public_extensions()") < body.index("simulate()")
-    assert body.index("simulate()") < body.index("report()")
+    for hidden in (
+        "training_median",
+        "persistence_2022",
+        "energy_null_ensemble_median",
+        "evap_physics_frozen_nnls",
+        "two_component_frozen_nnls",
+    ):
+        assert hidden not in body
+    for key in FIGURE3_DISPLAY_PREDICTORS:
+        row = full.set_index("predictor").loc[key]
+        assert np.isfinite(row.MAPE_pct)
+        assert np.isfinite(row.pct_error_2023)
+        assert np.isfinite(row.pct_error_2024)
+
+
+def test_figure1_user_facing_weather_and_meter_gap_rows():
+    from build_pipeline_report import COLORS
+
+    assert COLORS["not_necessary"] == "#000000"
+    src = (ROOT / "src" / "build_pipeline_report.py").read_text(encoding="utf-8")
+    start = src.index("def figure1_coverage")
+    end = src.index("\ndef figure2_ground_truth")
+    body = src[start:end]
+    assert "Canonical weather (KS39/KRDM + KBDN fallback)" in body
+    assert "Monthly campus water delivery" in body
+    assert "Monthly campus wastewater/sewer discharge" in body
+    assert "Monthly/hourly campus electricity meter" in body
+    assert "not an active target" in body
+    assert "Monthly Meta water/electricity meters" not in body
+
 

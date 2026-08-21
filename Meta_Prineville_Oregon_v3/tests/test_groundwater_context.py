@@ -5,6 +5,7 @@ import hashlib
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -182,3 +183,42 @@ def test_feasibility_recomputed_not_hardcoded_empty_heads():
     assert feas.iloc[0]["feasibility_class"] in {"A", "B", "C"}
     assert int(feas.iloc[0]["n_numeric_level_observations"]) > 0
     assert feas.iloc[0]["feasibility_class"] != "C"
+
+
+def test_groundwater_plot_inputs_are_chronological_points_in_study():
+    from build_groundwater_context import (
+        coverage_wells_with_numeric_bls,
+        numeric_bls_observations,
+        study_area_map_points,
+    )
+
+    inv = pd.read_csv(INV_OUT)
+    lv = pd.read_csv(LEVEL_OUT)
+    numeric = numeric_bls_observations(lv)
+    assert not numeric.empty
+    for _, g in numeric.groupby("well_node_id"):
+        dt = pd.to_datetime(g["dt"])
+        assert dt.is_monotonic_increasing
+    wells = coverage_wells_with_numeric_bls(lv)
+    expected = set(numeric["well_node_id"].astype(str))
+    assert set(wells) == expected
+    mapped, n_unresolved, n_out = study_area_map_points(inv)
+    lat = pd.to_numeric(inv["latitude"], errors="coerce")
+    lon = pd.to_numeric(inv["longitude"], errors="coerce")
+    finite = lat.notna() & lon.notna() & np.isfinite(lat) & np.isfinite(lon)
+    in_study = inv["in_study_geography"].astype(str).str.lower().isin(["true", "1"])
+    assert n_unresolved == int((~finite).sum())
+    assert n_out == int((finite & ~in_study).sum())
+    assert set(mapped["well_node_id"]).issubset(set(inv.loc[finite & in_study, "well_node_id"]))
+    if not mapped.empty:
+        left = mapped.set_index("well_node_id")[["latitude", "longitude"]]
+        right = inv.set_index("well_node_id").loc[left.index, ["latitude", "longitude"]]
+        assert np.allclose(left.to_numpy(float), right.to_numpy(float))
+    src = (ROOT / "src" / "build_groundwater_context.py").read_text(encoding="utf-8")
+    start = src.index("def write_diagnostics")
+    body = src[start:]
+    assert 'ax.scatter(gg["dt"], gg["bls"]' in body
+    assert 'ax.plot(g["dt"], g["bls"]' not in body
+    assert "geocode" not in body.lower()
+    assert "infer" not in body.lower() or "do not infer" in body.lower() or "unresolved remain" in body.lower()
+
