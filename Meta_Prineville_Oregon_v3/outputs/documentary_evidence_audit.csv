@@ -2,7 +2,7 @@ check,status,detail
 meta_reporting_boundary_unresolved,PASS,unresolved_prn_vs_prn_plus_cco
 source_ids_unique,PASS,n=21 unique=21
 evidence_ids_unique,PASS,n=48 unique=48
-event_ids_unique,PASS,n=13 unique=13
+event_ids_unique,PASS,n=14 unique=14
 source_tiers_allowed,PASS,"tiers=['core', 'supporting']"
 evidence_doc_ids_resolve,PASS,unmatched=[]
 alias_doc_ids_resolve,PASS,unmatched=[]
@@ -50,4 +50,4 @@ water_infrastructure_not_campus_water_observation,PASS,bad_ids=[]
 meta_reporting_boundary_row,PASS,n=1
 meta_reporting_boundary_value_unresolved,PASS,"UNRESOLVED: public regulatory evidence distinguishes PRN and CCO, but the physical boundary of each Meta annual “Prineville” disclosure vintage has not been established"
 no_documentary_campus_meter_observation,PASS,bad_ids=[]
-regulatory_events_have_dates,PASS,n_events=13 dated=13
+regulatory_events_have_dates,PASS,n_events=14 dated=14

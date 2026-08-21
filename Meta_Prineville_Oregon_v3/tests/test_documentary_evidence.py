@@ -2,15 +2,18 @@
 from __future__ import annotations
 
 import hashlib
+import shutil
 import sys
 from pathlib import Path
 
 import pandas as pd
+import pytest
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+import integrate_prineville_documentary_evidence as docint  # noqa: E402
 from integrate_prineville_documentary_evidence import (  # noqa: E402
     ALIASES,
     EVIDENCE,
@@ -37,6 +40,22 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _bind_tmp_root(monkeypatch: pytest.MonkeyPatch, tmp_root: Path) -> None:
+    config = tmp_root / "config"
+    monkeypatch.setattr(docint, "ROOT", tmp_root)
+    monkeypatch.setattr(docint, "CONFIG", config)
+    monkeypatch.setattr(docint, "SOURCES", config / "prineville_documentary_sources.csv")
+    monkeypatch.setattr(docint, "EVIDENCE", config / "prineville_documentary_evidence.csv")
+    monkeypatch.setattr(docint, "ALIASES", config / "prineville_documentary_aliases.csv")
+    monkeypatch.setattr(docint, "EVENTS", config / "prineville_documentary_events.csv")
+    monkeypatch.setattr(docint, "YAML_PATH", config / "prineville.yaml")
+    monkeypatch.setattr(docint, "ANNUAL", tmp_root / "data" / "canonical" / "meta_prineville_annual.csv")
+    monkeypatch.setattr(docint, "OUT_EVIDENCE", tmp_root / "data" / "canonical" / "campus_documentary_evidence.csv")
+    monkeypatch.setattr(docint, "OUT_ALIASES", tmp_root / "data" / "canonical" / "campus_identity_crosswalk.csv")
+    monkeypatch.setattr(docint, "OUT_EVENTS", tmp_root / "data" / "canonical" / "campus_regulatory_events.csv")
+    monkeypatch.setattr(docint, "OUT_AUDIT", tmp_root / "outputs" / "documentary_evidence_audit.csv")
+
+
 def test_seed_schema_and_unique_ids():
     sources = pd.read_csv(SOURCES, dtype=str, keep_default_na=False)
     evidence = pd.read_csv(EVIDENCE, dtype=str, keep_default_na=False)
@@ -50,6 +69,18 @@ def test_seed_schema_and_unique_ids():
     assert set(events["source_doc_id"]).issubset(set(sources["source_id"]))
     assert len(sources) == 21
     assert len(evidence) == 48
+    assert len(events) == 14
+    assert "2021-10-28" not in aliases.to_csv(index=False)
+    ev004 = events[events.event_id.eq("EV004")].iloc[0]
+    assert ev004.date_start == "2014"
+    assert ev004.date_end == ""
+    assert ev004.date_precision == "early_year"
+    assert "2014-04-30" not in events.to_csv(index=False)
+    ev007 = events[events.event_id.eq("EV007")].iloc[0]
+    ev014 = events[events.event_id.eq("EV014")].iloc[0]
+    assert ev007.source_doc_id == "CITY_ORD1242_2018"
+    assert ev014.source_doc_id == "CITY_ORD1243_2018"
+    assert "first and second" not in ev007.description.lower()
 
 
 def test_raw_sha256_when_files_exist():
@@ -61,7 +92,23 @@ def test_raw_sha256_when_files_exist():
             continue
         present += 1
         assert _sha256(path) == r.sha256, r.source_id
-    assert present == len(sources)
+    if present:
+        assert present == len(sources)
+
+
+def test_missing_raw_pdfs_record_not_verified_status(tmp_path, monkeypatch):
+    tmp_root = tmp_path / "clone"
+    shutil.copytree(ROOT / "config", tmp_root / "config")
+    _bind_tmp_root(monkeypatch, tmp_root)
+    main()
+    audit = pd.read_csv(tmp_root / "outputs" / "documentary_evidence_audit.csv", dtype=str, keep_default_na=False)
+    sha_rows = audit[audit.check.str.startswith("raw_sha256:")]
+    assert len(sha_rows) == 21
+    assert set(sha_rows.status) == {"NOT_VERIFIED_RAW_MISSING"}
+    events = pd.read_csv(tmp_root / "data" / "canonical" / "campus_regulatory_events.csv")
+    assert len(events) == 14
+    evidence = pd.read_csv(tmp_root / "data" / "canonical" / "campus_documentary_evidence.csv")
+    assert len(evidence) == 48
 
 
 def test_prn_cco_distinct_and_prn1_prn6_present():
@@ -140,7 +187,7 @@ def test_integration_does_not_alter_annual_targets_or_models():
     assert events_seed.exists()
     seed = pd.read_csv(events_seed)
     reg = pd.read_csv(OUT_EVENTS)
-    assert len(reg) == 13
+    assert len(reg) == 14
     assert list(seed.columns) != list(reg.columns) or not seed.equals(reg)
     evidence = pd.read_csv(OUT_EVIDENCE)
     aliases = pd.read_csv(OUT_ALIASES)
@@ -151,4 +198,11 @@ def test_integration_does_not_alter_annual_targets_or_models():
     assert (audit.loc[audit.check.eq("meta_reporting_boundary_unresolved"), "status"] == "PASS").all()
     sha_rows = audit[audit.check.str.startswith("raw_sha256:")]
     assert len(sha_rows) == 21
-    assert set(sha_rows.status) == {"PASS"}
+    allowed = {"PASS", "NOT_VERIFIED_RAW_MISSING"}
+    assert set(sha_rows.status).issubset(allowed)
+    sources = pd.read_csv(SOURCES, dtype=str, keep_default_na=False)
+    present = sum((ROOT / r.raw_relative_path).exists() for r in sources.itertuples(index=False))
+    if present == len(sources):
+        assert set(sha_rows.status) == {"PASS"}
+    elif present == 0:
+        assert set(sha_rows.status) == {"NOT_VERIFIED_RAW_MISSING"}

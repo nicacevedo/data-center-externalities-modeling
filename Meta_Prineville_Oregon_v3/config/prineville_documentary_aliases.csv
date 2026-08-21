@@ -2,8 +2,8 @@ canonical_entity_id,alias,alias_type,valid_from,valid_to,source_doc_id,source_lo
 VITESSE_LLC,Project Vitesse,historical_project_name,,2009-11-24,CITY_RES1117_2009,Recitals,VERY_HIGH,"City resolution says Project Vitesse is now Vitesse, LLC."
 VITESSE_LLC,"Vitesse, LLC",legal_name,2009-11-24,,CITY_RES1117_2009,Recitals,VERY_HIGH,Legal project/operator entity used in City/OPUC records.
 VITESSE_LLC,Vitesse LLC,legal_name_variant,2009-11-24,,OPUC_UM1989_VITESSE_2018,throughout,VERY_HIGH,Punctuation variant.
-META_PLATFORMS_INC,"Facebook, Inc.",historical_parent_name,,2021-10-28,OPUC_UM1989_VITESSE_2018,cover/application,VERY_HIGH,2018 source identifies Facebook as parent through Vitesse; do not use this row to infer exact corporate legal dates.
-META_PLATFORMS_INC,"Meta Platforms, Inc.",current_parent_name,2021-10-28,,OPUC_UE463_VITESSE_2026,Coyle/4,VERY_HIGH,2026 Vitesse testimony states Vitesse is wholly owned by Meta.
+META_PLATFORMS_INC,"Facebook, Inc.",historical_parent_name,,,OPUC_UM1989_VITESSE_2018,cover/application,VERY_HIGH,2018 source identifies Facebook as parent through Vitesse; do not use this row to infer exact corporate legal dates.
+META_PLATFORMS_INC,"Meta Platforms, Inc.",current_parent_name,,,OPUC_UE463_VITESSE_2026,Coyle/4,VERY_HIGH,2026 Vitesse testimony states Vitesse is wholly owned by Meta.
 PRN_CAMPUS,Prineville Campus,formal_campus_name,,,OPUC_UM1989_VITESSE_2018,application p.3-7,VERY_HIGH,Six-building PRN campus in 2018 filing.
 CCO_CAMPUS,Crook County Campus,formal_campus_name,2018-09-20,,OPUC_UM1989_VITESSE_2018,"application p.3, p.6",VERY_HIGH,Adjacent campus initially two buildings.
 PRN1,PRN1,building_code,,,CITY_ORD1246_2018,Exhibit A,VERY_HIGH,Official City map.
