@@ -23,3 +23,6 @@ Meta_Prineville_Oregon_v3/outputs/hourly_conditional_reconstruction.csv
 
 # Discovery MADIS nationwide hourly files (do not commit)
 Meta_Prineville_Oregon_v3/madis_test/raw/
+
+# Slurm job logs
+Meta_Prineville_Oregon_v3/outputs/slurm_logs/
