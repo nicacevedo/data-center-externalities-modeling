@@ -49,9 +49,17 @@ def ferc():
 
 
 def weather():
-    """Rebuild KRDM then canonical KS39/KRDM weather from cached raw files only."""
+    """Rebuild KRDM, KBDN tertiary, then canonical KS39/KRDM weather from cached raw files.
+
+    KBDN yearly NCEI files are downloaded only if missing from data/raw/noaa/.
+    """
     subprocess.run(
         [sys.executable, str(ROOT / "src" / "prepare_weather.py")],
+        check=True,
+        cwd=ROOT,
+    )
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "prepare_weather_kbdn.py")],
         check=True,
         cwd=ROOT,
     )

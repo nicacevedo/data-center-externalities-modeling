@@ -1,0 +1,67 @@
+{
+  "selected_station_id": "72063800224",
+  "selected_station_name": "Bend Municipal Airport",
+  "icao": "KBDN",
+  "provider": "NOAA NCEI Global Hourly",
+  "role": "tertiary gap-only weather fallback",
+  "source_selection_independent_of_model_results": true,
+  "selection_reason": "Authoritative NCEI observational station 31.7 km from Prineville; TMP and DEW present at all hours where KS39/KRDM cannot supply QC-usable required primitives. Not selected using electricity, water, PUE, WUE, or any fitted-model metric.",
+  "candidates_evaluated": [
+    {
+      "station_id": "72063800224",
+      "icao": "KBDN",
+      "name": "BEND MUNICIPAL AIRPORT",
+      "result": "selected"
+    },
+    {
+      "station_id": "72688799999",
+      "icao": "KS21",
+      "name": "SUNRIVER",
+      "result": "rejected_http_404"
+    }
+  ],
+  "n_overlap_t": 120098,
+  "n_overlap_td": 120032,
+  "n_overlap_slp": 0,
+  "mean_bias_t_C_krdm_minus_kbdn": 0.05392118030856831,
+  "median_bias_t_C": 0.3333333333333339,
+  "mae_t_C": 1.401313676833232,
+  "rmse_t_C": 1.8448394808164743,
+  "corr_t": 0.983656532112594,
+  "mean_bias_td_C_krdm_minus_kbdn": 0.19113869502524194,
+  "median_bias_td_C": 0.0,
+  "mae_td_C": 1.5411872363137025,
+  "rmse_td_C": 2.2153299287082913,
+  "corr_td": 0.9250190868068305,
+  "mean_bias_slp_hPa_krdm_minus_kbdn": null,
+  "mae_slp_hPa": null,
+  "monthly_bias_t_C": {
+    "1": -0.0940140152045147,
+    "2": -0.04626336222322497,
+    "3": 0.18632369008268293,
+    "4": 0.2426539821309569,
+    "5": 0.35509014314815096,
+    "6": 0.3874902419984391,
+    "7": 0.08630799008907526,
+    "8": 0.0701842212053796,
+    "9": -0.14769084742330632,
+    "10": -0.2657693518955918,
+    "11": -0.15765699608445216,
+    "12": 0.025114162119304114
+  },
+  "monthly_bias_td_C": {
+    "1": 0.2316749845059855,
+    "2": 0.32499587898810384,
+    "3": 0.29151881645862227,
+    "4": 0.444370389454976,
+    "5": 0.19902879651326702,
+    "6": 0.11064469573485464,
+    "7": 0.014885941388224593,
+    "8": 0.183231729229965,
+    "9": 0.16146929254725337,
+    "10": 0.20131790516827364,
+    "11": 0.0679526026156263,
+    "12": 0.06976681065581926
+  },
+  "correction_rule": "MISSING_DATA_PROTOCOL.md monthly additive bias on overlapping observed hours; no hour-of-day interactions"
+}

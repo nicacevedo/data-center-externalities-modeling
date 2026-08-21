@@ -22,9 +22,11 @@
   "water_holdout_mape_pct": 100.1091934311498,
   "weather_diagnostics": {
     "weather_rows": 122736,
-    "hours_with_any_required_field_missing_before_fill": 138,
-    "missing_required_cells_before_fill": 391,
-    "fraction_hours_proxy_filled": 0.0011243644896362925
+    "hours_with_any_required_field_missing_before_fill": 0,
+    "missing_required_cells_before_fill": 0,
+    "hours_interpolated_short_gap": 763,
+    "hours_tertiary_kbdn": 35,
+    "fraction_hours_proxy_filled": 0.006501759874853344
   },
   "selected_year_water_shape_priors": {
     "water_shape_evap_share": 0.5331737595588822,
@@ -32,7 +34,7 @@
     "water_shape_time_constant_share": 0.03
   },
   "selected_year_annual_closures": {
-    "facility_electricity_mwh": 1728291.0,
+    "facility_electricity_mwh": 1728291.0000000005,
     "water_withdrawal_m3": 328000.0,
     "location_scope2_tco2e": 498192.0
   },

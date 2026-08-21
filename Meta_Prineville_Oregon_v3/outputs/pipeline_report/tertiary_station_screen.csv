@@ -1,0 +1,3 @@
+file_id,name,call,lat,lon,dist_prn_km,elev_m,http_2011,http_2012,http_2013,http_2016,gap_hours_with_any_obs,gap_hours_with_tmp,gap_hours_with_dew,n_gap_hours
+72063800224,BEND MUNICIPAL AIRPORT,KBDN,44.095,-121.2,31.749316664882304,1055.2,200,200,200,200,35,35,35,35
+72688799999,SUNRIVER,KS21,43.876,-121.453,63.25720060095196,1269.2,404,404,404,404,0,0,0,35

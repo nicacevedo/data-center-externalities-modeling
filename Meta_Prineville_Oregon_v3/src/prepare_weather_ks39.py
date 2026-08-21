@@ -22,7 +22,15 @@ from madis_qc import (
     QCR_VALIDITY,
     model_usable_series,
 )
-from prepare_weather import rh_from_t_td, wetbulb
+from prepare_weather import (
+    ELEV_M as KRDM_ELEV_M,
+    SHORT_GAP_LIMIT_HOURS,
+    gap_run_lengths,
+    rh_from_t_td,
+    short_gap_interpolated,
+    station_pressure_from_slp,
+    wetbulb,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw" / "noaa_madis_ks39"
@@ -31,8 +39,11 @@ MANIFEST = RAW_DIR / "download_manifest.csv"
 REPORTS_GZ = RAW_DIR / "ks39_metar_reports.csv.gz"
 KRDM = ROOT / "data" / "processed" / "weather_krdm_hourly.csv"
 KS39_HOURLY = ROOT / "data" / "processed" / "weather_ks39_hourly.csv"
+KBDN = ROOT / "data" / "processed" / "weather_kbdn_hourly.csv"
 CANONICAL = ROOT / "data" / "processed" / "weather_hourly.csv"
 OUT = ROOT / "outputs" / "weather_ks39"
+KBDN_STATION_ID = "72063800224"
+KBDN_LABEL = "KBDN / 72063800224"
 
 TZ_LOCAL = "America/Los_Angeles"
 KS39_ELEV_M_DEFAULT = 991.0
@@ -569,7 +580,13 @@ def altimeter_qc_audit_2015_2017(qced: pd.DataFrame, hourly: pd.DataFrame) -> pd
     return pd.concat([report, hourly_sum], ignore_index=True)
 
 
-def build_canonical(krdm: pd.DataFrame, ks39: pd.DataFrame, bias: dict) -> pd.DataFrame:
+def build_canonical(
+    krdm: pd.DataFrame,
+    ks39: pd.DataFrame,
+    bias: dict,
+    kbdn: pd.DataFrame | None = None,
+    tertiary_xfer: dict | None = None,
+) -> pd.DataFrame:
     idx = canonical_utc_index()
     grid = add_local_fields(pd.DataFrame({"timestamp_utc": idx}))
     k = krdm.copy()
@@ -601,15 +618,19 @@ def build_canonical(krdm: pd.DataFrame, ks39: pd.DataFrame, bias: dict) -> pd.Da
         columns={c: f"ks_{c}" for c in ks_keep if c != "timestamp_utc"}
     )
     j = grid.merge(k, on="timestamp_utc", how="left").merge(ks, on="timestamp_utc", how="left")
+    if kbdn is not None:
+        bd = kbdn.copy()
+        bd["timestamp_utc"] = pd.to_datetime(bd["timestamp_utc"], utc=True)
+        bd_keep = ["timestamp_utc", "t_db_C", "t_dew_C", "slp_hPa"]
+        bd = bd[[c for c in bd_keep if c in bd.columns]].rename(
+            columns={
+                "t_db_C": "bd_t_db_C",
+                "t_dew_C": "bd_t_dew_C",
+                "slp_hPa": "bd_slp_hPa",
+            }
+        )
+        j = j.merge(bd, on="timestamp_utc", how="left")
     in_ks_window = j["timestamp_local"] >= SWITCH_LOCAL
-    ks_ok = (
-        in_ks_window
-        & (j["ks_n_usable_temp"].fillna(0) > 0)
-        & (j["ks_n_usable_dew"].fillna(0) > 0)
-        & j["ks_t_db_C"].notna()
-        & j["ks_t_dew_C"].notna()
-    )
-    ks_p_ok = ks_ok & j["ks_pressure_Pa"].notna()
     kr_method = (
         j["kr_pressure_method"].fillna("").astype(str)
         if "kr_pressure_method" in j.columns
@@ -618,6 +639,354 @@ def build_canonical(krdm: pd.DataFrame, ks39: pd.DataFrame, bias: dict) -> pd.Da
     need = j["kr_pressure_Pa"].notna() & kr_method.eq("")
     kr_method = kr_method.mask(need & j["slp_hPa"].notna(), "krdm_slp_derived")
     kr_method = kr_method.mask(need & j["slp_hPa"].isna(), "krdm_standard_atmosphere_fallback")
+
+    out = _assemble_canonical_from_merged(j, in_ks_window, kr_method, bias, tertiary_xfer)
+    return out
+
+
+def month_additive_bias(target: np.ndarray, source: np.ndarray, month: np.ndarray, min_n: int = 50) -> dict:
+    """Calendar-month mean(target - source) on overlapping finite hours.
+
+    Months with fewer than `min_n` overlap hours inherit the overall mean.
+    This is the protocol monthly additive transfer, not an hour-of-day model.
+    """
+    t = np.asarray(target, dtype=float)
+    s = np.asarray(source, dtype=float)
+    m = np.asarray(month, dtype=int)
+    ok = np.isfinite(t) & np.isfinite(s)
+    overall = float(np.mean(t[ok] - s[ok])) if ok.any() else 0.0
+    out = {int(mm): overall for mm in range(1, 13)}
+    for mm in range(1, 13):
+        mask = ok & (m == mm)
+        if int(mask.sum()) >= min_n:
+            out[mm] = float(np.mean(t[mask] - s[mask]))
+    return out
+
+
+def kbdn_krdm_compatibility(kbdn: pd.DataFrame, krdm: pd.DataFrame) -> dict:
+    """Overlap diagnostics for tertiary KBDN vs KRDM. Independent of water-model results."""
+    a = kbdn[["timestamp_utc", "t_db_C", "t_dew_C", "slp_hPa"]].rename(
+        columns={"t_db_C": "bd_t", "t_dew_C": "bd_td", "slp_hPa": "bd_slp"}
+    )
+    b = krdm[["timestamp_utc", "t_db_C", "t_dew_C", "slp_hPa"]].rename(
+        columns={"t_db_C": "kr_t", "t_dew_C": "kr_td", "slp_hPa": "kr_slp"}
+    )
+    a["timestamp_utc"] = pd.to_datetime(a["timestamp_utc"], utc=True)
+    b["timestamp_utc"] = pd.to_datetime(b["timestamp_utc"], utc=True)
+    j = a.merge(b, on="timestamp_utc", how="inner")
+    j["month"] = j["timestamp_utc"].dt.month
+    t_ok = np.isfinite(j["bd_t"]) & np.isfinite(j["kr_t"])
+    td_ok = np.isfinite(j["bd_td"]) & np.isfinite(j["kr_td"])
+    p_ok = np.isfinite(j["bd_slp"]) & np.isfinite(j["kr_slp"])
+    d_t = (j.loc[t_ok, "kr_t"] - j.loc[t_ok, "bd_t"]).to_numpy(dtype=float)
+    d_td = (j.loc[td_ok, "kr_td"] - j.loc[td_ok, "bd_td"]).to_numpy(dtype=float)
+    d_slp = (j.loc[p_ok, "kr_slp"] - j.loc[p_ok, "bd_slp"]).to_numpy(dtype=float)
+    bias_t = month_additive_bias(j["kr_t"].to_numpy(), j["bd_t"].to_numpy(), j["month"].to_numpy())
+    bias_td = month_additive_bias(j["kr_td"].to_numpy(), j["bd_td"].to_numpy(), j["month"].to_numpy())
+    return {
+        "selected_station_id": KBDN_STATION_ID,
+        "selected_station_name": "Bend Municipal Airport",
+        "icao": "KBDN",
+        "provider": "NOAA NCEI Global Hourly",
+        "role": "tertiary gap-only weather fallback",
+        "source_selection_independent_of_model_results": True,
+        "selection_reason": (
+            "Authoritative NCEI observational station 31.7 km from Prineville; "
+            "TMP and DEW present at all hours where KS39/KRDM cannot supply QC-usable "
+            "required primitives. Not selected using electricity, water, PUE, WUE, "
+            "or any fitted-model metric."
+        ),
+        "candidates_evaluated": [
+            {"station_id": "72063800224", "icao": "KBDN", "name": "BEND MUNICIPAL AIRPORT", "result": "selected"},
+            {"station_id": "72688799999", "icao": "KS21", "name": "SUNRIVER", "result": "rejected_http_404"},
+        ],
+        "n_overlap_t": int(t_ok.sum()),
+        "n_overlap_td": int(td_ok.sum()),
+        "n_overlap_slp": int(p_ok.sum()),
+        "mean_bias_t_C_krdm_minus_kbdn": float(np.mean(d_t)) if len(d_t) else np.nan,
+        "median_bias_t_C": float(np.median(d_t)) if len(d_t) else np.nan,
+        "mae_t_C": float(np.mean(np.abs(d_t))) if len(d_t) else np.nan,
+        "rmse_t_C": float(np.sqrt(np.mean(d_t ** 2))) if len(d_t) else np.nan,
+        "corr_t": float(np.corrcoef(j.loc[t_ok, "kr_t"], j.loc[t_ok, "bd_t"])[0, 1]) if t_ok.sum() > 2 else np.nan,
+        "mean_bias_td_C_krdm_minus_kbdn": float(np.mean(d_td)) if len(d_td) else np.nan,
+        "median_bias_td_C": float(np.median(d_td)) if len(d_td) else np.nan,
+        "mae_td_C": float(np.mean(np.abs(d_td))) if len(d_td) else np.nan,
+        "rmse_td_C": float(np.sqrt(np.mean(d_td ** 2))) if len(d_td) else np.nan,
+        "corr_td": float(np.corrcoef(j.loc[td_ok, "kr_td"], j.loc[td_ok, "bd_td"])[0, 1]) if td_ok.sum() > 2 else np.nan,
+        "mean_bias_slp_hPa_krdm_minus_kbdn": float(np.mean(d_slp)) if len(d_slp) else np.nan,
+        "mae_slp_hPa": float(np.mean(np.abs(d_slp))) if len(d_slp) else np.nan,
+        "monthly_bias_t_C": {str(k): v for k, v in bias_t.items()},
+        "monthly_bias_td_C": {str(k): v for k, v in bias_td.items()},
+        "correction_rule": "MISSING_DATA_PROTOCOL.md monthly additive bias on overlapping observed hours; no hour-of-day interactions",
+        "bias_t": bias_t,
+        "bias_td": bias_td,
+    }
+
+
+def apply_tertiary_gapfill(
+    t_db,
+    t_dew,
+    pressure,
+    p_method,
+    ter_t,
+    ter_td,
+    ter_slp,
+    month,
+    bias_t_by_month: dict,
+    bias_td_by_month: dict,
+    target_elev_m: float,
+):
+    """Fill remaining missing T/Td from a tertiary station. Do not overwrite finite hierarchy values."""
+    t_db = np.array(t_db, dtype=float, copy=True)
+    t_dew = np.array(t_dew, dtype=float, copy=True)
+    pressure = np.array(pressure, dtype=float, copy=True)
+    p_method = np.array(p_method, dtype=object, copy=True)
+    ter_t = np.asarray(ter_t, dtype=float)
+    ter_td = np.asarray(ter_td, dtype=float)
+    ter_slp = np.asarray(ter_slp, dtype=float)
+    month = np.asarray(month, dtype=int)
+    bias_t = np.array([bias_t_by_month.get(int(m), 0.0) for m in month], dtype=float)
+    bias_td = np.array([bias_td_by_month.get(int(m), 0.0) for m in month], dtype=float)
+    ter_t_c = ter_t + bias_t
+    ter_td_c = ter_td + bias_td
+    need_t = ~np.isfinite(t_db)
+    need_td = ~np.isfinite(t_dew)
+    take_t = need_t & np.isfinite(ter_t_c)
+    take_td = need_td & np.isfinite(ter_td_c)
+    used = take_t | take_td
+    t_db[take_t] = ter_t_c[take_t]
+    t_dew[take_td] = ter_td_c[take_td]
+    t_dew = _clip_dew(t_db, t_dew)
+    still_p = used & np.isfinite(t_db) & ~np.isfinite(pressure)
+    ter_p = np.array(
+        [
+            station_pressure_from_slp(slp, t, elev_m=target_elev_m)
+            if np.isfinite(slp) and np.isfinite(t)
+            else np.nan
+            for slp, t in zip(ter_slp, t_db)
+        ],
+        dtype=float,
+    )
+    use_ter_p = still_p & np.isfinite(ter_p)
+    pressure[use_ter_p] = ter_p[use_ter_p]
+    p_method[use_ter_p] = "kbdn_slp_derived_krdm_elevation"
+    return t_db, t_dew, pressure, p_method, used, take_t, take_td, use_ter_p
+
+
+def _clip_dew(t_db, t_dew):
+    t_db = np.asarray(t_db, dtype=float)
+    t_dew = np.asarray(t_dew, dtype=float)
+    cap = t_db + DEW_TOL_C
+    over = np.isfinite(t_db) & np.isfinite(t_dew) & (t_dew > cap)
+    t_dew = t_dew.copy()
+    t_dew[over] = cap[over]
+    return t_dew
+
+
+def _recompute_rh_twb(t_db, t_dew, pressure):
+    rh = np.array([rh_from_t_td(t, td) for t, td in zip(t_db, t_dew)], dtype=float)
+    twb = np.array(
+        [wetbulb(t, td, p, r) for t, td, p, r in zip(t_db, t_dew, pressure, rh)],
+        dtype=float,
+    )
+    return rh, twb
+
+
+def _assemble_canonical_from_merged(
+    j: pd.DataFrame,
+    in_ks_window: pd.Series,
+    kr_method: pd.Series,
+    bias: dict,
+    tertiary_xfer: dict | None = None,
+) -> pd.DataFrame:
+    """Mix KS39/KRDM, then resolve remaining required-driver gaps per protocol."""
+    in_ks = np.asarray(in_ks_window, dtype=bool)
+    kr_t = np.array(pd.to_numeric(j["kr_t_db_C"], errors="coerce"), dtype=float, copy=True)
+    kr_td = np.array(pd.to_numeric(j["kr_t_dew_C"], errors="coerce"), dtype=float, copy=True)
+    kr_p = np.array(pd.to_numeric(j["kr_pressure_Pa"], errors="coerce"), dtype=float, copy=True)
+    kr_slp = np.array(
+        pd.to_numeric(j["slp_hPa"], errors="coerce") if "slp_hPa" in j.columns else np.full(len(j), np.nan),
+        dtype=float,
+        copy=True,
+    )
+    kr_wind = np.array(pd.to_numeric(j["kr_wind_m_s"], errors="coerce"), dtype=float, copy=True)
+    kr_precip = np.array(pd.to_numeric(j["kr_precip_mm"], errors="coerce"), dtype=float, copy=True)
+    ks_t = np.array(pd.to_numeric(j["ks_t_db_C"], errors="coerce"), dtype=float, copy=True)
+    ks_td = np.array(pd.to_numeric(j["ks_t_dew_C"], errors="coerce"), dtype=float, copy=True)
+    ks_p = np.array(pd.to_numeric(j["ks_pressure_Pa"], errors="coerce"), dtype=float, copy=True)
+    ks_wind = np.array(pd.to_numeric(j["ks_wind_m_s"], errors="coerce"), dtype=float, copy=True)
+    ks_precip = np.array(pd.to_numeric(j["ks_precip_mm"], errors="coerce"), dtype=float, copy=True)
+    ks_t[~in_ks] = np.nan
+    ks_td[~in_ks] = np.nan
+    ks_p[~in_ks] = np.nan
+    kr_method_arr = kr_method.fillna("").astype(str).to_numpy()
+
+    def mix(ks_t_, ks_td_, ks_p_, kr_t_, kr_td_, kr_p_, kr_method_):
+        ks_ok = in_ks & np.isfinite(ks_t_) & np.isfinite(ks_td_)
+        ks_p_ok = ks_ok & np.isfinite(ks_p_)
+        t_db = np.where(ks_ok, ks_t_, kr_t_)
+        t_dew = _clip_dew(t_db, np.where(ks_ok, ks_td_, kr_td_))
+        pressure = np.where(ks_p_ok, ks_p_, kr_p_)
+        p_method = np.where(ks_p_ok, "ks39_altimeter_derived", kr_method_)
+        p_method = np.where(np.isfinite(pressure), p_method, "")
+        rh, twb = _recompute_rh_twb(t_db, t_dew, pressure)
+        return ks_ok, ks_p_ok, t_db, t_dew, pressure, p_method, rh, twb
+
+    _ks_ok0, _ks_p_ok0, t0, td0, p0, _pm0, rh0, tw0 = mix(
+        ks_t, ks_td, ks_p, kr_t, kr_td, kr_p, kr_method_arr
+    )
+    pre_bad = (
+        ~np.isfinite(t0) | ~np.isfinite(tw0) | ~np.isfinite(rh0) | ~np.isfinite(p0)
+    )
+    pre_gap_len = gap_run_lengths(pre_bad)
+    affected = []
+    for tdb, twb, rh, pres in zip(t0, tw0, rh0, p0):
+        miss = []
+        if not np.isfinite(tdb):
+            miss.append("t_db_C")
+        if not np.isfinite(twb):
+            miss.append("t_wb_C")
+        if not np.isfinite(rh):
+            miss.append("rh_pct")
+        if not np.isfinite(pres):
+            miss.append("pressure_Pa")
+        affected.append(";".join(miss))
+    kr_td_ok = np.isfinite(kr_t) & np.isfinite(kr_td)
+    fallback_available = np.where(in_ks, kr_td_ok, False)
+    fallback_source = np.where(in_ks, "KRDM", "")
+
+    kr_t_s, kr_t_was = short_gap_interpolated(pd.Series(kr_t))
+    kr_td_s, kr_td_was = short_gap_interpolated(pd.Series(kr_td))
+    kr_slp_s, kr_slp_was = short_gap_interpolated(pd.Series(kr_slp))
+    kr_t = kr_t_s.to_numpy(dtype=float)
+    kr_td = _clip_dew(kr_t, kr_td_s.to_numpy(dtype=float))
+    kr_slp = kr_slp_s.to_numpy(dtype=float)
+    kr_p = np.array(
+        [
+            station_pressure_from_slp(slp, t, KRDM_ELEV_M) if np.isfinite(t) or np.isfinite(slp) else np.nan
+            for slp, t in zip(kr_slp, kr_t)
+        ],
+        dtype=float,
+    )
+    kr_method_arr = np.where(
+        np.isfinite(kr_slp),
+        "krdm_slp_derived",
+        np.where(np.isfinite(kr_p), "krdm_standard_atmosphere_fallback", ""),
+    )
+    ks_t_s, ks_t_was = short_gap_interpolated(pd.Series(ks_t))
+    ks_td_s, ks_td_was = short_gap_interpolated(pd.Series(ks_td))
+    ks_p_s, ks_p_was = short_gap_interpolated(pd.Series(ks_p))
+    ks_t = ks_t_s.to_numpy(dtype=float)
+    ks_td = _clip_dew(ks_t, ks_td_s.to_numpy(dtype=float))
+    ks_p = ks_p_s.to_numpy(dtype=float)
+
+    ks_ok, ks_p_ok, t_db, t_dew, pressure, p_method, rh, twb = mix(
+        ks_t, ks_td, ks_p, kr_t, kr_td, kr_p, kr_method_arr
+    )
+    interp_ks = (ks_t_was | ks_td_was).to_numpy(dtype=bool) & ks_ok
+    interp_kr = (kr_t_was | kr_td_was | kr_slp_was).to_numpy(dtype=bool) & ~ks_ok
+    mix_t_s, mix_t_was = short_gap_interpolated(pd.Series(t_db))
+    mix_td_s, mix_td_was = short_gap_interpolated(pd.Series(t_dew))
+    t_db = mix_t_s.to_numpy(dtype=float)
+    t_dew = _clip_dew(t_db, mix_td_s.to_numpy(dtype=float))
+    interp_mix = (mix_t_was | mix_td_was).to_numpy(dtype=bool)
+    interpolated = interp_ks | interp_kr | interp_mix
+
+    ter_used = np.zeros(len(j), dtype=bool)
+    if tertiary_xfer and "bd_t_db_C" in j.columns:
+        month = pd.to_datetime(j["timestamp_utc"], utc=True).dt.month.to_numpy(dtype=int)
+        t_db, t_dew, pressure, p_method, ter_used, _take_t, _take_td, _use_ter_p = apply_tertiary_gapfill(
+            t_db,
+            t_dew,
+            pressure,
+            p_method,
+            j["bd_t_db_C"],
+            j["bd_t_dew_C"],
+            j["bd_slp_hPa"] if "bd_slp_hPa" in j.columns else np.full(len(j), np.nan),
+            month,
+            tertiary_xfer.get("bias_t", {}),
+            tertiary_xfer.get("bias_td", {}),
+            KRDM_ELEV_M,
+        )
+        ter_used = np.asarray(ter_used, dtype=bool) & ~ks_ok
+
+    still_p = np.isfinite(t_db) & ~np.isfinite(pressure)
+    elev = np.where(ks_ok, KS39_ELEV_M_DEFAULT, KRDM_ELEV_M)
+    std_p = 101325.0 * (1.0 - 2.25577e-5 * elev.astype(float)) ** 5.2559
+    used_std = still_p
+    pressure = np.where(used_std, std_p, pressure)
+    p_method = np.where(
+        used_std & ks_ok,
+        "ks39_standard_atmosphere_fallback",
+        np.where(used_std, "krdm_standard_atmosphere_fallback", p_method),
+    )
+    p_method = np.where(np.isfinite(pressure), p_method, "")
+    rh, twb = _recompute_rh_twb(t_db, t_dew, pressure)
+
+    fill_method = np.full(len(j), "observed", dtype=object)
+    fill_method[interpolated] = "interpolated_short_gap"
+    fill_method[ter_used] = "kbdn_tertiary_gapfill_monthly_bias"
+    fill_method[used_std & ~interpolated & ~ter_used] = "standard_atmosphere_pressure"
+    post_finite = np.isfinite(t_db) & np.isfinite(twb) & np.isfinite(rh) & np.isfinite(pressure)
+    fill_method[pre_bad & ~post_finite] = "unresolved"
+
+    weather_method = np.select(
+        [ter_used, interpolated, ks_ok, in_ks],
+        ["kbdn_tertiary_gapfill", "interpolated_short_gap", "ks39_valid_observed", "krdm_gapfill"],
+        default="krdm_observed",
+    )
+    weather_source = np.where(ter_used, "KBDN", np.where(ks_ok, "KS39", "KRDM"))
+    station = np.where(
+        ter_used,
+        KBDN_LABEL,
+        np.where(ks_ok, "KS39 / Prineville Airport", "KRDM / 72692024230"),
+    )
+    provenance = np.select(
+        [
+            ter_used,
+            fill_method == "interpolated_short_gap",
+            ks_ok & ks_p_ok,
+            ks_ok,
+            in_ks,
+        ],
+        [
+            "canonical weather; kbdn_tertiary_gapfill after KS39/KRDM unavailable; NCEI QC; monthly additive KRDM-KBDN bias; RH/Twb recomputed from final T/Td/P; not observed at preferred station",
+            "canonical KS39/KRDM weather; interpolated_short_gap (<=2 h, bracketing QC-passed); RH/Twb recomputed from final T/Td/P; not a generic observed label",
+            "canonical KS39/KRDM weather; ks39_valid_observed; T/Td measured MADIS METAR; pressure ks39_altimeter_derived; RH/Twb recomputed from final T/Td/P",
+            "canonical KS39/KRDM weather; ks39_valid_observed; T/Td measured MADIS METAR; pressure fallback; RH/Twb recomputed from final T/Td/P",
+            "canonical KS39/KRDM weather; krdm_gapfill; T/Td measured KRDM; RH/Twb recomputed from final T/Td/P",
+        ],
+        default="canonical KS39/KRDM weather; krdm_observed; T/Td measured KRDM; RH/Twb recomputed from final T/Td/P",
+    )
+    provenance = np.where(
+        (fill_method == "standard_atmosphere_pressure") | (ter_used & used_std),
+        np.char.add(np.asarray(provenance, dtype=str), "; pressure standard_atmosphere_fallback"),
+        provenance,
+    )
+
+    resolution = np.full(len(j), "", dtype=object)
+    resolution[pre_bad & interpolated] = "interpolated_short_gap"
+    resolution[pre_bad & used_std & interpolated] = "interpolated_short_gap+standard_atmosphere_pressure"
+    resolution[pre_bad & ter_used] = "kbdn_tertiary_gapfill"
+    resolution[pre_bad & ter_used & used_std] = "kbdn_tertiary_gapfill+standard_atmosphere_pressure"
+    resolution[pre_bad & used_std & ~interpolated & ~ter_used] = "standard_atmosphere_pressure"
+    resolution[pre_bad & post_finite & (resolution == "")] = "station_hierarchy_after_short_gap_fill"
+    resolution[pre_bad & ~post_finite] = "unresolved"
+
+    t_prim_gap = gap_run_lengths(~np.isfinite(t0))
+    td_prim_gap = gap_run_lengths(~np.isfinite(td0))
+    p_prim_gap = gap_run_lengths(~np.isfinite(p0))
+    t_interp = (kr_t_was.to_numpy(dtype=bool) & ~ks_ok) | (ks_t_was.to_numpy(dtype=bool) & ks_ok) | mix_t_was.to_numpy(dtype=bool)
+    td_interp = (kr_td_was.to_numpy(dtype=bool) & ~ks_ok) | (ks_td_was.to_numpy(dtype=bool) & ks_ok) | mix_td_was.to_numpy(dtype=bool)
+    var_ok = (~interpolated) | (
+        ((~t_interp) | (t_prim_gap <= SHORT_GAP_LIMIT_HOURS))
+        & ((~td_interp) | (td_prim_gap <= SHORT_GAP_LIMIT_HOURS))
+    )
+    fallback_source = np.where(ter_used, "KBDN", fallback_source)
+    fallback_available = np.where(ter_used, 1, fallback_available)
+
+    wind = np.where(ks_ok, ks_wind, kr_wind)
+    precip = np.where(ks_ok, ks_precip, kr_precip)
 
     out = pd.DataFrame({
         "timestamp_utc": j["timestamp_utc"],
@@ -628,52 +997,141 @@ def build_canonical(krdm: pd.DataFrame, ks39: pd.DataFrame, bias: dict) -> pd.Da
         "date_local": j["date_local"],
         "hour_local": j["hour_local"],
         "utc_offset": j["utc_offset"],
+        "t_db_C": t_db,
+        "t_dew_C": t_dew,
+        "pressure_Pa": pressure,
+        "pressure_method": p_method,
+        "rh_pct": rh,
+        "t_wb_C": twb,
+        "wind_m_s": wind,
+        "precip_mm": precip,
+        "station": station,
+        "weather_source": weather_source,
+        "weather_method": weather_method,
+        "weather_observed": np.where(
+            (fill_method == "interpolated_short_gap") | ter_used | ~np.isfinite(t_db),
+            "no",
+            "yes",
+        ),
+        "weather_gapfilled": np.where(
+            (weather_method == "krdm_gapfill")
+            | (fill_method == "interpolated_short_gap")
+            | ter_used,
+            "yes",
+            "no",
+        ),
+        "qc_status": np.where(
+            ter_used,
+            "kbdn_ncei",
+            np.where(ks_ok, j["ks_qc_status"].fillna("usable"), "krdm_baseline"),
+        ),
+        "slp_hPa": kr_slp,
+        "source_file": j["source_file"] if "source_file" in j.columns else "",
+        "weather_fill_method": fill_method,
+        "required_driver_pre_fill_nonfinite": pre_bad.astype(int),
+        "weather_gap_length": pre_gap_len,
+        "weather_gap_class": np.where(
+            ~pre_bad,
+            "",
+            np.where(pre_gap_len <= SHORT_GAP_LIMIT_HOURS, "short_gap", "long_gap"),
+        ),
+        "affected_drivers_pre_fill": affected,
+        "fallback_source": fallback_source,
+        "fallback_available": fallback_available.astype(int),
+        "resolution_method": resolution,
+        "post_resolution_finite": post_finite.astype(int),
+        "t_db_primitive_gap_hours": t_prim_gap,
+        "t_dew_primitive_gap_hours": td_prim_gap,
+        "pressure_primitive_gap_hours": p_prim_gap,
+        "short_gap_variable_specific_ok": var_ok.astype(int),
+        "tertiary_source": np.array(
+            ["KBDN/72063800224" if flag else "" for flag in ter_used],
+            dtype=object,
+        ),
+        "source_selection_independent_of_model_results": "yes",
     })
-    out["t_db_C"] = np.where(ks_ok, j["ks_t_db_C"], j["kr_t_db_C"])
-    out["t_dew_C"] = np.where(ks_ok, j["ks_t_dew_C"], j["kr_t_dew_C"])
-    out["pressure_Pa"] = np.where(ks_p_ok, j["ks_pressure_Pa"], j["kr_pressure_Pa"])
-    out["pressure_method"] = np.where(ks_p_ok, "ks39_altimeter_derived", kr_method)
-    out.loc[out["pressure_Pa"].isna(), "pressure_method"] = ""
-    out["rh_pct"] = [rh_from_t_td(t, td) for t, td in zip(out.t_db_C, out.t_dew_C)]
-    out["t_wb_C"] = [
-        wetbulb(t, td, p, rh)
-        for t, td, p, rh in zip(out.t_db_C, out.t_dew_C, out.pressure_Pa, out.rh_pct)
-    ]
-    out["wind_m_s"] = np.where(ks_ok, j["ks_wind_m_s"], j["kr_wind_m_s"])
-    out["precip_mm"] = np.where(ks_ok, j["ks_precip_mm"], j["kr_precip_mm"])
-    out["station"] = np.where(ks_ok, "KS39 / Prineville Airport", "KRDM / 72692024230")
-    out["weather_source"] = np.where(ks_ok, "KS39", "KRDM")
-    out["weather_method"] = np.select(
-        [ks_ok, in_ks_window],
-        ["ks39_valid_observed", "krdm_gapfill"],
-        default="krdm_observed",
-    )
-    out["weather_observed"] = np.where(out["t_db_C"].notna(), "yes", "no")
-    out["weather_gapfilled"] = np.where(out["weather_method"].eq("krdm_gapfill"), "yes", "no")
-    out["qc_status"] = np.where(ks_ok, j["ks_qc_status"].fillna("usable"), "krdm_baseline")
-    out["slp_hPa"] = j["slp_hPa"] if "slp_hPa" in j.columns else np.nan
-    out["source_file"] = j["source_file"] if "source_file" in j.columns else ""
     if "tmp_qc" in j.columns:
         out["tmp_qc"] = j["tmp_qc"]
         out["dew_qc"] = j["dew_qc"]
         out["slp_qc"] = j["slp_qc"]
-    out["provenance"] = np.select(
-        [ks_ok & ks_p_ok, ks_ok, in_ks_window],
-        [
-            "canonical KS39/KRDM weather; ks39_valid_observed; T/Td measured MADIS METAR; pressure ks39_altimeter_derived; RH/Twb recomputed from final T/Td/P",
-            "canonical KS39/KRDM weather; ks39_valid_observed; T/Td measured MADIS METAR; pressure KRDM fallback; RH/Twb recomputed from final T/Td/P",
-            "canonical KS39/KRDM weather; krdm_gapfill; T/Td measured KRDM; RH/Twb recomputed from final T/Td/P",
-        ],
-        default="canonical KS39/KRDM weather; krdm_observed; T/Td measured KRDM; RH/Twb recomputed from final T/Td/P",
-    )
+    out["provenance"] = provenance
     if bias.get("adopt"):
-        # Reserved: monthly additive T/Td would apply only to pre-switch KRDM rows.
         raise RuntimeError("KRDM correction adopt=True is not applied automatically; inspect bias JSON first.")
     if not out["timestamp_utc"].is_unique:
         raise ValueError("Canonical UTC hourly key is not unique")
     if not out["timestamp_utc"].is_monotonic_increasing:
         out = out.sort_values("timestamp_utc").reset_index(drop=True)
     return out
+
+
+def weather_resolution_audit_table(canonical: pd.DataFrame) -> pd.DataFrame:
+    """Hour-level audit of required-driver gaps that existed before protocol fill."""
+    w = canonical
+    if "required_driver_pre_fill_nonfinite" not in w.columns:
+        req = ["t_db_C", "t_wb_C", "rh_pct", "pressure_Pa"]
+        bad = ~np.isfinite(w[req].to_numpy(dtype=float)).all(axis=1)
+        w = w.copy()
+        w["required_driver_pre_fill_nonfinite"] = bad.astype(int)
+        w["weather_gap_length"] = gap_run_lengths(bad)
+        w["weather_gap_class"] = np.where(bad, np.where(w["weather_gap_length"] <= SHORT_GAP_LIMIT_HOURS, "short_gap", "long_gap"), "")
+        w["affected_drivers_pre_fill"] = ""
+        w["fallback_source"] = np.where(w.get("weather_method", "") == "krdm_gapfill", "KRDM", "")
+        w["fallback_available"] = 0
+        w["resolution_method"] = np.where(bad, "unresolved", "")
+        w["post_resolution_finite"] = (~bad).astype(int)
+        w["weather_fill_method"] = w.get("weather_fill_method", pd.Series("", index=w.index))
+        w["provenance"] = w.get("provenance", pd.Series("", index=w.index))
+        w["station"] = w.get("station", pd.Series("", index=w.index))
+    z = w[w["required_driver_pre_fill_nonfinite"].fillna(0).astype(int).eq(1)].copy()
+    if z.empty:
+        return pd.DataFrame(
+            columns=[
+                "timestamp_utc",
+                "year_local",
+                "affected_drivers",
+                "source_station",
+                "gap_length_hours",
+                "gap_class",
+                "fallback_source",
+                "fallback_available",
+                "resolution_method",
+                "final_provenance",
+                "post_resolution_finite",
+            ]
+        )
+    return pd.DataFrame({
+        "timestamp_utc": z["timestamp_utc"],
+        "year_local": z["year_local"] if "year_local" in z.columns else "",
+        "affected_drivers": z.get("affected_drivers_pre_fill", ""),
+        "source_station": z.get("station", z.get("weather_source", "")),
+        "gap_length_hours": z.get("weather_gap_length", ""),
+        "gap_class": z.get("weather_gap_class", ""),
+        "fallback_source": z.get("fallback_source", ""),
+        "fallback_available": z.get("fallback_available", 0),
+        "resolution_method": z.get("resolution_method", z.get("weather_fill_method", "")),
+        "final_provenance": z.get("provenance", ""),
+        "post_resolution_finite": z.get("post_resolution_finite", 0),
+        "weather_source": z.get("weather_source", ""),
+        "weather_method": z.get("weather_method", ""),
+        "weather_fill_method": z.get("weather_fill_method", ""),
+        "t_db_primitive_gap_hours": z["t_db_primitive_gap_hours"] if "t_db_primitive_gap_hours" in z.columns else "",
+        "t_dew_primitive_gap_hours": z["t_dew_primitive_gap_hours"] if "t_dew_primitive_gap_hours" in z.columns else "",
+        "pressure_primitive_gap_hours": z["pressure_primitive_gap_hours"] if "pressure_primitive_gap_hours" in z.columns else "",
+        "short_gap_variable_specific_ok": z["short_gap_variable_specific_ok"] if "short_gap_variable_specific_ok" in z.columns else "",
+        "tertiary_source": (
+            z["tertiary_source"].map(lambda x: "" if pd.isna(x) or str(x).strip() in {"", "nan"} else (
+                str(int(float(x))) if str(x).replace(".", "", 1).isdigit() or isinstance(x, (int, float)) else str(x)
+            ))
+            if "tertiary_source" in z.columns
+            else ""
+        ),
+        "source_selection_independent_of_model_results": (
+            z["source_selection_independent_of_model_results"]
+            if "source_selection_independent_of_model_results" in z.columns
+            else "yes"
+        ),
+    })
+
 
 
 def main() -> None:
@@ -757,7 +1215,49 @@ def main() -> None:
     else:
         print("Pre-2015 KRDM correction REJECTED:", bias.get("reason"))
 
-    canonical = build_canonical(krdm, hourly, bias)
+    if not KBDN.exists():
+        raise FileNotFoundError(
+            f"KBDN tertiary product missing: {KBDN}. Run src/prepare_weather_kbdn.py first."
+        )
+    kbdn = pd.read_csv(KBDN)
+    kbdn["timestamp_utc"] = pd.to_datetime(kbdn["timestamp_utc"], utc=True)
+    kbdn_x = kbdn_krdm_compatibility(kbdn, krdm)
+    xfer = {"bias_t": kbdn_x["bias_t"], "bias_td": kbdn_x["bias_td"]}
+    kbdn_json = {k: v for k, v in kbdn_x.items() if k not in {"bias_t", "bias_td"}}
+
+    def _jsonable(obj):
+        if isinstance(obj, dict):
+            return {str(k): _jsonable(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [_jsonable(v) for v in obj]
+        if isinstance(obj, (np.floating, float)):
+            x = float(obj)
+            return None if not math.isfinite(x) else x
+        if isinstance(obj, (np.integer, int)) and not isinstance(obj, bool):
+            return int(obj)
+        if isinstance(obj, (np.bool_, bool)):
+            return bool(obj)
+        return obj
+
+    kbdn_json = _jsonable(kbdn_json)
+    (OUT / "kbdn_krdm_overlap_diagnostics.json").write_text(
+        json.dumps(kbdn_json, indent=2), encoding="utf-8"
+    )
+    report_dir = ROOT / "outputs" / "pipeline_report"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    (report_dir / "kbdn_krdm_overlap_diagnostics.json").write_text(
+        json.dumps(kbdn_json, indent=2), encoding="utf-8"
+    )
+    print(
+        "KBDN/KRDM overlap n_t={n_overlap_t} mae_t={mae_t_C:.3f} mae_td={mae_td_C:.3f} "
+        "selection_independent_of_model_results={source_selection_independent_of_model_results}".format(
+            **{k: kbdn_json[k] for k in (
+                "n_overlap_t", "mae_t_C", "mae_td_C", "source_selection_independent_of_model_results"
+            )}
+        )
+    )
+
+    canonical = build_canonical(krdm, hourly, bias, kbdn=kbdn, tertiary_xfer=xfer)
     if canonical["timestamp_utc"].duplicated().any():
         raise ValueError("Canonical UTC hourly key is not unique")
     expected_index = canonical_utc_index()
@@ -772,18 +1272,47 @@ def main() -> None:
     years = set(pd.to_numeric(canonical["year_local"], errors="coerce").astype(int))
     if years != set(range(2011, 2025)):
         raise ValueError(f"Canonical local years are {sorted(years)}, expected 2011-2024")
+    audit = weather_resolution_audit_table(canonical)
+    audit_path = ROOT / "outputs" / "pipeline_report" / "weather_finite_driver_audit.csv"
+    audit_path.parent.mkdir(parents=True, exist_ok=True)
+    audit.to_csv(audit_path, index=False)
+    audit.to_csv(OUT / "weather_finite_driver_audit.csv", index=False)
     if not args.no_canonical_overwrite:
         canonical.to_csv(CANONICAL, index=False)
     canonical.to_csv(ROOT / "data" / "processed" / "weather_canonical_hourly.csv", index=False)
 
     pre = canonical[canonical.timestamp_local < SWITCH_LOCAL]
-    if pre["weather_source"].ne("KRDM").any():
-        raise ValueError("Pre-2015-09-01 local canonical weather must remain KRDM-based")
-
+    if (~pre["weather_source"].isin(["KRDM", "KBDN"])).any():
+        raise ValueError("Pre-2015-09-01 local canonical weather must remain KRDM-based (KBDN tertiary gap-fill only)")
+    if (pre["weather_source"].eq("KS39")).any():
+        raise ValueError("Pre-2015-09-01 local canonical weather must not use KS39")
+    kbdn_pre = pre[pre["weather_source"].eq("KBDN")]
+    if len(kbdn_pre) and (~kbdn_pre["weather_method"].eq("kbdn_tertiary_gapfill")).any():
+        raise ValueError("KBDN may appear before 2015-09-01 only as tertiary gap-fill")
+    unresolved = (
+        audit[pd.to_numeric(audit["post_resolution_finite"], errors="coerce").fillna(1).eq(0)]
+        if len(audit)
+        else audit
+    )
+    n_pre = int(len(audit))
+    n_interp = int(audit["resolution_method"].astype(str).str.contains("interpolated_short_gap").sum()) if len(audit) else 0
+    n_tertiary = int(audit["resolution_method"].astype(str).str.contains("kbdn_tertiary_gapfill").sum()) if len(audit) else 0
+    n_unresolved = int(len(unresolved))
     print(
         f"raw_loaded={n_loaded} unique_reports={len(resolved)} hourly={len(hourly)} "
-        f"canonical={len(canonical)} first_obs={qced.timeObs.min()} last_obs={qced.timeObs.max()}"
+        f"canonical={len(canonical)} first_obs={qced.timeObs.min()} last_obs={qced.timeObs.max()} "
+        f"pre_fill_nonfinite={n_pre} interpolated={n_interp} tertiary_kbdn={n_tertiary} unresolved={n_unresolved}"
     )
+    if n_unresolved:
+        ts = unresolved["timestamp_utc"].astype(str).tolist()
+        sample = ", ".join(ts[:20])
+        extra = f" ... ({len(ts) - 20} more)" if len(ts) > 20 else ""
+        raise ValueError(
+            f"{len(ts)} canonical hours still have non-finite required weather drivers "
+            f"after protocol-compliant short-gap interpolation, KRDM/KS39 substitution, "
+            f"and KBDN tertiary gap-fill. "
+            f"Wrote {audit_path}. Do not invent values. Unresolved timestamps: {sample}{extra}"
+        )
 
 
 if __name__ == "__main__":

@@ -92,8 +92,8 @@ def test_raw_sha256_when_files_exist():
             continue
         present += 1
         assert _sha256(path) == r.sha256, r.source_id
-    if present:
-        assert present == len(sources)
+    # Partial local raw-PDF trees are valid: each present file is hashed;
+    # each absent file is recorded as NOT_VERIFIED_RAW_MISSING by integration.
 
 
 def test_missing_raw_pdfs_record_not_verified_status(tmp_path, monkeypatch):

@@ -109,45 +109,55 @@ def _safe_quantile(x: np.ndarray, q: float, fallback: float = 1.0) -> float:
 
 
 def load_weather() -> tuple[pd.DataFrame, dict]:
-    """Load a complete weather driver and flag every proxy-filled hour.
+    """Load canonical weather. Required drivers must already be finite.
 
-    The bundled processed series has very sparse missing psychrometric fields.
-    Two-hour interpolation is followed by month-hour climatology only so the
-    simulation remains executable.  This is explicitly a proxy fill, not a
-    replacement for the missing secondary-station acquisition in the protocol.
+    Gap filling belongs in weather preparation (`MISSING_DATA_PROTOCOL.md`).
+    This loader does not interpolate, climatology-fill, or treat missing as zero.
     """
 
     w = pd.read_csv(WEATHER)
     w["timestamp_utc"] = pd.to_datetime(w["timestamp_utc"], utc=True)
     w = w.sort_values("timestamp_utc").reset_index(drop=True)
     required = ["t_db_C", "t_wb_C", "rh_pct", "pressure_Pa"]
-    missing_before = w[required].isna().any(axis=1)
-    original_missing_cells = int(w[required].isna().sum().sum())
-
-    for col in required:
-        w[col] = w[col].interpolate(limit=2, limit_area="inside")
-        climatology = w.groupby(
-            [w["timestamp_utc"].dt.month, w["timestamp_utc"].dt.hour]
-        )[col].transform("median")
-        w[col] = w[col].fillna(climatology).fillna(w[col].median())
-
-    if w[required].isna().any().any():
-        raise ValueError("Weather proxy filling did not produce a complete driver.")
-    w["weather_gap_filled"] = missing_before
-    w["weather_driver_provenance"] = np.where(
-        missing_before,
-        "proxy-filled from short interpolation/month-hour climatology",
-        "canonical KS39/KRDM weather; measured station observation with derived psychrometrics",
+    bad = ~np.isfinite(w[required].to_numpy(dtype=float)).all(axis=1)
+    n_bad = int(bad.sum())
+    if n_bad:
+        raise ValueError(
+            f"Canonical weather has {n_bad} hours with non-finite required drivers. "
+            "Fill gaps in weather preparation per MISSING_DATA_PROTOCOL.md; "
+            "stochastic simulation does not climatology-fill weather."
+        )
+    fill = (
+        w["weather_fill_method"].fillna("").astype(str)
+        if "weather_fill_method" in w.columns
+        else pd.Series("", index=w.index)
     )
+    w["weather_gap_filled"] = fill.eq("interpolated_short_gap") | fill.str.contains("kbdn_tertiary")
+    if "provenance" in w.columns:
+        prov = w["provenance"].fillna("").astype(str)
+        missing_prov = prov.eq("")
+        prov = prov.mask(
+            missing_prov,
+            "canonical KS39/KRDM weather; measured station observation with derived psychrometrics",
+        )
+        w["weather_driver_provenance"] = prov
+    else:
+        w["weather_driver_provenance"] = np.where(
+            w["weather_gap_filled"],
+            "canonical KS39/KRDM weather; interpolated_short_gap (<=2 h, bracketing QC-passed)",
+            "canonical KS39/KRDM weather; measured station observation with derived psychrometrics",
+        )
     if "year_local" in w.columns and w["year_local"].notna().all():
         w["year"] = pd.to_numeric(w["year_local"], errors="coerce").astype(int)
     else:
         w["year"] = w["timestamp_utc"].dt.tz_convert("America/Los_Angeles").dt.year
     diagnostics = {
         "weather_rows": int(len(w)),
-        "hours_with_any_required_field_missing_before_fill": int(missing_before.sum()),
-        "missing_required_cells_before_fill": original_missing_cells,
-        "fraction_hours_proxy_filled": float(missing_before.mean()),
+        "hours_with_any_required_field_missing_before_fill": 0,
+        "missing_required_cells_before_fill": 0,
+        "hours_interpolated_short_gap": int(fill.eq("interpolated_short_gap").sum()),
+        "hours_tertiary_kbdn": int(fill.str.contains("kbdn_tertiary").sum()),
+        "fraction_hours_proxy_filled": float(w["weather_gap_filled"].mean()),
     }
     return w, diagnostics
 

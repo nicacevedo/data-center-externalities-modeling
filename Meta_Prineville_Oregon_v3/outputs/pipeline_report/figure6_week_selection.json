@@ -1,8 +1,8 @@
 {
   "rule": "hottest complete America/Los_Angeles Monday-Sunday week with 168 finite dry/wet-bulb hours in 2011-2024 reconstruction",
   "week_start_local": "2022-07-25 00:00:00-07:00",
-  "mean_t_db_C": 27.760311901758605,
+  "mean_t_db_C": 27.715470377604188,
   "n_hours": 168,
-  "n_complete_weeks_considered": 634,
+  "n_complete_weeks_considered": 716,
   "seed": 20260812
 }

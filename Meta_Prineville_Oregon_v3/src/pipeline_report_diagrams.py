@@ -269,7 +269,7 @@ def render_source_tree_png(path: Path) -> Path:
     ax.text(0.25, 10.82, "Conditional branch", fontsize=9, fontweight="bold", color="#1e3a8a")
 
     meta_e = _box(ax, 0.3, 9.55, 2.15, 0.85, "Meta annual\nfacility electricity\nQ_E_FAC", "#dbeafe", 6.2)
-    wx = _box(ax, 0.3, 8.35, 2.15, 0.85, "KS39/KRDM weather\nQ_WEATHER", "#ecfccb", 6.2)
+    wx = _box(ax, 0.3, 8.35, 2.15, 0.85, "KS39/KRDM/KBDN weather\nQ_WEATHER", "#ecfccb", 6.2)
     clos = _box(ax, 3.0, 8.95, 2.25, 0.95, "annual latent\nIT-scale closure\nM_ELEC_CLOSURE", "#fed7aa", 6.2)
     pit = _box(ax, 5.7, 8.95, 2.2, 0.95, "fitted hourly\nIT / facility power\nQ_P_IT, Q_P_FAC", "#fde68a", 6.2)
     gray = _box(ax, 8.35, 8.95, 2.15, 0.95, "gray-box\nevaporation\nM_GRAYBOX", "#fbcfe8", 6.2)

@@ -1,0 +1,27 @@
+claim_id,value,unit,source_artifact,source_field_or_formula,filter_or_scope,formatting_note
+cond_water_scale,8.24650287088067,1,outputs/conditional_water_model.csv,scale,kind=global train-only log-scale,15 significant digits; display ~6 decimals in prose
+cond_water_kind,global,,outputs/conditional_water_model.csv,kind,selected conditional water form,string
+cond_water_bic,-11.428320270192,1,outputs/conditional_water_model.csv,bic,global model BIC on training years,15 significant digits; display 2 decimals in prose
+cond_holdout_pct_error_2023,126.721417605438,percent,outputs/conditional_annual_compare.csv,water_pct_error,year=2023 split=holdout,percent; display 1 decimal with sign
+cond_holdout_pct_error_2024,100.800831240036,percent,outputs/conditional_annual_compare.csv,water_pct_error,year=2024 split=holdout,percent; display 1 decimal with sign
+cond_holdout_mape,113.761124422737,percent,outputs/conditional_annual_compare.csv,mean(abs(water_pct_error)),split=holdout years with observed water,percent; display 1 decimal
+cond_train_mape,37.9598672460325,percent,outputs/conditional_annual_compare.csv,mean(abs(water_pct_error)),split=train years with observed water,percent; display 1 decimal
+cond_modeled_2011_pue,1.0600794849499,1,outputs/conditional_water_model.csv,modeled_2011_annual_pue,2011 design/assumption check,4 decimals in prose
+elec_closure_max_abs_mwh,4.65661287307739e-10,MWh,outputs/conditional_annual_compare.csv,max(abs(electricity_mwh_model_closure - electricity_mwh_reported)),all reconstructed years,scientific notation in scorecard
+selected_mechanistic_candidate,energy_null,,outputs/stochastic_proxy_water_model_diagnostics.csv,model where selected=True,pre-registered mechanistic/covariate candidates only,string; not a claim of best overall predictor
+selected_rolling_mape,34.2483644988005,percent,outputs/stochastic_proxy_water_model_diagnostics.csv,rolling_one_step_mape_pct,selected mechanistic candidate; train expanding-window,percent; display 2 decimals
+selected_beta_e,0.364305618310312,m3/MWh,outputs/stochastic_proxy_water_model_diagnostics.csv,coefficients.electricity_mwh_reported,selected energy_null NNLS,15 significant digits
+selected_holdout_mape,135.156582584195,percent,outputs/pipeline_report/water_holdout_baseline_compare.csv,MAPE_pct,predictor=energy_null_frozen_nnls,percent; display 1 decimal; selected equation frozen on train
+selected_holdout_pct_error_2023,178.353981822309,percent,outputs/pipeline_report/water_holdout_baseline_compare.csv,pct_error_2023,predictor=energy_null_frozen_nnls,percent; display 1 decimal with sign
+selected_holdout_pct_error_2024,91.9591833460815,percent,outputs/pipeline_report/water_holdout_baseline_compare.csv,pct_error_2024,predictor=energy_null_frozen_nnls,percent; display 1 decimal with sign
+energy_null_ensemble_holdout_mape,100.10919343115,percent,outputs/stochastic_proxy_annual_summary.csv,mean(abs(water_train_only_error_pct)),split=holdout ensemble-median diagnostic; not model selection,percent; display 1 decimal
+training_mean_holdout_mape,24.4932371567615,percent,outputs/pipeline_report/water_holdout_baseline_compare.csv,MAPE_pct,predictor=training_mean; not in mechanistic selection,percent; display 1 decimal
+training_mean_pct_error_2023,8.56461874888888,percent,outputs/pipeline_report/water_holdout_baseline_compare.csv,pct_error_2023,predictor=training_mean,percent; display 1 decimal with sign
+training_mean_pct_error_2024,-40.4218555646341,percent,outputs/pipeline_report/water_holdout_baseline_compare.csv,pct_error_2024,predictor=training_mean,percent; display 1 decimal with sign
+conditional_baseline_holdout_mape,113.761124422737,percent,outputs/pipeline_report/water_holdout_baseline_compare.csv,MAPE_pct,predictor=conditional_global_scale,must match cond_holdout_mape
+evap_physics_beta_v,7.36350052657006,1,outputs/stochastic_proxy_water_model_diagnostics.csv,coefficients.raw_evap_m3_median,evap_physics not selected,15 significant digits
+evap_physics_rolling_mape,52.0620535680332,percent,outputs/stochastic_proxy_water_model_diagnostics.csv,rolling_one_step_mape_pct,evap_physics not selected,percent; display 2 decimals
+two_component_beta_e,0.364305618310312,m3/MWh,outputs/stochastic_proxy_water_model_diagnostics.csv,coefficients.electricity_mwh_reported,two_component not selected,15 significant digits
+two_component_beta_v,0,1,outputs/stochastic_proxy_water_model_diagnostics.csv,coefficients.raw_evap_m3_median,two_component not selected,15 significant digits
+two_component_rolling_mape,46.0562076447517,percent,outputs/stochastic_proxy_water_model_diagnostics.csv,rolling_one_step_mape_pct,two_component not selected,percent; display 2 decimals
+energy_null_ensemble_holdout_mape_from_baselines,100.10919343115,percent,outputs/pipeline_report/water_holdout_baseline_compare.csv,MAPE_pct,predictor=energy_null_ensemble_median,must match energy_null_ensemble_holdout_mape

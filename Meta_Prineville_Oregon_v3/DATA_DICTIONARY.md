@@ -11,7 +11,7 @@
 - `location_based_scope2_tco2e_reported`: site location-based purchased-electricity Scope 2, where separately disclosed.
 - `location_based_scope2_kg_per_mwh_derived`: reported location Scope 2 / reported facility MWh.
 - `operational_scope1_2_tco2e_reported`: source-vintage operational Scope 1+2 value. Reporting/accounting methods changed across years; use with source-vintage caution.
-- `*_source_id`: foreign key to `data/source_manifest.csv`.
+- `*_source_id`: source identifier used in the canonical annual table. Those IDs are also listed in the legacy/local `data/source_manifest.csv`. The complete executable pipeline inventory is `outputs/pipeline_report/data_source_inventory.csv`.
 - `*_status`: reported/missing status.
 
 ## `data/canonical/meta_prineville_source_vintages.csv`
@@ -177,7 +177,7 @@ Oregon DEQ electricity-supplier GHG for Pacific Power (PacifiCorp), 2010-2024. U
 High-confidence public events only. Event timing does not imply commissioning unless explicitly supported. DEQ matches are in `outputs/deq_campus_event_crosswalk.csv` only.
 
 ## `data/source_manifest.csv`
-Source registry. Every final result should be traceable to one or more `source_id` values.
+Legacy/local acquisition manifest (public URLs, roles, and manual-action flags). It is **not** the complete executable source inventory: several pipeline sources (CAMPD, EIA-860/923/cooling, DEQ, Crook County permits, and others) are used in code but omitted here. The complete executable inventory is `outputs/pipeline_report/data_source_inventory.csv` plus `src/pipeline_report_catalog.py::source_inventory()`. Lineage validation requires every source ID on registered source→quantity edges to exist in that executable inventory.
 
 ## USGS NWAA HUC12 water module
 
@@ -287,9 +287,13 @@ KRDM / Roberts Field (NCEI Global Hourly `72692024230`) 2011–2024 UTC hourly b
 
 KS39 / Prineville Airport MADIS METAR, one row per physical UTC hour of `timeObs`. Temperature/dewpoint/wind are means of QC-usable unique reports in the hour. `precip1Hour` is an overlapping 1-hour accumulation (meters in MADIS); the hourly value is the last usable report in the hour, converted to mm — reports are not summed. Station pressure is **derived** from altimeter setting (Pa) and station elevation using the ICAO standard atmosphere. MADIS QC fields remain on the raw report table.
 
+## `data/processed/weather_kbdn_hourly.csv`
+
+KBDN / Bend Municipal Airport (NCEI Global Hourly `72063800224`) hourly product after the same NCEI QC as KRDM. Used only as a tertiary gap-only fallback in the canonical mix; it does not replace KS39 or KRDM.
+
 ## `data/processed/weather_hourly.csv`
 
-Canonical model weather for Prineville local calendar years 2011–2024: `2011-01-01 00:00` local `<= timestamp_local < 2025-01-01 00:00` local. UTC remains the unique physical-hour key. Hierarchy: QC-usable KS39 observed (from 2015-09-01 local) > KRDM gap-fill > KRDM observed > missing. After final T/Td/pressure selection, RH and wet-bulb are **recomputed**. Row-level `pressure_method` is `ks39_altimeter_derived`, `krdm_slp_derived`, or `krdm_standard_atmosphere_fallback`. Reconstruction and water-context months use `year_local` / local month.
+Canonical model weather for Prineville local calendar years 2011–2024: `2011-01-01 00:00` local `<= timestamp_local < 2025-01-01 00:00` local. UTC remains the unique physical-hour key. Hierarchy: QC-usable KS39 observed (from 2015-09-01 local) > KRDM gap-fill > KRDM observed > protocol short-gap interpolation (`interpolated_short_gap`, ≤2 consecutive hours of the underlying primitive with finite bracketing observations) > KBDN NCEI tertiary gap-only fallback (`72063800224`) with monthly additive KRDM−KBDN bias > missing. After final T/Td/pressure selection, RH and wet-bulb are **recomputed**. Precipitation is never linearly interpolated. Row-level `pressure_method` is `ks39_altimeter_derived`, `krdm_slp_derived`, `krdm_standard_atmosphere_fallback`, `ks39_standard_atmosphere_fallback`, or `kbdn_slp_derived_krdm_elevation`. `weather_fill_method` / `resolution_method` retain interpolation vs station-fallback vs tertiary provenance; interpolated and tertiary hours are not labeled generic observed. Reconstruction and water-context months use `year_local` / local month. Required-driver resolution audit: `outputs/pipeline_report/weather_finite_driver_audit.csv`.
 
 Exact coverage: `outputs/ks39_coverage_monthly.csv`, `outputs/ks39_coverage_annual.csv`, `outputs/ks39_gap_summary.csv`. Overlap: `outputs/ks39_krdm_overlap_summary.csv`. Discovery sample rates in `madis_test/outputs/` are not exact completeness.
 

@@ -20,6 +20,13 @@ weather:
   station_lon_deg: -121.1406
   station_elevation_m: 929.0
   note: 'NCEI directory confirms 72692024230 exists in 2011 and 2024; use the same file ID for 2011-2024 and fail loudly if a year is absent.'
+  tertiary_station_name: Bend Municipal Airport
+  tertiary_icao: KBDN
+  tertiary_noaa_global_hourly_file_id: '72063800224'
+  tertiary_station_lat_deg: 44.095
+  tertiary_station_lon_deg: -121.200
+  tertiary_station_elevation_m: 1055.2
+  tertiary_role: 'gap-only observational fallback when KS39 and KRDM cannot supply QC-usable T/Td; not a replacement for the preferred stations'
 
 grid:
   utility_context: PacifiCorp / Pacific Power

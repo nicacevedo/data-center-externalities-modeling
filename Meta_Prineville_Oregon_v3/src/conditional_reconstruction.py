@@ -18,7 +18,7 @@ import math
 import numpy as np
 import pandas as pd
 
-from prineville_graybox import Params, simulate
+from prineville_graybox import Params, assert_finite_physical_outputs, assert_finite_weather, simulate
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGETS = ROOT / "data" / "canonical" / "meta_prineville_annual.csv"
@@ -81,6 +81,17 @@ def _scale_for_year(model: dict, year: int) -> float:
     return float(model["scale_pre"] if year < model["break_year"] else model["scale_post"])
 
 
+def _finite_sum(series, name: str, year: int) -> float:
+    arr = pd.to_numeric(series, errors="coerce").to_numpy(dtype=float)
+    n_bad = int((~np.isfinite(arr)).sum())
+    if n_bad:
+        raise ValueError(
+            f"Cannot annually aggregate {name} for {year}: {n_bad} non-finite values. "
+            "Missing hours are not skipped."
+        )
+    return float(np.sum(arr))
+
+
 def reconstruct(target_years=None, train_end_year: int = 2022, params: Params = Params()):
     if not WEATHER.exists():
         raise FileNotFoundError(
@@ -107,20 +118,22 @@ def reconstruct(target_years=None, train_end_year: int = 2022, params: Params = 
         coverage = len(wy) / expected
         if coverage < 0.98:
             raise ValueError(f"Weather coverage for {r.year} is only {coverage:.1%}; fill/flag gaps before reconstruction.")
+        assert_finite_weather(wy, year=int(r.year))
 
         # Facility MWh per 1 MW constant latent IT scale. The model is linear in IT power.
         unit = simulate(wy, 1.0, params=params)
-        fac_mwh_per_it_mw = unit.p_fac_mw.sum()
+        fac_mwh_per_it_mw = _finite_sum(unit.p_fac_mw, "p_fac_mw", int(r.year))
         p_it_scale = float(r.electricity_mwh_reported) / fac_mwh_per_it_mw
         hy = simulate(wy, p_it_scale, params=params)
+        assert_finite_physical_outputs(hy, year=int(r.year))
         hy["year"] = int(r.year)
         hy["electricity_closure_target_mwh"] = float(r.electricity_mwh_reported)
         hy["it_power_provenance"] = "fitted annual scale; NOT observed hourly IT telemetry"
         hourly_parts.append(hy)
 
-        e_it = float(hy.p_it_mw.sum())
-        e_fac = float(hy.p_fac_mw.sum())
-        water_raw = float(hy.evap_water_m3_per_h.sum())
+        e_it = _finite_sum(hy.p_it_mw, "p_it_mw", int(r.year))
+        e_fac = _finite_sum(hy.p_fac_mw, "p_fac_mw", int(r.year))
+        water_raw = _finite_sum(hy.evap_water_m3_per_h, "evap_water_m3_per_h", int(r.year))
         annual_rows.append({
             "year": int(r.year),
             "electricity_mwh_reported": float(r.electricity_mwh_reported),

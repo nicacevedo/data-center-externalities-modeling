@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -264,6 +265,98 @@ def test_not_necessary_is_distinct_from_missing_and_figure1_uses_both():
 
 
 def test_full_rebuilds_conditional_before_public_extensions():
+    src = (ROOT / "run_prineville.py").read_text(encoding="utf-8")
+    start = src.index("def full():")
+    end = src.index("\ndef ", start + 1)
+    body = src[start:end]
+    assert body.index("groundwater_context()") < body.index("groundwater_identifiability()")
+    assert body.index("groundwater_identifiability()") < body.index("conditional()")
+    assert body.index("conditional()") < body.index("public_extensions()")
+    assert body.index("public_extensions()") < body.index("simulate()")
+    assert body.index("simulate()") < body.index("report()")
+
+
+def test_catalog_does_not_hardcode_fitted_results():
+    text = (ROOT / "src" / "pipeline_report_catalog.py").read_text(encoding="utf-8")
+    for stale in (
+        "6.580050701752435",
+        "BIC=-15.38",
+        "+152.2%",
+        "+110.2%",
+        "0.3643056183103121",
+        "5.847440762862596",
+    ):
+        assert stale not in text, stale
+
+
+def test_result_claims_match_canonical_artifacts_if_present():
+    from pipeline_report_catalog import model_registry, parameter_registry, quantity_registry
+    from pipeline_report_results import apply_runtime_results, audit_report_consistency, load_result_claims
+
+    if not (REPORT / "water_holdout_baseline_compare.csv").exists():
+        return
+    claims = load_result_claims()
+    assert claims["claim_id"].is_unique
+    wm = pd.read_csv(ROOT / "outputs" / "conditional_water_model.csv").iloc[0]
+    cmap = dict(zip(claims.claim_id, claims.value))
+    assert abs(float(cmap["cond_water_scale"]) - float(wm["scale"])) < 1e-12
+    assert abs(float(cmap["cond_water_bic"]) - float(wm["bic"])) < 1e-12
+    annual = pd.read_csv(ROOT / "outputs" / "conditional_annual_compare.csv")
+    hold = annual[annual.split.eq("holdout")]
+    assert abs(float(cmap["cond_holdout_pct_error_2023"]) - float(hold.loc[hold.year.eq(2023), "water_pct_error"].iloc[0])) < 1e-12
+    assert abs(float(cmap["cond_holdout_pct_error_2024"]) - float(hold.loc[hold.year.eq(2024), "water_pct_error"].iloc[0])) < 1e-12
+    q, m, p = apply_runtime_results(quantity_registry(), model_registry(), parameter_registry(), claims)
+    audit_report_consistency(pd.DataFrame(q), pd.DataFrame(m), pd.DataFrame(p), claims)
+    qty_path = REPORT / "model_quantity_registry.csv"
+    claims_path = REPORT / "result_claims.csv"
+    if qty_path.exists() and claims_path.exists():
+        audit_report_consistency(
+            pd.read_csv(qty_path),
+            pd.read_csv(REPORT / "model_registry.csv"),
+            pd.read_csv(REPORT / "model_parameter_registry.csv"),
+            pd.read_csv(claims_path, dtype=str),
+        )
+
+
+def test_markdown_report_uses_live_result_claims_if_built():
+    from pipeline_report_results import load_result_claims
+
+    claims_path = REPORT / "result_claims.csv"
+    if not claims_path.exists():
+        if not (REPORT / "water_holdout_baseline_compare.csv").exists():
+            return
+        claims = load_result_claims()
+    else:
+        claims = pd.read_csv(claims_path, dtype=str)
+    md = ROOT / "docs" / "PIPELINE_DATA_MODEL_REPORT.md"
+    if not md.exists():
+        return
+    text = md.read_text(encoding="utf-8")
+    cmap = dict(zip(claims.claim_id, claims.value))
+    scale = f"{float(cmap['cond_water_scale']):.6f}"
+    assert scale in text
+    assert "not validated predictors" in text.lower() or "not a validated predictor" in text.lower()
+    assert "pipeline_result_macros.tex" not in text
+
+
+def test_consistency_audit_fails_on_deliberate_disagreement():
+    from pipeline_report_results import apply_runtime_results, audit_report_consistency, load_result_claims
+    from pipeline_report_catalog import model_registry, parameter_registry, quantity_registry
+
+    if not (REPORT / "water_holdout_baseline_compare.csv").exists():
+        return
+    claims = load_result_claims()
+    q, m, p = apply_runtime_results(quantity_registry(), model_registry(), parameter_registry(), claims)
+    qdf = pd.DataFrame(q)
+    mdf = pd.DataFrame(m)
+    pdf = pd.DataFrame(p)
+    pdf.loc[
+        pdf.model_id.eq("M_WATER_SCALE_GLOBAL") & pdf.parameter.eq("water_scale"),
+        "value",
+    ] = "0.0"
+    with pytest.raises(AssertionError, match="Report consistency audit FAILED"):
+        audit_report_consistency(qdf, mdf, pdf, claims)
+
     src = (ROOT / "run_prineville.py").read_text(encoding="utf-8")
     start = src.index("def full():")
     end = src.index("\ndef ", start + 1)

@@ -1,0 +1,16 @@
+# Direct dependencies from requirements.txt, pinned to the versions
+# used for the validated Python 3.11.15 run in conda env dc_externalities
+# with PYTHONNOUSERSITE=1. Install with:
+#   pip install -r requirements-lock.txt
+pandas==3.0.5
+numpy==2.4.6
+scipy==1.17.1
+requests==2.34.2
+PyYAML==6.0.3
+psychrolib==2.5.0
+matplotlib==3.11.1
+openpyxl==3.1.5
+xlrd==2.0.2
+python-calamine==0.8.2
+PyMuPDF==1.28.2
+netCDF4==1.7.4

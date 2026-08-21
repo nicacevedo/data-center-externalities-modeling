@@ -1,0 +1,25 @@
+check,status,detail
+claim_ids_unique,PASS,n=26
+cond_scale_matches_artifact,PASS,claim=8.24650287088067 artifact=8.246502870880668
+cond_kind_matches_artifact,PASS,claim=global artifact=global
+cond_bic_matches_artifact,PASS,claim=-11.428320270192 artifact=-11.428320270191978
+cond_holdout_2023_matches_artifact,PASS,claim=126.721417605438 artifact=126.72141760543798
+cond_holdout_2024_matches_artifact,PASS,claim=100.800831240036 artifact=100.80083124003647
+cond_holdout_mape_matches_artifact,PASS,claim=113.761124422737 artifact=113.76112442273723
+selected_candidate_matches_diagnostics,PASS,claim=energy_null artifact=energy_null
+selected_beta_matches_diagnostics,PASS,claim=0.364305618310312 artifact=0.36430561831031194
+selected_rolling_mape_matches_diagnostics,PASS,claim=34.2483644988005 artifact=34.2483644988005
+cond_mape_matches_baseline_table,PASS,cond_holdout_mape=113.761124422737 baseline=113.761124422737
+training_mean_holdout_mape_matches_baseline,PASS,claim=24.4932371567615 artifact=24.49323715676152
+ensemble_mape_matches_baseline_table,PASS,stoch=100.10919343115 baseline=100.10919343115
+quantity_registry_scale,PASS,"global scale 8.24650287088067 (train through 2022); one-break not selected. Scale is an empirical mapping from raw evaporation to the withdrawal accounting boundary, not a physical cooling multiplier."
+quantity_registry_holdout_2023,PASS,"water_pct_error in conditional_annual_compare.csv; holdout 2023 +126.7%, 2024 +100.8%; holdout MAPE 113.8%"
+quantity_registry_holdout_2024,PASS,"water_pct_error in conditional_annual_compare.csv; holdout 2023 +126.7%, 2024 +100.8%; holdout MAPE 113.8%"
+model_registry_scale,PASS,"s_hat = 8.24650287088067 from outputs/conditional_water_model.csv; empirical withdrawal-boundary mapping, not a physical cooling multiplier"
+model_registry_bic,PASS,"BIC vs one-break; require BIC improvement > 2 to prefer one-break. Current selection: global, BIC=-11.43"
+model_registry_selected_name,PASS,Annual water selected mechanistic candidate: energy-only
+model_registry_selected_beta,PASS,β_E = 0.364305618310312 m³/MWh in current diagnostics
+model_registry_selected_rolling,PASS,Selected mechanistic candidate among pre-registered energy/evaporation candidates (not a claim of best overall predictor). Expanding-window train MAPE 34.25%; frozen-NNLS holdout MAPE 135.2%. Frozen training-mean baseline holdout MAPE 24.5%
+model_registry_selected_holdout,PASS,Selected mechanistic candidate among pre-registered energy/evaporation candidates (not a claim of best overall predictor). Expanding-window train MAPE 34.25%; frozen-NNLS holdout MAPE 135.2%. Frozen training-mean baseline holdout MAPE 24.5%
+parameter_registry_scale,PASS,param=8.24650287088067 claim=8.24650287088067
+parameter_registry_beta,PASS,param=0.364305618310312 claim=0.364305618310312

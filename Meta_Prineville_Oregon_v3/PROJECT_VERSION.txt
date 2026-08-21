@@ -16,3 +16,4 @@ Key changes:
 - canonical PACW EIA-930 history is data/raw/eia930/historical/PACW.xlsx; API is overlap/update only
 - EPA eGRID NWPP output rates × Meta campus MWh; ZIP 97754 → NWPP
 - working env for this freeze: conda env dc_externalities with PYTHONNOUSERSITE=1
+- tested Python: 3.11.15; direct-dependency lock: requirements-lock.txt

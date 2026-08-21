@@ -13,12 +13,13 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from download_madis_ks39 import hour_key, hours_to_fetch  # noqa: E402
 from madis_qc import QCR_VALIDITY, model_usable_scalar  # noqa: E402
-from prepare_weather import ncei_qc_usable, rh_from_t_td, wetbulb  # noqa: E402
+from prepare_weather import ncei_qc_usable, rh_from_t_td, short_gap_interpolated, wetbulb  # noqa: E402
 from prepare_weather_ks39 import (  # noqa: E402
     LOCAL_END_EXCLUSIVE,
     LOCAL_START,
     SWITCH_LOCAL,
     TZ_LOCAL,
+    apply_tertiary_gapfill,
     canonical_utc_index,
     station_pressure_from_altimeter_pa,
 )
@@ -138,6 +139,9 @@ def test_canonical_rh_twb_recomputed_from_final_t_td_pressure():
     ks_p = both[both["pressure_method"].eq("ks39_altimeter_derived")]
     if len(ks_p):
         parts.append(ks_p.head(25))
+    kbdn = both[both["weather_source"].eq("KBDN")] if "weather_source" in both.columns else both.iloc[0:0]
+    if len(kbdn):
+        parts.append(kbdn)
     sample = pd.concat(parts).drop_duplicates()
     for _, r in sample.iterrows():
         rh = rh_from_t_td(r.t_db_C, r.t_dew_C)
@@ -155,6 +159,8 @@ def test_pressure_method_not_mislabeled():
         "ks39_altimeter_derived",
         "krdm_slp_derived",
         "krdm_standard_atmosphere_fallback",
+        "ks39_standard_atmosphere_fallback",
+        "kbdn_slp_derived_krdm_elevation",
         "",
     }
     methods = w["pressure_method"].fillna("").astype(str)
@@ -261,10 +267,15 @@ def test_canonical_pre2015_is_krdm_and_august_2015_not_intermittent_ks39():
     w["timestamp_utc"] = pd.to_datetime(w["timestamp_utc"], utc=True)
     w["timestamp_local"] = w["timestamp_utc"].dt.tz_convert(TZ_LOCAL)
     pre = w[w.timestamp_local < SWITCH_LOCAL]
-    assert (pre.weather_source == "KRDM").all()
+    assert pre.weather_source.isin(["KRDM", "KBDN"]).all()
+    kbdn_pre = pre[pre.weather_source.eq("KBDN")]
+    if len(kbdn_pre):
+        assert (kbdn_pre.weather_method == "kbdn_tertiary_gapfill").all()
+        assert (kbdn_pre.weather_observed == "no").all()
     aug = w[(w.timestamp_local.dt.year == 2015) & (w.timestamp_local.dt.month == 8)]
     if "weather_source" in aug:
-        assert (aug.weather_source == "KRDM").all()
+        assert aug.weather_source.isin(["KRDM", "KBDN"]).all()
+        assert (~aug.weather_source.eq("KS39")).all()
 
 
 def test_electricity_closure_preserved():
@@ -274,3 +285,125 @@ def test_electricity_closure_preserved():
     a = pd.read_csv(path)
     resid = (a.electricity_mwh_model_closure - a.electricity_mwh_reported).abs()
     assert resid.max() < 1e-6
+
+
+def test_short_gap_interpolation_requires_brackets_and_does_not_fill_long_gaps():
+    s = pd.Series([1.0, np.nan, 3.0, np.nan, np.nan, np.nan, 7.0, np.nan, 9.0])
+    y, filled = short_gap_interpolated(s)
+    assert bool(filled.iloc[1])
+    assert abs(float(y.iloc[1]) - 2.0) < 1e-12
+    assert not bool(filled.iloc[3])
+    assert not bool(filled.iloc[4])
+    assert not bool(filled.iloc[5])
+    assert not np.isfinite(y.iloc[3])
+    assert not np.isfinite(y.iloc[4])
+    assert not np.isfinite(y.iloc[5])
+    assert bool(filled.iloc[7])
+    assert abs(float(y.iloc[7]) - 8.0) < 1e-12
+    edge = pd.Series([np.nan, 1.0, np.nan])
+    y2, filled2 = short_gap_interpolated(edge)
+    assert not bool(filled2.iloc[0])
+    assert not bool(filled2.iloc[2])
+
+
+def test_model_period_required_weather_drivers_are_finite():
+    path = ROOT / "data" / "processed" / "weather_hourly.csv"
+    if not path.exists():
+        return
+    w = pd.read_csv(path)
+    for col in ("t_db_C", "t_wb_C", "rh_pct", "pressure_Pa"):
+        x = pd.to_numeric(w[col], errors="coerce").to_numpy(dtype=float)
+        assert np.isfinite(x).all(), f"{col} has {int((~np.isfinite(x)).sum())} non-finite hours"
+    if "year_local" in w.columns:
+        years = set(pd.to_numeric(w["year_local"], errors="coerce").astype(int).unique())
+        assert years == set(range(2011, 2025))
+
+
+def test_weather_audit_has_zero_unresolved_required_driver_rows():
+    path = ROOT / "outputs" / "pipeline_report" / "weather_finite_driver_audit.csv"
+    wx = ROOT / "data" / "processed" / "weather_hourly.csv"
+    if not path.exists() or not wx.exists():
+        return
+    a = pd.read_csv(path)
+    if a.empty:
+        w = pd.read_csv(wx)
+        for col in ("t_db_C", "t_wb_C", "rh_pct", "pressure_Pa"):
+            assert np.isfinite(pd.to_numeric(w[col], errors="coerce").to_numpy(dtype=float)).all()
+        return
+    if "post_resolution_finite" in a.columns:
+        n_unresolved = int(pd.to_numeric(a["post_resolution_finite"], errors="coerce").fillna(1).eq(0).sum())
+        assert n_unresolved == 0
+    if "gap_class" in a.columns and "resolution_method" in a.columns:
+        long_interp = a[
+            a["gap_class"].astype(str).eq("long_gap")
+            & a["resolution_method"].astype(str).str.fullmatch("interpolated_short_gap")
+        ]
+        assert long_interp.empty
+    if "short_gap_variable_specific_ok" in a.columns:
+        interp = a[a["resolution_method"].astype(str).str.contains("interpolated_short_gap")]
+        if len(interp):
+            assert pd.to_numeric(interp["short_gap_variable_specific_ok"], errors="coerce").fillna(0).eq(1).all()
+
+
+def test_secondary_station_substitution_retains_provenance():
+    path = ROOT / "data" / "processed" / "weather_hourly.csv"
+    if not path.exists() or "weather_method" not in pd.read_csv(path, nrows=1).columns:
+        return
+    w = pd.read_csv(path)
+    gap = w[w["weather_method"].astype(str).eq("krdm_gapfill")]
+    if len(gap):
+        assert (gap["weather_source"] == "KRDM").all()
+        assert gap["provenance"].astype(str).str.contains("krdm_gapfill").all()
+        assert not gap["provenance"].astype(str).str.fullmatch("observed").any()
+    interp = w[w["weather_method"].astype(str).eq("interpolated_short_gap")] if "weather_method" in w.columns else w.iloc[0:0]
+    if len(interp):
+        assert interp["provenance"].astype(str).str.contains("interpolated_short_gap").all()
+        assert (interp["weather_observed"] == "no").all()
+        assert not interp["provenance"].astype(str).str.contains(r"^observed$").any()
+
+
+def test_tertiary_gapfill_does_not_overwrite_finite_hierarchy_values():
+    t = np.array([10.0, np.nan, 12.0], dtype=float)
+    td = np.array([1.0, np.nan, 2.0], dtype=float)
+    p = np.array([90000.0, np.nan, 91000.0], dtype=float)
+    pm = np.array(["krdm_slp_derived", "", "krdm_slp_derived"], dtype=object)
+    ter_t = np.array([99.0, 11.0, 99.0], dtype=float)
+    ter_td = np.array([99.0, 1.5, 99.0], dtype=float)
+    ter_slp = np.array([np.nan, 1013.0, np.nan], dtype=float)
+    month = np.array([5, 5, 5], dtype=int)
+    t2, td2, p2, pm2, used, take_t, take_td, use_p = apply_tertiary_gapfill(
+        t, td, p, pm, ter_t, ter_td, ter_slp, month, {5: 0.0}, {5: 0.0}, 929.0
+    )
+    assert abs(t2[0] - 10.0) < 1e-12
+    assert abs(t2[2] - 12.0) < 1e-12
+    assert abs(t2[1] - 11.0) < 1e-12
+    assert abs(td2[1] - 1.5) < 1e-12
+    assert bool(used[1]) and (not bool(used[0])) and (not bool(used[2]))
+    assert bool(take_t[1]) and bool(take_td[1])
+    assert bool(use_p[1])
+    assert pm2[1] == "kbdn_slp_derived_krdm_elevation"
+
+
+def test_tertiary_used_only_where_hierarchy_missing_and_retains_provenance():
+    path = ROOT / "data" / "processed" / "weather_hourly.csv"
+    if not path.exists() or "weather_source" not in pd.read_csv(path, nrows=1).columns:
+        return
+    w = pd.read_csv(path)
+    ter = w[w["weather_source"].astype(str).eq("KBDN")]
+    if not len(ter):
+        return
+    assert (ter["weather_method"] == "kbdn_tertiary_gapfill").all()
+    assert ter["provenance"].astype(str).str.contains("kbdn_tertiary_gapfill").all()
+    assert (ter["weather_observed"] == "no").all()
+    if "required_driver_pre_fill_nonfinite" in ter.columns:
+        assert pd.to_numeric(ter["required_driver_pre_fill_nonfinite"], errors="coerce").eq(1).all()
+    ks = w[w["weather_method"].astype(str).eq("ks39_valid_observed")]
+    if len(ks):
+        assert (~ks["weather_source"].eq("KBDN")).all()
+    for _, r in ter.iterrows():
+        rh = rh_from_t_td(r.t_db_C, r.t_dew_C)
+        tw = wetbulb(r.t_db_C, r.t_dew_C, r.pressure_Pa, rh)
+        assert abs(rh - r.rh_pct) < 1e-9
+        assert abs(tw - r.t_wb_C) < 1e-9
+
+
