@@ -1,0 +1,1028 @@
+Statistical analysis for predicting location-speci ﬁc data center PUE and
+its improvement potential
+Nuoa Leia,*, Eric Masaneta,b,c
+aDepartment of Mechanical Engineering, Northwestern University, Evanston, IL, USA
+bDepartment of Chemical and Biological Engineering, Northwestern University, Evanston, IL, USA
+cBren School of Environmental Science and Management, University of California, Santa Barbara, CA, USA
+article info
+Article history:
+Received 28 October 2019
+Received in revised form
+27 February 2020Accepted 4 April 2020Available online 13 April 2020
+Keywords:
+Data centersPower usage effectiveness (PUE)Energy systems analysisSensitivity analysisPrediction under uncertaintyabstract
+This paper presents a statistical framework for predictive analysis of data center power usage effec-
+tiveness (PUE), with a focus on hyperscale data centers (HDCs). Thermodynamics-based PUE models
+considering representative economizer choices are proposed, taking climate variables and energy system
+parameters as inputs for robust PUE predictions. Sobol ’s method is used to assess total order sensitivity
+indices of key modeling parameters, suggesting that climate variables and uninterruptible power supply
+(UPS) ef ﬁciencies are the most important parameters. The PUE values of 17 HDCs operated by Google and
+Facebook were predicted, considering location-speci ﬁc weather conditions, and uncertainties in energy
+system parameters and economizer choices. Results were veri ﬁed using reported PUE values, indicating
+the model ’s effectiveness in capturing regional and seasonal PUE variations, and in generating point-
+estimations for macro-level data center (DC) energy models. Finally, achievable PUE values werecomputed through differential evolution, identifying minimum practical PUE values that could be ob-tained with state-of-the-art technologies. The framework can be applied in predictions of location-
+speci ﬁc PUE values, PUE improvement analysis, and PUE target-setting by policy makers.
+©2020 Elsevier Ltd. All rights reserved.
+1. Introduction
+As demand for data center (DC) services grows rapidly, so too
+has interest in modeling DC energy use at both national [ 1,2] and
+global [ 3e5] levels. Such models are useful for understanding the
+scale and drivers of DC energy use and for providing visibility to
+energy planners on potential technology and policy interventions
+for improving DC energy ef ﬁciency moving forward [ 1,2].
+Recent modeling results suggest that, despite rapid growth in
+demand for DC services, the worldwide energy use of DCs has
+grown by only around 6% since 2010 [ 5]. This decoupling of DC
+energy use and demand for services [ 6] is partly explained by
+steady improvements to the energy ef ﬁciency and operations of DC
+information technology (IT) hardware (notably servers).
+It is also partly explained by the so-called “hyperscale shift ”,
+which describes the increasing share of global DC operations
+concentrated in large, ultra-ef ﬁcient hyperscale data centers
+(HDCs). For example, Cisco estimates that the share of globalservers located in HDCs will rise from 27% in 2016 to over 53% in
+2021 [ 7], representing a dramatic shift in global DC structure. The
+efﬁciency of HDCs is partly explained by their use of ef ﬁcient power
+provision and cooling equipment con ﬁgurations and controls, as
+well as favorable siting that enables the use of so-called “free
+cooling ”.
+These practices are re ﬂected in low PUE values associated with
+HDCs, where PUE is de ﬁned as total DC energy use divided by IT
+energy use [ 8]. Understanding the future of global DC energy use
+therefore requires an understanding of HDC energy use; it follows
+that energy models that can accurately assess the PUE of HDCs may
+be particularly useful.
+Yet in prevailing DC energy models, PUE is typically modelled
+simplistically [ 1e4]. Namely, PUE values are often based on a
+limited number of values reported by various DC operators and
+industry surveys [ 9]. Such an approach is inadequate for under-
+standing the future energy use trends of HDCs, since: (1) it is
+retrospective in nature and not suitable for projections; (2) it
+cannot explain the underlying factors that determine PUE (e.g.,
+installed equipment and operational decisions) that might be tar-gets of technology and policy interventions; and (3) it cannot
+*Corresponding author.
+E-mail address: nuoalei2021@u.northwestern.edu (N. Lei).
+Contents lists available at ScienceDirect
+Energy
+journal homepage: www.elsevier.com /locate/energy
+https://doi.org/10.1016/j.energy.2020.117556
+0360-5442/ ©2020 Elsevier Ltd. All rights reserved.Energy 201 (2020) 117556
+consider plausible “what if ”questions, such as the case when HDCs
+continue to proliferate and move to locations with less idea “free
+cooling ”conditions, or the case of a warming world where “free
+cooling ”may be less reliable.
+This paper proposes a modeling approach for predictive PUE
+analysis based on thermodynamic models, several of which have
+been reported in the literature [ 10e14]. We examine the speci ﬁc
+case of HDCs, given their importance for global energy use moving
+forward and the availability of suf ﬁcient equipment, locational, and
+reported PUE data necessary for model validation. We conduct
+sensitivity analysis to identify the most important PUE modeling
+parameters for improving model accuracy and which should be
+targeted in future data collection efforts, followed by a robust un-
+certainty analysis to establish plausible uncertainty ranges for use
+in such models moving forward. Finally, we perform analyses of
+practical minimum PUE values that may be achieved, which en-
+ables policy makers to set PUE targets for incentives or standards.
+As such, this paper seeks to ﬁll important knowledge gaps related
+to the use of physics-based PUE models coupled with statistical
+methods in forward-looking analyses of DC energy use.
+2. Previous work
+Several previous studies have focused on free cooling technol-
+ogies, using PUE as a metric for DC energy savings [ 10,11,14e18].
+The most comprehensive study was by Gozcü et al. [ 10], which
+applied a thermodynamic model using constant model inputs (e.g.
+fan power and air ﬂowrate) to estimate PUE and to compare
+different free cooling methods in 19 cities. Although the previous
+studies used thermodynamic models to calculate PUE values, their
+purpose was to compare theoretical PUE reductions under different
+free cooling assumptions using simpli ﬁed calculations, as opposed
+to validating a generalizable model against real-world PUE data.
+However, the latter is necessary for predicting PUE values in macro-
+level energy studies and to location-speci ﬁc policy decisions [ 19].
+Only two previous studies provided both PUE prediction and
+model validation [ 12,20]. Gao [ 20] developed a 5 hidden layer
+neural network to predict the PUE of a single Google DC and ach-
+ieved a mean absolute error of 0.004. However, a signi ﬁcant
+amount of non-public data is required to train such neural network
+models (e.g., 2 years of operational data was used in Gao ’s
+research), which poses a barrier to broader use by the energy
+modeling community, whereas the results of a model trained to a
+speci ﬁc DC are dif ﬁcult to generalize to other DCs. Brady et al. [ 12]
+carried out a thermodynamic modeling case study to calculate the
+PUE of one Facebook HDC in Prineville, Oregon, with high accuracy.
+However, this work was limited to airside economizers at a single
+DC; its accuracy was not evaluated for other DCs using airsideeconomizers and it did not address waterside economizers. While
+both studies performed sensitivity analysis, a one-factor-at-a-time
+approach was used, which can neither assess the relative impor-
+tance of parameters nor consider important variable interaction
+effects.
+This paper helps to ﬁll the aforementioned knowledge gaps by
+presenting a statistical framework for predictive analysis of HDC
+PUE values based on thermodynamics-based models, which further
+incorporates sensitivity analysis and assessment of location-
+speci ﬁc practical minimum PUE values. It differs from previous
+studies in several ways. First, our predictive PUE modeling includes
+dynamic interrelationships between key system parameters, for
+example, how supply water temperature changes with heat
+exchanger ef ﬁciency and differences in supply/return air temper-
+ature, for more accurate system simulations. Second, we perform a
+global sensitivity analysis that considers variable interaction ef-
+fects, which identi ﬁes the most important parameters for reducingmodeling uncertainty. To the best of our knowledge, no previous
+global sensitivity analyses of HDC PUE models have appeared in the
+literature. Third, location-speci ﬁc PUE values were predicted under
+uncertainty and validated using reported PUE data from 17 HDCs
+operated by Facebook and Google. Such a multi-location model
+validation has not appeared in the literature. Fourth, our model
+framework provides a way to quantify the uncertainty in PUE
+predictions in light of variance in weather conditions and DC sys-
+tem parameters. Finally, we identi ﬁed practical minimum PUE
+values under different weather conditions considering state-of-
+the-art technologies, which can enable setting of PUE targets
+[21,22].
+3. Research methodology
+Fig. 1 depicts our research methodology, which consists of four
+key components.
+First, generalized thermodynamics-based PUE models repre-
+senting typical HDC infrastructure systems were built to serve the
+statistical analyses. Second, variance-based sensitivity analysis
+(Sobol ’s method) was adopted to identify the most in ﬂuential pa-
+rameters for HDC PUE through quantitative parameter ranking.
+Third, uncertainty quanti ﬁcations of quarterly and yearly PUE
+values were performed and compared with the reported values
+from actual HDCs to validate the proposed PUE models. Fourth,
+achievable PUE values based on state-of-the-art DC energy system
+parameters under different weather conditions were computed
+using the differential evolution optimization method.
+3.1. PUE models
+We constructed thermodynamics-based PUE models for typical
+HDC infrastructures, which are based on frameworks that have
+demonstrated utility in the past [ 10e14].Fig. 2 depicts the cooling
+and power provision systems options available to a typical HDC,
+upon which the PUE simulations in this paper were based. Three
+most common free cooling methods used by HDCs were consid-
+ered: (1) airside economizers combined with adiabatic cooling (AE)
+[23e25]; (2) waterside economizers that utilize the evaporative
+cooling capability of cooling towers (WEC) [ 25e27]; and (3)
+waterside economizers that utilize seawater for cooling (WES)
+[28,29]. HDCs typically apply one of these free cooling technologies,
+and when the chosen economizer cannot provide adequate cooling,
+a mechanical chiller is used to maintain an acceptable DC indoor
+thermal environment [ 30]. The basic features of the PUE models are
+discussed below. Further details and a link to the modeling code (in
+Python) can be found in the supplementary information (SI) ﬁle.
+The PUE models consider all heat generation sources and power
+consuming components in a DC. Total heat generation and DC po-
+wer use are expressed by Eq. (1)and Eq. (2)1:
+QDC¼pITþ/C16
+1/C0hUPS/C17
+pUPSþaPDpPDþpL(1)
+pDC¼pITþ/C16
+1/C0hUPS/C17
+pUPSþaPDpPDþpLþX
+fpFAN
+fþX
+ppPUMP
+p
+þpCH
+(2)
+Given outside climate conditions and a speci ﬁed indoor thermal
+environment, the PUE models determine the economizer usage
+1A list of symbols and acronyms is provided at the end of this paper.N. Lei, E. Masanet / Energy 201 (2020) 117556 2
+scenario and the amount of additional mechanical cooling that may
+be required. The AE usage scenario is determined by the enthalpy
+difference of the supply air and outside air, where outside air pre-
+humidi ﬁcation is applied to take advantage of adiabatic cooling
+[31,32], but the state of the pre-humidi ﬁed air has to be constrained
+by supply air set points.
+The WEC and WES economizer usage scenarios are determined
+by comparing the water temperature that could be delivered by the
+economizer heat exchanger ( TWEC orTWES) and the return facility
+water temperature ðTrwÞ, where the return facility water temper-
+ature is used here for a partial economizer use control strategy
+[13,33]. For HDCs that use waterside economizers, the supply fa-
+cility water temperature ðTsw;/C14CÞis set according to the dynami-
+cally changing computer room air conditioning (CRAC) supply and
+return air temperature, described by Eq. (3):
+Tsw¼Tra/C0ðTra/C0TsaÞ=ε¼Tra/C0DTair=ε (3)
+The return facility water temperature ðTrw;/C14CÞis calculated us-
+ing the temperature difference ( DT) between the supply and return
+facility water ðDTw;/C14CÞ, whereas the water temperatures that couldbe delivered by the WEC and WES economizer heat exchangers are
+calculated by Eq. (4)and Eq. (5)in the PUE models:
+TWEC¼TwbþATCTþATEX (4)
+TWES¼TseaþATEX (5)
+The equipment power consumption parameters in Eq. (2)were
+calculated based on the related energy and/or mass ﬂows across
+that equipment, together with the associated equipment parame-
+ters (fan/pump pressure and ef ﬁciency, chiller ef ﬁciencies at
+different load factors, cooling tower liquid-gas ratio, etc.). The en-
+ergy ﬂows in the three different PUE models are governed by the
+quantities of free cooling supplied by the chosen economizer, me-
+chanical cooling supplied by the chiller, and the total heat gener-
+ated within the HDC, described by Eqs. (6)e(8):
+QDC¼QAEþQCH(6)
+or
+Fig. 1. Flowchart of research design and methodology.N. Lei, E. Masanet / Energy 201 (2020) 117556 3
+QDC¼QWECþQCH(7)
+or
+QDC¼QWESþQCH(8)
+The resulting PUE can be calculated by:
+PUE¼pDC.
+pIT(9)
+3.2. PUE model input ranges
+The PUE models require two major categories of inputs: climate
+parameters and HDC energy system parameters. The latter category
+includes equipment speci ﬁcations, system operational ef ﬁciency
+parameters, and indoor environment set points.
+Climate parameters include outdoor dry bulb temperature and
+relative humidity in the AE and WEC models, and seawater tem-
+perature in the WES model. Variations in climate parameters
+greatly impact energy demand due to their in ﬂuences on the
+model ’s chosen economizer use scenario and chiller ef ﬁciency [ 34].
+To quantify these variations for the purpose of sensitivity analysis
+[35], ranges were chosen as follows: taking into account regional
+and seasonal variations, ranges for outdoor dry bulb temperature,
+outdoor relative humidity, and seawater temperature were set at /C0
+10 to 40/C14C, 0 to 100%, and /C02t o3 6/C14C[36,37], respectively. Uniform
+probability distributions were chosen for each range [ 38].Energy system parameters include uninterruptible power sup-
+ply (UPS) ef ﬁciency, percentage of power loss in power trans-
+formation and distribution systems, lighting power to IT power
+ratio, supply air set points (dry bulb, dew point, and relative hu-
+midity), DTof supply and return ﬂuids in air and water systems,
+pressure heads and ef ﬁciencies of fans and pumps, approach tem-
+peratures of cooling towers and economizer heat exchangers, heat
+exchanger effectiveness of CRAC cooling coils, liquid-gas ratio of
+cooling towers, sensible heat ratio in HDC, and chiller ef ﬁciency.
+Ranges for these parameters were determined based on publicly-
+available HDC information and engineering estimates ( Appendix
+A,Table A.1 ).
+The chiller ef ﬁciency, represented as coef ﬁcient of performance
+(COP), is modelled as a function of entering condenser water
+temperature and partial load factor using regression analysis (SI Eq.
+(S1)).
+3.3. Sensitivity analysis
+Sensitivity analysis was used to identify the most important
+input parameters that affect the resulting PUE values, enabling
+greater focus on the few parameters for which accurate input data
+are most important. Variance-based sensitivity analysis was
+employed, using Sobol ’s method, which is a global and model in-
+dependent sensitivity approach to decompose the uncertainty of
+model outputs attributed to speci ﬁc model inputs [ 39]. Global
+sensitivity analysis is more robust than local sensitivity analysis,
+because the former considers parameter interactions whereas the
+latter can only evaluate changes to single variables [ 35]. The
+Fig. 2. Energy system diagrams for HDCs with AE/WEC/WES.N. Lei, E. Masanet / Energy 201 (2020) 117556 4
+associated sensitivity evaluations (i.e. quantitative parameter
+ranking) are expressed by Sobol ’sﬁrst order ðSiÞ, second order ðSijÞ,
+and total order ðSTiÞsensitivity indices [ 40], which are brie ﬂy
+introduced in the SI.
+Section (2) of Fig. 1 shows the steps for implementing Sobol ’s
+method: generate sample vectors from the ranges and distributions
+of climate and energy system parameters ( Appendix A ,Table A.1 );
+run the sample vectors through the PUE model; calculate Sobol ’s
+sensitivity indices and analyze the sensitivity results. Furthermore,
+to assess the accuracy of the sensitivity results, the bootstrap
+method (with 100 times of sampling with replacement) was used
+to compute 95% con ﬁdence intervals for the sensitivity indices [ 41].
+3.4. PUE uncertainty quanti ﬁcation and model validation
+Given variabilities in climate and energy system parameters for
+HDCs, a non-intrusive uncertainty quanti ﬁcation approach [ 42]w a s
+employed to assess con ﬁdence in the outputs of the PUE models.
+Predicted PUE results were then compared with reported PUE
+values from 17 different HDCs operated by Facebook and Google to
+assess PUE model accuracy. Facebook and Google HDCs were cho-
+sen because they offer the only publicly-available PUE values with
+temporal and spatial resolution [ 43,44], and for which key technical
+information is available (SI, Table S1 ).
+To reduce parameter uncertainties, conclusions from the
+sensitivity results were applied. The sensitivity results suggest
+climate parameters and UPS ef ﬁciency are the most important in-
+puts for accurate PUE estimation ( Fig. 3 ). Therefore, location-
+speci ﬁc climate data should be used to reduce uncertainty. As for
+the UPS ef ﬁciency, its uncertainty range used in the sensitivity
+analysis corresponds to all possible values in HDCs and needs to be
+reﬁned to a narrower range representing individual cases for more
+accurate PUE estimation. The UPS ef ﬁciency range was set at 96% e
+99% for Google ’s HDCs based on data derived from Ref. [ 45,46]. The
+UPS ef ﬁciency range for Facebook ’s HDCs could not be established
+using publicly-available data. The assumed uncertainty ranges for
+other model inputs are summarized in Appendix A ,Table A.1 . The
+uncertainty in PUE model selection (e.g. AE vs. WEC) could be
+eliminated if information about economizer use has been released
+by the HDC. If the economizer information for a speci ﬁc HDC is not
+available, the uncertainty quanti ﬁcation process needs to be treated
+as running a hierarchical model that contains each uncertain PUE
+model as its sub-model, and equal probabilities are assigned to run
+each sub-model. In this case, the uncertainty of the model result
+increases due to uncertainty in HDC ’s actual economizer choice.
+Our uncertainty quanti ﬁcation and model validation process is
+summarized in Section (3) of Fig. 1 :r eﬁne energy systemparameters for individual HDCs based on available information and
+sensitivity results to reduce data uncertainties; determine whether
+economizer information is available or a hierarchical model
+approach should be used to include the uncertainty of economizer
+choice; gather location-speci ﬁc weather data with hourly resolu-
+tion for individual HDCs; draw samples from energy system pa-
+rameters and probabilistic distributions of hourly weather data and
+combine them as input vectors (sample vector generation scheme
+documented in the SI); run the sample vectors through the PUE
+model developed in section 3.1; compute statistical metrics of
+model outputs (i.e., mean, variance, and prediction intervals);
+compare the predicted and reported PUE values for model
+validation.
+3.5. Achievable PUE analysis
+Reductions in PUE have long been an ef ﬁciency goal of DC op-
+erators [ 47]. We de ﬁne achievable PUE as the practical minimum
+PUE value that can be attained within a given set of climate con-
+ditions and using state-of-the-art technologies. Identi ﬁcation of
+achievable PUE values enables DC operators and policy makers to
+understand available ef ﬁciency potentials and to set PUE targets on
+a location-speci ﬁc basis [ 21,22].
+We estimate the achievable PUE of HDCs using a given type of
+economizer by minimizing the objective function of the PUE model
+subject to the range of the inputs speci ﬁed in Appendix A ,Table A.1
+(deﬁned as X2R). For comparison purposes, we also calculated the
+maximal PUE value under the same weather conditions and
+economizer choice by maximizing the objective function while
+satisfying the constraints of the energy system parameters. That is,
+for every possible weather condition w(within the same ranges
+that were used in sensitivity analysis) and a given PUE model
+denoted as PUEð,Þ, the following two optimization problems were
+solved:
+min
+XPUEðw;XÞ; (10)
+and
+max
+XPUEðw;XÞ; (11)
+subject to:
+X2R (12)
+Due to non-differentiability and discontinuity in the PUE
+models, a differential evolution approach [ 48] was used. This sto-
+chastic population-based optimization method optimizes an
+Fig. 3. Sobol ’s total order sensitivity indices for predicted PUE values using AE/WEC/WES.N. Lei, E. Masanet / Energy 201 (2020) 117556 5
+objective function by maintaining numerous candidate solutions,
+and iteratively improves these candidate solutions by creating a
+trial candidate mutated from existing ones, for which we used the
+‘best1bin ’scheme. For more details relating to this optimization
+method, readers are referred to Ref. [ 49].
+4. Results and discussions
+4.1. Sensitivity results
+Results of our sensitivity analysis are summarized in Fig. 3 ,
+which plots parameters with Sobol ’s total order sensitivity indices
+larger than 0.01. The total order sensitivity index quanti ﬁes the total
+contribution of an input parameter to the variation in predicted
+PUE value, given the uncertainty distribution of the input param-
+eter and any variance caused by its interactions, of any order, with
+any other parameters [ 35]. Further details on the computed Sobol ’s
+indices for all parameters can be found in the SI.
+InFig. 3 , the error bars represent the 95% con ﬁdence intervals
+obtained from the bootstrapping process. For all three economizer
+strategies, variance in climate parameters that express the prop-
+erties of the free cooling medium (i.e., outdoor air dry bulb tem-
+perature and relative humidity for AE and WEC, and seawater
+temperature for WES), emerged as the greatest contributors to
+variance in predicted PUE values. In all cases, variance in UPS ef ﬁ-
+ciencies and supply air dry bulb set points2were found to be the
+next largest contributors to variance in predicted PUE values. These
+results suggest that focusing on reducing uncertainties in these key
+input parameters is most important for reducing uncertainties in
+PUE values predicted by the model. Fortunately, climate parameter
+data are typically available from weather databases in most parts of
+the world, meaning that most analysts can readily reduce the
+largest source of uncertainty in location-speci ﬁc PUE predictions.
+However, reducing uncertainties related to UPS ef ﬁciency and
+supply air set points requires access to internal, data-center speci ﬁc
+practices. This may not be a problem for analysts with access to
+such data, but it may not be feasible for the broader research
+community, which would need to rely on improved reporting
+practices from data center operators to reduce these sources ofmodel uncertainty.
+Variance in the remaining parameters in Fig. 3 has a lesser, but
+still signi ﬁcant, contribution to predicted PUE uncertainty. The
+chiller partial load factor impacts the chiller COP, which greatly
+inﬂuences energy use when mechanical cooling is required. CRAC
+fan pressure is important for HDCs with AE, as it relates to the
+magnitude of the pressure drop required to ﬁlter outside air for
+dust and particle removal, which can offset energy savings from
+outside air use. Heat exchanger effectiveness and cooling tower
+approach temperatures both impact the ef ﬁciency of waterside
+economizer systems, contributing to PUE variance. For WES sys-
+tems, variance in the pump head affects overall pumping energy
+whereas variance in both seawater
+DTand facility water DTaffects
+net heat removal ef ﬁciency, which in turn in ﬂuences PUE.
+An interesting observation is that the DTof CRAC air, which has
+been widely accepted as a signi ﬁcant factor in ﬂuencing energy use
+of traditional DCs, does not appear in Fig. 3 due to a comparatively
+low total order index for HDCs. This is because thermalmanagement of air ﬂow is more ef ﬁcient in HDCs compared to
+traditional DCs, thanks to their advanced control systems and
+better equipment layouts.
+Finally, as discussed further in the SI, we can compare the
+summation of the total order indices (Pk
+i¼1STi) with the summation of
+theﬁrst order indices (Pk
+i¼1Si) to assess the extent to which variable
+interactions in ﬂuence variability in predicted PUE values of HDCs.
+These ratios are 2 :9:1, 1.9:1, and 1.3:1, for the cases of AE, WED,
+and WES, respectively, showing that variable interaction effects are
+evident, particularly for the AE case, justifying the use of total order
+indices.
+4.2. PUE uncertainty quanti ﬁcation and model validation
+Fig. 4 presents the uncertainty quanti ﬁcations for quarterly PUE
+values of 17 HDCs operated by Google and Facebook, expressed as
+the mean, 5th, 25th, 75th, and 95th percentiles of the distributions
+of PUE values predicted by the model. It can be observed that the
+predicted means lie very close to the reported PUE values for many
+quarters and HDC locations, suggesting that thermodynamics-
+based models can reliably predict PUE values in light of inherentuncertainties. Most of the reported values lie within a 50% pre-
+diction interval, and nearly all lie within a 90% prediction interval,
+suggesting reasonable model accuracy. One exception is the Q1 PUE
+prediction for Google ’s Netherlands DC, for which the reported
+value is based on initial DC operations and may thus not be
+representative of stable operations.
+In addition, given the lack of information on economizer use of
+HDCs in the Netherlands, Singapore, and Chile (o, p, and q), we
+predicted their PUE values with uncertain economizer use, which
+indicates that the existence of uncertainty in a HDC ’s economizer
+choice will not severely deteriorate the prediction accuracy. This is
+an important ﬁnding for future energy analysts who may seek to
+predict PUE values with limited technology information.
+Theﬁgure also shows a regional and seasonal difference in the
+PUE simulation results, speci ﬁcally the variation in the shape of the
+uncertainty ranges. For HDCs a, c, d, e, k, l, n, o, and q, the quarterly
+uncertainty ranges are narrow and steady across the year due to
+stable climatic or seawater conditions. HDCs in those locations
+rarely need to operate a chiller even during their hottest days,
+which is the major reason for the small uncertainty ranges. For
+HDCs b, f, g, h, i, j, and m, obvious seasonal PUE variations exist and
+are well captured by the proposed models. The simulation results
+display relatively larger uncertainty ranges during the warm
+quarters, which can be explained by the larger diurnal temperature
+variations over the summertime. During warmer seasons in those
+locations, HDCs have higher likelihoods of operating a chiller in the
+daytime but can still achieve low PUE values taking advantage of
+colder nocturnal temperatures.
+For HDC p, the large quarterly PUE uncertainty ranges across the
+year are attributable to uncertainties in the indoor environment set
+points and economizer choice under the special climatic environ-
+ment of Singapore. According to weather statistics [ 51], Singapore
+has a relative humidity greater than 60% and 90% around 98% and30% of the time in a year and has a wet bulb temperature greater
+than 18
+/C14Cand 27/C14Caround 100% and 1.4% of the time in a year. If
+HDCs use AE under these conditions, the variation in the higher
+bound set point of supply air relative humidity (uncertain between
+60% and 90%) will largely impact whether a chiller would be used
+for dehumidi ﬁcation. Similarly, if HDCs use WEC under these con-
+ditions, the variation in the supply air dry bulb set point (uncertain
+between 27/C14Cand 35/C14C) will determine whether the wet bulb
+temperature could satisfy the speci ﬁed supply air temperature, and
+thus impact the necessity of chiller operation. The uncertainty in
+chiller operation patterns caused by the variations in set points2Note: the supply air temperature of typical HDCs with AE is determined by
+upper and lower bound set points [ 50]. The higher bound set point determines
+whether AE can be used or not, and the lower bound set point is applied to preventdisruption by possible freezing outside temperatures [ 13]. HDCs with waterside
+economizers (WEC and WES) use only one set point (it could be dynamically
+adjusted within a range) because the indoor environment has no direct heat ex-
+change with the outside air (more details in the SI).N. Lei, E. Masanet / Energy 201 (2020) 117556 6
+increases the uncertainty ranges of the simulation result, which is
+then slightly enlarged by uncertain economizer choice (SI, Fig. S2 ).
+The case of Singapore suggests that variations in the indoor envi-
+ronment set points could lead to wide uncertainty ranges for pre-
+dicted PUE values under very hot and humid climate conditions.
+However, this source of uncertainty could be readily addressed
+through more publicly-available information on HDC set points,
+which is not without precedent in the literature [ 52]. Moreover, it is
+noted that HDCs a, b, c, and d from Facebook have comparatively
+wider PUE uncertainty ranges due to larger input ranges of UPS
+efﬁciency, recon ﬁrming the importance of UPS ef ﬁciency in accu-
+rate PUE estimation for individual cases. Uncertainties related to
+UPS ef ﬁciency could also be reduced with greater information
+sharing by HDCs.
+The quarterly uncertainty results above showed good prediction
+quality veri ﬁed by HDC quarterly reported values and demon-
+strated that the PUE model can also reasonably capture regional
+and seasonal differences in PUE values. However, policy makers and
+energy analysts may be more inclined to use point-estimations of
+annual PUE values (mean values) for macro-level DC energy
+modeling [ 53]. To assess the accuracy of the model output for point
+estimations, we present yearly PUE simulation distributions and
+the simulation averages, with comparison to the yearly reported
+averages, in Fig. 5 . The results show that the model can also
+generate acceptable annual mean PUE values for point estimations
+(±4% relative errors at most) even though the uncertainty ranges of
+the yearly simulation results might be quite large.
+4.3. Achievable PUE and related suggestions
+Here we present achievable PUE results for HDCs with AE, WEC,
+and WES under different weather conditions, which are contrastedagainst calculated maximal PUE values for the same conditions in
+Fig. 6 . The resulting comparisons quantify the bandwidth of per-
+formance that exists between ideal and suboptimal energy man-
+agement practices for a given weather condition and gives HDCs
+(whose actual PUE values will fall somewhere in between) andpolicy makers a useful benchmark to assess current practices and
+remaining practical PUE reduction potential.
+InFig. 6 , non-smoothed lines convey the stochastic nature of the
+differential evolution algorithm.
+3As expected, the results indicate
+that PUE values of HDCs with AE and WEC generally increase with
+higher outdoor air dry bulb temperature and relative humidity.
+Fig. 6 (1) indicates a step change in PUE value at a dry bulb tem-
+perature of around 30/C14C, above which direct adiabatic cooling
+could not be fully utilized due to the indoor thermal environment
+restrictions. In Fig. 6 (2), no similar step change occurs because of
+no such change in operation occurs.
+As seen in Fig. 6 (3), in HDCs with WES, lower values of PUE can
+be maintained until seawater temperature reaches a threshold,
+beyond which the PUE value increases almost linearly with
+increasing seawater temperature. These temperature thresholds
+are mainly determined by the synergy of supply air dry bulb set
+points and heat exchange ef ﬁciencies in both CRAC cooling coils
+and economizer heat exchangers. The slope of PUE values beyond
+the threshold is affected by both the chiller COP and the amount
+seawater pump power use.
+To identify how HDCs can make targeted improvements toward
+practical minimum PUE values, Fig. 7 plots the component-level
+power use predicted by the model for several weather conditions
+shown in Fig. 6 . The power consumption of all infrastructure
+Fig. 4. Location-speci ﬁc quarterly PUE uncertainty distributions and comparisons to reported values.
+3Additional descriptions and explanations of Fig. 6 can be found in the SI.N. Lei, E. Masanet / Energy 201 (2020) 117556 7
+components has been normalized to an IT power of 1 kW for ease of
+interpretation.
+Fig. 7 reveals that most infrastructure power is consumed by the
+UPS system, CRAC fans, and seawater pumps (WES) under favorable
+weather conditions (i.e., low temperature and relative humidity),
+but that power consumption could be more than doubled with the
+necessary operation of a chiller at higher temperatures and/or
+relative humidity. Furthermore, the power consumption difference
+between achievable and maximal PUE values is mostly attributable
+to the UPS system, CRAC fans, chiller, cooling towers (AE/WEC), and
+seawater pumps (WES). The comparatively lower UPS power con-
+sumption the achievable case is due to its higher UPS ef ﬁciency,
+which is above 99%. However, achieving a 99% UPS ef ﬁciency may
+require running the UPS system in Eco Mode [ 54] or integrating
+servers with specialized batteries [ 46], strategies that may bring
+tradeoffs such as longer transfer times (which may sacri ﬁce service
+reliability) or higher capital investments.
+Differences in power used by CRAC fans in Fig. 7 (1) is mainly
+due to the pressure drop difference associated with different out-
+door air ﬁltration strategies, while such pressure drop differences
+inFig. 7 (2) and (3) are due to different air system layouts.
+Compared with that of AE, the power used by CRAC fans in the WEC
+and WES cases could be much lower, suggesting the superiority of
+waterside economizers in places with poor air quality. Another
+advantage of the waterside economizer is that it can be combined
+with server liquid cooling as a more ef ﬁcient alternative to air-
+based DC cooling systems [ 55]. However, HDCs with waterside
+economizers do not necessarily have lower PUE values than those
+with AE, especially when the outdoor dry bulb temperature and
+relative humidity are low and outdoor air quality is acceptable for
+direct air cooling.
+As for the difference in chiller power, this is mainly due to
+setting the supply air temperature as high as 35/C14Cin the achievable
+case, which can maximize economizer use to reduce the chiller
+power, and partially owing to higher chiller ef ﬁciency in the
+achievable case. The high supply air temperature set point is
+extremely important to save energy with AE because turning on the
+chiller requires operation of the whole water system including
+pumps and cooling towers. Although it seems a high set point is
+conducive to energy savings, operating servers at higher temper-
+ature may consume more IT power due to increased CMOS circuit
+static power and server fan power [ 56]. Therefore, a trade-off be-
+tween IT power use and infrastructure power use must be
+considered, and it is typically recommended to only apply a high
+supply air set point when outdoor temperatures are very hot.
+Finally, the noticeable difference in power used by coolingtowers in Fig. 7 (1) and (2) could be explained by differences in the
+cooling tower pump/fan head, pump/fan ef ﬁciency, and the liquid-
+gas ratio. The difference in power used by seawater pumps in Fig. 7
+(3) is due to the distance and altitude variations between the
+seawater resource and the HDC location, a critical consideration
+that will also impact the economics of seawater cooling.
+5. Conclusions
+This paper demonstrated that, through a combination of ther-
+modynamic modeling and statistical analyses methods, it is
+possible to predict the PUE values of HDCs using representative free
+cooling technologies (AE, WEC, and WES) with reasonable accuracy
+compared to actual reported values, and in consideration of sea-
+sonal variations. The use of Sobol ’s method enabled isolation of the
+most important modeling parameters, which allows energy ana-
+lysts to focus on a just few parameters for improved data collection
+(i.e., climate parameters, UPS ef ﬁciency, supply air dry bulb tem-
+perature set point) to reduce uncertainty, improving the practical
+utility of the approach. It was further demonstrated that the
+approach can be used to identify practical minimum PUE values for
+HDCs using these free cooling technologies when location-speci ﬁc
+climate data are available, and assuming state-of-art technologies
+and operating practices are employed. Therefore, the methods
+proposed in this paper can be used to estimate PUE values under
+different assumptions for locations and technology conditions in
+regional and global energy systems models that seek to quantify
+the energy use implications of HDCs in the future. These methods
+can also be used for setting location-speci ﬁc targets for achievable
+PUE values by HDC operators and policy makers, with resolution on
+speci ﬁc component-level improvements that can be pursued to
+such targets. Importantly, our results also demonstrate that there is
+no“one size ﬁts all ”PUE value for HDCs, and that policy makers
+must take into account local climate conditions and available
+technology incentives when incentivizing PUE reductions or usingpolicy mechanisms to establish PUE targets.
+The scope of this study was limited to HDC infrastructure energy
+analysis with air-cooled IT equipment, given the availability of
+sufﬁcient equipment, locational, and reported PUE data necessary
+for model construction and validation. However, the modeling
+framework could be easily extended to the analysis of non-HDCs
+using location-speci ﬁc climate data if suf ﬁcient data on installed
+technologies, control strategies, and energy system parameters are
+available, as well as reported PUE data for model validation. Such
+non-HDC analyses should be priorities for future work.
+Future model expansions should focus on several important
+Fig. 5. Location-speci ﬁc yearly PUE simulations and comparisons with yearly reported averages.N. Lei, E. Masanet / Energy 201 (2020) 117556 8
+Fig. 6. Achievable and maximal PUE results under different weather conditions (AE/WEC/WES).N. Lei, E. Masanet / Energy 201 (2020) 117556 9
+Fig. 7. Power consumption of cooling systems components for achievable and maximal PUE values at selected weather conditions.N. Lei, E. Masanet / Energy 201 (2020) 117556 10
+HDC technologies and heat con ﬁgurations, which were beyond the
+scope of the present study. Liquid cooling is emerging as an
+important cooling strategy in light of increasing rack-level heat
+intensities, which may be especially pronounced in deep learning
+and cryptocurrency mining activities. Liquid cooling can transfer
+additional heat from IT equipment which cannot be realized by air
+cooling due to air ﬂow rate constraints. It can also reduce cooling
+fan power use and lower the temperature of microprocessors with
+a slight incursion on cooling pump power, thus lead to reduced PUE
+values and reduced static power losses of CMOS circuits in IT
+equipment. Liquid-immersion cooling, wherein IT electronics are
+immersed in electrically compatible ﬂuid, could enable the use of
+facility water with higher temperatures due to the superior thermal
+properties of immersion liquids, and thus result in more free
+cooling hours (and, hence, lower PUE values) across a year in places
+with less favorable climates. Finally, although the use of DC waste
+heat recovery does not impact the PUE value of a DC itself, it is
+gaining momentum recently because it contributes to energy sav-
+ings by distributing waste heat to nearby facilities that require
+heating or hot water supply. Incorporating the external bene ﬁts of
+recovered heat into PUE analyses can shed light on system-levelenergy and resource savings that could accrue at PUE values pre-
+dicted by the model.
+Declaration of competing interests
+The authors declare that they have no known competing
+ﬁnancial interests or personal relationships that could have
+appeared to in ﬂuence the work reported in this paper.
+CRediT authorship contribution statement
+Nuoa Lei: Conceptualization, Methodology, Software, Formal
+analysis, Investigation, Data curation, Writing - original draft,
+Visualization. Eric Masanet: Conceptualization, Validation, Inves-
+tigation, Resources, Writing - review &editing, Supervision, Project
+administration, Funding acquisition.
+Acknowledgements
+This research was conducted using ﬁnancial support provided
+by Leslie and Mac McQuown.
+List of symbols and acronyms
+PUE power usage effectiveness
+DC data center
+HDC hyperscale data center
+UPS uninterruptible power supply
+IT information technology
+AE airside economizer combined with adiabatic cooling
+WEC waterside economizer utilizing the evaporative cooling
+capability of cooling towers
+WES waterside economizer utilizing seawater for cooling
+CRAC computer room air conditioning
+DT temperature difference
+COP coef ﬁcient of performanceQDCtotal heat generation of a DC ðkWÞ
+QAEfree cooling supplied by AE ðkWÞ
+QWECfree cooling supplied by WEC ðkWÞ
+QWESfree cooling supplied by WES ðkWÞ
+QCHmechanical cooling supplied by chiller ðkWÞ
+pDCpower used by a DC ðkWÞ
+pITpower used by IT equipment ðkWÞ
+pUPSpower across the UPS system ðkWÞ
+pPDpower across the power transformation and distribution
+system ðkWÞ
+pLpower used by lighting system ðkWÞ
+pFAN
+fpower used by fan type fðkWÞ, including CRAC fans and
+cooling tower fans
+pPUMP
+p power used by pump type pðkWÞ, including chiller
+pumps, waterside economizer pumps, seawater pumps,
+cooling tower pumps, and humidi ﬁcation pumps
+pCHpower used by chiller ðkWÞ
+hUPSUPS ef ﬁciency
+aPDpercentage of power loss in power transformation and
+distribution systems (i.e., line and switch loss)
+Tsa CRAC supply air temperature ð/C14CÞ
+Tra CRAC return air temperature ð/C14CÞ
+DTair temperature difference of supply and return CRAC air
+ð/C14CÞ
+Trw supply temperature of facility water ð/C14CÞ
+Tsw return temperature of facility water ð/C14CÞ
+DTw temperature difference of facility water ð/C14CÞ
+TWEC water temperature that could be delivered by
+economizer heat exchanger in WEC ð/C14CÞ
+TWES water temperature that could be delivered by
+economizer heat exchanger in WES ð/C14CÞ
+Twb wet bulb temperature of outdoor air ð/C14CÞ
+Tsea seawater temperature ð/C14CÞ
+ATEX approach temperature of economizer heat exchanger
+ð/C14CÞ
+ATCT approach temperature of cooling tower ð/C14CÞ
+ε heat exchanger effectiveness of CRAC cooling coils
+PUEð,Þ PUE model
+w a vector of weather condition
+X a vector of the energy system parameters
+R possible ranges of the energy system parameters in
+HDCs
+Appendix A. PUE simulation code and input variations
+A.1. GitHub link
+The PUE simulation code associated with this article can be
+found at:
+https://github.com/nuoaleon/Data-center-PUE-prediction-tool .
+A.2. Model inputsN. Lei, E. Masanet / Energy 201 (2020) 117556 11
+Appendix B. Supplementary data
+Supplementary data to this article can be found online at
+https://doi.org/10.1016/j.energy.2020.117556 .
+References
+[1]Shehabi A, et al. United States data center energy usage report. Berkeley, CA
+(United States), LBNL-1005775: ”Lawrence Berkeley National Lab (LBNL); Jun.
+2016 .
+[2]Masanet Eric R, Brown RE, Shehabi A, Koomey JG, Nordman B. Estimating the
+energy use and ef ﬁciency potential of US data centers. Proc IEEE 2011;99(8):
+1440e53.
+[3]International Energy Agency (IEA). Digitalization and energy. Paris: ”IEA;
+2017 .
+[4]Koomey JG. Worldwide electricity used in data centers. Environ Res Lett
+2008;3(3):034008 .
+[5] Masanet ER, Shehabi A, Lei N, Smith S, Koomey J. Recalibrating global data
+center energy use estimates. Science Feb. 2020;367:6481. https://doi.org/
+10.1126/science.aba3758 .
+[6]Shehabi A, Smith SJ, Masanet E, Koomey J. Data center growth in the United
+States: decoupling the demand for services from electricity use. Environ Res
+Lett 2018;13(12):124030 .
+[7]Global Cloud Index Cisco. “Forecast and methodology, 2016 e2021 white pa-
+per. 2018 .
+[8]Jaureguialzo E. PUE: the Green Grid metric for evaluating the energy ef ﬁciency
+in DC (Data Center). In: 2011 IEEE 33rd international telecommunications
+energy conference. INTELEC); 2011. p. 1 e8.
+[9] Lawrence Andy. Is PUE actually going UP? [Online]. Available: ”Uptime
+Institute ; May-2019. https://journal.uptimeinstitute.com/is-pue-actually-
+going-up/ . [Accessed 12 September 2019].
+[10] Gozcü O,€Ozada B, Car ﬁMU, Erden HS. “Worldwide energy analysis of majorfree cooling methods for data centers, ”in2017 16th IEEE Intersociety Confer-
+ence on Thermal and Thermomechanical Phenomena in Electronic Systems .
+ITherm); 2017. p. 968 e76.
+[11] Lee K-P, Chen H-L. Analysis of energy saving potential of air-side free cooling
+for data centers in worldwide climate zones. Energy Build 2013;64:103 e12.
+[12] Brady GA, Kapur N, Summers JL, Thompson HM. A case study and critical
+assessment in calculating power usage effectiveness for a data centre. Energy
+Convers Manag 2013;76:155 e61.
+[13] Joshi Y, Kumar P. Energy ef ﬁcient thermal management of data centers.
+Springer Science &Business Media; 2012 .
+[14] Ham S-W, Kim M-H, Choi B-N, Jeong J-W. Energy saving potential of various
+air-side economizers in a modular data center. Appl Energy 2015;138:
+258e75.
+[15] Song Z, Zhang X, Eriksson C. Data center energy and cost saving evaluation.
+Energy Procedia 2015;75:1255 e60.
+[16] Deymi-Dashtebayaz M, Namanlo SV. Potentiometric and economic analysis of
+using air and water-side economizers for data center cooling based on various
+weather conditions. Int J Refrig 2019;99:213 e25.
+[17] Shao S, Liu H, Zhang H, Tian C. Experimental investigation on a loop ther-
+mosyphon with evaporative condenser for free cooling of data centers. Energy
+2019;185:829 e36.
+[18] Chen H, Cheng W, Zhang W, Peng Y, Jiang L. Energy saving evaluation of a
+novel energy system based on spray cooling for supercomputer center. Energy
+2017;141:304 e15.
+[19] Mitchell-Jackson J, Koomey JG, Nordman B, Blazek M. Data center power re-
+quirements: measurements from Silicon Valley. Energy 2003;28(8):837 e50.
+[20] Gao Jim. Machine learning applications for data center optimization. 2014 .
+[21] Judge Peter. Can Beijing ban low PUE sites [Online]. Available: Data-
+centerDynamics 26-Sep-2016:18. https://www.datacenterdynamics.com/
+opinions/can-beijing-ban-low-pue-sites/ . [Accessed September 2019].
+[22] China I, “Boosting PUE 1. 25 or lower, Shenzhen released green data center
+policy, ”IDCNOVA . 16-Apr-2019 [Online]. Available: http://www.idcnova.com/
+html/1/59/153/700.html . [Accessed 18 September 2019].
+[23] “Use an air-side economizer, ”ENERGY STAR [Online]. Available: https://www.Table A.1
+Model input values and ranges
+Input variablesabcUnit Variable ranges and data sources
+AE WEC WES
+UPS ef ﬁciency % 90-99 [ 32,45,46]
+Percentage of power loss in power transformation and distribution system % 0-2 [ 32,45]
+Lighting power to IT power ratio e 0e0.2 [ 45,57]
+Supply air dry bulb set point (lower bound)/C14C 10-18 [ 50] e
+Supply air dry bulb set point (higher bound)/C14C 27-35 [ 50,58e60] e
+Supply air dry bulb set point/C14C e 27-35 [ 50,58e60]
+Supply air dew point set point (lower bound)/C14C /C012-/C09[50] e
+Supply air dew point set point (higher bound)/C14C 15-27 [ 50] e
+Supply air relative humidity set point (lower bound) % 8-20 [ 50] e
+Supply air relative humidity set point (higher bound) % 60-90 [ 50,52] e
+Sensible heat ratio (SHR) ee 0.95e0.99 [ 61,62]
+Temperature difference (supply/return CRAC air)/C14C 13.9e19.4 [ 13,52,57]
+Temperature difference (supply/return facility system water)/C14C 5-10 [ 50,55]
+Temperature difference (supply/return cooling tower water)/C14C 4-6 [ 55,57] e
+Temperature difference (supply/return seawater)/C14C ee 5-10 [ 55]
+Fan pressure (CRAC) Pa 500-1000 [ 13,63] 400-600 [ 13,63]
+Fan ef ﬁciency (CRAC) % 65-90 [ 64e66]
+Fan pressure (cooling tower) Pa 100-400 [ 67,68] e
+Fan ef ﬁciency (cooling tower) % 65-90 [ 64e66] e
+Pump pressure (humidi ﬁcation pump) kPa 6300-7700 [ 69]
+Pump ef ﬁciency (humidi ﬁcation pump) % 60-80 [ 70]
+Pump pressure (chiller pump) kPa 114.9 e172.4 [ 71e75]
+Pump ef ﬁciency (chiller pump) % 60-80 [ 70]
+Pump pressure (cooling tower) kPa 166.9 e250.4 [ 72,74e77] e
+Pump ef ﬁciency (cooling tower) % 60-80 [ 70] e
+Pump pressure (waterside economizer pump) kPa e 114.9e172.4 [ 73e76]
+Pump ef ﬁciency (waterside economizer pump) % e 60-80 [ 70]
+Pump pressure (seawater pump) kPa ee 294-1470 [ 78,79]
+Pump ef ﬁciency (seawater pump) % ee 60-80 [ 70]
+Approach temperature (cooling tower)/C14C 2.8e6.7 [ 50] e
+Approach temperature (economizer heat exchanger)/C14C e 1.7e2.8 [ 50]
+Chiller partial load factor % 20-80 [ 80e82]
+Liquid-gas ratio (cooling tower) e 0.2e4[83e85] e
+COP relative error to regressed value % /C011/C011 [81]
+Heat exchanger effectiveness (CRAC cooling coils) % e 70-90 [ 86,87]
+aUniform distributions were used for all energy system parameters in both the sensitivity analysis and uncertainty quanti ﬁcation.
+bIn the sensitivity analysis, the outdoor dry bulb temperature, outdoor relative humidity, and seawater temperature is uniformly distributed with in ranges of /C010 to 40/C14C,0t o
+100%, and /C02t o3 6/C14C, respectively. Also, it is assumed that atmospheric pressure uniformly varies within ±10% of standard atmospheric pressure (101.325 kPa).
+cSources of weather data used in the uncertainty quanti ﬁcation are [ 51,88,89] (sampling with replacement).N. Lei, E. Masanet / Energy 201 (2020) 117556 12
+energystar.gov/products/use_air_side_economizer . [Accessed 19 September
+2019].
+[24] Facebook. Environmental practices, ”Facebook . 11-Jan-2010 [Online]. Avail-
+able: https://www.facebook.com/notes/prineville-data-center/
+environmental-practices/242308668132/ . [Accessed 19 September 2019].
+[25] Yoon John. The development of ASHRAE 90.4. Energy Standard for Data
+Centers, ”Consulting - Specifying Engineer ; 25-Jul [Online]. Available: https://
+www.csemag.com/articles/the-development-of-ashrae-90-4-energy-stan-
+dard-for-data-centers/ . [Accessed 19 September 2019].
+[26] Water-Side economizer, ”ENERGY STAR. [Online]. Available: https://www.
+energystar.gov/products/low_carbon_it_campaign/12_ways_save_energy_
+data_center/water_side_economizer . [Accessed: 19-Sep-2019].
+[27] Kava J. “Getting the heat out: a look at evaporative cooling, ”Google Green Blog .
+19-Nov-2012 [Online]. Available: https://green.googleblog.com/2012/11/
+getting-heat-out-look-at-evaporative.html . [Accessed 19 September 2019].
+[28] “Google ’s Finland data center pioneers new seawater cooling. Data-
+centerDynamics ; 14-May [Online]. Available: https://www.
+datacenterdynamics.com/news/googles- ﬁnland-data-center-pioneers-new-
+seawater-cooling/ . [Accessed 19 September 2019].
+[29] Paul Tadich. How oceans are being used to cool massive data centres. Vice; 21-
+Sep [Online]. Available: https://www.vice.com/en_us/article/evpz9a/how-
+oceans-are-being-used-to-cool-massive-data-centres . [Accessed 19
+September 2019].
+[30] Metz Cade. Google ﬂushes heat from data center with toilet water. Wired; 15-
+Mar.
+[31] Meyer Adam. Adiabatic cooling: best of both worlds. 12-Jun-2017. p. 19
+[Online]. Available: https://www.datacenterdynamics.com/opinions/
+adiabatic-cooling-best-of-both-worlds/ . [Accessed September 2019].
+[32] Park Jay. Designing a very ef ﬁcient data center. Facebook ; 14-Apr [Online].
+Available: https://www.facebook.com/notes/facebook-engineering/
+designing-a-very-ef ﬁcient-data-center/10150148003778920/ . [Accessed 19
+September 2019].
+[33] Ian Seaton. “Cooling ef ﬁciency algorithms: economizers, ”upsite technologies -
+data center cooling optimization . 02-Jan-2019. p. 19 [Online]. Available:
+https://www.upsite.com/blog/cooling-ef ﬁciency-algorithms-economizers-
+and-temperature-differentials-water-side-economizers-parallel/ . [Accessed
+September 2019].
+[34] American Society of Heating. Refrigerating and air-conditioning engineers,
+thermal Guidelines for data processing environments . third ed. ASHRAE; 2012 .
+[35] Tian W. A review of sensitivity analysis methods in building energy analysis.
+Renew Sustain Energy Rev 2013;20:411 e9.
+[36] Bergman Jennifer. Temperature of ocean water. Windows2Universe ; 16-Feb
+[Online]. Available: https://www.windows2universe.org/earth/Water/temp.
+html . [Accessed 19 September 2019].
+[37] “Sea surface temperature, ”NASA earth observations . 30-Apr-2019 [Online].
+Available: https://earthobservatory.nasa.gov/global-maps/MYD28M .
+[Accessed 19 September 2019].
+[38] Mechri HE, Capozzoli A, Corrado V. Use of the ANOVA approach for sensitive
+building energy design. Appl Energy 2010;87(10):3073 e83.
+[39] Saltelli A, Tarantola S, Campolongo F, Ratto M. Sensitivity analysis in practice:
+a guide to assessing scienti ﬁc models. Chichester Engl. ; 2004 .
+[40] Ilya M. Sobol, “Global sensitivity indices for nonlinear mathematical models
+and their Monte Carlo estimates. Math Comput Simulat 2001;55(1 e3):
+271e80.
+[41] Efron B, Tibshirani RJ. An introduction to the bootstrap. CRC press; 1994 .
+[42] Tennøe S, Halnes G, Einevoll GT. Uncertainpy: a Python toolbox for uncer-
+tainty quanti ﬁcation and sensitivity analysis in computational neuroscience.
+Front Neuroinf 2018;12 .
+[43] Google data center PUE performance, ”Google Data Centers. [Online]. Avail-
+able: https://www.google.com/about/datacenters/ef ﬁciency/ . [Accessed: 17-
+Dec-2019].
+[44] “Open sourcing PUE/WUE dashboards. Facebook Engineering; 14-Mar [On-
+line]. Available: https://engineering.fb.com/data-center-engineering/open-
+sourcing-pue-wue-dashboards/ . [Accessed 23 September 2019].
+[45] Barroso LA, Clidaras J, H €olzle U. The datacenter as a computer: an introduction
+to the design of warehouse-scale machines. Synth. Lect. Comput. Archit.2013;8(3):1 e154.
+[46] Miller Rich. “Efﬁcient UPS aids Google ’s extreme PUE. Data Center Knowledge;
+01-Apr [Online]. Available: https://www.datacenterknowledge.com/archives/
+2009/04/01/ef ﬁcient-ups-aids-googles-extreme-pue . [Accessed 20 September
+2019].
+[47] Are low PUE ratings hitting their limit? Data Center Knowledge ; 13-Nov
+[Online]. Available:
+https://www.datacenterknowledge.com/archives/2012/
+11/13/are-low-pue-ratings-hitting-their-limit . [Accessed 20 September 2019].
+[48] Storn R, Price K. “Differential evolution ea simple and ef ﬁcient heuristic for
+global optimization over continuous spaces. J Global Optim 1997;11(4):341e59.
+[49] Price K, Storn RM, Lampinen JA. Differential evolution: a practical approach to
+global optimization. Springer Science &Business Media; 2006 .
+[50] American Society of Heating. Refrigerating and air-conditioning engineers,
+thermal Guidelines for data processing environments . fourth ed. ASHRAE; 2015 .
+[51] EnergyPlus. Weather data [Online]. Available: https://energyplus.net/weather .
+[Accessed 22 September 2019].
+[52] The Facebook data center FAQ (page 4). Data Center Knowledge; 30-May
+[Online]. Available: https://www.datacenterknowledge.com/the-facebook-data-center-faq-newest-page . [Accessed 23 September 2019].
+[53] Brown RE, et al. Report to congress on server and data center energy ef ﬁ-
+ciency: public law 109-431. Berkeley, CA (US): ”Ernest Orlando Lawrence
+Berkeley National Laboratory; 2007 .
+[54] Rasmussen Neil. Eco-mode: bene ﬁts and risks of energy-saving modes of UPS
+operation. White Pap. 2012;157 .
+[55] American Society of Heating. Refrigerating and air-conditioning engineers,
+liquid cooling Guidelines for datacom equipment centers . ASHRAE; 2014 .
+[56] Seifoori Z, Ebrahimi Z, Khaleghi B, Asadi H. Introduction to emerging SRAM-
+based FPGA architectures in dark silicon era. In Advances in computers , vol.
+110. Elsevier; 2018. p. 259 e94.
+[57] National Renewable Energy Laboratory, “Data center ef ﬁciency dashboard, ”
+NREL. [Online]. Available: https://www.nrel.gov/hpc/cool.html .
+[58] Humphries Matthew. “Google ’s most ef ﬁcient data center runs at 95 degrees, ”
+Geek.com . 27-Mar-2012 [Online]. Available: https://www.geek.com/chips/
+googles-most-ef ﬁcient-data-center-runs-at-95-degrees-1478473/ . [Accessed
+23 September 2019].
+[59] Megan Treacy, “Google ’s super-ef ﬁcient Belgium data center operates at 95
+degrees F, ”TreeHugger. [Online]. Available: https://www.treehugger.com/
+clean-technology/googles-most-ef
+ﬁcient-data-center-operates-95-degrees.
+html . [Accessed: 23-Sep-2019].
+[60] laniakea. Here are the largest data centre in the worlds 2018. Tech Talk 21-
+Apr-2018 [Online]. Available: https://www.futurescope.co/largest-data-
+centre/ . [Accessed 23 September 2019].
+[61] Evans Tony. How and why mission-critical cooling systems differ from com-
+mon air conditioners | schneider electric. White Pap Jul. 2019;56 .
+[62] Power EN. Precision versus comfort cooling choosing a cooling system to
+support business-critival IT environments. White Pap. ; 2010 .
+[63] Patankar SV. Air ﬂow and cooling in a data center. J Heat Tran 2010;132(7):
+073001 .
+[64] Steve Davis, “EC fans for data centers ebick group, ”bickgroup.com. [Online].
+Available: http://bickgroup.com/ec-fans-for-data-centers/ . [Accessed: 23-Sep-
+2019].
+[65] Schild P, Mysen M. “Technical Note AIVC 65 drecommendations on speci ﬁc
+fan power and fan system ef ﬁciency,. Air In ﬁltration Vent. Cent. Sint-Stevens-
+Woluwe Belg. 2009 .
+[66] Kim Baker, “Air handling ef ﬁciency in data center cooling, ”esmagazine, 03/
+212019. [Online]. Available: https://www.esmagazine.com/articles/99413-
+air-handling-ef ﬁciency-in-data-center-cooling?v ¼preview . [Accessed: 23-
+Sep-2019].
+[67] Baltimore Aircoil Company, “Cooling towers, ”Baltimore Aircoil Company.
+[Online]. Available: http://www.baltimoreaircoil.com/english/products/
+cooling-towers . [Accessed: 23-Sep-2019].
+[68] Levin Leung, “SLG low noise axial fan - AMX cooler industrial ventilation fan, ”
+AMX Cooler. [Online]. Available: https://www.amxcooler.com/portfolio-
+items/slg-low-noise-axial-fan/ . [Accessed: 23-Sep-2019].
+[69] Cool, Clean and comfortable, ”Condair HP-Series. [Online]. Available: https://
+www.condair.com/m/0/19-475-hp-series-brochure-4-page.pdf .
+[70] U. S. DoE. “Improving pumping system performance: a sourcebook for in-
+dustry,. Prep. US Dep 1999. Energy Mot. Chall. Program Lawrence Berkeley
+Natl. Lab. LBNL Resour. Dyn. Corp. RDC .
+[71] Patil SP, Auti AB, Warke DAS. Prediction of pressure drop in chilled water
+piping system using theoretical and CFD Analysis. Int. J. Eng. Technol. IJET 5 4
+3388 2013;3394 .
+[72] Liebert, “Packaged ﬂuid cooling for fail-safe protection of critical applications, ”
+EMERSON Network Power. [Online]. Available: https://www.rlkistler.com/
+wp-content/uploads/product-documents/liebert-csu3000-and-process- ﬂuid-
+chillers-brochure.pdf .
+[73] Hendy Coils, “Cooling coil speci ﬁcations, ”Hendy Coils Pty Ltd. [Online].
+Available: http://www.hendycoils.com.au/documents/Cooling_Coil_Design.
+pdf.
+[74] Monsen Jon F. Determining the control valve pressure drop for control valve
+sizing purposes. Metso ; 08-Jun [Online]. Available: https://www.metso.com/
+blog-hub/go-with-the- ﬂow/determining-the-control-valve-pressure-drop-
+for-control-valve-sizing-purposes/ . [Accessed 23 September 2019].
+[75] Harvey Wilson. Pressure drop in pipe ﬁttings and valves. Katmar Software ;
+Oct-2012 [Online]. Available: https://www.katmarsoftware.com/articles/pipe-
+ﬁtting-pressure-drop.htm . [Accessed 23 September 2019].
+[76] Tutorial - heat exchanger shell side pressure drop calculation. EnggCyclopedia ;
+18-Sep [Online]. Available: https://www.enggcyclopedia.com/2011/09/
+problem-solving-heat-exchanger-shellside-pressure-drop-calculation/ .
+[Accessed 23 September 2019].
+[77] “KFT Counter ﬂow, Square type, modular cell cooling tower, ”KING SUN
+GROUP. [Online]. Available: http://www.kingsunct.com/product.php?
+act¼view&no¼26. [Accessed: 23-Sep-2019].
+[78] Marine pump, ”KSB AG, Frankenthal Germany. [Online]. Available: https://
+www.ksb.com/centrifugal-pump-lexicon/ . [Accessed: 23-Sep-2019].
+[79] Bulletproof PUMP, “100m 135m 150m head double suction high ef ﬁciency
+split casing water pump, ”Bulletproof PUMP. [Online]. Available: https://
+www.denkgrootenwordrijk.nl/pumplist/9306.html . [Accessed: 23-Sep-2019].
+[80] Grant David. “HPC Data Center Cooling Design Considerations. ”[Online].
+Available: https://static1.squarespace.com/static/53e6c526e4b0f490b8ffc465/
+t/580ceabdc534a57edb709d16/1477241536892/HPCþDataþCenter þCooling
+þDesign þConsiderations.pdf .
+[81] Thomas Squillo, “How to get the most energy ef ﬁciency from a chiller plant -N. Lei, E. Masanet / Energy 201 (2020) 117556 13
+facilities management insights, ”Facilities. [Online]. Available: https://www.
+facilitiesnet.com/hvac/article/How-To-Get-the-Most-Energy-Ef ﬁciency-From-
+a-Chiller-Plant –17668 . [Accessed: 23-Sep-2019].
+[82] Thomas Squillo, “3 ways to increase chiller ef ﬁciency - facilities management
+insights, ”Facilitiesnet. [Online]. Available: https://www.facilitiesnet.com/
+hvac/article/3-Ways-To-Increase-Chiller-Ef ﬁciency —17669 . [Accessed: 23-
+Sep-2019].
+[83] Lemouari M, Boumaza M, Kaabi A. Experimental analysis of heat and mass
+transfer phenomena in a direct contact evaporative cooling tower. Energy
+Convers Manag 2009;50(6):1610 e7.
+[84] Khalifa AHN. Thermal and exergy analysis of counter ﬂow induced draught
+cooling tower. Int J Curr Eng Technol 2015;5(4):2868 e73.
+[85] Asvapoositkul W, Treeutok S. A simpli ﬁed method on thermal performancecapacity evaluation of counter ﬂow cooling tower. Appl Therm Eng 2012;38:
+160e7.
+[86] Sammeta H, Ponnusamy K, Majid MA, Dheenathayalan K. Effectiveness charts
+for counter ﬂow corrugated plate heat exchanger. Simulat Model Pract Theor
+2011;19(2):777 e84.
+[87] Haslego Chris. Heat exchanger effectiveness. Cheresources.com Community;
+16-Oct [Online]. Available: https://www.cheresources.com/invision/tags/ccs/
+exchanger/ . [Accessed 23 September 2019].
+[88] World water temperature. [Online]. Available: http://www.seatemperature.
+org/. [Accessed 23 September 2019].
+[89] National centers for environmental information, ”NCEI. [Online]. Available:
+https://www.ncdc.noaa.gov/climate-information/international . [Accessed:
+23-Sep-2019].N. Lei, E. Masanet / Energy 201 (2020) 117556 14

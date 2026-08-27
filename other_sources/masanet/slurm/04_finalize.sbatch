@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH -J masanet_final
+#SBATCH -p sched_mit_sloan_batch
+#SBATCH -N 1
+#SBATCH -c 1
+#SBATCH --mem=4G
+#SBATCH -t 00:20:00
+#SBATCH --chdir=/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet
+#SBATCH -o /home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/logs/04_finalize_%j.out
+#SBATCH -e /home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/logs/04_finalize_%j.err
+
+set -euo pipefail
+export PYTHONUNBUFFERED=1 PYTHONNOUSERSITE=1
+unset PYTHONPATH PYTHONHOME
+ROOT="/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet"
+PY="/home/nacevedo/.conda/envs/masanet_lei/bin/python"
+cd "${ROOT}"
+export PYTHONPATH="${ROOT}/scripts"
+echo "host=$(hostname) job=${SLURM_JOB_ID:-local} start=$(date -Is)"
+"${PY}" scripts/finalize_first_run.py
+echo "end=$(date -Is)"
+ls -l results/FIRST_RUN_STATUS.json docs/FIRST_RUN_SUMMARY.md

@@ -1,0 +1,33 @@
+{
+  "created_utc": "2026-08-27T14:22:54Z",
+  "submit_host": "login009",
+  "git_head": "773f85d071a8bb89850dd6caccb9d5fdd202edbf",
+  "work_root": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet",
+  "python": "/home/nacevedo/.conda/envs/masanet_lei/bin/python",
+  "partition": "sched_mit_sloan_batch",
+  "dependency_graph": {
+    "MASANET_REPRO": "21391285",
+    "BOUNDARY_AUDIT": "21391286",
+    "MASANET_GRID": "21391287",
+    "FRONTIER": "21391288",
+    "FINALIZE": "21391289",
+    "edges": [
+      "BOUNDARY_AUDIT afterok MASANET_REPRO",
+      "MASANET_GRID afterok BOUNDARY_AUDIT",
+      "FINALIZE afterok MASANET_GRID and FRONTIER",
+      "FRONTIER independent after data freeze"
+    ]
+  },
+  "job_ids": {
+    "MASANET_REPRO": "21391285",
+    "BOUNDARY_AUDIT": "21391286",
+    "MASANET_GRID": "21391287",
+    "FRONTIER": "21391288",
+    "FINALIZE": "21391289"
+  },
+  "independent_of_local_session": true,
+  "notes": [
+    "Jobs use absolute paths and conda env python binary; no notebook/tmux/SSH session required after sbatch.",
+    "Inputs live under /home/nacevedo which is cluster shared storage."
+  ]
+}
