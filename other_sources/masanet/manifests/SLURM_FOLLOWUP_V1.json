@@ -1,0 +1,64 @@
+{
+  "created_utc": "2026-08-27T15:33:24Z",
+  "submit_host": "login008",
+  "git_head": "166b6ee5a9a1563ca95fa4bf19c6df53d69970a5",
+  "upstream_commit": "2cc53bee89b0a61bdad10c02b4d170d7f673e2dc",
+  "work_root": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet",
+  "python": "/home/nacevedo/.conda/envs/masanet_lei/bin/python",
+  "partition": "sched_mit_sloan_batch",
+  "environment": "masanet_lei",
+  "seed_plan": {
+    "facility_LHS": "cell_lhs_seed = 2025 + 1000*case + 10*zone_index + replicate",
+    "internal_stream": "lhs_seed*100003 + sample_id*1009 + stream_offset",
+    "notebook_sweep": "np.random.seed 0:9999 on demo vector",
+    "prineville": "lhs_seed = 202200 + paper_case"
+  },
+  "dependency_graph": {
+    "PREFLIGHT": "21394438",
+    "NOTEBOOK": "21394439",
+    "FRONTIER": "21394440",
+    "ANNUAL_SMOKE": "21394441",
+    "ANNUAL_SELECTED_ARRAY": "21394442",
+    "ANNUAL_RNG": "21394443",
+    "ANNUAL_GATE": "21394444",
+    "PROJECT_ADAPTER_TEST": "21394445",
+    "PRINEVILLE_WEATHER_SMOKE": "21394446",
+    "FINALIZE": "21394447",
+    "edges": [
+      "NOTEBOOK afterok PREFLIGHT",
+      "FRONTIER afterok PREFLIGHT",
+      "ANNUAL_SMOKE afterok PREFLIGHT",
+      "ANNUAL_SELECTED_ARRAY afterok ANNUAL_SMOKE",
+      "ANNUAL_RNG afterok ANNUAL_SMOKE",
+      "ANNUAL_GATE afterok SELECTED and RNG and NOTEBOOK and FRONTIER",
+      "ADAPTER afterok GATE",
+      "PRINEVILLE afterok ADAPTER",
+      "FINALIZE afterok PRINEVILLE"
+    ]
+  },
+  "job_ids": {
+    "PREFLIGHT": "21394438",
+    "NOTEBOOK": "21394439",
+    "FRONTIER": "21394440",
+    "ANNUAL_SMOKE": "21394441",
+    "ANNUAL_SELECTED_ARRAY": "21394442",
+    "ANNUAL_RNG": "21394443",
+    "ANNUAL_GATE": "21394444",
+    "PROJECT_ADAPTER_TEST": "21394445",
+    "PRINEVILLE_WEATHER_SMOKE": "21394446",
+    "FINALIZE": "21394447"
+  },
+  "independent_of_local_session": true,
+  "resources": {
+    "annual_and_prineville": "8 CPU, 16-24G, no GPU",
+    "partition_order": [
+      "sched_mit_sloan_batch"
+    ]
+  },
+  "notes": [
+    "Jobs use absolute paths and conda env python binary; no notebook/tmux/SSH session required after sbatch.",
+    "Inputs live under /home/nacevedo which is cluster shared storage.",
+    "First-run JSON/CSV/Parquet/figures are not overwritten.",
+    "GATE also writes a status snapshot; FINALIZE refreshes after Prineville."
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "timestamp_utc": "2026-08-27T15:33:27Z",
+  "hostname": "node964",
+  "platform": "Linux-3.10.0-1062.el7.x86_64-x86_64-with-glibc2.17",
+  "parent_repository": "/home/nacevedo/RA/data-center-externalities-modeling",
+  "work_root": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet",
+  "git_rev_parse_HEAD": "166b6ee5a9a1563ca95fa4bf19c6df53d69970a5",
+  "git_branch": "main",
+  "git_status_short": "M Data-center-PUE-prediction-tool\n M other_sources/masanet/scripts/instrument_upstream.py\n?? other_sources/masanet/docs/followup_v1/\n?? other_sources/masanet/external/energyplus_tmy/\n?? other_sources/masanet/manifests/FOLLOWUP_V1_FREEZE.json\n?? other_sources/masanet/manifests/FOLLOWUP_V1_WEATHER.json\n?? other_sources/masanet/manifests/SLURM_FOLLOWUP_V1.json\n?? other_sources/masanet/scripts/facility_adapter.py\n?? other_sources/masanet/scripts/followup_adapter_test.py\n?? other_sources/masanet/scripts/followup_annual.py\n?? other_sources/masanet/scripts/followup_common.py\n?? other_sources/masanet/scripts/followup_crosswalk.py\n?? other_sources/masanet/scripts/followup_finalize.py\n?? other_sources/masanet/scripts/followup_freeze.py\n?? other_sources/masanet/scripts/followup_frontier_v2.py\n?? other_sources/masanet/scripts/followup_gate.py\n?? other_sources/masanet/scripts/followup_notebook_pue.py\n?? other_sources/masanet/scripts/followup_preflight.py\n?? other_sources/masanet/scripts/followup_prineville.py\n?? other_sources/masanet/scripts/followup_weather.py\n?? other_sources/masanet/scripts/submit_followup_v1.sh\n?? other_sources/masanet/slurm/followup_v1/\n?? other_sources/masanet/tests/test_followup_v1_adapter.py\n?? other_sources/masanet/tests/test_followup_v1_crosswalk.py",
+  "upstream_commit_recorded": "2cc53bee89b0a61bdad10c02b4d170d7f673e2dc",
+  "upstream_commit_git": "2cc53bee89b0a61bdad10c02b4d170d7f673e2dc",
+  "python": {
+    "executable": "/home/nacevedo/.conda/envs/masanet_lei/bin/python",
+    "expected": "/home/nacevedo/.conda/envs/masanet_lei/bin/python",
+    "version": "3.9.23",
+    "packages": {
+      "numpy": "1.21.6",
+      "pandas": "1.3.5",
+      "sklearn": "1.0.2",
+      "scipy": "1.7.3",
+      "CoolProp": "6.6.0",
+      "openpyxl": "3.1.2",
+      "pyarrow": "12.0.1",
+      "matplotlib": "3.7.3",
+      "pytest": "7.4.4",
+      "pypdf": "3.17.4"
+    }
+  },
+  "sklearn_compat_intervention": {
+    "affected_model": "COP_AC.pkl",
+    "missing_sklearn_attribute": "_y_train_std",
+    "reason_shim_sets_to_1": "normalize_y is False on the unpickled GPR; sklearn 1.0.2 predict expects _y_train_std. Identity scale is correct when labels were not normalized.",
+    "pickle_mutated_on_disk": false,
+    "environment_sklearn": "1.0.2",
+    "will_not_revisit_0.23_unless_annual_COP_discrepancy": true
+  },
+  "first_run_status_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/FIRST_RUN_STATUS.json",
+  "first_run_immutable_artifacts": [
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/FIRST_RUN_STATUS.json",
+      "exists": true,
+      "sha256": "70782ac8597d81d8d970fdbffb427969cc5618526df0191146b382e7cb1d1d8a"
+    },
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/masanet_reproduction_summary.json",
+      "exists": true,
+      "sha256": "a48690ff46f480f6857f67c59bf0bcfebd8c9adc5d628fd41185c33dc6695cb4"
+    },
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/masanet_boundary_audit.json",
+      "exists": true,
+      "sha256": "e4418cc2585c933a9bcd88bd32ff6f170588733901830d1f7cfabf6a7f11083b"
+    },
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/masanet_grid.parquet",
+      "exists": true,
+      "sha256": "f81b5cd26de247aee06ac70de7befa9dc0428f971ace0346498c13964801d09a"
+    },
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/masanet_grid.csv",
+      "exists": true,
+      "sha256": "f4c10023a62f439d30cc4f78b4a3eb62b79a3c4d4f268af146c371d658b611e0"
+    },
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/masanet_grid_summary.json",
+      "exists": true,
+      "sha256": "ae4486c5a3d632a8317d9ad212598ea5c7926c574be67affa4abfc8e66c937e4"
+    },
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/frontier_qc.json",
+      "exists": true,
+      "sha256": "01d4d021c2f3d3c2e0457c1b5ce9d4c7df57f5772a67f7516bdec9f24573a871"
+    },
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/frontier_validation.json",
+      "exists": true,
+      "sha256": "9823a85b61a38fbfeebbe97e32ec585844d675716a046c2163565b921c1e1d0f"
+    },
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/docs/FIRST_RUN_SUMMARY.md",
+      "exists": true,
+      "sha256": "e52fa5322e2384198fc586defb279987a27e245d784819e1b64afcb1fada03a2"
+    },
+    {
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/docs/WATER_BOUNDARY_AUDIT.csv",
+      "exists": true,
+      "sha256": "40191165c1f0422e3764c1f65406c096da7465b89029ad9dc333175ea5ba5bf8"
+    }
+  ],
+  "source_hashes": {
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/simulation_funs_DC.py": {
+      "sha256": "74ea9da658482a29e1a298a544234cc43b654cf514d678482842ae30c2446c01",
+      "bytes": 52202
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/Simulation Results/UE.xlsx": {
+      "sha256": "adc2a6ca4ad96fb735361177483c27b829070031956ce6b63317b68bb86d0e96",
+      "bytes": 21774
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/frontier/Frontier HPC & Facility Data.xlsx": {
+      "sha256": "56a48dd66382896890dfc2e4940ec90f894bb85795ee8e85ea2708dda05796bf",
+      "bytes": 20164974
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/COP_AC.pkl": {
+      "sha256": "e8ac8e5cabb75013a3313cdafaf43e3137853197b8029554ae73599bbf18e9a4",
+      "bytes": 25894
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/COP_2.pkl": {
+      "sha256": "a17f740bf3a4c4f59a6e1aedce46bf0457913fc559da51320dd3518dfa6a790a",
+      "bytes": 19788
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/COP_DX.pkl": {
+      "sha256": "b17e58dc27f9227946f175ff0b1d8e93f8919c2af4a974b0fe256c18b0cacf8e",
+      "bytes": 18730
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/lei_masanet_2022/Climate-_and_Technology-Specific_PUE_and_WUE_Predi.pdf": {
+      "sha256": "ea2136303b0a38b7db896a095494b90d0b36f011cf3558074fcf263ad42268f3",
+      "bytes": 1490445
+    }
+  },
+  "did_not_read_meta_2023_2024_water": true,
+  "outputs_root": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1",
+  "will_not_overwrite_first_run": true
+}

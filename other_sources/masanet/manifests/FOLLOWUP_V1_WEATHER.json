@@ -1,0 +1,173 @@
+{
+  "timestamp_utc": "2026-08-27T15:33:39Z",
+  "needed_zones": [
+    "1A",
+    "2A",
+    "5A",
+    "8"
+  ],
+  "ue_climate_zones": [
+    "1A",
+    "2A",
+    "2B",
+    "3A",
+    "3B",
+    "3C",
+    "4A",
+    "4B",
+    "4C",
+    "5A",
+    "5B",
+    "6A",
+    "6B",
+    "7",
+    "8"
+  ],
+  "city_source": "DOE/IECC representative cities corresponding to paper text 'representative city designated by the U.S. Department of Energy'; Figure 2 bracket labels were not OCR-readable.",
+  "artifacts": [
+    {
+      "climate_zone": "1A",
+      "city": "Miami",
+      "state": "FL",
+      "epw_id": "USA_FL_Miami.Intl.AP.722020_TMY3",
+      "wmo": "722020",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/energyplus_tmy/1A_USA_FL_Miami.Intl.AP.722020_TMY3.epw",
+      "downloaded": false,
+      "reused": true,
+      "sha256": "e0fff5174a6e4360821555dd6ce4c4872e12e7da342f1cf87d90f0628d89bcbf",
+      "bytes": 1642067
+    },
+    {
+      "climate_zone": "2A",
+      "city": "Houston",
+      "state": "TX",
+      "epw_id": "USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3",
+      "wmo": "722430",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/energyplus_tmy/2A_USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3.epw",
+      "downloaded": false,
+      "reused": true,
+      "sha256": "ea9d0a627725874894ed05f97828dedbdec06d102d20720292cb820b6d754592",
+      "bytes": 1636325
+    },
+    {
+      "climate_zone": "5A",
+      "city": "Chicago",
+      "state": "IL",
+      "epw_id": "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3",
+      "wmo": "725300",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/energyplus_tmy/5A_USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw",
+      "downloaded": false,
+      "reused": true,
+      "sha256": "3cc3dc0c7bcc93e7203e8d9aab657d384315f5a0c86cdede23f792d437a0309f",
+      "bytes": 1639985
+    },
+    {
+      "climate_zone": "8",
+      "city": "Fairbanks",
+      "state": "AK",
+      "epw_id": "USA_AK_Fairbanks.Intl.AP.702610_TMY3",
+      "wmo": "702610",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/energyplus_tmy/8_USA_AK_Fairbanks.Intl.AP.702610_TMY3.epw",
+      "downloaded": false,
+      "reused": true,
+      "sha256": "1cd8d0aa9f81596f53472f8620932268c94ea1c854500689cb55c4de06113432",
+      "bytes": 1619443
+    }
+  ],
+  "parsed": {
+    "1A": {
+      "location_header": "LOCATION,Miami Intl AP,FL,USA,TMY3,722020,25.80000,-80.30000,-5.0,11.0",
+      "n_rows": 8760,
+      "T_oa_C_range": [
+        5.0,
+        35.6
+      ],
+      "RH_oa_pct_range": [
+        20.0,
+        100.0
+      ],
+      "P_oa_Pa_range": [
+        100600.0,
+        102900.0
+      ],
+      "units": {
+        "T_oa": "deg_C",
+        "RH_oa": "percent",
+        "P_oa": "Pa"
+      },
+      "n_8760": 1,
+      "parquet": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/weather_1A.parquet"
+    },
+    "2A": {
+      "location_header": "LOCATION,Houston-Bush Intercontinental AP,TX,USA,TMY3,722430,30.00000,-95.36700,-6.0,29.0",
+      "n_rows": 8760,
+      "T_oa_C_range": [
+        -6.1,
+        39.4
+      ],
+      "RH_oa_pct_range": [
+        15.0,
+        100.0
+      ],
+      "P_oa_Pa_range": [
+        99600.0,
+        103700.0
+      ],
+      "units": {
+        "T_oa": "deg_C",
+        "RH_oa": "percent",
+        "P_oa": "Pa"
+      },
+      "n_8760": 1,
+      "parquet": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/weather_2A.parquet"
+    },
+    "5A": {
+      "location_header": "LOCATION,Chicago Ohare Intl Ap,IL,USA,TMY3,725300,41.98,-87.92,-6.0,201.0",
+      "n_rows": 8760,
+      "T_oa_C_range": [
+        -22.8,
+        35.0
+      ],
+      "RH_oa_pct_range": [
+        17.0,
+        100.0
+      ],
+      "P_oa_Pa_range": [
+        96200.0,
+        101800.0
+      ],
+      "units": {
+        "T_oa": "deg_C",
+        "RH_oa": "percent",
+        "P_oa": "Pa"
+      },
+      "n_8760": 1,
+      "parquet": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/weather_5A.parquet"
+    },
+    "8": {
+      "location_header": "LOCATION,Fairbanks Intl AP,AK,USA,TMY3,702610,64.81700,-147.8500,-9.0,133.0",
+      "n_rows": 8760,
+      "T_oa_C_range": [
+        -38.3,
+        30.0
+      ],
+      "RH_oa_pct_range": [
+        18.0,
+        100.0
+      ],
+      "P_oa_Pa_range": [
+        95500.0,
+        101700.0
+      ],
+      "units": {
+        "T_oa": "deg_C",
+        "RH_oa": "percent",
+        "P_oa": "Pa"
+      },
+      "n_8760": 1,
+      "parquet": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/weather_8.parquet"
+    }
+  },
+  "errors": [],
+  "status": "PASS"
+}
