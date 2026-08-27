@@ -1,0 +1,120 @@
+{
+  "created_utc": "2026-08-27T03:56:57Z",
+  "git_head": "bd112cf8d253d609fb003dfe50130e930f9fa773",
+  "script_sha256": {
+    "analyze_m100_suitability_v3.py": "022374fde79e5823941fdbfb465d038a19e73a7343e7235a37e54b599ad9d464",
+    "m100_suitability_v3.py": "27ac932c7621d8ea17a5a9d97c7dec2aefe181adfbca89019e77109c2694e443"
+  },
+  "partition_default": "sched_mit_sloan_batch_r8",
+  "reason": "rocky8 Sloan r8 matches the established 2021 DAG; CPU-only; no GPU",
+  "dependency_dag": "PREP(afterok) -> {static, within_month, node_array, thermal, dynamic, literature, support} -> AGG(afterany) -> AUDIT(afterany)",
+  "jobs": {
+    "prep": {
+      "id": "21358178",
+      "name": "m100_v3_prep",
+      "role": "test gate",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 2,
+      "mem": "8G",
+      "time": "00:30:00",
+      "depend": null
+    },
+    "static": {
+      "id": "21358179",
+      "name": "m100_v3_static",
+      "role": "weather/state/HQ/energy/wetbulb/R1/cooling",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 4,
+      "mem": "16G",
+      "time": "01:00:00",
+      "depend": "afterok:21358178"
+    },
+    "within_month": {
+      "id": "21358180",
+      "name": "m100_v3_within",
+      "role": "within-month weather",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 4,
+      "mem": "8G",
+      "time": "01:00:00",
+      "depend": "afterok:21358178"
+    },
+    "node_array": {
+      "id": "21358185",
+      "name": "m100_v3_node",
+      "role": "node-to-ICT array 1-11%3",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 8,
+      "mem": "32G",
+      "time": "02:00:00",
+      "depend": "afterok:21358178"
+    },
+    "thermal": {
+      "id": "21358181",
+      "name": "m100_v3_thermal",
+      "role": "Q101/Q102 / HTI audit",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 4,
+      "mem": "16G",
+      "time": "01:00:00",
+      "depend": "afterok:21358178"
+    },
+    "dynamic": {
+      "id": "21358182",
+      "name": "m100_v3_dyn",
+      "role": "D1 one-step vs recursive",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 4,
+      "mem": "16G",
+      "time": "02:00:00",
+      "depend": "afterok:21358178"
+    },
+    "literature": {
+      "id": "21358183",
+      "name": "m100_v3_lit",
+      "role": "optional same-data RC reproduction",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 4,
+      "mem": "16G",
+      "time": "04:00:00",
+      "depend": "afterok:21358178"
+    },
+    "support": {
+      "id": "21358184",
+      "name": "m100_v3_supp",
+      "role": "interpolation/extrapolation",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 2,
+      "mem": "8G",
+      "time": "01:00:00",
+      "depend": "afterok:21358178"
+    },
+    "aggregate": {
+      "id": "21358186",
+      "name": "m100_v3_agg",
+      "role": "final report/contract",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 2,
+      "mem": "8G",
+      "time": "01:00:00",
+      "depend": "afterany:branches"
+    },
+    "audit": {
+      "id": "21358187",
+      "name": "m100_v3_aud",
+      "role": "output/hash/no-deletion audit",
+      "partition": "sched_mit_sloan_batch_r8",
+      "cpus": 1,
+      "mem": "4G",
+      "time": "00:30:00",
+      "depend": "afterany:21358186"
+    }
+  },
+  "output_dir": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/m100/results/suitability_2021_v3_closure",
+  "does_not_overwrite": [
+    "results/pilot_facility_2021",
+    "results/suitability_2021",
+    "results/suitability_2021_v2"
+  ],
+  "no_raw_deletion": true
+}
