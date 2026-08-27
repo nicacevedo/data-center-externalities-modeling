@@ -15,25 +15,39 @@ sys.path.insert(0, str(SCRIPTS))
 
 from m100_suitability_v2 import expanding_folds  # noqa: E402
 from m100_suitability_v3 import (  # noqa: E402
+    EXECUTED_SAMPLE_WITH_NUMERICAL_DISCREPANCY,
     FORMULAS,
     LITERATURE,
+    LITERATURE_TRIANGULATION_CAVEAT,
+    NOT_REQUIRED_BY_M100_EVIDENCE,
+    NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT,
+    NOT_SUPPORTED,
+    NOT_TESTABLE_FROM_PROCESSED_FIELDS,
     R1_FORBIDDEN,
+    STRONG_SUPPORT,
     active_liquid_panel,
     build_contract,
     complete_case_mask,
     coverage_status,
     design_W,
     energy_quality_mask,
+    energy_quality_robustness_from_hq,
     expanding_folds as expanding_folds_v3,
+    format_struct_claim_evidence,
     hq_mask_from_coverage,
     independent_wetbulb,
     joint_support_label,
     lag_pairs,
+    literature_execution_status,
+    literature_reason,
+    node_timestamp_series,
     predict_d1_one_step,
     predict_d1_recursive,
+    regime_generic_input_label,
     stull_wetbulb_c,
     support_label,
     w_feature_names,
+    weather_interaction_label,
     within_month_split,
 )
 
@@ -260,8 +274,12 @@ def test_generic_contract_from_evidence_not_hardcoded():
     claims_n = " ".join(x["claim"] for x in c_none["STRUCTURALLY_SUPPORTED"])
     assert "weather" in claims_s.lower() or "f_k" in claims_s
     assert "f_k(P_IT, weather" not in claims_n
+    assert "optional_state" not in claims_s
+    assert "state_(t+1)" not in claims_s
+    assert "forward simulator" in claims_s
     assert c_strong["STRUCTURALLY_SUPPORTED"] != c_none["STRUCTURALLY_SUPPORTED"]
     assert any("WUE" in x["claim"] or "water" in x["claim"].lower() for x in c_strong["NOT_IDENTIFIED_BY_M100"])
+    assert c_strong.get("M100_CLOSED_FROZEN") is True
 
 
 def test_within_month_split_is_chronological():
@@ -274,3 +292,63 @@ def test_within_month_split_is_chronological():
     tr, te = within_month_split(df, mask)
     assert tr["hour_utc"].max() < te["hour_utc"].min()
     assert len(tr) == 20 and len(te) == 10
+
+
+def test_literature_status_flags_unexplained_mae():
+    assert literature_execution_status(26324.99) == EXECUTED_SAMPLE_WITH_NUMERICAL_DISCREPANCY
+    assert literature_execution_status(10.0) == "REPRODUCED_SAMPLE"
+    reason = literature_reason(EXECUTED_SAMPLE_WITH_NUMERICAL_DISCREPANCY, 26324.99)
+    assert LITERATURE_TRIANGULATION_CAVEAT in reason
+    assert "26.3" in reason
+
+
+def test_weather_interaction_and_regime_labels():
+    assert weather_interaction_label([0.04, -0.02, 0.01, 0.0, 0.044, -0.01, 0.02, 0.03]) == NOT_REQUIRED_BY_M100_EVIDENCE
+    assert regime_generic_input_label([0.055, 0.055, 0.01, -0.02, -0.04, -0.1, -0.2, -0.32]) == NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT
+
+
+def test_energy_quality_and_coverage_split():
+    hq = pd.DataFrame({
+        "sample": ["energy_quality_filter"] * 4,
+        "fold_id": [1, 1, 2, 2],
+        "model": ["W0", "W1", "W0", "W1"],
+        "mae": [100.0, 50.0, 80.0, 40.0],
+    })
+    assert energy_quality_robustness_from_hq(hq) == STRONG_SUPPORT
+    assert coverage_status(["Tot", "T_wetbulb"], "Tot")["status"] == "HQ_COVERAGE_NOT_AVAILABLE"
+    assert NOT_TESTABLE_FROM_PROCESSED_FIELDS == "NOT_TESTABLE_FROM_PROCESSED_FIELDS"
+
+
+def test_contract_prose_does_not_dump_dict():
+    ev = {
+        "facility_decomposition": "STRONG SUPPORT",
+        "weather_additive": STRONG_SUPPORT,
+        "weather_interaction": NOT_REQUIRED_BY_M100_EVIDENCE,
+        "regime_interaction": NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT,
+        "pue_derived": "STRONG SUPPORT",
+        "temporal_dependence": STRONG_SUPPORT,
+        "recursive_d1_forward_simulator": NOT_SUPPORTED,
+        "water": "UNSUPPORTED BY AVAILABLE DATA",
+        "generic_coefficients": "NOT IDENTIFIED BY M100",
+        "generic_pue": "NOT IDENTIFIED BY M100",
+        "generic_cooling_fraction": "NOT IDENTIFIED BY M100",
+        "universal_weather_variable": "NOT IDENTIFIED BY M100",
+        "universal_thresholds": "NOT IDENTIFIED BY M100",
+        "generic_state_parameters": "NOT IDENTIFIED BY M100",
+        "modern_ai_it": "NOT IDENTIFIED BY M100",
+    }
+    c = build_contract(ev)
+    for s in c["STRUCTURALLY_SUPPORTED"]:
+        rendered = f"- **{s['claim']}** — {format_struct_claim_evidence(s)}"
+        assert "{'claim'" not in rendered
+        assert not rendered.strip().endswith("}")
+
+
+def test_node_timestamp_accepts_hour_column():
+    df = pd.DataFrame({
+        "hour": pd.date_range("2021-01-01", periods=3, freq="h", tz="UTC"),
+        "total_power_mean": [1.0, 2.0, 3.0],
+    })
+    ts = node_timestamp_series(df)
+    assert len(ts) == 3
+    assert ts.dt.tz is not None

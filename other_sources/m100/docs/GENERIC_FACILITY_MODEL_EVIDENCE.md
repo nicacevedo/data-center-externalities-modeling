@@ -6,11 +6,11 @@ M100 is an **external measured facility-physics benchmark**, not generic-DC cali
 
 - **P_facility = P_IT + P_cooling + P_aux** — STRONG SUPPORT
   - M100 cooling aggregate accounts for nearly all non-IT energy; aux is residual, not a generic fraction
-- **P_cooling = f_k(P_IT, weather, optional_state)** — {'claim': 'P_cooling = f_k(P_IT, weather, optional_state)', 'weather_additive': 'STRONG SUPPORT', 'weather_interaction': 'MIXED / REGIME-DEPENDENT', 'regime_interaction': 'MIXED / REGIME-DEPENDENT', 'note': 'k is a cooling/facility archetype; M100 coefficients are not generic'}
-  - k is a cooling/facility archetype; M100 coefficients are not generic
+- **P_cooling = f_k(P_IT, weather)** — STRONG_SUPPORT; weather_additive=STRONG_SUPPORT; weather_interaction=NOT_REQUIRED_BY_M100_EVIDENCE; regime_interaction=NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT
+  - k is a cooling/facility archetype; M100 coefficients are not generic. IT×weather interaction: NOT_REQUIRED_BY_M100_EVIDENCE. M100 Free_Cooling_Status / regime interaction: NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT.
 - **PUE = P_facility / P_IT is a derived output, not a primitive** — STRONG SUPPORT
-- **operational form may need state_(t+1) = g_k(state_t, P_IT_t, weather_t)** — STRONG SUPPORT
-  - D1 is an identifiability diagnostic, not the physical model
+- **strong temporal dependence is supported, but the tested recursive D1 model is not supported as a forward simulator** — STRONG_SUPPORT; temporal_dependence=STRONG_SUPPORT; recursive_d1_forward_simulator=NOT_SUPPORTED
+  - Static-map residual autocorrelation supports temporal memory as an identifiability result. The tested D1 recursion is not a validated state equation and is not an operational simulator.
 
 ## NOT IDENTIFIED BY M100
 
@@ -25,6 +25,9 @@ Do not write production parameters from M100 for:
 - site WUE (UNSUPPORTED BY AVAILABLE DATA)
 - water withdrawal (UNSUPPORTED BY AVAILABLE DATA)
 - modern AI workload -> IT power (NOT IDENTIFIED BY M100)
+- validated D1 state equation / recursive forward simulator (NOT_SUPPORTED)
+- IT×weather interaction as a required generic term (NOT_REQUIRED_BY_M100_EVIDENCE)
+- M100 Free_Cooling_Status as a generic planning input (NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT)
 
 ## Evidence snapshot
 
@@ -32,15 +35,18 @@ Do not write production parameters from M100 for:
 {
   "n_chronological_folds": 8,
   "facility_decomposition": "STRONG SUPPORT",
-  "weather_additive": "STRONG SUPPORT",
-  "weather_interaction": "MIXED / REGIME-DEPENDENT",
+  "weather_additive": "STRONG_SUPPORT",
+  "weather_interaction": "NOT_REQUIRED_BY_M100_EVIDENCE",
   "weather_within_month": "MIXED / REGIME-DEPENDENT",
   "weather_descriptor_robustness": "STRONG SUPPORT",
-  "hq_robustness": "STRONG SUPPORT",
+  "source_coverage_robustness": "NOT_TESTABLE_FROM_PROCESSED_FIELDS",
+  "energy_quality_robustness": "STRONG_SUPPORT",
   "wetbulb_qa": "STRONG SUPPORT",
-  "regime_interaction": "MIXED / REGIME-DEPENDENT",
-  "temporal_state": "STRONG SUPPORT",
-  "recursive_dynamics_skill": "MIXED / REGIME-DEPENDENT",
+  "regime_interaction": "NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT",
+  "temporal_dependence": "STRONG_SUPPORT",
+  "temporal_state": "STRONG_SUPPORT",
+  "recursive_d1_forward_simulator": "NOT_SUPPORTED",
+  "recursive_dynamics_skill": "NOT_SUPPORTED",
   "node_bridge": "STRONG SUPPORT",
   "thermal_sanity": "STRONG SUPPORT",
   "thermal_load_closure": "UNSUPPORTED BY AVAILABLE DATA",
@@ -57,7 +63,7 @@ Do not write production parameters from M100 for:
   "n_folds_W1_to_W2_ge5pct": 0,
   "n_folds_W2_to_R1_ge5pct": 2,
   "frac_folds_W0_to_W1_ge5pct": 1.0,
-  "literature_reproduction": "REPRODUCED_SAMPLE",
+  "literature_reproduction": "EXECUTED_SAMPLE_WITH_NUMERICAL_DISCREPANCY",
   "cooling_target_weather": "STRONG SUPPORT",
   "october_retained": true
 }
@@ -65,4 +71,4 @@ Do not write production parameters from M100 for:
 
 ## Stop rule
 
-STOP M100 MODEL DEVELOPMENT. Next: NLR/H100/MLPerf IT layer; Lei–Masanet/LBNL climate-technology-water; independent thermal/control datasets.
+STOP M100 MODEL DEVELOPMENT. M100 CLOSED/FROZEN. Next: NLR/H100/MLPerf IT layer; Lei–Masanet/LBNL climate-technology-water; independent thermal/control datasets.

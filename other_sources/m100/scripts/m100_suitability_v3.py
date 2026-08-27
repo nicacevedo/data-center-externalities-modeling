@@ -511,13 +511,164 @@ def save_stage_status(stage: str, payload: dict) -> None:
     (d / "status.json").write_text(json.dumps(payload, indent=2, default=str) + "\n")
 
 
+def save_stage_status_month(stage: str, month: str, payload: dict) -> None:
+    """Per-month status so array tasks cannot overwrite other months."""
+    d = stage_dir(stage)
+    payload = dict(payload)
+    payload["stage"] = stage
+    payload["month"] = month
+    payload["git_head"] = git_head()
+    (d / f"status_{month}.json").write_text(json.dumps(payload, indent=2, default=str) + "\n")
+
+
+def rebuild_stage_status_index(stage: str, extra: dict | None = None) -> dict:
+    d = stage_dir(stage)
+    month_files = sorted(
+        p for p in d.glob("status_*.json")
+        if p.name != "status.json" and p.stem.startswith("status_")
+    )
+    months = []
+    for p in month_files:
+        tag = p.stem.replace("status_", "", 1)
+        if tag:
+            months.append(tag)
+    payload = {
+        "ok": True,
+        "months": months,
+        "per_month_status_files": [p.name for p in month_files],
+        "note": "index of per-month status files; not last-array-task overwrite",
+    }
+    if extra:
+        payload.update(extra)
+    save_stage_status(stage, payload)
+    return payload
+
+
 def evidence_label_from_improvements(xs, n) -> str:
     return label_from_fold_improvements(xs, n)
 
 
+STRONG_SUPPORT = "STRONG_SUPPORT"
+NOT_REQUIRED_BY_M100_EVIDENCE = "NOT_REQUIRED_BY_M100_EVIDENCE"
+NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT = "NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT"
+NOT_TESTABLE_FROM_PROCESSED_FIELDS = "NOT_TESTABLE_FROM_PROCESSED_FIELDS"
+EXECUTED_SAMPLE_WITH_NUMERICAL_DISCREPANCY = "EXECUTED_SAMPLE_WITH_NUMERICAL_DISCREPANCY"
+NOT_SUPPORTED = "NOT_SUPPORTED"
+LITERATURE_TRIANGULATION_CAVEAT = "same-data triangulation, not independent validation"
+
+
+def is_strong_support(label) -> bool:
+    return label in ("STRONG SUPPORT", STRONG_SUPPORT)
+
+
+def as_strong_support_token(label: str) -> str:
+    return STRONG_SUPPORT if label == "STRONG SUPPORT" else label
+
+
+def weather_interaction_label(improvements: list[float]) -> str:
+    """0/N folds meeting the 5% MAE heuristic is 'not required', not MIXED."""
+    if not improvements:
+        return "UNRESOLVED"
+    n_ge5 = sum(x >= 0.05 for x in improvements)
+    if n_ge5 == 0:
+        return NOT_REQUIRED_BY_M100_EVIDENCE
+    return evidence_label_from_improvements(improvements, len(improvements))
+
+
+def regime_generic_input_label(improvements: list[float]) -> str:
+    """Partial 5% wins plus later-month deterioration is not a stable generic input."""
+    if not improvements:
+        return "UNRESOLVED"
+    n = len(improvements)
+    n_ge5 = sum(x >= 0.05 for x in improvements)
+    n_worse = sum(x < 0 for x in improvements)
+    if 0 < n_ge5 < n and n_worse > 0:
+        return NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT
+    if n_ge5 == 0 and n_worse > 0:
+        return NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT
+    return evidence_label_from_improvements(improvements, n)
+
+
+def literature_execution_status(mae_vs_bundled, *, failed: bool = False) -> str:
+    """Status from sample execution vs bundled output. MAE is in Watts if present."""
+    if failed:
+        return "LITERATURE_REPRODUCTION_FAILED"
+    if mae_vs_bundled is None or not np.isfinite(mae_vs_bundled):
+        return "EXECUTED_SAMPLE_NO_BUNDLED_COMPARISON"
+    # Unexplained discrepancy vs bundled sample (Watts). 1 kW is far above rounding.
+    if float(mae_vs_bundled) > 1000.0:
+        return EXECUTED_SAMPLE_WITH_NUMERICAL_DISCREPANCY
+    return "REPRODUCED_SAMPLE"
+
+
+def literature_reason(status: str, mae_vs_bundled=None) -> str:
+    caveat = LITERATURE_TRIANGULATION_CAVEAT
+    if status == EXECUTED_SAMPLE_WITH_NUMERICAL_DISCREPANCY and mae_vs_bundled is not None and np.isfinite(mae_vs_bundled):
+        mae_kw = float(mae_vs_bundled) / 1000.0
+        return (
+            f"Executed authors' sample drivers/parameters. MAE vs bundled simulated_sample.csv "
+            f"is {float(mae_vs_bundled):.2f} W (~{mae_kw:.1f} kW) on sim_Pcool_total_elec_W; "
+            f"this numerical discrepancy is not explained by a documented unit or window mismatch. "
+            f"{caveat}; no retuning."
+        )
+    return (
+        "Ran authors' sample drivers/parameters. Comparison is to bundled simulated_sample.csv "
+        f"and published MAE numbers. Same M100 source; {caveat}; no retuning."
+    )
+
+
+def energy_quality_robustness_from_hq(hq: pd.DataFrame) -> str:
+    if hq is None or hq.empty:
+        return "UNRESOLVED"
+    sub = hq
+    if "sample" in hq.columns:
+        sub = hq.loc[hq["sample"].eq("energy_quality_filter")]
+    if sub.empty or "model" not in sub.columns:
+        return "UNRESOLVED"
+    imps = []
+    for _, g in sub.groupby("fold_id"):
+        w0 = g.loc[g["model"].eq("W0"), "mae"]
+        w1 = g.loc[g["model"].eq("W1"), "mae"]
+        if len(w0) and len(w1):
+            imps.append(rel_mae_improvement(float(w0.iloc[0]), float(w1.iloc[0])))
+    lab = evidence_label_from_improvements(imps, len(imps) or 0)
+    return as_strong_support_token(lab)
+
+
+def node_timestamp_series(df: pd.DataFrame) -> pd.Series:
+    for col in ("timestamp_utc", "hour", "hour_utc", "datetime"):
+        if col in df.columns:
+            return pd.to_datetime(df[col], utc=True)
+    raise KeyError("no node timestamp column among timestamp_utc/hour/hour_utc/datetime")
+
+
+def format_struct_claim_evidence(s: dict) -> str:
+    """Prose fragment for a STRUCTURALLY_SUPPORTED item; never dump a raw dict."""
+    ev = s.get("evidence")
+    if ev is not None and not isinstance(ev, dict):
+        extras = []
+        for k in (
+            "weather_additive", "weather_interaction", "regime_interaction",
+            "temporal_dependence", "recursive_d1_forward_simulator",
+        ):
+            if k in s and s[k] is not None and k != "evidence":
+                extras.append(f"{k}={s[k]}")
+        if extras:
+            return f"{ev}; " + "; ".join(extras)
+        return str(ev)
+    parts = []
+    for k in (
+        "weather_additive", "weather_interaction", "regime_interaction",
+        "temporal_dependence", "recursive_d1_forward_simulator",
+    ):
+        if k in s and s[k] is not None:
+            parts.append(f"{k}={s[k]}")
+    return "; ".join(parts) if parts else ""
+
+
 def build_contract(evidence: dict) -> dict:
     """Machine-readable generic facility-model contract generated from evidence labels."""
-    def supported(key, extra_ok=("STRONG SUPPORT",)):
+    def supported(key, extra_ok=("STRONG SUPPORT", STRONG_SUPPORT)):
         return evidence.get(key) in extra_ok
 
     struct = []
@@ -533,22 +684,38 @@ def build_contract(evidence: dict) -> dict:
 
     if supported("weather_additive"):
         struct.append({
-            "claim": "P_cooling = f_k(P_IT, weather, optional_state)",
+            "claim": "P_cooling = f_k(P_IT, weather)",
+            "evidence": evidence.get("weather_additive"),
             "weather_additive": evidence.get("weather_additive"),
             "weather_interaction": evidence.get("weather_interaction"),
             "regime_interaction": evidence.get("regime_interaction"),
-            "note": "k is a cooling/facility archetype; M100 coefficients are not generic",
+            "note": (
+                "k is a cooling/facility archetype; M100 coefficients are not generic. "
+                f"IT×weather interaction: {evidence.get('weather_interaction')}. "
+                f"M100 Free_Cooling_Status / regime interaction: {evidence.get('regime_interaction')}."
+            ),
         })
     if supported("pue_derived"):
         struct.append({
             "claim": "PUE = P_facility / P_IT is a derived output, not a primitive",
             "evidence": evidence.get("pue_derived"),
         })
-    if supported("temporal_state"):
+    temporal = evidence.get("temporal_dependence") or evidence.get("temporal_state")
+    if is_strong_support(temporal):
         struct.append({
-            "claim": "operational form may need state_(t+1) = g_k(state_t, P_IT_t, weather_t)",
-            "evidence": evidence.get("temporal_state"),
-            "note": "D1 is an identifiability diagnostic, not the physical model",
+            "claim": (
+                "strong temporal dependence is supported, but the tested recursive D1 model "
+                "is not supported as a forward simulator"
+            ),
+            "evidence": temporal if temporal in (STRONG_SUPPORT, "STRONG SUPPORT") else STRONG_SUPPORT,
+            "temporal_dependence": evidence.get("temporal_dependence", temporal),
+            "recursive_d1_forward_simulator": evidence.get(
+                "recursive_d1_forward_simulator", evidence.get("recursive_dynamics_skill", NOT_SUPPORTED)
+            ),
+            "note": (
+                "Static-map residual autocorrelation supports temporal memory as an identifiability result. "
+                "The tested D1 recursion is not a validated state equation and is not an operational simulator."
+            ),
         })
 
     for item, key in [
@@ -561,11 +728,13 @@ def build_contract(evidence: dict) -> dict:
         ("site WUE", "water"),
         ("water withdrawal", "water"),
         ("modern AI workload -> IT power", "modern_ai_it"),
+        ("validated D1 state equation / recursive forward simulator", "recursive_d1_forward_simulator"),
+        ("IT×weather interaction as a required generic term", "weather_interaction"),
+        ("M100 Free_Cooling_Status as a generic planning input", "regime_interaction"),
     ]:
         not_id.append({"claim": item, "evidence": evidence.get(key, "NOT IDENTIFIED BY M100")})
 
-    if evidence.get("weather_additive") != "STRONG SUPPORT":
-        # do not emit weather-dependent cooling as structurally supported
+    if not is_strong_support(evidence.get("weather_additive")):
         struct = [s for s in struct if "f_k(P_IT, weather" not in s.get("claim", "")]
 
     return {
@@ -578,7 +747,8 @@ def build_contract(evidence: dict) -> dict:
         "STRUCTURALLY_SUPPORTED": struct,
         "NOT_IDENTIFIED_BY_M100": not_id,
         "evidence_snapshot": evidence,
-        "stop_rule": "STOP M100 MODEL DEVELOPMENT after this closure.",
+        "stop_rule": "M100 CLOSED/FROZEN. STOP M100 MODEL DEVELOPMENT.",
+        "M100_CLOSED_FROZEN": True,
     }
 
 
@@ -615,7 +785,7 @@ def triangulation_rows(evidence: dict) -> list[dict]:
             "Ngwerume 2026 nonlinear RC+control (same-data triangulation, not nested OLS)",
             "AlphaDataCenterCooling / ExaDigiT: load and outdoor conditions jointly drive plant mode",
             "Allow archetype-specific IT×weather response; do not copy M100 interaction coefficient",
-            "interaction vs additive may be regime-dependent",
+            "M100 nested OLS does not require an IT×weather term",
         ),
         row(
             "free-cooling / operating modes",
@@ -623,15 +793,15 @@ def triangulation_rows(evidence: dict) -> list[dict]:
             "Ardebili: 6 CRAC, 4 with DFC, ~18C; Ngwerume: deadband/state persistence, manually calibrated",
             "AlphaDataCenterCooling independent FC / partial-mechanical / mechanical; Frontier/ExaDigiT controls",
             "Generic model may include archetype operating modes; do not transfer M100 FC flag or 18C threshold",
-            "M100 Free_Cooling_Status semantics vs published 18C may disagree; flag is an oracle",
+            "M100 Free_Cooling_Status is not stably supported as a generic input; flag is an oracle",
         ),
         row(
             "temporal state / thermal memory",
-            evidence.get("temporal_state"),
-            "Ngwerume 2026 four-state RC + rejection state + deadband, same M100, MAE 20.88 vs 95.80 constant-COP; parameters hand-calibrated",
+            evidence.get("temporal_dependence") or evidence.get("temporal_state"),
+            "Ngwerume 2026 four-state RC + rejection state + deadband, same M100, MAE 20.88 vs 95.80 constant-COP; parameters hand-calibrated; same-data triangulation, not independent validation",
             "ExaDigiT transient thermo-fluid (different facility); AlphaDataCenterCooling dynamics (independent)",
-            "Static maps are insufficient for operational simulation; keep a state, do not use D1 as physics",
-            "D1 phi is not a thermal capacitance; literature RC is same-data not independent proof",
+            "Strong temporal dependence is supported; the tested recursive D1 is not a validated forward simulator",
+            "D1 phi is not a thermal capacitance; the D1 state equation was not validated; literature RC is same-data not independent proof",
         ),
         row(
             "node -> facility IT bridge",

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """M100 2021 v3 closure runner. Writes only to results/suitability_2021_v3_closure/.
 
-Stages: prep, static, within_month, node, thermal, dynamic, literature, support, aggregate, audit
+Stages: prep, static, within_month, node, thermal, dynamic, literature, support, aggregate, report_only, audit
 """
 
 from __future__ import annotations
@@ -40,21 +40,29 @@ from m100_suitability_v2 import (
 )
 from m100_suitability_v3 import (
     DFC_DEVICES,
+    EXECUTED_SAMPLE_WITH_NUMERICAL_DISCREPANCY,
     FORMULAS,
     HEURISTIC_NOTE,
     HQ_THRESHOLD,
     LITERATURE,
+    LITERATURE_TRIANGULATION_CAVEAT,
     NODE_MONTHS,
     NON_DFC_DEVICES,
+    NOT_REQUIRED_BY_M100_EVIDENCE,
+    NOT_STABLY_SUPPORTED_AS_GENERIC_INPUT,
+    NOT_SUPPORTED,
+    NOT_TESTABLE_FROM_PROCESSED_FIELDS,
     NRMSE_DEF,
     ORIG_SUIT,
     OUT_DIR,
     PILOT_DIR,
     QUALIFIED_MONTHS,
     R1_FORBIDDEN,
+    STRONG_SUPPORT,
     TDB_DFC_C,
     V2_DIR,
     active_liquid_panel,
+    as_strong_support_token,
     build_contract,
     complete_case_mask,
     coverage_status,
@@ -62,22 +70,31 @@ from m100_suitability_v3 import (
     design_W,
     design_descriptor,
     energy_quality_mask,
+    energy_quality_robustness_from_hq,
     evidence_label_from_improvements,
     fit_d1,
     fit_predict,
+    format_struct_claim_evidence,
     freeze_hashes,
     git_head,
     hti_on_active_paths,
     independent_wetbulb,
     joint_support_label,
     lag_pairs,
+    literature_execution_status,
+    literature_reason,
     load_month_v3,
     metrics,
     nested_scores,
+    node_timestamp_series,
     panel_activity_table,
     predict_d1_one_step,
     predict_d1_recursive,
+    rebuild_stage_status_index,
+    regime_generic_input_label,
     save_stage_status,
+    save_stage_status_month,
+    weather_interaction_label,
     stage_dir,
     support_label,
     triangulation_rows,
@@ -510,6 +527,77 @@ def stage_within_month():
     save_stage_status("within_month", {"ok": True, "n_months": len({r['month'] for r in rows})})
 
 
+def _summarize_node_month(m: str) -> dict:
+    """One processed node month. Does not refit facility models."""
+    npth = grain_parquet("node", m)
+    if not npth.exists():
+        return {"month": m, "status": "no_node_parquet"}
+    node = pd.read_parquet(npth)
+    gpu_power_cols = [
+        c for c in node.columns
+        if "gpu" in c.lower() and any(tok in c.lower() for tok in ("power", "energy", "watt"))
+    ]
+    gpu_chain = "present_in_columns" if gpu_power_cols else "SKIP"
+    hq = node
+    if "high_quality" in node.columns:
+        hq = node.loc[node["high_quality"].astype(bool)]
+    elif "total_power_coverage" in node.columns:
+        hq = node.loc[node["total_power_coverage"] >= HQ_THRESHOLD]
+    hq = hq.copy()
+    hq["hour_utc"] = node_timestamp_series(hq)
+    agg = hq.groupby("hour_utc").agg(
+        n_hq_nodes=("node", "nunique") if "node" in hq.columns else ("total_power_mean", "size"),
+        P_nodes_W=("total_power_mean", "sum"),
+        median_coverage=("total_power_coverage", "median") if "total_power_coverage" in hq.columns else ("total_power_mean", "size"),
+    ).reset_index()
+    n_ref = float(agg["n_hq_nodes"].max()) if len(agg) else np.nan
+    agg["P_nodes_kW"] = agg["P_nodes_W"] / 1000.0
+    agg["P_nodes_kW_coverage_adjusted"] = agg["P_nodes_kW"] * (n_ref / agg["n_hq_nodes"].replace(0, np.nan))
+    fac = load_month_v3(m)
+    if fac.empty or "P_IT" not in fac.columns:
+        (OUT_DIR / "tables").mkdir(parents=True, exist_ok=True)
+        agg.to_csv(OUT_DIR / "tables" / f"node_hourly_{m}.csv", index=False)
+        return {
+            "month": m,
+            "status": "node_present_facility_IT_absent",
+            "n_hours_nodes": int(len(agg)),
+            "median_hq_nodes": float(agg["n_hq_nodes"].median()) if len(agg) else np.nan,
+            "facility_IT_available": False,
+            "gpu_chain": gpu_chain,
+            "note": "node parquet present; canonical Tot_ict absent this month",
+        }
+    merged = pd.merge(agg, fac[["hour_utc", "P_IT"]], on="hour_utc", how="inner")
+    merged = merged.dropna(subset=["P_nodes_kW", "P_IT"])
+    merged = merged.loc[merged["P_IT"] > 0]
+    if merged.empty:
+        return {"month": m, "status": "no_overlap", "gpu_chain": gpu_chain}
+    x = merged["P_IT"].to_numpy(float)
+    y = merged["P_nodes_kW"].to_numpy(float)
+    slope = float(np.linalg.lstsq(x.reshape(-1, 1), y, rcond=None)[0][0])
+    ratio = y / x
+    merged[["hour_utc", "P_IT", "P_nodes_kW", "P_nodes_kW_coverage_adjusted", "n_hq_nodes"]].to_csv(
+        OUT_DIR / "tables" / f"node_hourly_{m}.csv", index=False
+    )
+    return {
+        "month": m,
+        "n_hours": int(len(merged)),
+        "median_hq_nodes": float(merged["n_hq_nodes"].median()),
+        "p05_hq_nodes": float(merged["n_hq_nodes"].quantile(0.05)),
+        "p95_hq_nodes": float(merged["n_hq_nodes"].quantile(0.95)),
+        "pearson": float(np.corrcoef(x, y)[0, 1]) if len(merged) > 2 else np.nan,
+        "spearman": float(pd.Series(x).corr(pd.Series(y), method="spearman")),
+        "through_origin_slope": slope,
+        "median_P_nodes_over_Tot_ict": float(np.median(ratio)),
+        "p05_ratio": float(np.quantile(ratio, 0.05)),
+        "p50_ratio": float(np.quantile(ratio, 0.50)),
+        "p95_ratio": float(np.quantile(ratio, 0.95)),
+        "median_level_diff_kW": float(np.median(y - x)),
+        "coverage_adjusted_used_in_primary": False,
+        "gpu_chain": gpu_chain,
+        "note": "raw measured-node sum is primary; coverage-adjusted is diagnostic only; Watts converted /1000 to kW",
+    }
+
+
 def stage_node():
     months = NODE_MONTHS
     if os.environ.get("SLURM_ARRAY_TASK_ID"):
@@ -518,80 +606,65 @@ def stage_node():
             raise SystemExit(f"bad array id {idx}")
         months = [months[idx]]
     rows = []
-    gpu_skip = True
     for m in months:
-        npth = grain_parquet("node", m)
-        if not npth.exists():
-            rows.append({"month": m, "status": "no_node_parquet"})
-            continue
-        node = pd.read_parquet(npth)
-        # GPU
-        gpu_cols = [c for c in node.columns if "gpu" in c.lower() or "Gpu" in c]
-        if gpu_cols:
-            gpu_skip = False
-        hq = node
-        if "high_quality" in node.columns:
-            hq = node.loc[node["high_quality"].astype(bool)]
-        elif "total_power_coverage" in node.columns:
-            hq = node.loc[node["total_power_coverage"] >= HQ_THRESHOLD]
-        hq = hq.copy()
-        hq["hour_utc"] = pd.to_datetime(hq["timestamp_utc"], utc=True)
-        # total_power_mean is Watts
-        agg = hq.groupby("hour_utc").agg(
-            n_hq_nodes=("node", "nunique") if "node" in hq.columns else ("total_power_mean", "size"),
-            P_nodes_W=("total_power_mean", "sum"),
-            median_coverage=("total_power_coverage", "median") if "total_power_coverage" in hq.columns else ("total_power_mean", "size"),
-        ).reset_index()
-        n_ref = float(agg["n_hq_nodes"].max()) if len(agg) else np.nan
-        agg["P_nodes_kW"] = agg["P_nodes_W"] / 1000.0
-        agg["P_nodes_kW_coverage_adjusted"] = agg["P_nodes_kW"] * (n_ref / agg["n_hq_nodes"].replace(0, np.nan))
-        fac = load_month_v3(m)
-        if fac.empty or "P_IT" not in fac.columns:
-            rows.append({
-                "month": m, "n_hours_nodes": int(len(agg)),
-                "median_hq_nodes": float(agg["n_hq_nodes"].median()) if len(agg) else np.nan,
-                "facility_IT_available": False,
-                "note": "node parquet present; canonical Tot_ict absent this month",
-            })
-            write_table(agg.head(0), f"node_bridge_{m}.csv")  # placeholder
-            (OUT_DIR / "tables").mkdir(parents=True, exist_ok=True)
-            agg.to_csv(OUT_DIR / "tables" / f"node_hourly_{m}.csv", index=False)
-            continue
-        merged = pd.merge(agg, fac[["hour_utc", "P_IT"]], on="hour_utc", how="inner")
-        merged = merged.dropna(subset=["P_nodes_kW", "P_IT"])
-        merged = merged.loc[merged["P_IT"] > 0]
-        if merged.empty:
-            rows.append({"month": m, "status": "no_overlap"})
-            continue
-        x = merged["P_IT"].to_numpy(float)
-        y = merged["P_nodes_kW"].to_numpy(float)
-        slope = float(np.linalg.lstsq(x.reshape(-1, 1), y, rcond=None)[0][0])
-        ratio = y / x
-        rows.append({
-            "month": m,
-            "n_hours": int(len(merged)),
-            "median_hq_nodes": float(merged["n_hq_nodes"].median()),
-            "p05_hq_nodes": float(merged["n_hq_nodes"].quantile(0.05)),
-            "p95_hq_nodes": float(merged["n_hq_nodes"].quantile(0.95)),
-            "pearson": float(np.corrcoef(x, y)[0, 1]) if len(merged) > 2 else np.nan,
-            "spearman": float(pd.Series(x).corr(pd.Series(y), method="spearman")),
-            "through_origin_slope": slope,
-            "median_P_nodes_over_Tot_ict": float(np.median(ratio)),
-            "p05_ratio": float(np.quantile(ratio, 0.05)),
-            "p50_ratio": float(np.quantile(ratio, 0.50)),
-            "p95_ratio": float(np.quantile(ratio, 0.95)),
-            "median_level_diff_kW": float(np.median(y - x)),
-            "coverage_adjusted_used_in_primary": False,
-            "gpu_chain": "SKIP" if gpu_skip else "present_in_columns",
-            "note": "raw measured-node sum is primary; coverage-adjusted is diagnostic only; Watts converted /1000 to kW",
-        })
-        merged[["hour_utc", "P_IT", "P_nodes_kW", "P_nodes_kW_coverage_adjusted", "n_hq_nodes"]].to_csv(
-            OUT_DIR / "tables" / f"node_hourly_{m}.csv", index=False
-        )
+        rec = _summarize_node_month(m)
+        rows.append(rec)
+        save_stage_status_month("node", m, {"ok": True, "record": rec})
     out = pd.DataFrame(rows)
     tag = months[0] if len(months) == 1 else "all"
     write_table(out, f"node_to_facility_it_{tag}.csv")
-    save_stage_status("node", {"ok": True, "months": months, "gpu_chain": "SKIP" if gpu_skip else "present"})
+    rebuild_stage_status_index("node", {"gpu_chain": "SKIP"})
+
+
+def _relabel_literature_csv() -> pd.DataFrame:
+    lit = _read_table("literature_dynamic_reproduction.csv")
+    if lit.empty:
+        return lit
+    rec = lit.iloc[0].to_dict()
+    failed = str(rec.get("status", "")).endswith("FAILED")
+    mae = rec.get("sample_mae_vs_bundled_output")
+    try:
+        mae = float(mae)
+    except Exception:
+        mae = np.nan
+    rec["status"] = literature_execution_status(mae, failed=failed)
+    rec["reason"] = literature_reason(rec["status"], mae)
+    rec["independence_tag"] = LITERATURE["independence"]
+    rec["literature_triangulation_only"] = True
+    rec["independent_validation"] = False
+    out = pd.DataFrame([rec])
+    write_table(out, "literature_dynamic_reproduction.csv")
+    return out
+
+
+def _rebuild_node_table_from_shards(*, fill_missing: bool = True) -> pd.DataFrame:
+    """Concatenate per-month shards; optionally fill missing processed months from parquet."""
+    tables = OUT_DIR / "tables"
+    tables.mkdir(parents=True, exist_ok=True)
+    if fill_missing:
+        for m in NODE_MONTHS:
+            shard = tables / f"node_to_facility_it_{m}.csv"
+            if shard.exists() and shard.stat().st_size > 10:
+                rec = pd.read_csv(shard).iloc[0].to_dict()
+                save_stage_status_month("node", m, {"ok": True, "record": rec, "source": "existing_shard"})
+                continue
+            rec = _summarize_node_month(m)
+            pd.DataFrame([rec]).to_csv(shard, index=False)
+            save_stage_status_month("node", m, {"ok": True, "record": rec, "source": "processed_parquet_fill"})
+    parts = sorted(tables.glob("node_to_facility_it_*.csv"))
+    frames = []
+    for p in parts:
+        if p.name == "node_to_facility_it_all.csv":
+            continue
+        df = pd.read_csv(p)
+        if len(df):
+            frames.append(df)
+    nd = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    if len(nd) and "month" in nd.columns:
+        nd = nd.drop_duplicates(subset=["month"], keep="last").sort_values("month")
+    write_table(nd, "node_to_facility_it.csv")
+    rebuild_stage_status_index("node")
+    return nd
 
 
 def stage_thermal():
@@ -823,11 +896,8 @@ def stage_literature():
                 d = a[:n] - b[:n]
                 rec["sample_mae_vs_bundled_output"] = float(np.nanmean(np.abs(d)))
                 rec["sample_max_abs_vs_bundled"] = float(np.nanmax(np.abs(d)))
-        rec["status"] = "REPRODUCED_SAMPLE"
-        rec["reason"] = (
-            "Ran authors' sample drivers/parameters. Comparison is to bundled simulated_sample.csv "
-            "and published MAE numbers. Same M100 source; not independent validation; no retuning."
-        )
+        rec["status"] = literature_execution_status(rec.get("sample_mae_vs_bundled_output"))
+        rec["reason"] = literature_reason(rec["status"], rec.get("sample_mae_vs_bundled_output"))
         rec["discrepancy_from_published_mae"] = (
             "Published MAE 20.88 kW is the authors' calibrated evaluation on their M100 window, "
             "not a metric we re-estimated on 2021 chronological folds."
@@ -892,11 +962,16 @@ def _impr(df, inc, col="mae_rel_improvement"):
 
 
 def stage_aggregate():
-    # merge node shards
-    node_parts = sorted((OUT_DIR / "tables").glob("node_to_facility_it_*.csv"))
-    if node_parts:
-        nd = pd.concat([pd.read_csv(p) for p in node_parts], ignore_index=True)
-        write_table(nd, "node_to_facility_it.csv")
+    return _write_closure_reports(write_figures=True, fill_missing_node=False)
+
+
+def stage_report_only():
+    """Relabel flags and rewrite JSON/docs from existing tables. No model refits."""
+    return _write_closure_reports(write_figures=False, fill_missing_node=True)
+
+
+def _write_closure_reports(*, write_figures: bool, fill_missing_node: bool):
+    node = _rebuild_node_table_from_shards(fill_missing=fill_missing_node)
     nested = _read_table("weather_nested_folds.csv")
     incs = _read_table("weather_nested_increments.csv")
     win = _read_table("weather_within_month_increments.csv")
@@ -905,12 +980,13 @@ def stage_aggregate():
     cool = _read_table("cooling_target_accounting.csv")
     cool_res = _read_table("cooling_target_results.csv")
     therm = _read_table("thermal_check.csv")
-    node = _read_table("node_to_facility_it.csv")
+    if node is None or (hasattr(node, "empty") and node.empty):
+        node = _read_table("node_to_facility_it.csv")
     wb = _read_table("wetbulb_qa.csv")
     desc = _read_table("weather_descriptor_robustness.csv")
     hq = _read_table("measurement_hq_robustness.csv")
     assoc = _read_table("state_weather_association.csv")
-    lit = _read_table("literature_dynamic_reproduction.csv")
+    lit = _relabel_literature_csv()
     supp = _read_table("support_extrapolation.csv")
     octd = _read_table("october_diagnostic.csv")
     sem = _read_table("state_semantics.csv")
@@ -921,26 +997,20 @@ def stage_aggregate():
     win_w0w1 = _impr(win, "W0_to_W1")
     r1i = _impr(r1, "W2_to_R1")
 
-    # HQ robustness: compare complete vs energy_quality W0->W1 direction
-    hq_robust = "UNRESOLVED"
-    if len(hq):
-        a = hq.loc[hq["sample"].eq("complete_case_v2_like") & hq["model"].eq("W2")]
-        b = hq.loc[hq["sample"].eq("energy_quality_filter") & hq["model"].eq("W2")]
-        if len(a) and len(b):
-            hq_robust = "STRONG SUPPORT" if (a["mae"].median() > 0 and b["mae"].median() > 0) else "MIXED / REGIME-DEPENDENT"
-            # direction of weather increment
-            inc_c = _impr(incs, "W0_to_W1")
-            hq_robust = "STRONG SUPPORT" if evidence_label_from_improvements(inc_c, n_folds) == "STRONG SUPPORT" else evidence_label_from_improvements(inc_c, n_folds)
+    # HQ: source coverage is not testable from processed Tot/Tot_ict/weather/FC fields.
+    # Energy-quality sample is a separate robustness check on existing W0→W1 increments.
+    source_coverage_robustness = NOT_TESTABLE_FROM_PROCESSED_FIELDS
+    energy_quality_robustness = energy_quality_robustness_from_hq(hq)
 
     fac_frac = float(cool["frac_nonIT_energy_from_cooling"].median()) if len(cool) and "frac_nonIT_energy_from_cooling" in cool else np.nan
     facility_decomp = "STRONG SUPPORT" if np.isfinite(fac_frac) and fac_frac >= 0.9 else (
         "MIXED / REGIME-DEPENDENT" if np.isfinite(fac_frac) else "UNSUPPORTED BY AVAILABLE DATA"
     )
 
-    weather_add = evidence_label_from_improvements(w0w1, n_folds)
-    weather_int = evidence_label_from_improvements(w1w2, n_folds)
+    weather_add = as_strong_support_token(evidence_label_from_improvements(w0w1, n_folds))
+    weather_int = weather_interaction_label(w1w2)
     weather_within = evidence_label_from_improvements(win_w0w1, len(win_w0w1) or 0)
-    regime = evidence_label_from_improvements(r1i, len(r1i) or 0)
+    regime = regime_generic_input_label(r1i)
 
     # descriptor robustness: weather specs beat IT on most folds
     desc_label = "UNRESOLVED"
@@ -963,21 +1033,24 @@ def stage_aggregate():
                     desc_label = "NOT SUPPORTED"
 
     mem_label = "UNRESOLVED"
-    rec_useful = "NOT SUPPORTED"
+    rec_useful = NOT_SUPPORTED
     if len(dyn):
         ac = dyn.loc[dyn["model"].eq("W2_static"), "acf_1h"]
         if ac.notna().any() and float(ac.median()) >= 0.3:
-            mem_label = "STRONG SUPPORT"
+            mem_label = STRONG_SUPPORT
         elif ac.notna().any():
             mem_label = "MIXED / REGIME-DEPENDENT"
-        # recursive vs static
         rec_imp = []
         for fid, g in dyn.groupby("fold_id"):
             sw = g.loc[g.model.eq("W2_static"), "mae"]
             sr = g.loc[g.model.eq("D1_recursive"), "mae"]
             if len(sw) and len(sr):
                 rec_imp.append(rel_mae_improvement(float(sw.iloc[0]), float(sr.iloc[0])))
-        rec_useful = evidence_label_from_improvements(rec_imp, len(rec_imp) or 0)
+        # Recursive D1 is a forward-simulator test; MIXED/weaker than static is NOT_SUPPORTED.
+        if rec_imp and all(x >= 0.05 for x in rec_imp):
+            rec_useful = STRONG_SUPPORT
+        else:
+            rec_useful = NOT_SUPPORTED
 
     node_label = "UNSUPPORTED BY AVAILABLE DATA"
     if len(node) and "pearson" in node.columns:
@@ -1020,10 +1093,13 @@ def stage_aggregate():
         "weather_interaction": weather_int,
         "weather_within_month": weather_within,
         "weather_descriptor_robustness": desc_label,
-        "hq_robustness": hq_robust,
+        "source_coverage_robustness": source_coverage_robustness,
+        "energy_quality_robustness": energy_quality_robustness,
         "wetbulb_qa": wb_ok,
         "regime_interaction": regime,
+        "temporal_dependence": mem_label,
         "temporal_state": mem_label,
+        "recursive_d1_forward_simulator": rec_useful,
         "recursive_dynamics_skill": rec_useful,
         "node_bridge": node_label,
         "thermal_sanity": therm_label,
@@ -1066,13 +1142,15 @@ def stage_aggregate():
         {"topic": "temporal_memory", "v2": (v2.get("evidence") or {}).get("temporal_memory"),
          "v3": mem_label, "changed": False},
         {"topic": "water", "v2": "UNSUPPORTED BY AVAILABLE DATA", "v3": water, "changed": False},
-        {"topic": "HQ_coverage", "v2": "not assessed", "v3": "HQ_COVERAGE_NOT_AVAILABLE for Tot/Tot_ict/weather/FC", "changed": True},
+        {"topic": "HQ_coverage", "v2": "not assessed",
+         "v3": f"source_coverage_robustness={source_coverage_robustness}; energy_quality_robustness={energy_quality_robustness}",
+         "changed": True},
         {"topic": "classification_scope", "v2": v2.get("classification"),
          "v3": "closure contract; M100 frozen as structural benchmark", "changed": True},
     ])
     write_table(old, "old_v2_vs_v3_conclusions.csv")
 
-    _write_figures(nested, incs, win, dyn, node, therm, desc, assoc)
+    _write_figures(nested, incs, win, dyn, node, therm, desc, assoc) if write_figures else None
     _write_report(evidence, contract, nested, incs, win, r1, dyn, node, therm, cool, lit, wb, octd, assoc, sem, desc, supp)
     _write_docs(evidence, contract)
 
@@ -1104,7 +1182,8 @@ def stage_aggregate():
         "original_v2_untouched": True,
         "no_raw_deletion": True,
         "role": "EXTERNAL MEASURED FACILITY-PHYSICS BENCHMARK",
-        "stop_rule": "STOP M100 MODEL DEVELOPMENT",
+        "stop_rule": "M100 CLOSED/FROZEN. STOP M100 MODEL DEVELOPMENT",
+        "M100_CLOSED_FROZEN": True,
         "frozen_v2_hashes": json.loads((OUT_DIR / "frozen_v2_hashes.json").read_text()) if (OUT_DIR / "frozen_v2_hashes.json").exists() else V2_FROZEN,
     }
     (OUT_DIR / "final_status.json").write_text(json.dumps(status, indent=2, default=str) + "\n")
@@ -1223,7 +1302,7 @@ def _write_report(evidence, contract, nested, incs, win, r1, dyn, node, therm, c
         "M100 is an **EXTERNAL MEASURED FACILITY-PHYSICS BENCHMARK**.",
         "Do not transfer coefficients, PUE levels, cooling fractions, control thresholds, GPU behavior, or traces.",
         "",
-        f"**Overall status:** see `final_status.json`. Stop rule: **STOP M100 MODEL DEVELOPMENT**.",
+        f"**Overall status:** see `final_status.json`. **M100 CLOSED/FROZEN.** Stop rule: **STOP M100 MODEL DEVELOPMENT**.",
         "",
         "## T1. Canonical power/energy boundaries",
         f"Canonical meters remain `panel=generals`, `device=pue`. NRMSE definition: `{NRMSE_DEF}`.",
@@ -1233,8 +1312,9 @@ def _write_report(evidence, contract, nested, incs, win, r1, dyn, node, therm, c
         "",
         "## T2. HQ filtering robustness",
         "Tot, Tot_ict, weather, and Free_Cooling_Status have **no** `*_coverage` column (`HQ_COVERAGE_NOT_AVAILABLE`).",
+        f"source_coverage_robustness: **{evidence.get('source_coverage_robustness')}**.",
+        f"energy_quality_robustness (W0→W1 on energy_quality sample): **{evidence.get('energy_quality_robustness')}**.",
         f"Weather conclusion label on complete-case chronological folds: **{evidence.get('weather_additive')}**.",
-        f"Energy-quality filter comparison: **{evidence.get('hq_robustness')}**.",
         "",
         "## T3. Within-month weather",
         f"Fixed first 2/3 vs last 1/3 of valid hours: **{evidence.get('weather_within_month')}**.",
@@ -1258,13 +1338,13 @@ def _write_report(evidence, contract, nested, incs, win, r1, dyn, node, therm, c
         "Do not transfer the M100 control flag or 18°C threshold as a generic planning variable.",
         "",
         "## T9–T10. Temporal memory",
-        f"Static W2 residual 1 h ACF: **{evidence.get('temporal_state')}**.",
-        f"Recursive D1 vs static W2: **{evidence.get('recursive_dynamics_skill')}**.",
-        "D1 is an identifiability diagnostic, not the physical model. One-step path is an ORACLE.",
+        f"Static W2 residual 1 h ACF (temporal dependence): **{evidence.get('temporal_dependence')}**.",
+        f"Recursive D1 as a forward simulator: **{evidence.get('recursive_d1_forward_simulator')}**.",
+        "Strong temporal dependence is supported, but the tested recursive D1 model is not supported as a forward simulator. The D1 state equation was not validated. One-step path is an ORACLE.",
         tbl(dyn.head(24) if len(dyn) else dyn),
         "",
         "## T11. Literature RC model",
-        f"Status: **{lit_s}**. Tag: **same-data triangulation, not independent validation**.",
+        f"Status: **{lit_s}**. Tag: **{LITERATURE_TRIANGULATION_CAVEAT}**.",
         tbl(lit),
         "",
         "## T12. Node → facility IT",
@@ -1283,7 +1363,11 @@ def _write_report(evidence, contract, nested, incs, win, r1, dyn, node, therm, c
         tbl(supp.head(30) if len(supp) else supp),
         "",
         "## T17. Structurally supported (generic contract)",
-        json.dumps(contract.get("STRUCTURALLY_SUPPORTED"), indent=2, default=str),
+        "\n".join(
+            f"- **{s.get('claim')}** — {format_struct_claim_evidence(s)}"
+            + (f"\n  - {s['note']}" if s.get("note") else "")
+            for s in (contract.get("STRUCTURALLY_SUPPORTED") or [])
+        ),
         "",
         "## T18. Not identified by M100",
         json.dumps(contract.get("NOT_IDENTIFIED_BY_M100"), indent=2, default=str),
@@ -1308,7 +1392,7 @@ M100 is an **external measured facility-physics benchmark**, not generic-DC cali
 
 """
     for s in contract.get("STRUCTURALLY_SUPPORTED") or []:
-        text += f"- **{s.get('claim')}** — {s.get('evidence', s)}\n"
+        text += f"- **{s.get('claim')}** — {format_struct_claim_evidence(s)}\n"
         if s.get("note"):
             text += f"  - {s['note']}\n"
     text += """
@@ -1328,7 +1412,7 @@ Do not write production parameters from M100 for:
 
 ## Stop rule
 
-STOP M100 MODEL DEVELOPMENT. Next: NLR/H100/MLPerf IT layer; Lei–Masanet/LBNL climate-technology-water; independent thermal/control datasets.
+STOP M100 MODEL DEVELOPMENT. M100 CLOSED/FROZEN. Next: NLR/H100/MLPerf IT layer; Lei–Masanet/LBNL climate-technology-water; independent thermal/control datasets.
 """
     (docs / "GENERIC_FACILITY_MODEL_EVIDENCE.md").write_text(text)
 
@@ -1400,6 +1484,7 @@ STAGES = {
     "literature": stage_literature,
     "support": stage_support,
     "aggregate": stage_aggregate,
+    "report_only": stage_report_only,
     "audit": stage_audit,
 }
 
