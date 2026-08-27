@@ -1,0 +1,18 @@
+{
+  "schema_version": "hourly-v2-2021.2",
+  "pool_raw": "/orcd/pool/005/nacevedo/m100/raw_staging",
+  "pool_processed": "/orcd/pool/005/nacevedo/m100/processed",
+  "scratch": "/orcd/scratch/orcd/008/nacevedo/m100",
+  "zenodo_catalog": "data/catalog/m100_zenodo_2021_files.csv",
+  "energy_integration": "trapezoidal; gaps longer than 180s (90s IPMI) excluded; not interpolated",
+  "liquid_physics": "delta_T and flow*delta_T joined at truncated second before hourly aggregation",
+  "weather_pressure": "OpenWeather sea-level hPa converted to station Pa at assumed 61 m elevation; wet bulb via psychrolib SI",
+  "raw_deletion_policy": "only if month QC certification=PASS and raw_deletion_allowed true",
+  "do_not_transfer_to_prineville": [
+    "absolute M100 coefficients",
+    "M100 PUE values",
+    "M100 cooling-power fractions",
+    "M100 GPU coefficients",
+    "M100 hourly traces"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "job_id": "21338092",
+  "partition": "mit_normal",
+  "script": "scripts/run_m100_facility_pilot.sbatch",
+  "cpus": 1,
+  "mem": "4G",
+  "time": "00:30:00",
+  "depends_on_21334082": false,
+  "note": "idempotent skip-if-complete; local run already wrote results/pilot_facility_2021",
+  "updated_utc": "2026-08-26T21:32:56Z"
+}

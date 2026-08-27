@@ -1,7 +1,0 @@
-rank,owner,action,why_it_matters,exact_instruction_file
-1,user/manual,Submit City of Prineville public-record request for monthly Meta water/discharge + well production + ASR/head series,turns annual water reconstruction into subannual empirical validation,MANUAL_ACQUISITION.md section 3
-2,user/manual,Export OWRD water-use records by City/entity/POD/right using official well IDs,adds monthly groundwater/withdrawal evidence and measured-vs-estimated flags,MANUAL_ACQUISITION.md section 1
-3,user/manual,Request City/Crook County Meta building permit/final/CO index,converts expansion announcements into defensible capacity/technology epochs,MANUAL_ACQUISITION.md section 4
-4,user/manual,Get free EIA API key and run PACW downloader,enables hourly regional grid context and emissions reconstruction,MANUAL_ACQUISITION.md section 5
-5,user/local-run,Run NOAA downloader/prepare scripts,creates the hourly weather driver that this environment could not bundle,MANUAL_ACQUISITION.md section 7
-6,optional cooperation,Ask Meta/PacifiCorp for monthly/hourly campus electricity or IT telemetry,would materially strengthen PUE/load validation and reduce latent-state uncertainty,MANUAL_ACQUISITION.md section 8

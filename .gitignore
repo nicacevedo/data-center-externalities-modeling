@@ -26,3 +26,13 @@ Meta_Prineville_Oregon_v3/madis_test/raw/
 
 # Slurm job logs
 Meta_Prineville_Oregon_v3/outputs/slurm_logs/
+
+# M100 raw archives, extracted partitions, and generated products
+other_sources/m100/archives/
+other_sources/m100/daily_input_january/
+other_sources/m100/sample_january/
+other_sources/m100/derived/
+other_sources/m100/parquet/
+other_sources/m100/data/
+other_sources/m100/results/
+other_sources/m100/logs/

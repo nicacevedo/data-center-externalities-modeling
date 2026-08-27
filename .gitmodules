@@ -1,0 +1,3 @@
+[submodule "other_sources/m100/external/exadata"]
+	path = other_sources/m100/external/exadata
+	url = https://gitlab.com/ecs-lab/exadata.git
