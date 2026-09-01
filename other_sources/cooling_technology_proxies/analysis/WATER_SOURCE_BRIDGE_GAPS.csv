@@ -1,0 +1,8 @@
+quantity,identified_by_WUE_site,public_source,project_source,outreach_or_permit,likely_resolution,importance_groundwater,notes
+onsite conditioning water W_cond / WUE_site,YES as modeled intensity,Lei 2025 pairs; not site meters,gray-box evaporative index (not makeup),no,annual or hourly modeled,upstream of bridge,this module ends here
+City withdrawal/delivery to campus,NO,City meters exist in Prineville module (WATER-COMM),yes — do not treat as WUE,package already obtained,monthly,high for municipal share,not cooling-tech calibration
+reclaimed-water share,NO,city/ASR documents,partial documentary,maybe,annual/unknown,high,source allocation Ψ
+direct well / Vitesse POD,NO,OWRD WUR,yes,no for existing exports,monthly water-year,high,not WUE
+sewer/discharge / blowdown destination,NO (draw-off is inside modeled WUE but not a sewer meter),SWR METER physical direction unknown,unresolved,yes,monthly if obtained,high for return,
+consumption fraction,NO,Meta defines consumption as withdrawal-discharge or CoC; not used here,not from Lei WUE,n/a,annual if disclosed,medium,do not read 2023-24 holdout to fit this module
+source-specific pumping energy,NO,not in Lei,groundwater module,n/a,hourly/monthly,high,outside cooling proxy

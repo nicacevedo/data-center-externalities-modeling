@@ -1,0 +1,13 @@
+tech_id,source_label,IT_HEAT_CAPTURE,HEAT_TRANSPORT,HEAT_REJECTION,ECONOMIZER,MECHANICAL_COOLING,DIRECT_WATER_MECHANISM,liquid_it,lei2025_cases,confidence,notes
+DX,Direct expansion system,air,air,dry,none,DX,humidification_possible,no,"5,11",high,CRAC/DX; WUE near-humidification only
+ACC,Air-cooled chiller,air,air,dry,none,air-cooled chiller,humidification_possible,no,"4,10",high,
+WCC,Water-cooled chiller,air,air,evaporative tower,none,water-cooled chiller,cooling tower,no,"3,9",high,highest typical site WUE
+AE_ACC,Airside economizer (air-cooled chiller),air,air,dry,airside,air-cooled chiller,humidification_possible,no,2,high,chiller supplemental
+AE_WCC,Airside economizer (water-cooled chiller),air,air,evaporative tower,airside,water-cooled chiller,cooling tower,no,1,high,
+AE_AD_ACC,Airside economizer& adiabatic cooling (air-cooled chiller),air,air,hybrid dry/adiabatic,airside,air-cooled chiller,adiabatic assist,no,0,high,Lei 2022 case 6-like
+AE_AD_WCC,Airside economizer& adiabatic cooling (water-cooled chiller),air,air,hybrid dry/adiabatic plus tower if chiller,airside,water-cooled chiller,multiple,no,6,high,Lei 2022 case 1-like
+WE_WCC,Waterside economizer (water-cooled chiller),air,liquid loop,evaporative tower,waterside,water-cooled chiller,cooling tower,no,"7,8",high,Lei 2022 cases 2/4
+DRY_ACC,Dry cooler (air-cooled chiller),air,liquid loop,dry,none,air-cooled chiller,humidification_possible,no,17,high,Rmd drops from some figures
+DRY_AD_ACC,Dry cooler with adiabatic assist (air-cooled chiller),air,liquid loop,hybrid dry/adiabatic,none,air-cooled chiller,adiabatic assist,no,18,high,Rmd drops from some figures
+LIQ_DRY_AD,IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller),rear-door|direct-to-chip|immersion (pooled),liquid loop,hybrid dry/adiabatic,none,air-cooled chiller,adiabatic assist,yes,"15_1,15_2,15_3",medium,"Paper: liquid includes RDHX, cold-plate, immersion (SI Fig S6.3). Public CSV does not split those physics; only subcase IDs."
+LIQ_WE_WCC,IT Liquid cooling: waterside economizer (water-cooled chiller),rear-door|direct-to-chip|immersion (pooled),liquid loop,evaporative tower,waterside,water-cooled chiller,cooling tower,yes,"16_1,16_2,16_3",medium,Same pooling limitation

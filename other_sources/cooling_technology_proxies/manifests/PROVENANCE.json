@@ -1,0 +1,23 @@
+{
+  "timestamp_utc": "2026-09-01T16:09:44Z",
+  "hostname": "login009",
+  "platform": "Linux-5.14.0-687.39.1.el9_8.x86_64-x86_64-with-glibc2.28",
+  "repo_head": "60be7e5ffd17664fbaa5f72a73c38b5b39e1e37b",
+  "repo_branch": "main",
+  "lei2025_git_commit": "155b0216f4bfc20679310360e9966a65951712d0",
+  "lei2025_git_url": "https://github.com/nuoaleon/The-Water-Use-of-Data-Center-Workloads-A-Review-and-Assessment-of-Key-Determinants",
+  "user_copies_sha256_match_git": true,
+  "hashes": {
+    "sources/lei2025/UEs_16cases.csv": "4924fdb451dfefc433b4de375322dadbbf5fb056876c12e5cc1a913d5cf4c031",
+    "sources/lei2025/SPEC_2024.xlsx": "e3a872d0472139ee7302a261241a803f7a050fd7cef10eef1885de8d6330edb7",
+    "sources/lei2025/SI Supporting Code.Rmd": "25a54a5c463304ed12a4e4cd25951aa89ef6e1e0ea435bf5f20e687ee7362b6d",
+    "sources/lei2025/SI Supporting Code 2 (WaterSensitivity).ipynb": "a782b7a0484948f44ab1d90662d0c103668e1d0a2fe57353def1c09afb8e571e",
+    "references/core/The water use of data center workloads A review and assessment of key determinants.pdf": "d87ee9e0c99b8d17004759ea57c08e82c19191f9bd32c94d6ada0d2b39fd18c8",
+    "references/core/Climate-_and_Technology-Specific_PUE_and_WUE_Predi.pdf": "ea2136303b0a38b7db896a095494b90d0b36f011cf3558074fcf263ad42268f3",
+    "references/core/lbnl-2024-united-states-data-center-energy-usage-report.pdf": "791f95feb348b406f0817bca11a65a9147883ade988c7426ebc4e28bfe35a3c5",
+    "references/core/best-practice-guide-data-center-design_0.pdf": "f4db5c015154933482e84f1946dcafc297d8ad526db90d2985df35232d8ab0c2"
+  },
+  "python": "masanet_lei for numeric work; did not use HPC",
+  "did_not_mutate_upstream_git_or_user_pdfs": true,
+  "did_read_meta_2023_2024_water": false
+}

@@ -1,0 +1,21 @@
+{
+  "timestamp_utc": "2026-09-01T16:00:24Z",
+  "n_scenario_rows": 19000,
+  "n_summary_cells": 380,
+  "paired_pairs_preserved": true,
+  "n_PUE_lt_1": 0,
+  "n_WUE_lt_0": 0,
+  "independence_diagnostic": {
+    "n_cells_tested": 304,
+    "median_pearson": 0.1387664528823776,
+    "median_abs_rel_bias_PUE_times_WUE": 0.004244796997833641,
+    "median_frac_independent_outside_paired_nn_p95": 0.04575,
+    "PAIRED_SAMPLING_REQUIRED": true,
+    "rule": "Independent marginal sampling is disallowed if median Pearson>0.25 or >10% of independent draws sit farther than paired NN p95.",
+    "policy": "Source emits joint (PUE,WUE) pairs. Downstream MUST sample pairs. Empirical dependence is technology-specific: water-cooled chiller median Pearson ~0.38; dry-cooler/liquid-dry near 0. Independent marginals produce >10% off-support draws in 17/304 cells and are forbidden even where correlation is weak.",
+    "n_cells_frac_gt_0p10": 17
+  },
+  "did_not_average_across_climates": true,
+  "did_not_fit_hourly_from_annual": true,
+  "did_read_meta_2023_2024_water": false
+}

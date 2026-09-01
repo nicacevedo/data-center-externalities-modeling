@@ -1,0 +1,24 @@
+{
+  "timestamp_utc": "2026-09-01T16:09:44Z",
+  "found_hourly_simulator_for_lei2022_air_IT": true,
+  "repository": "nuoaleon/Data-Center-Water-footprint",
+  "commit": "2cc53bee89b0a61bdad10c02b4d170d7f673e2dc",
+  "technologies_supported": "eight PUE_WUE_* air-IT functions; no liquid IT",
+  "required_inputs": "T, RH, P hourly + Table 3 facility parameters + COP pickles",
+  "weather_support": "TMY3 EPW / any hourly T,RH,P",
+  "reproducibility_status": "code runs; annual UE.xlsx envelopes PARTIAL/FAIL in masanet V1; V2 running \u2014 not rerun here",
+  "found_hourly_simulator_for_lei2025_liquid_cases": false,
+  "lei2025_repo_contents": "UEs_16cases.csv, SPEC_2024.xlsx, Sobol/SA CSVs, SI Rmd, SALib notebook \u2014 analysis of annual pairs and workload water, not the physical hourly engine",
+  "other_hourly_models_found_different_lineage": {
+    "EnergyPlus_OpenStudio_data_center_prototypes": "LBNL/NREL prototype CRAC and CRAH+chiller models exist; not the Lei liquid-case engine; not used to generate UEs_16cases",
+    "NREL_ESIF_PUE_parquet": "measured electricity timeseries, not a simulator"
+  },
+  "lbnl2024_million_simulation_microdata": "NOT FOUND as public CSV/XLSX",
+  "search": [
+    "github.com/nuoaleon/The-Water-Use-of-Data-Center-Workloads-A-Review-and-Assessment-of-Key-Determinants",
+    "LBNL 2024 report supplements / eScholarship / eta-publications \u2014 no microdata CSV located",
+    "nuoaleon/Geospatial-assessment-of-water-footprints \u2014 XGB surrogates of earlier air-IT cases, not liquid hourly physics"
+  ],
+  "decision": "RETAIN modern cooling as annual/climate paired proxies. Do not reverse-engineer hourly physics from UEs_16cases.csv. Do not treat EnergyPlus prototypes as Lei 2025 liquid validation.",
+  "limitations": "Cannot currently simulate rear-door vs cold-plate vs immersion hourly under Prineville weather from public code."
+}

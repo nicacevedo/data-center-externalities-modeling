@@ -1,0 +1,942 @@
+---
+"The Water Use of Data Center Workloads: A Review and Assessment of Key Determinants (Supplementary Code (SC))"
+---
+
+Import Packages
+
+```{r, message=FALSE}
+library(sm)
+library(dplyr)
+library(tidyr)
+library("readxl")
+library(ggpubr)
+library(ggplot2)
+library(tibble)
+library(gt)
+library(ggrepel)
+```
+
+refresh cycle (1-8 years)
+server power efficiency quantile (5%, 95%)
+server utilization level (10%-80%)
+inactive_server_fraction (5%, 30%)
+
+```{r}
+baseline <- 2023
+max_rc <- 8
+year <- seq(baseline - max_rc + 1,baseline,1)
+
+# refreh cycle, Server vintage distribution 
+rc <- c(1:length(year))
+vd <- matrix(rep(1,length(year)*length(year)),length(year),length(year))
+vd[upper.tri(vd)] <- 0
+vd <- apply(vd, 1, rev)
+vd <- vd/c(1:length(year)) 
+vd <- as.data.frame(vd)
+colnames(vd) <- seq(baseline - max_rc + 1,baseline,1)
+rownames(vd) <- seq(1,length(year),1)
+
+# e.g. Server vintage distribution of refresh cycle 2
+#print(vd[2,])
+```
+
+# *SI: Table. S.1
+
+```{r}
+vd_table <- lapply(vd, function(x) {
+  scales::percent(round(x, 5), accuracy = 0.1)
+})
+
+vd_table <- as.data.frame(vd_table)
+names(vd_table) <- gsub("^X", "", names(vd_table))
+
+vd_table <- mutate(vd_table, `Length (Years)` = 1: max_rc) %>%
+  select(`Length (Years)`, everything())
+
+SI_Table1 <- 
+  vd_table %>%
+  gt() %>%
+  tab_header(
+    title = "Server Vintage Distributions v.s. Refresh Cycle"
+  ) %>%
+  tab_spanner(
+    label = "Refresh Cycle",
+    columns = `Length (Years)`
+  ) %>%
+  tab_spanner(
+    label = "Server Vintage Distributions",
+    columns = -`Length (Years)`
+  ) |>
+  opt_stylize(style = 6, color = "cyan")
+
+SI_Table1
+# gtsave(SI_Table1, file = "Table.S.1.png")
+```
+
+required function: predict power and performance of servers at a given quantile
+
+```{r}
+# predict power and perf of servers at given quantile
+
+method <- 'aicc'
+
+pred.pe <- function(year,workload,server_quantile){
+        # fetch the orginal server data at the given quantile
+        spec <- read_excel("data/SPEC_2024.xlsx") 
+        df <- subset(spec,`Server quantile`==server_quantile&Year<=baseline)
+        # Active servers: Watts at at utilization& year
+        pw <- sm.regression(cbind(df$Year,df$Workload),df$Power,method=method,eval.points=cbind(year,workload),eval.grid=FALSE)$estimate
+        # Active servers: ssj_ops/Watt at given utilization& year
+        perf <- sm.regression(cbind(df$Year,df$Workload),df$Performance,method=method,eval.points=cbind(year,workload),eval.grid=FALSE)$estimate
+        # Idle servers: watts at at utilization==0& year
+        idle_pw <- sm.regression(cbind(df$Year,df$Workload),df$Power,method=method,eval.points=cbind(year,replicate(length(year),0)),eval.grid=FALSE)$estimate
+        
+        return(list(power = pw,performance = perf,idle_power = idle_pw))
+}
+
+# e.g.
+# pred.pe(seq(2010,2021,1),replicate(12,10/100),5)
+```
+
+required function: average ssj_per_Watt
+
+```{r}
+# vintage distribution (matrix): e.g.vd
+# refreshcycle (int): e.g. 1
+
+pred.avg_ssj_per_watt <- function(vd,refreshcycle,utilization_level,inactive,server_quantile){
+    year <- as.numeric(colnames(vd))
+    utilization <- replicate(length(year),utilization_level)
+    dist <- vd[refreshcycle,]
+    
+    # predict power and performance
+    server <- pred.pe(year,utilization,server_quantile)
+    # ssj_ops/W
+    perf <- sum(dist*server$performance)
+    # active w
+    pact <- sum(dist*server$power)
+    # idle w
+    pidle <- sum(dist*server$idle_power)
+    # average ssj_ops/watts
+    perf_res <- (1-inactive)*pact*perf/((1-inactive)*pact + inactive*pidle)
+    return (perf_res)
+}
+
+# e.g
+#pred.avg_ssj_per_watt(vd,1,30/100,5/100,95)
+```
+
+a full factorial analysis
+
+```{r, cache=TRUE}
+table <- expand_grid(`Refresh cycle` = 1:8, `efficiency quantile` = c(5, 95),`Utilization (%)` = seq(0.1, 0.8, 0.1), `Inactive server (%)`= c(5/100,30/100))
+
+df <- 
+  table %>% 
+  rowwise() %>% 
+  mutate(`ssj_ops/w` = pred.avg_ssj_per_watt(vd,`Refresh cycle`,`Utilization (%)`,`Inactive server (%)`,`efficiency quantile`)) %>% 
+  mutate(`mw/ssj_ops`= 1000*1/`ssj_ops/w`) %>%
+  mutate(`Inactive server (%)`= as.factor(`Inactive server (%)`)) %>% 
+  mutate(`Utilization (%)`= as.factor(`Utilization (%)`)) %>% 
+  mutate(`efficiency quantile`= as.factor(`efficiency quantile`)) %>% 
+  mutate(`efficiency quantile` = recode(`efficiency quantile`, `5` = "5th efficient", `95` = "95th efficient")) %>%
+  mutate(`Inactive server (%)` = recode(`Inactive server (%)`, `0.05` = "5% inactive", `0.3` = "30% inactive"))
+```
+
+# *Fig. 2
+
+```{r, warning=FALSE}
+f2 <- 
+  ggplot(df, aes(`Utilization (%)`, `Refresh cycle`)) + 
+  geom_raster(aes(fill=`mw/ssj_ops`), interpolate = TRUE) + 
+  facet_grid( `efficiency quantile` + forcats::fct_rev(`Inactive server (%)`) ~.) +
+  
+  geom_point(data = subset(df, `efficiency quantile` == "95th efficient" & `Inactive server (%)` == "30% inactive"),
+             aes(x = 2, y = 6), color = "#1a1a1a", size = 0.5) + 
+  geom_text(data = subset(df, `efficiency quantile` == "95th efficient" & `Inactive server (%)` == "30% inactive"),
+            aes(x = 2, y = 6, label = "B"), color = "#1a1a1a", hjust = 1.5, fontface = "bold") + 
+  geom_point(data = subset(df, `efficiency quantile` == "5th efficient" & `Inactive server (%)` == "5% inactive"),
+             aes(x = 8, y = 3), color = "#67001f", size = 0.5) +  
+  geom_text(data = subset(df, `efficiency quantile` == "5th efficient" & `Inactive server (%)` == "5% inactive"),
+            aes(x = 8, y = 3, label = "A"), color = "#67001f", hjust = 1.5, fontface = "bold") + 
+  
+  scale_fill_distiller(palette = "Spectral") + 
+  labs(x="Server utilization level",y="Refresh cycle (years)",fill = "Server electricity per workload (milliwatt/ssj_ops)") + 
+  theme_bw() + 
+  theme(legend.direction = "horizontal", legend.position = "top")
+
+f2
+# ggsave(plot = f2,"Fig.2.png",width=5,height = 5,dpi = 500)
+```
+
+# *SI: Fig. S.2.1
+
+```{r}
+df_SI2 <- expand_grid(`Year` = seq(2010,2022,0.1), `Utilization level (%)` = seq(0,100,1))
+
+df_SI2_1 <- 
+  df_SI2 %>%
+  mutate(`efficiency quantile`= "5th") %>%
+  mutate(`Power`= pred.pe(df_SI2$Year,df_SI2$`Utilization level (%)`/100,5)$power) %>%
+  mutate(`Power-performance`= pred.pe(df_SI2$Year,df_SI2$`Utilization level (%)`/100,5)$performance)
+
+df_SI2_2 <- 
+  df_SI2 %>%
+  mutate(`efficiency quantile`= "95th") %>%
+  mutate(`Power`= pred.pe(df_SI2$Year,df_SI2$`Utilization level (%)`/100,95)$power) %>%
+  mutate(`Power-performance`= pred.pe(df_SI2$Year,df_SI2$`Utilization level (%)`/100,95)$performance)
+
+df_SI2 <- rbind(df_SI2_1, df_SI2_2)
+```
+
+```{r}
+SI2_a <- ggplot(df_SI2, aes(`Year`, `Utilization level (%)`,z=`Power`)) +
+  geom_raster(aes(fill = `Power`), interpolate = TRUE) +
+  geom_contour(colour = "#ece2f0", bins = 10) + 
+  metR::geom_text_contour(aes(z = `Power`), size=2.5,colour = "white") + 
+  facet_grid(cols = vars(`efficiency quantile`)) +
+  scale_fill_viridis_c(option = "mako") +
+  scale_x_continuous(breaks=c(2010,2012,2014,2016,2018,2020,2022)) +
+  theme(legend.direction = "horizontal", legend.position = "top", legend.text = element_text(size = 8, angle = 45)) +
+  labs(fill = "Power (W)", x = "Server installation year")
+
+SI2_b <- ggplot(df_SI2, aes(`Year`, `Utilization level (%)`,z=`Power-performance`)) +
+  geom_raster(aes(fill = `Power-performance`), interpolate = TRUE) +
+  geom_contour(colour = "#ece2f0", bins = 12) + 
+  metR::geom_text_contour(aes(z = `Power-performance`), size=2.5, colour = "white") + 
+  facet_grid(cols = vars(`efficiency quantile`)) +
+  scale_fill_viridis_c(option = "cividis") +
+  scale_x_continuous(breaks=c(2010,2012,2014,2016,2018,2020,2022)) +
+  theme(legend.direction = "horizontal", legend.position = "top", legend.text = element_text(size = 8, angle = 45)) +
+  labs(fill = "Power-performance (ssj_ops/W)",  x = "Server installation year")
+
+SI_2 <- ggarrange(SI2_a, SI2_b, labels = c("A", "B"), ncol = 1, nrow = 2)
+
+SI_2
+# ggsave(plot = SI_2, "Fig.S2.1.png",width=6, height = 7.5,dpi = 500)
+```
+
+# *SI: Fig. S.5.2
+
+```{r}
+df_copy <- df %>% 
+  mutate(`Utilization (%)`= as.numeric(`Utilization (%)`)/10) %>% mutate(`Refresh cycle`= as.factor(`Refresh cycle`)) 
+
+SI_5_2 <- ggplot(df_copy, aes(x=`Utilization (%)`, y = `mw/ssj_ops`)) + 
+  geom_point(size=1,color='#fa9fb5') + 
+  geom_smooth(method='loess', formula='y ~ x', color='#c51b8a') +
+  labs(x="Server utilization", y="Server electricity per data center workload (milliwatt/ssj_ops)") + 
+  theme_bw()
+ 
+SI_5_2 
+# ggsave(plot = SI_5_2, "Fig.S.5.2.png",width=6,height = 4.5,dpi = 500)
+```
+
+# *SI: Fig. S.5.1
+
+```{r}
+SI_5_1 <- ggplot(df_copy, aes(x=`efficiency quantile`, y = `mw/ssj_ops`)) + 
+  geom_boxplot(outlier.shape = NA, color ='#c51b8a') +
+  geom_jitter(shape=16, position=position_jitter(0.1), color='#fa9fb5') +
+  labs(x="Server power efficiency quantile", y="Server electricity per data center workload (milliwatt/ssj_ops)") + 
+  scale_x_discrete(labels=c("5th efficient" = "5th", "95th efficient" = "95th")) + 
+  theme_bw()
+
+SI_5_1
+# ggsave(plot = SI_5_1, "Fig.S.5.1.png",width=6,height = 4.5,dpi = 500)
+```
+
+# *SC: Test 1
+
+```{r}
+t1 = df_copy$`mw/ssj_ops`[df_copy$`efficiency quantile` == "5th efficient"] - df_copy$`mw/ssj_ops`[df_copy$`efficiency quantile` == "95th efficient"]
+
+t.test(t1)
+```
+
+# *SI: Fig .S.5.3
+
+```{r, warning=FALSE}
+df_SI5_3 <- 
+  df %>% 
+  group_by(`Refresh cycle`,`Utilization (%)`,`Inactive server (%)`) %>% 
+  summarize(`mw/ssj_ops (95th)`=max(`mw/ssj_ops`), `mw/ssj_ops (5th)`=min(`mw/ssj_ops`), `mw/ssj_ops`= mean(`mw/ssj_ops`)) %>%
+  filter(`Utilization (%)` %in% c(0.2, 0.4, 0.6, 0.8))
+  # filter(`Utilization (%)` == 0.2 || `Utilization (%)` == 0.4 || `Utilization (%)` == 0.6 || `Utilization (%)` == 0.8)
+
+###
+SI_5_3 <- 
+  ggplot(df_SI5_3, aes(x=`Refresh cycle`,y = `mw/ssj_ops`, fill = `Utilization (%)`)) +
+  geom_ribbon(aes(x=`Refresh cycle`,ymin = `mw/ssj_ops (5th)`, ymax = `mw/ssj_ops (95th)`,fill = `Utilization (%)`),alpha=0.2) + 
+  geom_line(linetype = 2,size=1, aes(color = `Utilization (%)`)) + 
+  facet_grid(cols = vars(`Inactive server (%)`)) + 
+  labs(x="Refresh cycle (years)",y="Server electricity per data center workload (milliwatt/ssj_ops)", fill="Server utilization", color="Server utilization") + 
+  theme_bw()
+
+SI_5_3
+# ggsave(plot = SI_5_3, "Fig.S.5.3.png",width=10,height = 4.5,dpi = 500)
+```
+
+# *SI: Fig. S.5.4
+
+```{r}
+SI_5_4 <- ggplot(df_copy, aes(x=`Inactive server (%)`, y = `mw/ssj_ops`)) + 
+geom_boxplot(outlier.shape = NA, color ='#c51b8a') +
+  geom_jitter(shape=16, position=position_jitter(0.1), color='#fa9fb5') +
+  labs(x="Fraction of inactive servers", y="Server electricity per data center workload (milliwatt/ssj_ops)") + 
+  scale_x_discrete(labels=c("5% inactive" = "5%", "30% inactive" = "30%")) + 
+  theme_bw()
+
+SI_5_4
+# ggsave(plot = SI_5_4, "Fig.S.5.4.png",width=6,height = 4.5,dpi = 500)
+```
+
+# *SI: Test 2
+
+```{r}
+t2 = df_copy$`mw/ssj_ops`[df_copy$`Inactive server (%)` == "30% inactive"] - 
+  df_copy$`mw/ssj_ops`[df_copy$`Inactive server (%)` == "5% inactive"]
+t.test(t2)
+```
+
+L/ssj_ops = L/kWh * kWh/(ssj_ops) = L/kWh * (W/ssj_ops)/1000*3600
+
+```{r, warning=FALSE}
+df1 <- df %>% 
+  group_by(`Refresh cycle`,`Utilization (%)`,`Inactive server (%)`) %>% 
+  mutate(`w/ssj_ops`= 1/`ssj_ops/w`) %>% 
+  summarize(`w/ssj_ops (95th)`=max(`w/ssj_ops`), `w/ssj_ops (5th)`=min(`w/ssj_ops`), `w/ssj_ops`= mean(`w/ssj_ops`))
+```
+
+data preparation
+
+```{r}
+table <- expand_grid(`WUE (L/kWh)` = 0:5, `w/ssj_ops` = c(min(df1$`w/ssj_ops`), max(df1$`w/ssj_ops`))) %>% 
+  mutate(`kWh/ssj_ops`= `w/ssj_ops`/1000*3600) %>%
+  mutate(`L/ssj_ops`= `WUE (L/kWh)`*`kWh/ssj_ops`) %>% 
+  group_by(`WUE (L/kWh)`) %>% 
+  summarize(`L/ssj_ops (low)`= min(`L/ssj_ops`), `L/ssj_ops (high)`= max(`L/ssj_ops`), `w/ssj_ops (low)`= min(`w/ssj_ops`), `w/ssj_ops (high)`= max(`w/ssj_ops`))
+
+```
+
+```{r}
+#w.ssj_ops.min = min(df1$`w/ssj_ops`)
+#w.ssj_ops.max = max(df1$`w/ssj_ops`)
+w.ssj_ops.min = 1/max(df$`ssj_ops/w`)
+w.ssj_ops.max = 1/min(df$`ssj_ops/w`)
+
+# 9 breaks
+n <- 9
+w.ssj_ops.ranges = seq(w.ssj_ops.min,w.ssj_ops.max,(w.ssj_ops.max-w.ssj_ops.min)/n)*3600/1000  #kwh
+
+#cbPalette <- c("#f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5", "#08519c","#08306b")
+cbPalette <- rev(c("#d73027","#f46d43","#fdae61","#fee08b","#ffffbf","#d9ef8b","#a6d96a","#66bd63","#1a9850"))
+
+alpha=0.5
+
+w.ssj_ops.mean <- (w.ssj_ops.ranges[1:9] + w.ssj_ops.ranges[2:10])/2
+l.ssj_ops.mean <- w.ssj_ops.mean*5  # WUE (0-5) in the right part of the below plot
+
+mw.ssj_ops.mean <- round(w.ssj_ops.mean*1000/3.6,2)  # 
+#mw.ssj_ops.mean
+```
+
+# *Fig. 3
+
+```{r, warning=FALSE}
+f3  <- ggplot(table, aes(x=`WUE (L/kWh)`)) + 
+    geom_ribbon(aes(ymin = w.ssj_ops.ranges[1]*`WUE (L/kWh)`, ymax = w.ssj_ops.ranges[2]*`WUE (L/kWh)`),fill=cbPalette[1],size=0.5, alpha = alpha) +
+    geom_ribbon(aes(ymin = w.ssj_ops.ranges[2]*`WUE (L/kWh)`, ymax = w.ssj_ops.ranges[3]*`WUE (L/kWh)`),fill=cbPalette[2],size=0.5, alpha = alpha) + 
+    geom_ribbon(aes(ymin = w.ssj_ops.ranges[3]*`WUE (L/kWh)`, ymax = w.ssj_ops.ranges[4]*`WUE (L/kWh)`),fill=cbPalette[3],size=0.5, alpha = alpha) + 
+    geom_ribbon(aes(ymin = w.ssj_ops.ranges[4]*`WUE (L/kWh)`, ymax = w.ssj_ops.ranges[5]*`WUE (L/kWh)`),fill=cbPalette[4],size=0.5, alpha = alpha) + 
+    geom_ribbon(aes(ymin = w.ssj_ops.ranges[5]*`WUE (L/kWh)`, ymax = w.ssj_ops.ranges[6]*`WUE (L/kWh)`),fill=cbPalette[5],size=0.5, alpha = alpha) +
+    geom_ribbon(aes(ymin = w.ssj_ops.ranges[6]*`WUE (L/kWh)`, ymax = w.ssj_ops.ranges[7]*`WUE (L/kWh)`),fill=cbPalette[6],size=0.5, alpha = alpha) + 
+    geom_ribbon(aes(ymin = w.ssj_ops.ranges[7]*`WUE (L/kWh)`, ymax = w.ssj_ops.ranges[8]*`WUE (L/kWh)`),fill=cbPalette[7],size=0.5, alpha = alpha) + 
+    geom_ribbon(aes(ymin = w.ssj_ops.ranges[8]*`WUE (L/kWh)`, ymax = w.ssj_ops.ranges[9]*`WUE (L/kWh)`),fill=cbPalette[8],size=0.5, alpha = alpha) + 
+    geom_ribbon(aes(ymin = w.ssj_ops.ranges[9]*`WUE (L/kWh)`, ymax = w.ssj_ops.ranges[10]*`WUE (L/kWh)`),fill=cbPalette[9],size=0.5, alpha = alpha) + 
+    geom_line(aes(y = w.ssj_ops.ranges[1]*`WUE (L/kWh)`)) + 
+    geom_line(aes(y = w.ssj_ops.ranges[10]*`WUE (L/kWh)`)) + 
+    labs(y="L/ssj_ops") + 
+  
+    #annotate("segment", x = 0, xend = 4, y = 0.001, yend = 0.001, linetype = "dashed", color = "grey30",size=0.8) + 
+    annotate("point", x = 4, y = 0.001, color = "black",size=2) + 
+    annotate("text", x = 4, y = 0.0013, color = "black",label="B") + 
+    annotate("point", x = as.numeric(0.001/table[2,3]), y = 0.001, color = "black",size=2) +
+    annotate("text", x = as.numeric(0.001/table[2,3]), y = 0.0013, color = "black",label="A") +
+    
+    geom_segment(aes(x = 5, y = w.ssj_ops.ranges[1]*5, xend = 5, yend = w.ssj_ops.ranges[10]*5),color = "#2b8cbe") + 
+    annotate("point", x = 5, y = l.ssj_ops.mean, color = "#2b8cbe",size=1) +
+    annotate("text", x = 5.18, y = l.ssj_ops.mean, label=mw.ssj_ops.mean, color='#2b8cbe',size = 3.5) +
+    annotate("text", x = 5.4, y = l.ssj_ops.mean[5], label= 'Server electricity per workload (milliwatt/ssj_ops)', angle='90', size = 3.5, color='#2b8cbe') + 
+    labs(x="WUE-site (L/kWh)",y="Facility water use per workload (L/ssj_ops)") + 
+    theme_bw()
+
+f3
+
+# ggsave(plot = f3,"Fig.3.png",width=7,height = 4.5,dpi = 500)
+```
+
+```{r, warning=FALSE}
+UEs <- read.csv(("Data/UEs_16cases.csv")) %>%
+  filter(Case != 12 & Case != 13 & Case != 14 & Case != 17 & Case != 18) %>% # filter some cases
+  group_by(Case, Climate.Zone, Cooling.system, Data.center.size, type) %>%
+  summarize(PUE_5th = quantile(PUE, 0.05), PUE_95th = quantile(PUE, 0.95),
+            WUE_5th = quantile(WUE, 0.05), WUE_95th = quantile(WUE, 0.95)) %>%
+  pivot_longer(cols = c(PUE_5th, PUE_95th, WUE_5th, WUE_95th), 
+               names_to = "Quantile", values_to = "Value") %>%
+  separate(Quantile, into = c("Variable", "Quantile"), sep = "_") %>%
+  pivot_wider(names_from = Variable, values_from = Value) %>%
+  rename(`Climate Zone`= Climate.Zone, `Cooling system` = Cooling.system, `Data center size` = Data.center.size) %>%
+  mutate(`Case`= as.factor(`Case`))
+```
+
+```{R}
+UE_LC <- read.csv("Data/UEs_16cases.csv") %>%
+  rename(`Climate Zone`= Climate.Zone, 
+         `Cooling system` = Cooling.system, 
+         `Data center size` = Data.center.size) %>%
+  filter(`Cooling system` %in% c("IT Liquid cooling: waterside economizer (water-cooled chiller)",
+                                 "IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller)")) %>%
+  rename(`subcase` = Case..Original.) %>%
+  mutate(`Liquid Cooling Type` = case_when(
+    subcase %in% c("15_1", "16_1") ~ "Rear Door Heat Exchanger",
+    subcase %in% c("15_2", "16_2") ~ "Cold Plate",
+    TRUE ~ "Immersion"
+  )) %>%
+  mutate(`Liquid Cooling Type` = factor(`Liquid Cooling Type`, levels = c("Rear Door Heat Exchanger", "Cold Plate", "Immersion")))
+```
+
+# *SI: Fig. S.6.3
+
+```{r}
+a1 <- 
+  ggplot(UE_LC, 
+  aes(x = `Liquid Cooling Type`, y = `PUE`, color = `Liquid Cooling Type`)
+) + 
+  geom_boxplot(outlier.shape = NA) +
+  labs(x = "Liquid Cooling Type", y = "PUE (kWh/kWh)") +
+  theme_bw() +
+  facet_wrap(~ `Cooling system`, scales = "free_y", labeller = label_wrap_gen(width = 50)) +
+  theme(axis.text.x = element_text(angle = 55, hjust = 1)) +
+  theme(legend.position = "none") + 
+  labs(title = "(a)") 
+
+a2 <- 
+  ggplot(UE_LC, 
+  aes(x = `Liquid Cooling Type`, y = `WUE`, color = `Liquid Cooling Type`)
+) + 
+  geom_boxplot(outlier.shape = NA) +
+  labs(x = "Liquid Cooling Type", y = "WUE-site (L/kWh)") +
+  theme_bw() +
+  facet_wrap(~ `Cooling system`, scales = "free_y", labeller = label_wrap_gen(width = 50)) +
+  theme(axis.text.x = element_text(angle = 55, hjust = 1)) +
+  theme(legend.position = "none") +
+  labs(title = "(b)") 
+
+a1
+a2
+# ggsave(plot = a1,"Fig.S.6.3(a).png",width=6,height = 4,dpi = 500)
+# ggsave(plot = a2,"Fig.S.6.3(b).png",width=6,height = 4,dpi = 500)
+```
+
+```{r}
+custom_order <- c(
+  "Direct expansion system", # 
+  "Air-cooled chiller", #
+  "Water-cooled chiller", #
+  "Waterside economizer (water-cooled chiller)", #
+  "Airside economizer (air-cooled chiller)", #
+  "Airside economizer (water-cooled chiller)", #
+  "Airside economizer& adiabatic cooling (air-cooled chiller)", #
+  "Airside economizer& adiabatic cooling (water-cooled chiller)", #
+  "IT Liquid cooling: waterside economizer (water-cooled chiller)",
+  "IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller)")
+```
+
+# *Fig. 4
+
+```{r, warning=FALSE}
+f4 <- ggscatter(UEs %>% filter(WUE > 0) %>%
+                mutate(`Cooling system` = factor(`Cooling system`, levels = custom_order)),
+                x="WUE", y="PUE", color = "Cooling system", 
+                ellipse = TRUE, ellipse.type = "convex", size = 0.5, ylim=c(1,3.2), xscale="log10") + 
+  # scale_color_manual(values = custom_colors) +  # Apply custom colors
+  theme(legend.position="right",legend.text = element_text(size = 8),legend.title = element_text(color = "Black",size=8,face = "bold")) + 
+  guides(color=guide_legend(ncol=1, byrow=TRUE)) + 
+  labs(x="WUE-site (L/kWh)",y="PUE (kWh/kWh)") + 
+  annotation_logticks(sides = "b")  + 
+  geom_point(aes(x = 0.1, y = 1.06), color = "#67001f", size = 0.5) +  
+  geom_text(aes(x = 0.1, y = 1.06, label = "A"), color = "#67001f", hjust = 1.5, fontface = "bold") +
+  geom_point(aes(x = 0.1, y = 3.06), color = "#1a1a1a", size = 0.5) +  
+  geom_text(aes(x = 0.1, y = 3.06, label = "B"), color = "#1a1a1a", hjust = 1.5, fontface = "bold") +
+  geom_point(aes(x = 0.001, y = 1.2), color = "#67001f", size = 0.5) +  
+  geom_text(aes(x = 0.001, y = 1.2, label = "C"), color = "#67001f", hjust = 1.5, fontface = "bold") +
+  geom_point(aes(x = 2.601, y = 1.2), color = "#1a1a1a", size = 0.5) +  
+  geom_text(aes(x = 2.601, y = 1.2, label = "D"), color = "#1a1a1a", hjust = 1.5, fontface = "bold") +
+  theme_bw()
+
+f4
+# ggsave(plot = f4,"Fig.4.png",width=9,height = 4,dpi = 500)
+```
+
+# *SI: Fig. S.6.2
+
+```{r}
+v_line <- data.frame(
+  xintercept = c(max(subset(UEs, type=='Cluster 1')$WUE)),
+  `type` = c("Cluster 2"))
+
+
+SI_6_2 <- ggscatter(UEs %>%
+                mutate(`Cooling system` = factor(`Cooling system`, levels = custom_order)), 
+                x="WUE",y="PUE",color = "Cooling system",ellipse = TRUE,ellipse.type = "convex", size = 1,ylim=c(1,3.2)) +
+  facet_grid(cols = vars(`type`),scales = "free_x") +
+  theme_bw() + 
+  theme(legend.position="right",legend.text = element_text(size = 8),legend.title = element_text(color = "Black",size=8,face = "bold")) +
+  guides(color=guide_legend(ncol=1, byrow=TRUE)) + 
+  labs(x="WUE-site (L/kWh)",y="PUE (kWh/kWh)") +
+  geom_vline(data = v_line, aes(xintercept = xintercept), linetype='dashed', size=0.5, color = c("#D89000"))
+
+# UEs %>% filter(type=='Cluster 1' & WUE == v_line$xintercept)
+SI_6_2 
+# ggsave(plot = SI_6_2,"Fig.S.6.2.png",width=11,height = 4.5,dpi = 500)
+```
+
+# *SI: Fig. S.6.1
+
+```{r}
+SI_6_1 <- ggplot(
+  subset(UEs,`Cooling system`=="Airside economizer& adiabatic cooling (water-cooled chiller)"), 
+  aes(x=`WUE`, y=`PUE`,col=`Quantile`, label=`Climate Zone`)) + 
+  geom_point(size=1, color="#636363") +  
+  labs(x="WUE-site (L/kWh)",y="PUE (kWh/kWh)") + 
+  geom_label_repel(min.segment.length = 0.1, size = 3, max.overlaps = Inf) + 
+  theme_bw()
+
+SI_6_1
+# ggsave(plot = SI_6_1,"Fig.S.6.1.png",width=7,height = 4.5,dpi = 500)
+```
+
+```{r}
+data4 <- UEs %>% 
+  add_column(`kWh/ssj_low` = quantile(df1$`w/ssj_ops`,probs = 1)/1000*3600,.after="WUE") %>%
+  #add_column(`kWh/ssj_mid` = quantile(df1$`w/ssj_ops`,probs = 0.5)/1000*3600,.after="WUE") %>%
+    add_column(`kWh/ssj_high` = quantile(df1$`w/ssj_ops`,probs = 0.0)/1000*3600,.after="WUE") %>%
+  pivot_longer(cols=`kWh/ssj_high`:`kWh/ssj_low`,names_to="Server efficiency",names_prefix="kWh/ssj_",values_to="kWh/ssj_ops") %>%
+  mutate(`L/ssj_ops (facility)`=WUE*`kWh/ssj_ops`) %>% 
+  mutate(`KWh/ssj_ops (facility)`=PUE*`kWh/ssj_ops`) %>%
+  janitor::clean_names()
+```
+
+# *SI: Fig. S.7.1
+
+```{r}
+SI_7_1 <- 
+  ggscatter(subset(data4,`cooling_system`=="Airside economizer& adiabatic cooling (water-cooled chiller)"),x="l_ssj_ops_facility",y="k_wh_ssj_ops_facility",ellipse = TRUE,ellipse.type = "convex",size = 0, color = '#2c7fb8') + 
+  geom_point(size=1.5,shape=16, aes(col=`server_efficiency`)) + 
+  stat_smooth(method = "gam", formula = y ~ x , size = 1, aes(col=`server_efficiency`)) + 
+  labs(x="Facility water use per workload (L/ssj_ops)",y="Facility electricity use per workload (kWh/ssj_ops)", col = "Server workload efficiency") +
+  theme_bw()
+
+SI_7_1
+# ggsave(plot = SI_7_1,"Fig.S.7.1.png",width=7,height = 4.5,dpi = 500)
+```
+
+# *Fig. 5
+
+```{r}
+fixed_points_1 <- data.frame(l_ssj_ops_facility = rep(0.8*1e-4, 7), k_wh_ssj_ops_facility = c(0.003,0.003,0.001,0.0017,0.001,0.0025, 0.0012), cooling_system = c("Air-cooled chiller", "Airside economizer (air-cooled chiller)", "Airside economizer (water-cooled chiller)", "Airside economizer& adiabatic cooling (air-cooled chiller)", "Airside economizer& adiabatic cooling (water-cooled chiller)",   "Direct expansion system", "IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller)"), label = rep("A", 7)) %>% mutate(cooling_system = factor(cooling_system, levels = custom_order))
+
+fixed_points_2 <- data.frame(l_ssj_ops_facility = c(2.5*1e-5, 2.5*1e-5, 1e-3, 2.5*1e-5, 2.5*1e-5, 2.5*1e-5, 1.8*1e-3, 2.2*1e-3, 2*1e-3, 2.7*1e-5), k_wh_ssj_ops_facility = rep(0.0014, 10), cooling_system =  c("Air-cooled chiller", "Airside economizer (air-cooled chiller)", "Airside economizer (water-cooled chiller)", "Airside economizer& adiabatic cooling (air-cooled chiller)", "Airside economizer& adiabatic cooling (water-cooled chiller)", "Direct expansion system", "Water-cooled chiller", "Waterside economizer (water-cooled chiller)", "IT Liquid cooling: waterside economizer (water-cooled chiller)",
+  "IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller)"),  label2 = rep("B", 10)) %>% mutate(cooling_system = factor(cooling_system, levels = custom_order))
+
+f5 <- 
+  ggscatter(data4 %>% filter(wue > 0) %>% mutate(cooling_system = factor(cooling_system, levels = custom_order)), x="l_ssj_ops_facility", y="k_wh_ssj_ops_facility", color = "cooling_system", ellipse = TRUE, ellipse.type = "convex", size = 0.1, xscale="log10", ylim = c(0, 0.005)) + 
+  
+  geom_point(data = fixed_points_1 , color = "#1a1a1a", size = 1) + 
+  geom_text(data = fixed_points_1, color = "#1a1a1a",aes(label = label), hjust = -0.6, fontface = "bold") + 
+  geom_point(data = fixed_points_2, color = "#67001f", size = 1) + 
+  geom_text(data = fixed_points_2, color = "#67001f", aes(label = label2), hjust = 1.5, fontface = "bold") + 
+  
+  facet_wrap(vars(cooling_system), ncol = 2) + 
+  # facet_grid(rows = vars(`cooling_system`),scales = "free_x") + 
+  theme_bw() + 
+  theme(legend.position="right",legend.text = element_text(size = 7),legend.title = element_text(color = "Black",size=7,face = "bold")) + 
+  theme(legend.position = "none",
+        plot.margin = margin(t = 10, r = 20, b = 10, l = 10)) + 
+  theme(strip.background = element_blank(),strip.text.y = element_blank()) + 
+  guides(color=guide_legend(ncol=1, byrow=TRUE)) + 
+  labs(x="Facility water use per workload (L/ssj_ops)",y="Facility electricity use per workload (kWh/ssj_ops)", color = "Cooling system", fill = "Cooling system") +
+  annotation_logticks(sides = "b")
+  
+
+
+
+f5
+# ggsave(plot = f5,"Fig.5.png",width=6,height = 8.5,dpi = 500)
+ggsave(plot = f5,"Fig.5.png",width=8.5, height = 8.5,dpi = 500)
+```
+
+```{r}
+## AB (POG) + Peer (Upstream)
+data5 <-
+  UEs %>%
+  add_column(`Coal`= 2.20) %>%
+  add_column(`Oil`= 2.9) %>%
+  add_column(`Natural gas`= 1.17) %>%
+  add_column(Biomass= 4.28) %>%
+  add_column(`Hydro`= 6.8) %>%
+  add_column(`Wind`= 0.011) %>%
+  add_column(`Solar PV`= 0.034) %>%
+  add_column(`Geothermal`= 11.09) %>%
+  pivot_longer(cols=`Coal`:`Geothermal`,names_to="Power source",values_to="WCF") %>%
+  mutate(`WUE_source`=WUE+PUE*WCF)
+```
+
+# *Fig. 6 (a)(b)
+
+```{r, warning=FALSE}
+data5_sub <- subset(data5, (`Cooling system`=="Airside economizer& adiabatic cooling (water-cooled chiller)" & (`Power source`=="Wind" | `Power source`=="Geothermal")) | (`Cooling system`=="Direct expansion system" & (`Power source`=="Wind" | `Power source`=="Geothermal")))
+
+## Fig 6, part 1
+hull_data <- 
+  data5_sub %>%
+  group_by(`Cooling system`) %>%
+  slice(chull(WUE, WUE_source))
+
+f6_1 <-data5_sub %>%
+  ggplot(aes(x = `WUE`, y = `WUE_source`)) +
+  geom_polygon(data = hull_data, aes(fill=`Cooling system`), alpha=0.4) +
+  geom_point(size=1, shape=16, aes(col=`Power source`)) + 
+  scale_color_manual(breaks = c("Wind", "Geothermal"), values = c("#FB61D7", "#53B400")) + 
+  #stat_smooth(method = "gam", formula = y ~ x, size = 0.4, aes(col=`Power source`, fill=`Cooling system`), se = FALSE) + 
+  scale_x_continuous(trans='log10') +
+  scale_y_continuous(trans='log10') + 
+  annotation_logticks(sides = "bl") + 
+  labs(x="WUE-site (L/kWh)", y="WUE-source (L/kWh)") + 
+  theme_bw() +
+  theme(legend.position = "bottom", legend.box="vertical") + 
+  guides(fill = guide_legend(nrow = 2, byrow = TRUE)) + 
+  guides(color = guide_legend(nrow = 1, byrow = TRUE))
+
+## Fig 6, part 2
+f6_2 <- data5 %>%
+  group_by(`Power source`) %>%
+  summarise_at(vars(WCF), list(WCF = mean)) %>%
+ggplot(aes(x=`Power source`, y=`WCF`, fill=`Power source`)) +
+  geom_bar(stat="identity") + 
+  geom_text(aes(label=paste(format(WCF, nsmall = 3))), position=position_dodge(width=0.9), vjust=-0.25) + 
+  aes(x = forcats::fct_reorder(`Power source`, WCF)) + 
+  labs(x="Power source", y="Water consumption factor (L/kWh)") + 
+  theme_bw() +
+  theme(legend.position = "bottom")
+
+f6 <- ggarrange(f6_1, f6_2, labels = c("(a)", "(b)"))
+
+f6
+# ggsave(plot = f6,"Fig.6(a)(b).png", width=12, height = 6,dpi = 500)
+```
+
+# *SI: Fig. S.8.1
+
+```{r}
+SI_8 <- 
+  ggscatter(subset(data5, `Cooling system`=="Airside economizer& adiabatic cooling (water-cooled chiller)" | `Cooling system`=="Direct expansion system"), x = "WUE", y = "WUE_source", ellipse = TRUE, ellipse.type = "convex", size=0, color = '#bdbdbd') + 
+  geom_point(size=1.5,shape=16, aes(col=`Power source`)) + 
+  stat_smooth(method = "gam", formula = y ~ x, size = 0.2, aes(col=`Power source`), alpha=0.2) +
+  labs(x="WUE-site (L/kWh)",y="WUE-source (L/kWh)") + 
+  facet_grid(cols = vars(`Cooling system`),scales = "free_x", labeller = label_wrap_gen(multi_line = TRUE)) +
+  theme_bw()
+
+SI_8
+# ggsave(plot = SI_8,"Fig.S.8.1.png",width=9,height = 4.5,dpi = 500)
+```
+
+```{r, warning=FALSE}
+# Extract the colors used in f3
+colors_f4 <- unique(ggplot_build(f4)$data[[1]]$colour)
+
+# Extract the corresponding Cooling system values from f3
+cooling_systems_f4 <- unique(ggplot_build(f4)$plot$data$`Cooling system`)
+
+# Create a named vector to map colors to cooling systems
+cooling_system_colors <- setNames(colors_f4, cooling_systems_f4)
+```
+
+# *Fig. 6 (c)
+
+```{r, warning=FALSE}
+hull_data_5 <- 
+  data5 %>%
+  group_by(`Cooling system`) %>%
+  slice(chull(WUE, WUE_source))
+
+f6_c <- data5 %>%
+  ggplot(aes(x = `WUE`, y = `WUE_source`)) +
+  geom_polygon(data = hull_data_5, aes(fill=`Cooling system`, color = `Cooling system`), alpha=0.1) +
+  #facet_grid(cols = vars(`type`),scales = "free_x") + 
+  labs(x="WUE-site (L/kWh)",y="WUE-source (L/kWh)") + 
+  scale_x_continuous(trans='log10') +
+  annotation_logticks(sides = "b") + 
+  scale_fill_manual(values = cooling_system_colors) +  # Apply the same fill colors
+  scale_color_manual(values = cooling_system_colors) + # Apply the same border colors
+  theme_bw() +
+  geom_point(aes(x = 0.1, y = 0.01), color = "#67001f", size = 0.5) +  
+  geom_text(aes(x = 0.1, y = 0.01, label = "A"), color = "#67001f", hjust = 1.5, fontface = "bold") +
+  geom_point(aes(x = 0.1, y = 34.01), color = "#1a1a1a", size = 0.5) +  
+  geom_text(aes(x = 0.1, y = 34.01, label = "B"), color = "#1a1a1a", hjust = 1.5, fontface = "bold") +
+  
+  annotate("point", x = 0, y = 10, color = "#67001f", size = 0.5) +  
+  annotate("text", x = 0, y = 10, label = "C", color = "#67001f", hjust = -0.5, fontface = "bold") +
+  
+  geom_point(aes(x = 4.5, y = 10), color = "#1a1a1a", size = 0.5) +  
+  geom_text(aes(x = 4.5, y = 10, label = "D"), color = "#1a1a1a", hjust = 1.5, fontface = "bold")
+  # theme(legend.position="none")
+
+f6_c
+# ggsave(plot = f6_c,"Fig.6(c).png",width=6,height = 5,dpi = 500)
+```
+
+
+```{r}
+data6 <- data5 %>% 
+  add_column(`kWh/ssj_low` = quantile(df1$`w/ssj_ops`,probs = 1)/1000*3600,.after="WUE") %>% 
+  #add_column(`kWh/ssj_mid` = quantile(df1$`w/ssj_ops`,probs = 0.5)/1000*3600,.after="WUE") %>%
+  add_column(`kWh/ssj_high` = quantile(df1$`w/ssj_ops`,probs = 0.0)/1000*3600,.after="WUE") %>% 
+  pivot_longer(cols=`kWh/ssj_high`:`kWh/ssj_low`,names_to="Server efficiency",names_prefix="kWh/ssj_",values_to="kWh/ssj_ops") %>%
+  mutate(`L/ssj_ops (facility)`= WUE*`kWh/ssj_ops`) %>% 
+  mutate(`L/ssj_ops (total)`=`WUE_source`*`kWh/ssj_ops`)
+
+data6.1 <- subset(data6,`Power source`=="Geothermal" | `Power source`=="Wind") %>%
+  janitor::clean_names()
+```
+
+# *Fig. 7 (a)
+
+```{r}
+f7_a <- 
+  ggscatter(subset(data6.1, `cooling_system`=="Airside economizer (air-cooled chiller)"), x="l_ssj_ops_facility",y="l_ssj_ops_total", ellipse = TRUE,ellipse.type = "convex",size = 0, color = '#bdbdbd') +
+  geom_point(size=1,shape=16, aes(col=`server_efficiency`)) + 
+  stat_smooth(method = "gam", formula = y ~ x , size = 0.5, aes(col=`server_efficiency`)) + 
+  facet_grid(cols = vars(`power_source`),scales = "free") + 
+  labs(x="Facility water use per workload (L/ssj_ops)",y="Overall water use per workload (L/ssj_ops)", color = "Server workload efficiency") +
+  theme_bw() +
+  scale_x_continuous(trans='log10') + 
+  scale_y_continuous(trans='log10') +
+  annotation_logticks(sides = "bl") +
+  theme(legend.position = "bottom")
+
+f7_a
+# ggsave(plot = f7_a, "Fig.7(a).png", width=5, height = 4, dpi = 500)
+```
+
+# *Fig. 7 (b)
+
+```{r, warning=FALSE}
+hull_data_6.1 <- 
+  data6.1 %>%
+  group_by(`cooling_system`, `power_source`) %>%
+  slice(chull(l_ssj_ops_facility, l_ssj_ops_total))
+
+v_line <- data.frame(
+  yintercept = c( max(subset(data6.1, `power_source`=="Wind")$l_ssj_ops_total),
+min(subset(data6.1, `power_source`=="Geothermal")$l_ssj_ops_total)),
+  `power_source` = c("Geothermal", "Wind"))
+
+f7_b <- data6.1 %>%
+  ggplot(aes(x = `l_ssj_ops_facility`, y = `l_ssj_ops_total`)) +
+  geom_polygon(data = hull_data_6.1, aes(fill=`cooling_system`, color = `cooling_system`), alpha=0.1) +
+  geom_hline(data = v_line, aes(yintercept = yintercept), linetype='dashed', size=1, color = c("red", "blue")) + 
+  facet_grid(cols = vars(`power_source`),scales = "free") +
+  #facet_wrap(~`power_source`,scales = "free") +
+  labs(x="Facility water use per workload (L/ssj_ops)",y="Overall water use per workload (L/ssj_ops)", fill="Cooling system", color = "Cooling system") + 
+  scale_x_continuous(trans='log10') + 
+  scale_y_continuous(trans='log10') +
+  annotation_logticks(sides = "bl") + 
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  guides(color=guide_legend(ncol=2, byrow=TRUE)) + 
+  guides(fill=guide_legend(ncol=2, byrow=TRUE))
+
+f7_b 
+# ggsave(plot = f7_b, "Fig.7(b).png", width=11, height = 6, dpi = 500)
+```
+
+# *SI: Fig. S.9.1
+
+```{r, warning=FALSE}
+data6_SI <- data6 %>%
+  janitor::clean_names() %>%
+  group_by(`cooling_system`, `power_source`) %>%
+  slice(chull(l_ssj_ops_facility, l_ssj_ops_total)) %>%
+  mutate(`power_source` = factor(`power_source`,levels = c("Geothermal", "Hydro", "Biomass", "Oil", "Coal", "Natural gas", "Solar PV", "Wind")))
+
+SI_9 <- subset(data6_SI, `power_source` != "Wind" & `power_source` != "Geothermal") %>%
+  ggplot(aes(x = `l_ssj_ops_facility`, y = `l_ssj_ops_total`)) +
+  geom_polygon(aes(fill=`cooling_system`, color = `cooling_system`), alpha=0.1) + 
+  facet_wrap(vars(`power_source`), nrow=1) +
+  labs(x="Facility water use per workload (L/ssj_ops)",y="Overall water use per workload (L/ssj_ops)", fill="Cooling system", color = "Cooling system") + 
+  scale_x_continuous(trans='log10') + 
+  scale_y_continuous(trans='log10') +
+  annotation_logticks(sides = "bl") + 
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  guides(color=guide_legend(ncol=2, byrow=TRUE)) + 
+  guides(fill=guide_legend(ncol=2, byrow=TRUE))
+
+SI_9
+# ggsave(plot = SI_9,"Fig.S.9.1.png",width=12,height = 7,dpi = 500)
+```
+```{r}
+max(data6$`L/ssj_ops (total)`)/min(data6$`L/ssj_ops (total)`)
+max(data6$WUE_source)/min(data6$WUE_source)
+max(data6$`kWh/ssj_ops`)/min(data6$`kWh/ssj_ops`)
+```
+
+# *Fig. 8
+
+```{r}
+sa_res <- read.csv("data/SA_result_0924.csv") %>%
+  mutate(`Variables` = R.utils::capitalize(`Variables`))
+
+f8 <- ggplot(sa_res, aes(y = reorder(`Variables`, `Indices`), x = `Indices`, fill=`Variables`)) + 
+  geom_bar(stat = "identity", color="black", position=position_dodge()) + 
+  geom_linerange(aes(xmin=Indices-conf/2, xmax=Indices+conf/2)) +
+  labs(x="Sensitivity Indices",y="") + 
+  theme_bw() +
+  theme(legend.position = "None")
+
+f8
+# ggsave(plot = f8,"Fig.8.png",width=6.5,height = 5,dpi = 500)
+```
+
+# Sensitivity Analysis
+
+```{}
+df_sa <- UEs %>% 
+  select(-c(Case,`Data center size`,type))
+```
+
+# WF model for sensitivity Analysis
+
+```{}
+# refresh cycle --- 0-11 (continuous)
+# utilization_level  --- 0--1 (continuous)
+# inactive percentage --- 0---1 (continuous)
+# Server quantile --- 5,95 (discrete)
+# Climate zone --- 1A----8 (discrete)
+# Data center efficiency quantile --- 5th, 95th (discrete)
+# `Cooling system` ---- ....(discrete)
+# WCF ----(continuous)
+
+pred.sa <- function(refreshcycle,utilization_level,inactive,server_quantile,climate_zone,dc_quantile, cooling_system, WCF){
+    year <- as.numeric(colnames(vd))
+    utilization <- replicate(length(year),utilization_level)
+    dist <- vd[refreshcycle,]
+    
+    # predict power and performance
+    server <- pred.pe(year,utilization,server_quantile)
+    # ssj_ops/W
+    perf <- sum(dist*server$performance)
+    # active w
+    pact <- sum(dist*server$power)
+    # idle w
+    pidle <- sum(dist*server$idle_power)
+    # average ssj_ops/watts
+    perf_res <- (1-inactive)*pact*perf/((1-inactive)*pact + inactive*pidle)
+    # kWh/ssj_ops
+    #eff <- (1/perf_res)*1000*3600
+    # PUE/WUE
+    UE <- subset(df_sa,`Climate Zone`==climate_zone& Quantile==dc_quantile& `Cooling system`==cooling_system)
+    PUE <- mean(UE$PUE)
+    WUE <- mean(UE$WUE)
+    # WF (L/ssj_ops)
+    WF <- (PUE*WCF + WUE)/perf_res*1000*3600
+    return (WF)
+}
+
+# e.g
+# pred.sa(1,10/100,20/100,95,"1A","5th","IT Liquid cooling: waterside economizer (water-cooled chiller)",0.170)
+```
+
+# MC-simulation
+
+```{}
+sobol <- read.csv("Data/sobol_0924.csv") %>% select(-c(X)) %>%
+  mutate(`server.efficiency.quantile` = ifelse(`server.efficiency.quantile`< 0, 5, 95)) %>% 
+  mutate(`climate.zone` = case_when(
+    climate.zone < 1~"0A",
+    climate.zone < 2~"0B",
+    climate.zone < 3~"1A",
+    climate.zone < 4~"1B",
+    climate.zone < 5~"2A",
+    climate.zone < 6~"2B",
+    climate.zone < 7~"3A",
+    climate.zone < 8~"3B",
+    climate.zone < 9~"3C",
+    climate.zone < 10~"4A",
+    climate.zone < 11~"4B",
+    climate.zone < 12~"4C",
+    climate.zone < 13~"5A",
+    climate.zone < 14~"5B",
+    climate.zone < 15~"5C",
+    climate.zone < 16~"6A",
+    climate.zone < 17~"6B",
+    climate.zone < 18~"7",
+    climate.zone >=18~"8"
+)) %>%
+  mutate(`infrastructure.efficiency.quantile` = ifelse(`infrastructure.efficiency.quantile`< 0, "5th", "95th")) %>%
+  mutate(`cooling.system.type` = case_when(
+    cooling.system.type < 1~"Airside economizer& adiabatic cooling (air-cooled chiller)",
+    cooling.system.type < 2~"Airside economizer& adiabatic cooling (water-cooled chiller)",
+    cooling.system.type < 3~"Waterside economizer (water-cooled chiller)",
+    cooling.system.type < 4~"Airside economizer (water-cooled chiller)",
+    cooling.system.type < 5~"Water-cooled chiller",
+    cooling.system.type < 6~"Airside economizer (air-cooled chiller)",
+    cooling.system.type < 7~"Air-cooled chiller",
+    cooling.system.type < 8~"Direct expansion system",
+    cooling.system.type < 9~"IT Liquid cooling: waterside economizer (water-cooled chiller)",
+    cooling.system.type >=9~"IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller)"
+    )) %>% 
+  mutate(server.refresh.cycle=as.integer(server.refresh.cycle))
+```
+
+```{}
+y = mapply(pred.sa, 
+       sobol$server.refresh.cycle,
+       sobol$server.utilization.level,
+       sobol$inactive.server.percentage,
+       sobol$server.efficiency.quantile,
+       sobol$climate.zone,
+       sobol$infrastructure.efficiency.quantile,
+       sobol$cooling.system.type,
+       sobol$water.consumption.factor)
+```
+
+```{}
+df <- data.frame(WF=y)
+write.csv(df, "sobol_res_0924.csv", row.names = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

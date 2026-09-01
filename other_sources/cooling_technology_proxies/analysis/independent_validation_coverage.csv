@@ -1,0 +1,13 @@
+technology,modeled_lei2025,hourly_simulator_public,independent_energy,independent_WUE
+Direct expansion system,yes,yes,M100/Frontier structural only,no
+Air-cooled chiller,yes,yes,M100/Frontier structural only,no
+Water-cooled chiller,yes,yes,M100/Frontier structural only,no
+Airside economizer (air-cooled chiller),yes,yes,M100/Frontier structural only,no
+Airside economizer (water-cooled chiller),yes,yes,M100/Frontier structural only,no
+Airside economizer& adiabatic cooling (air-cooled chiller),yes,yes,M100/Frontier structural only,no
+Airside economizer& adiabatic cooling (water-cooled chiller),yes,yes,M100/Frontier structural only,no
+Waterside economizer (water-cooled chiller),yes,yes,M100/Frontier structural only,no
+Dry cooler (air-cooled chiller),yes,no_or_unverified,M100/Frontier structural only,no
+Dry cooler with adiabatic assist (air-cooled chiller),yes,no_or_unverified,M100/Frontier structural only,no
+IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller),yes,no_or_unverified,M100/Frontier structural only,no
+IT Liquid cooling: waterside economizer (water-cooled chiller),yes,no_or_unverified,M100/Frontier structural only,no

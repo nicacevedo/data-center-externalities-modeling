@@ -1,0 +1,28 @@
+{
+  "timestamp_utc": "2026-09-01T16:09:44Z",
+  "repo_branch": "main",
+  "repo_head": "60be7e5ffd17664fbaa5f72a73c38b5b39e1e37b",
+  "git_status_short": "m Data-center-PUE-prediction-tool\n?? other_sources/cooling_technology_proxies/",
+  "did_not_modify_masanet_workflow": true,
+  "did_read_meta_2023_2024_water": false,
+  "did_not_rerun_completed_masanet_validation": true,
+  "established": {
+    "P_fac_equals_P_IT_plus_P_nonIT": "M100 STRONG SUPPORT; used as accounting identity",
+    "cooling_depends_on_IT_and_weather": "M100 weather additive STRONG; Frontier IT-load effect on accessory/cooling STRONG; Lei-Masanet climate\u00d7technology intensities",
+    "PUE_derived_not_independently_sampled": "master.tex and M100 closure",
+    "Lei_Masanet_is_intensity_archetype_not_part_load_twin": "masanet FIRST_RUN_SUMMARY / followup_v1; all PUE_WUE_* hard-code Power_IT=1",
+    "site_WUE_is_onsite_conditioning_use": "Green Grid / Lei 2022 Eq.1; not groundwater pumping",
+    "traditional_Lei_Masanet_limited_for_liquid_AI": "eight air-IT archetypes in 2022 public code; liquid cases appear in Lei 2025 UEs_16cases and LBNL 2024 Table 4.2",
+    "modern_liquid_cooling_is_extension_target": true,
+    "masanet_annual_v2_in_progress": "other_sources/masanet/docs/final_repro_v2/STATUS_IN_PROGRESS.md; do not contaminate",
+    "M100_CLOSED_FROZEN": true,
+    "Frontier_energy_not_WUE": true
+  },
+  "other_sources_layout": {
+    "cooling_technology_proxies": "this module",
+    "masanet": "Lei 2022 public simulator reproduction (do not touch)",
+    "m100": "measured HPC facility energy benchmark, frozen",
+    "it_power": "workload\u2192IT power source audit",
+    "exadata": "present"
+  }
+}

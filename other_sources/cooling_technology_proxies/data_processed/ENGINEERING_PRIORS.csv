@@ -1,0 +1,9 @@
+prior_id,parameter,value,units,technology,source_id,kind,confidence,notes
+E1,ASHRAE_liquid_class_AI,W45,ASHRAE class,liquid IT,LBNL2024_REPORT,ENGINEERING_PRIOR,medium,Table 4.3 AI liquid cooling
+E2,n_lhs_operational_scenarios,50,count,all lineage models,LBNL2024_REPORT,ENGINEERING_PRIOR,high,also Lei 2022/2025
+E3,PUE_definition,E_fac/E_IT,1,all,LEI2025_PAPER_USER_PDF,ENGINEERING_PRIOR,high,Green Grid
+E4,WUE_site_definition,W_onsite_conditioning/E_IT,L/kWh,all,LEI2025_PAPER_USER_PDF,ENGINEERING_PRIOR,high,not withdrawal; not groundwater
+E5,liquid_free_cooling_advantage,"higher coolant T, fewer chiller hours",qualitative,liquid IT,LBNL2024_REPORT,ENGINEERING_PRIOR,medium,Section 4 liquid text
+E6,dry_cooler_adiabatic_when,"high DB, low WB",qualitative,dry/adiabatic,LBNL2024_REPORT,ENGINEERING_PRIOR,medium,Table 4.2 dry cooler paragraph
+E7,chiller_supplemental_only_in_favorable_climates,parentheses in system names,n/a,economizer systems,LBNL2024_REPORT,ENGINEERING_PRIOR,high,Table 4.2 note (1)
+E8,Prineville_2011_no_chiller_no_tower,OA evaporative only,n/a,airside evaporative,META_ENGINEERING_2011,ENGINEERING_PRIOR,high,initial epoch only
