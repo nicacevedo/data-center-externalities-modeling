@@ -1,0 +1,45 @@
+{
+  "kestrel_jobs": {
+    "title": "NLR HPC Kestrel Jobs Data",
+    "doi": "10.7799/3023270",
+    "catalog_url": "https://data.nlr.gov/submissions/302",
+    "canonical_archive": "esif.hpc.kestrel.job-anon.zip",
+    "catalog_range": "08/2023 - 12/2025",
+    "catalog_md5": "8f1d3be1cbe6345ef45e658a783c2aa0",
+    "catalog_size_label": "697.3 MB",
+    "local_md5": "8f1d3be1cbe6345ef45e658a783c2aa0",
+    "local_sha256": "3a90f9ac40991712f8718c686fa7b05d7a303a44a87ed1a8f21b403c11efd26f",
+    "status": "LOCAL_EXISTING_VERIFIED",
+    "redownloaded": false,
+    "datacard_local_sha256": "0139b75b80cd3029e0af54e22fc0dbad3080e92a8a7a602f1bd62cd7a36f62e9",
+    "datacard_status": "LOCAL_EXISTING_VERIFIED",
+    "citation": "Clark, Struan, Matt Selensky, and Kevin Menear. 2025. NLR HPC Kestrel Jobs Data. NLR Data Catalog. DOI: 10.7799/3023270."
+  },
+  "esif_pue": {
+    "title": "NLR HPC Facility Power Usage Effectiveness (PUE) Data",
+    "doi": "10.7799/3015212",
+    "catalog_url": "https://data.nlr.gov/submissions/300",
+    "canonical_file": "esif.influx.buildingData.PUE.combined.parquet",
+    "download_url": "https://data.nlr.gov/system/files/300/1757103411-esif.influx.buildingData.PUE.combined.parquet",
+    "catalog_size_label": "104.6 MB",
+    "local_sha256": "19cd12405dde9144b1a360e8c8418666c399a3d0d15a7f846880d71ab22f9dd4",
+    "status": "DOWNLOADED_MISSING_DATA",
+    "weather_downloaded": false,
+    "cooling_used_in_models": false,
+    "required_fields": [
+      "ts",
+      "it_power_kw"
+    ],
+    "citation": "Clark, Struan, and Justin Strelka. 2025. NLR HPC Facility Power Usage Effectiveness (PUE) Data. NLR Data Catalog. DOI: 10.7799/3015212."
+  },
+  "genai_profiles": {
+    "status": "NOT_PRESENT",
+    "processed": false
+  },
+  "extraction": {
+    "status": "ALREADY_EXTRACTED",
+    "destination": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/data_raw/extracted/esif.hpc.kestrel.job-anon",
+    "source_archive_sha256": "3a90f9ac40991712f8718c686fa7b05d7a303a44a87ed1a8f21b403c11efd26f",
+    "parquet_count": 29
+  }
+}

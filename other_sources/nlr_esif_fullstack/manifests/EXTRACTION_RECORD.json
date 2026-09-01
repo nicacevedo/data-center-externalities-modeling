@@ -1,0 +1,6 @@
+{
+  "status": "ALREADY_EXTRACTED",
+  "destination": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/data_raw/extracted/esif.hpc.kestrel.job-anon",
+  "source_archive_sha256": "3a90f9ac40991712f8718c686fa7b05d7a303a44a87ed1a8f21b403c11efd26f",
+  "parquet_count": 29
+}

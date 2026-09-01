@@ -1,0 +1,125 @@
+{
+  "observed_encoding": {
+    "null_shared_job_count": "nodes_shared and jobs_shared also null; dominant on exclusive CPU partitions with nonempty nodelist",
+    "zero_shared_job_count": "nodes_shared and jobs_shared empty arrays; explicitly no co-residents",
+    "positive_shared_job_count": "nonempty nodes_shared and jobs_shared; count is other co-resident jobs (self not included, because 0 exists)"
+  },
+  "encoding_crosstab": [
+    {
+      "sh": "null",
+      "nodes_sh": "null",
+      "jobs_sh": "null",
+      "n": 7796347
+    },
+    {
+      "sh": "positive",
+      "nodes_sh": "nonempty",
+      "jobs_sh": "nonempty",
+      "n": 1510949
+    },
+    {
+      "sh": "zero",
+      "nodes_sh": "empty",
+      "jobs_sh": "empty",
+      "n": 1252681
+    }
+  ],
+  "completed_positive_energy": {
+    "n": 5332950,
+    "n_null": 4262923,
+    "n0": 342998,
+    "n_pos": 727029,
+    "e": 9926266842.653074,
+    "e_null": 8618425510.230785,
+    "e0": 742411483.6044412,
+    "e_pos": 565429848.8177781
+  },
+  "energy_per_node_hour_by_class": [
+    {
+      "pclass": "cpu_exclusive",
+      "sh": "null",
+      "n": 4125294,
+      "median_wh_per_node_hour": 625.3870967741935,
+      "q25": 426.2296013189602,
+      "q75": 727.0813725884184,
+      "e_wh": 8540444022.449675
+    },
+    {
+      "pclass": "cpu_exclusive",
+      "sh": "pos",
+      "n": 407,
+      "median_wh_per_node_hour": 562.5384615384615,
+      "q25": 477.37230141113366,
+      "q75": 708.9958731236313,
+      "e_wh": 4993646.671666666
+    },
+    {
+      "pclass": "cpu_exclusive",
+      "sh": "zero",
+      "n": 331631,
+      "median_wh_per_node_hour": 640.4673913043478,
+      "q25": 452.9159311094882,
+      "q75": 719.4303321095284,
+      "e_wh": 741492542.424167
+    },
+    {
+      "pclass": "other",
+      "sh": "null",
+      "n": 94864,
+      "median_wh_per_node_hour": 724.5108912599355,
+      "q25": 714.7918644678322,
+      "q75": 729.2437240486853,
+      "e_wh": 12369617.698055577
+    },
+    {
+      "pclass": "other",
+      "sh": "pos",
+      "n": 22,
+      "median_wh_per_node_hour": 718.4229100024319,
+      "q25": 706.6750000000001,
+      "q75": 727.4406438631792,
+      "e_wh": 1927.8758333333333
+    },
+    {
+      "pclass": "other",
+      "sh": "zero",
+      "n": 11219,
+      "median_wh_per_node_hour": 720.9119373776907,
+      "q25": 311.83512512076453,
+      "q75": 728.698894739905,
+      "e_wh": 895273.7977777782
+    },
+    {
+      "pclass": "shared_part",
+      "sh": "null",
+      "n": 39661,
+      "median_wh_per_node_hour": 705.1799881586737,
+      "q25": 507.25445096778185,
+      "q75": 739.2554632727024,
+      "e_wh": 61798417.725277826
+    },
+    {
+      "pclass": "shared_part",
+      "sh": "pos",
+      "n": 726600,
+      "median_wh_per_node_hour": 687.542570542827,
+      "q25": 562.5695332958551,
+      "q75": 735.5545757387313,
+      "e_wh": 560434274.2702755
+    },
+    {
+      "pclass": "shared_part",
+      "sh": "zero",
+      "n": 148,
+      "median_wh_per_node_hour": 496.01417641764175,
+      "q25": 377.7039800995024,
+      "q75": 661.1024697562551,
+      "e_wh": 23667.3825
+    }
+  ],
+  "double_count_risk": "HIGH if summing shared-partition jobs: energy/node-hour for co-resident jobs is similar to exclusive CPU (~600-700 Wh/node-h), consistent with node-level ConsumedEnergyRaw copied onto each job rather than fractional allocation.",
+  "NON_SHARED_JOB_rule": {
+    "criterion": "partition in CPU exclusive set AND (shared_job_count IS NULL OR shared_job_count = 0) AND NOT shared/gpu partitions",
+    "rationale": "On exclusive CPU partitions, co-residency is almost never recorded as positive; NULL is the typical exclusive-node encoding. shared_job_count=0 is the explicit unshared encoding. Positive counts concentrate on shared* partitions. GPU partitions have no positive measured energy."
+  }
+}

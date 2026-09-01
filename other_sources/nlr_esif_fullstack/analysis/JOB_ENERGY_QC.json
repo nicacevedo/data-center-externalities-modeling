@@ -1,0 +1,236 @@
+{
+  "n_source_rows": 10559977,
+  "canonical_target": "consumed_energy_raw_watt_hours",
+  "joule_field": "consumed_energy_raw_joules",
+  "identity_E_Wh_eq_E_J_over_3600": true,
+  "energy": {
+    "n": 10559977,
+    "j_null": 1489930,
+    "wh_null": 1489930,
+    "j_neg": 0,
+    "wh_neg": 0,
+    "j0": 2005097,
+    "wh0": 2005097,
+    "wh_pos": 7064950,
+    "wh_nonfinite": 0,
+    "wh_min": 0.0,
+    "wh_max": 19171249.243055556,
+    "wh_sum": 23938967214.02182,
+    "j_wh_max_abs": 2.9103830456733704e-11,
+    "j_wh_mismatch": 0
+  },
+  "by_state": [
+    {
+      "state_simple": "COMPLETED",
+      "n": 6991818,
+      "e_null": 1000264,
+      "e0": 658604,
+      "epos": 5332950,
+      "e_wh": 9926266842.653072
+    },
+    {
+      "state_simple": "CANCELLED",
+      "n": 1534430,
+      "e_null": 175765,
+      "e0": 1201527,
+      "epos": 157138,
+      "e_wh": 1774839836.3780522
+    },
+    {
+      "state_simple": "FAILED",
+      "n": 1361924,
+      "e_null": 182136,
+      "e0": 50206,
+      "epos": 1129582,
+      "e_wh": 939142837.4086083
+    },
+    {
+      "state_simple": "TIMEOUT",
+      "n": 559732,
+      "e_null": 127070,
+      "e0": 31878,
+      "epos": 400784,
+      "e_wh": 10857812896.523027
+    },
+    {
+      "state_simple": "OUT_OF_MEMORY",
+      "n": 43931,
+      "e_null": 3669,
+      "e0": 719,
+      "epos": 39543,
+      "e_wh": 15755327.281944431
+    },
+    {
+      "state_simple": "NODE_FAIL",
+      "n": 36070,
+      "e_null": 1026,
+      "e0": 30091,
+      "epos": 4953,
+      "e_wh": 425149473.77694464
+    },
+    {
+      "state_simple": "DEADLINE",
+      "n": 32071,
+      "e_null": 0,
+      "e0": 32071,
+      "epos": 0,
+      "e_wh": 0.0
+    },
+    {
+      "state_simple": "PENDING",
+      "n": 1,
+      "e_null": 0,
+      "e0": 1,
+      "epos": 0,
+      "e_wh": 0.0
+    }
+  ],
+  "dates": {
+    "min_submit": "2023-08-10 00:13:58-04:00",
+    "max_submit": "2026-01-01 01:48:47-05:00",
+    "min_start": "2023-08-10 00:13:58-04:00",
+    "max_start": "2026-02-23 06:04:16-05:00",
+    "min_end": "2023-08-11 01:19:07-04:00",
+    "max_end": "2026-02-24 05:04:21-05:00"
+  },
+  "duration_completed_positive_energy": {
+    "n": 5332950,
+    "med_e": 59.06777777777778,
+    "med_dur_s": 381.0
+  },
+  "h100_measured_energy": {
+    "n": 1327785,
+    "e_null": 1161754,
+    "e0": 166031,
+    "epos": 0,
+    "min_start": "2024-02-22 17:31:12-05:00",
+    "max_start": "2026-02-06 19:52:42-05:00"
+  },
+  "h100_measured_energy_positive_jobs": 0,
+  "wallclock_unit": "nanoseconds_integer",
+  "cpu_used_unit": "cpu_nanoseconds_integer",
+  "extreme_jobs_not_trimmed": [
+    {
+      "id": "9521983",
+      "partition": "long",
+      "nodes_used": 40,
+      "duration_s": 1181351.0,
+      "e_wh": 9478049.5,
+      "wh_per_nh": 722.0753654079101
+    },
+    {
+      "id": "5267659",
+      "partition": "standard",
+      "nodes_used": 150,
+      "duration_s": 172086.0,
+      "e_wh": 5186334.613888889,
+      "wh_per_nh": 723.3129408164135
+    },
+    {
+      "id": "5509209",
+      "partition": "standard",
+      "nodes_used": 150,
+      "duration_s": 172073.0,
+      "e_wh": 5165785.5755555555,
+      "wh_per_nh": 720.5014953730877
+    },
+    {
+      "id": "10741248",
+      "partition": "long",
+      "nodes_used": 35,
+      "duration_s": 544462.0,
+      "e_wh": 3940342.9944444443,
+      "wh_per_nh": 744.3906503772794
+    },
+    {
+      "id": "10572308",
+      "partition": "long",
+      "nodes_used": 30,
+      "duration_s": 631924.0,
+      "e_wh": 3908543.0530555556,
+      "wh_per_nh": 742.2176818203877
+    },
+    {
+      "id": "5262690",
+      "partition": "long",
+      "nodes_used": 36,
+      "duration_s": 661723.0,
+      "e_wh": 3811286.0269444445,
+      "wh_per_nh": 575.9639648228102
+    },
+    {
+      "id": "10396731",
+      "partition": "long",
+      "nodes_used": 35,
+      "duration_s": 513073.0,
+      "e_wh": 3669032.101388889,
+      "wh_per_nh": 735.5408665043766
+    },
+    {
+      "id": "4816729",
+      "partition": "standard",
+      "nodes_used": 100,
+      "duration_s": 172510.0,
+      "e_wh": 3471080.964722222,
+      "wh_per_nh": 724.3575139412208
+    },
+    {
+      "id": "6972718",
+      "partition": "long",
+      "nodes_used": 21,
+      "duration_s": 720344.0,
+      "e_wh": 3116076.029166667,
+      "wh_per_nh": 741.5685591090605
+    },
+    {
+      "id": "5004261",
+      "partition": "standard",
+      "nodes_used": 100,
+      "duration_s": 154263.0,
+      "e_wh": 3106093.916111111,
+      "wh_per_nh": 724.8619628815725
+    },
+    {
+      "id": "11739773",
+      "partition": "long",
+      "nodes_used": 35,
+      "duration_s": 420240.0,
+      "e_wh": 2903683.9311111113,
+      "wh_per_nh": 710.7001544695548
+    },
+    {
+      "id": "6972750",
+      "partition": "long",
+      "nodes_used": 21,
+      "duration_s": 654449.0,
+      "e_wh": 2840516.9116666666,
+      "wh_per_nh": 744.054550141744
+    },
+    {
+      "id": "10263064",
+      "partition": "long",
+      "nodes_used": 35,
+      "duration_s": 382630.0,
+      "e_wh": 2831107.8588888887,
+      "wh_per_nh": 761.047658274872
+    },
+    {
+      "id": "6972752",
+      "partition": "long",
+      "nodes_used": 21,
+      "duration_s": 648505.0,
+      "e_wh": 2813100.3858333332,
+      "wh_per_nh": 743.6269272073021
+    },
+    {
+      "id": "6972742",
+      "partition": "long",
+      "nodes_used": 21,
+      "duration_s": 613823.0,
+      "e_wh": 2642348.4961111112,
+      "wh_per_nh": 737.9554495428844
+    }
+  ],
+  "note_gpu": "All gpu-h100/related partitions have consumed_energy_raw_watt_hours null or zero. H100 measured job energy is unsupported in this extract.",
+  "tdp_is_not_measured_ground_truth": true
+}

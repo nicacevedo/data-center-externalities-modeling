@@ -1,0 +1,51 @@
+field,role,source_definition,unit,timing_of_availability,ex_ante_permitted,ex_post_permitted,leakage_risk,intended_role
+id,IDENTIFIER,Unique primary key (full job ID string) from Slurm JobID,N/A,at submission,false,false,none,Join key only; not a predictor
+job_id,IDENTIFIER,Numeric Slurm job ID (JobIDRaw),N/A,at submission,false,false,none,Join key only; not a predictor
+array_pos,IDENTIFIER,Array index if job array else null (ArrayTaskID),N/A,at submission,false,false,none,Not used in energy models
+array_range,IDENTIFIER,Slurm array notation (ArrayTaskString),N/A,at submission,false,false,none,Not used in energy models
+name_hash,HASHED_GROUP_ID,7-char hex hash of job name; do not re-identify,N/A,at submission,false,false,reidentification_if_misused,Secondary grouped diagnostics only
+user_hash,HASHED_GROUP_ID,7-char hex hash of submitting user; do not re-identify,N/A,at submission,false,false,reidentification_if_misused,Unseen-user validation only; never a predictor
+account_hash,HASHED_GROUP_ID,7-char hex hash of allocation account; do not re-identify,N/A,at submission,false,false,reidentification_if_misused,Unseen-account validation only; never a predictor
+submit_line_hash,HASHED_GROUP_ID,7-char hex hash of submit command line; do not re-identify,N/A,at submission,false,false,reidentification_if_misused,Optional job-family sensitivity; never a predictor
+work_dir_hash,HASHED_GROUP_ID,7-char hex hash of working directory; do not re-identify,N/A,at submission,false,false,reidentification_if_misused,Not used as predictor
+submit_script_hash,HASHED_GROUP_ID,7-char hex hash of submit script (null if not captured); do not re-identify,N/A,at submission,false,false,reidentification_if_misused,Not used as predictor
+job_type_hash,HASHED_GROUP_ID,7-char hex hash of job type (null if not captured); do not re-identify,N/A,at submission,false,false,reidentification_if_misused,Not used as predictor
+python_job,QA_ONLY,Boolean flag derived by unspecified methodology; datacard notes both flags false in sample,boolean,unspecified,false,false,unspecified_derivation,Not used; methodology unpublished
+reframe_job,QA_ONLY,Boolean flag derived by unspecified methodology; datacard notes both flags false in sample,boolean,unspecified,false,false,unspecified_derivation,Not used; methodology unpublished
+partition,EX_ANTE_AVAILABLE,HPC queue/partition requested (Partition),categorical,at submission,true,true,none,Hardware/queue regime indicator
+state,QA_ONLY,Full Slurm job state string including CANCELLED-by-uid detail,N/A,during/after execution,false,true,none,QC only; use state_simple for cohort
+state_simple,EX_POST_EXECUTION,Simplified state COMPLETED/FAILED/PENDING/RUNNING/CANCELLED/TIMEOUT/etc,categorical,after execution,false,true,none,Cohort filter (COMPLETED required)
+submit_time,TIME_METADATA,Job submission timestamp with timezone offset (Submit),timestamptz,at submission,true,true,none,Chronology and queue context; not a physical energy predictor
+start_time,EX_POST_EXECUTION,Job start timestamp; null if PENDING (Start),timestamptz,after scheduling,false,true,none,Actual runtime bound; EX-POST only
+end_time,EX_POST_EXECUTION,Job end timestamp; null if PENDING/RUNNING (End),timestamptz,after completion,false,true,none,Actual runtime bound; EX-POST only
+nodes_req,EX_ANTE_AVAILABLE,Nodes requested (ReqNodes),count,at submission,true,true,none,EX-ANTE occupancy request
+processors_req,EX_ANTE_AVAILABLE,CPUs requested (ReqCPUS),count,at submission,true,true,none,EX-ANTE CPU request
+memory_req,EX_ANTE_AVAILABLE,Memory requested as string with unit suffix (ReqMem),string (M/G),at submission,true,true,none,Parsed to GB for EX-ANTE models
+wallclock_req,EX_ANTE_AVAILABLE,Requested wallclock stored as integer nanoseconds (Timelimit),nanoseconds,at submission,true,true,none,Converted to seconds; EX-ANTE duration request
+nodes_used,EX_POST_EXECUTION,Nodes utilized (NNodes),count,after allocation/execution,false,true,none,EX-POST occupancy
+processors_used,EX_POST_EXECUTION,CPUs utilized (NCPUS),count,after allocation/execution,false,true,none,EX-POST CPU occupancy
+wallclock_used,EX_POST_EXECUTION,Elapsed wall time stored as integer nanoseconds (Elapsed),nanoseconds,after execution,false,true,none,Converted to seconds; EX-POST duration
+cpu_used,EX_POST_EXECUTION,Total CPU time stored as integer CPU-nanoseconds (TotalCPU),CPU-nanoseconds,after execution,false,true,none,Converted to CPU-seconds; EX-POST only
+nodelist,EX_POST_EXECUTION,Array of Slurm node names used,node names,after allocation,false,false,none,QA/sharing context; not a model feature
+cpu_energy_tdp_estimated_max_watt_hours,DERIVED_ENERGY_BENCHMARK,TDP-based estimated max CPU energy derived from TotalCPU; not measured,Wh,after execution (engineering estimate),false,false,target_leakage_if_used_as_feature,EX-POST engineering benchmark only; never a predictor of measured energy
+cpu_energy_tdp_estimated_used_watt_hours,DERIVED_ENERGY_BENCHMARK,TDP-based estimated CPU energy from TotalCPU and CPUTime; not measured,Wh,after execution (engineering estimate),false,false,target_leakage_if_used_as_feature,EX-POST engineering benchmark only; never a predictor of measured energy
+consumed_energy_joules,QA_ONLY,Formatted energy string (may contain K suffix); not the canonical numeric target,formatted joules,after execution,false,false,target_leakage,QA only; do not parse as predictor
+consumed_energy_raw_joules,MEASURED_ENERGY_TARGET,Raw Slurm ConsumedEnergyRaw from node-level power monitoring,J,after execution,false,false,target_itself,Canonical SI measured energy; verify Wh = J/3600
+consumed_energy_raw_watt_hours,MEASURED_ENERGY_TARGET,ConsumedEnergyRaw converted to watt-hours; canonical modeling target,Wh,after execution,false,false,target_itself,Canonical job-energy target
+qos,EX_ANTE_AVAILABLE,Quality of Service (normal/high),categorical,at submission,true,true,none,Scheduler priority metadata
+queue_wait,EX_POST_EXECUTION,start_time minus submit_time stored as nanoseconds,nanoseconds,after start,false,true,none,Not used as energy predictor
+cpu_eff,EX_POST_EXECUTION,CPU efficiency TotalCPU/CPUTime,ratio 0-1,after execution,false,true,none,EX-POST utilization
+max_mem_eff,EX_POST_EXECUTION,Max memory efficiency across steps (MaxRSS/ReqMem),ratio 0-1,after execution,false,true,none,EX-POST optional; avg_mem_eff preferred
+min_mem_eff,EX_POST_EXECUTION,Min memory efficiency across steps,ratio 0-1,after execution,false,true,none,Not primary
+avg_mem_eff,EX_POST_EXECUTION,Avg memory efficiency across steps,ratio 0-1,after execution,false,true,none,EX-POST optional utilization
+gpus_requested,EX_ANTE_AVAILABLE,GPUs requested from ReqTRES,count,at submission,true,true,none,EX-ANTE GPU request; H100 measured energy is unsupported in this extract
+gpu_nodes_occupied,EX_POST_EXECUTION,Derived GPU nodes occupied,count,after allocation,false,true,none,EX-POST GPU occupancy; unused because GPU energy is all null/zero
+shared_job_count,SHARING_METADATA,Count of other jobs co-resident on the same nodes concurrently; NOT the shared partition,count,after execution (derived),false,false,allocation_ambiguity,Cohort filter; 0=explicitly unshared; NULL common on exclusive CPU partitions
+nodes_shared,SHARING_METADATA,Array of nodes shared with other jobs,node names,after execution (derived),false,false,allocation_ambiguity,Corroborate sharing encoding
+jobs_shared,SHARING_METADATA,Array of job IDs sharing the same nodes,job ids,after execution (derived),false,false,allocation_ambiguity,Corroborate sharing encoding
+year,TIME_METADATA,Year extracted from submit_time,N/A,at submission,false,false,none,Hive/QC only; splits use start_time
+month,TIME_METADATA,Month extracted from submit_time,N/A,at submission,false,false,none,Hive/QC only
+day,TIME_METADATA,Day of month from submit_time,N/A,at submission,false,false,none,Not used as predictor
+day_of_week,TIME_METADATA,Day of week from submit_time (0=Sunday),N/A,at submission,false,false,none,Not used as predictor
+hour,TIME_METADATA,Hour from submit_time 0-23,N/A,at submission,false,false,none,Not used as predictor
+minute,TIME_METADATA,Minute from submit_time 0-59,N/A,at submission,false,false,none,Not used as predictor

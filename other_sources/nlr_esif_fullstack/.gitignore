@@ -1,0 +1,15 @@
+# Large raw/extracted data — do not commit
+data_raw/extracted/
+data_raw/*.zip
+data_raw/esif_pue/*.parquet
+data_raw/esif_pue/*.zip
+
+# Generated analysis products (rebuild via scripts/run_kestrel_job_power_experiment.py)
+data_processed/*.parquet
+timeseries/*.parquet
+facility_validation/*.parquet
+
+__pycache__/
+*.pyc
+.pytest_cache/
+logs/

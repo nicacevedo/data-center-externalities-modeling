@@ -1,0 +1,5 @@
+filename,relative_path,byte_size,modification_time_utc,sha256,archive_container_type,likely_source_dataset,readable,authoritative_identity_established,required_for_this_experiment
+esif.hpc.kestrel.job-anon.zip,data_raw/esif.hpc.kestrel.job-anon.zip,731139558,2026-09-01T17:20:35.548518+00:00,3a90f9ac40991712f8718c686fa7b05d7a303a44a87ed1a8f21b403c11efd26f,zip,NLR HPC Kestrel Jobs Data DOI 10.7799/3023270,True,catalog_md5_match,True
+datacard.md,data_raw/datacard.md,14860,2026-09-01T17:18:50.052829+00:00,0139b75b80cd3029e0af54e22fc0dbad3080e92a8a7a602f1bd62cd7a36f62e9,md,NLR HPC Kestrel Jobs Data datacard,True,schema_identity_with_catalog,True
+esif.influx.buildingData.PUE.combined.parquet,data_raw/esif_pue/esif.influx.buildingData.PUE.combined.parquet,109685321,2026-09-01T17:26:55.260210+00:00,19cd12405dde9144b1a360e8c8418666c399a3d0d15a7f846880d71ab22f9dd4,parquet,NLR HPC Facility PUE Data DOI 10.7799/3015212,True,catalog_filename_and_size,True
+README.md,data_raw/esif_pue/README.md,1877,2026-09-01T17:26:55.906234+00:00,f69d32f1af598c48a899d54d48b26def2ca78a0c11d848516169570ecae4c029,md,NLR HPC Facility PUE Data README,True,catalog_readme,False

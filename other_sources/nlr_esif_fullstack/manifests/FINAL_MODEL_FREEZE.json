@@ -1,0 +1,66 @@
+{
+  "parsimony_rule": "within 1% relative validation WAPE of the best model, prefer simpler",
+  "EX_POST_CPU": {
+    "selected": "B0_node_hours",
+    "validation": {
+      "n": 1308441,
+      "MAE_Wh": 233.14678720987052,
+      "RMSE_Wh": 1738.967995490419,
+      "WAPE": 0.12363273036232535,
+      "total_energy_bias": 0.023254349082255876,
+      "sum_observed_Wh": 2467459988.221945,
+      "sum_predicted_Wh": 2524839164.134557,
+      "MAE_logE": 0.19430208317949849,
+      "R2_logE": 0.9825035134515504,
+      "problem": "EX_POST",
+      "model": "B0_node_hours",
+      "branch": "CPU",
+      "p_W": 700.6894574294788
+    },
+    "best_validation_model": "B1_node_cpu_hours",
+    "best_validation_WAPE": 0.12322380548404571,
+    "nonlinear_materially_better": false,
+    "features": [
+      "node_hours"
+    ],
+    "p_hat_W_per_node": 700.6894574294788,
+    "beta1": null,
+    "training_dates": "start_utc < 2025-01-01T00:00:00+00:00",
+    "n_dev": 2013738,
+    "n_val": 1308441
+  },
+  "EX_ANTE_CPU": {
+    "selected": "HGB_logE_scheduler",
+    "validation": {
+      "n": 1308441,
+      "MAE_Wh": 1757.7404746680224,
+      "RMSE_Wh": 17999.92941529924,
+      "WAPE": 0.9320919955716943,
+      "total_energy_bias": -0.7415745259718137,
+      "sum_observed_Wh": 2467459988.221945,
+      "sum_predicted_Wh": 637654517.1018391,
+      "MAE_logE": 1.564466709776315,
+      "R2_logE": 0.2735485882945813,
+      "problem": "EX_ANTE",
+      "model": "HGB_logE_scheduler",
+      "branch": "CPU",
+      "n_train": 500000
+    },
+    "best_validation_model": "HGB_logE_scheduler",
+    "best_validation_WAPE": 0.9320919955716943,
+    "features": [
+      "partition",
+      "nodes_req",
+      "processors_req",
+      "memory_req_gb",
+      "wallclock_req_s",
+      "qos"
+    ],
+    "p_hat_W_per_requested_node": null,
+    "training_dates": "start_utc < 2025-01-01T00:00:00+00:00",
+    "n_dev": 2013738
+  },
+  "EX_POST_H100": "UNSUPPORTED",
+  "EX_ANTE_H100": "UNSUPPORTED",
+  "test_not_used_for_selection": true
+}

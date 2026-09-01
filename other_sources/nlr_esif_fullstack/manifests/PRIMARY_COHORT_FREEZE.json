@@ -1,0 +1,120 @@
+{
+  "name": "PRIMARY_CPU_NONSHARED_COMPLETED",
+  "rules": {
+    "parent_job": true,
+    "state_simple": "COMPLETED",
+    "valid_timestamps": true,
+    "positive_duration": true,
+    "valid_resource_request_and_use": true,
+    "finite_positive_measured_raw_energy": true,
+    "supported_hardware": "CPU exclusive partitions only",
+    "NON_SHARED_JOB": "shared_job_count IS NULL OR shared_job_count = 0 on exclusive CPU partitions",
+    "filters_not_tuned_on_model_performance": true
+  },
+  "n_jobs": 4456925,
+  "n_source_rows": 10559977,
+  "pct_source_rows": 42.20582109222397,
+  "measured_energy_wh": 9281936564.87389,
+  "pct_measured_total_energy": 38.77333755416638,
+  "date_range_start": "2023-12-15 12:37:12-05:00",
+  "date_range_end": "2026-02-24 04:50:02-05:00",
+  "cpu_jobs": 4456925,
+  "h100_jobs_in_primary": 0,
+  "h100_branch": "UNSUPPORTED_NO_POSITIVE_MEASURED_ENERGY",
+  "partition_composition": [
+    {
+      "partition": "standard",
+      "n": 2226252,
+      "e": 5815387864.209719
+    },
+    {
+      "partition": "short",
+      "n": 1802561,
+      "e": 340405237.2213873
+    },
+    {
+      "partition": "standard-stdby",
+      "n": 280240,
+      "e": 1611540344.8683314
+    },
+    {
+      "partition": "debug",
+      "n": 49012,
+      "e": 3570676.341666663
+    },
+    {
+      "partition": "long",
+      "n": 35510,
+      "e": 1150046441.3961108
+    },
+    {
+      "partition": "short-stdby",
+      "n": 24005,
+      "e": 14881483.252777776
+    },
+    {
+      "partition": "bigmem",
+      "n": 11348,
+      "e": 11767327.036111113
+    },
+    {
+      "partition": "nvme",
+      "n": 9119,
+      "e": 53690168.04166669
+    },
+    {
+      "partition": "hbw",
+      "n": 8691,
+      "e": 131663213.06000003
+    },
+    {
+      "partition": "medmem",
+      "n": 2655,
+      "e": 29976184.15694445
+    },
+    {
+      "partition": "long-stdby",
+      "n": 2636,
+      "e": 89814816.06388888
+    },
+    {
+      "partition": "debug-stdby",
+      "n": 2560,
+      "e": 178451.49388888886
+    },
+    {
+      "partition": "bigmem-stdby",
+      "n": 1329,
+      "e": 640400.6263888892
+    },
+    {
+      "partition": "bigmeml",
+      "n": 492,
+      "e": 7864886.6725
+    },
+    {
+      "partition": "hbwl",
+      "n": 452,
+      "e": 19514604.82416667
+    },
+    {
+      "partition": "bigmeml-stdby",
+      "n": 35,
+      "e": 654380.9969444445
+    },
+    {
+      "partition": "hbw-stdby",
+      "n": 28,
+      "e": 340084.6113888889
+    }
+  ],
+  "excluded_populations": [
+    "shared/sharedl partitions (co-residency / likely node-energy duplication)",
+    "positive shared_job_count",
+    "H100/GPU partitions (measured energy all null/zero)",
+    "csc, project_3, multi-partition, empty, gpu-a100, gpu-hpe",
+    "non-COMPLETED states",
+    "nonpositive/null energy or duration"
+  ],
+  "where_sql": "\n        state_simple='COMPLETED'\n        AND start_time IS NOT NULL AND end_time IS NOT NULL\n        AND duration_s > 0\n        AND wallclock_used_s > 0\n        AND nodes_used > 0 AND processors_used > 0\n        AND energy_wh IS NOT NULL AND isfinite(energy_wh) AND energy_wh > 0\n        AND hardware_branch='CPU'\n        AND partition IN ('bigmem','bigmem-stdby','bigmeml','bigmeml-stdby','debug','debug-stdby','hbw','hbw-stdby','hbwl','long','long-stdby','medmem','medmem-stdby','nvme','short','short-stdby','standard','standard-stdby')\n        AND (shared_job_count IS NULL OR shared_job_count = 0)\n        AND nodes_req > 0 AND processors_req > 0 AND wallclock_req_s > 0\n    "
+}

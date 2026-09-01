@@ -1,0 +1,292 @@
+{
+  "experiment": "NLR_KESTREL_JOB_ENERGY_ESIF_IT_METER",
+  "git": {
+    "branch": "main",
+    "head": "26cbc417976ed5a5069f70cd8e2ed87ae7cfccb7",
+    "status": "M Data-center-PUE-prediction-tool\n?? other_sources/nlr_esif_fullstack/",
+    "status_full": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n  (commit or discard the untracked or modified content in submodules)\n\tmodified:   Data-center-PUE-prediction-tool (modified content)\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\tother_sources/nlr_esif_fullstack/\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")",
+    "module_root": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack",
+    "captured_at_utc": "2026-09-01T17:52:33.159363+00:00",
+    "python": "3.11.15 | packaged by conda-forge | (main, Aug 11 2026, 10:26:29) [GCC 14.4.0]",
+    "executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+    "PYTHONNOUSERSITE": "1"
+  },
+  "module_files_excluding_extracted": [
+    {
+      "path": ".gitignore",
+      "is_dir": false,
+      "bytes": 157
+    },
+    {
+      "path": "analysis",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "analysis/ESIF_OVERLAP_AUDIT.json",
+      "is_dir": false,
+      "bytes": 907
+    },
+    {
+      "path": "analysis/FIELD_SEMANTICS.csv",
+      "is_dir": false,
+      "bytes": 8204
+    },
+    {
+      "path": "analysis/JOB_ENERGY_QC.json",
+      "is_dir": false,
+      "bytes": 5613
+    },
+    {
+      "path": "analysis/JOB_ENERGY_QC_BY_PARTITION.csv",
+      "is_dir": false,
+      "bytes": 2784
+    },
+    {
+      "path": "analysis/METER_BOUNDARY_AUDIT.md",
+      "is_dir": false,
+      "bytes": 2247
+    },
+    {
+      "path": "analysis/SHARING_AUDIT.json",
+      "is_dir": false,
+      "bytes": 3821
+    },
+    {
+      "path": "baselines",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "data_processed",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "data_processed/kestrel_jobs_analysis.parquet",
+      "is_dir": false,
+      "bytes": 378539681
+    },
+    {
+      "path": "data_raw",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "data_raw/datacard.md",
+      "is_dir": false,
+      "bytes": 14860
+    },
+    {
+      "path": "data_raw/esif.hpc.kestrel.job-anon.zip",
+      "is_dir": false,
+      "bytes": 731139558
+    },
+    {
+      "path": "data_raw/esif_pue",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "data_raw/esif_pue/README.md",
+      "is_dir": false,
+      "bytes": 1877
+    },
+    {
+      "path": "data_raw/esif_pue/esif.influx.buildingData.PUE.combined.parquet",
+      "is_dir": false,
+      "bytes": 109685321
+    },
+    {
+      "path": "docs",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "ex_ante",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "ex_post",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "facility_validation",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "facility_validation/esif_it_linkage_metrics.csv",
+      "is_dir": false,
+      "bytes": 3482
+    },
+    {
+      "path": "facility_validation/esif_it_linkage_timeseries.parquet",
+      "is_dir": false,
+      "bytes": 534181
+    },
+    {
+      "path": "figures",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "figures/01_energy_vs_node_hours_cpu.png",
+      "is_dir": false,
+      "bytes": 80071
+    },
+    {
+      "path": "figures/02_ex_post_test_pred_vs_obs.png",
+      "is_dir": false,
+      "bytes": 69488
+    },
+    {
+      "path": "figures/03_calibration_duration.png",
+      "is_dir": false,
+      "bytes": 37775
+    },
+    {
+      "path": "figures/04_daily_aggregate_energy.png",
+      "is_dir": false,
+      "bytes": 206496
+    },
+    {
+      "path": "figures/05_esif_vs_kestrel_window.png",
+      "is_dir": false,
+      "bytes": 85708
+    },
+    {
+      "path": "logs",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "manifests",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "manifests/EXTRACTION_RECORD.json",
+      "is_dir": false,
+      "bytes": 305
+    },
+    {
+      "path": "manifests/FINAL_MODEL_FREEZE.json",
+      "is_dir": false,
+      "bytes": 2003
+    },
+    {
+      "path": "manifests/INITIAL_STATE.json",
+      "is_dir": false,
+      "bytes": 3754
+    },
+    {
+      "path": "manifests/LOCAL_RAW_DATA_INVENTORY.csv",
+      "is_dir": false,
+      "bytes": 1165
+    },
+    {
+      "path": "manifests/LOCAL_RAW_DATA_INVENTORY.json",
+      "is_dir": false,
+      "bytes": 8590
+    },
+    {
+      "path": "manifests/MODEL_PROTOCOL_FREEZE.json",
+      "is_dir": false,
+      "bytes": 3054
+    },
+    {
+      "path": "manifests/PRIMARY_COHORT_FREEZE.json",
+      "is_dir": false,
+      "bytes": 3500
+    },
+    {
+      "path": "manifests/SOURCE_PROVENANCE.json",
+      "is_dir": false,
+      "bytes": 2082
+    },
+    {
+      "path": "models",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "results",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "results/job_energy_baselines.csv",
+      "is_dir": false,
+      "bytes": 1000
+    },
+    {
+      "path": "results/job_energy_calibration.csv",
+      "is_dir": false,
+      "bytes": 14215
+    },
+    {
+      "path": "results/job_energy_generalization.json",
+      "is_dir": false,
+      "bytes": 757
+    },
+    {
+      "path": "results/job_energy_model_comparison.csv",
+      "is_dir": false,
+      "bytes": 2616
+    },
+    {
+      "path": "results/job_energy_test_metrics.csv",
+      "is_dir": false,
+      "bytes": 506
+    },
+    {
+      "path": "results/replay_conservation.json",
+      "is_dir": false,
+      "bytes": 2356
+    },
+    {
+      "path": "scripts",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "scripts/kestrel_paths.py",
+      "is_dir": false,
+      "bytes": 3731
+    },
+    {
+      "path": "scripts/run_kestrel_job_power_experiment.py",
+      "is_dir": false,
+      "bytes": 70775
+    },
+    {
+      "path": "sources",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "tests",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "tests/test_kestrel_job_power.py",
+      "is_dir": false,
+      "bytes": 8133
+    },
+    {
+      "path": "timeseries",
+      "is_dir": true,
+      "bytes": null
+    },
+    {
+      "path": "timeseries/kestrel_job_power_replay.parquet",
+      "is_dir": false,
+      "bytes": 10113699
+    }
+  ],
+  "note": "Recovered existing module; did not create nlr_kestrel_job_power/."
+}

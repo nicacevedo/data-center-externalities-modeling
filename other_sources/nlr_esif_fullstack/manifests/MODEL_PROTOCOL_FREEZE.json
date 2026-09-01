@@ -1,0 +1,85 @@
+{
+  "source_zip_sha256": "3a90f9ac40991712f8718c686fa7b05d7a303a44a87ed1a8f21b403c11efd26f",
+  "source_zip_md5": "8f1d3be1cbe6345ef45e658a783c2aa0",
+  "datacard_sha256": "0139b75b80cd3029e0af54e22fc0dbad3080e92a8a7a602f1bd62cd7a36f62e9",
+  "esif_parquet_sha256": "19cd12405dde9144b1a360e8c8418666c399a3d0d15a7f846880d71ab22f9dd4",
+  "doi_kestrel": "10.7799/3023270",
+  "doi_esif": "10.7799/3015212",
+  "cohort": "PRIMARY_CPU_NONSHARED_COMPLETED",
+  "target": "energy_wh",
+  "target_unit": "watt_hours",
+  "ex_post_feature_whitelist": [
+    "partition",
+    "nodes_used",
+    "processors_used",
+    "duration_s",
+    "cpu_used_s",
+    "cpu_eff",
+    "avg_mem_eff",
+    "qos"
+  ],
+  "ex_ante_feature_whitelist": [
+    "partition",
+    "nodes_req",
+    "processors_req",
+    "memory_req_gb",
+    "wallclock_req_s",
+    "qos"
+  ],
+  "forbidden_predictors": [
+    "consumed_energy_raw_joules",
+    "consumed_energy_raw_watt_hours",
+    "consumed_energy_joules",
+    "cpu_energy_tdp_estimated_max_watt_hours",
+    "cpu_energy_tdp_estimated_used_watt_hours",
+    "user_hash",
+    "account_hash",
+    "name_hash",
+    "submit_line_hash",
+    "work_dir_hash",
+    "submit_script_hash",
+    "job_type_hash"
+  ],
+  "hash_predictors_forbidden": true,
+  "cpu_branch": "PRIMARY",
+  "h100_branch": "UNSUPPORTED_NO_POSITIVE_MEASURED_ENERGY",
+  "split_variable": "start_time converted to UTC",
+  "split_rule": "chronological; no random split",
+  "development": {
+    "start_time_utc <": "2025-01-01T00:00:00+00:00"
+  },
+  "validation": {
+    "start_time_utc >=": "2025-01-01T00:00:00+00:00",
+    "start_time_utc <": "2025-07-01T00:00:00+00:00"
+  },
+  "untouched_final_test": {
+    "start_time_utc >=": "2025-07-01T00:00:00+00:00"
+  },
+  "split_dates_chosen_from_coverage_not_model_scores": true,
+  "h100_split": "not applicable",
+  "candidate_models": [
+    "B0_node_hours_through_origin",
+    "B1_node_hours_cpu_hours",
+    "B2_tdp_used_benchmark_not_a_fitted_predictor",
+    "log_linear_node_hours_partition",
+    "hist_gradient_boosting_if_val_justifies"
+  ],
+  "primary_metric": "WAPE = sum|y-yhat|/sum(y) on linear Wh scale",
+  "secondary_metrics": [
+    "MAE",
+    "RMSE",
+    "total_energy_bias",
+    "MAE_logE",
+    "R2_logE"
+  ],
+  "model_selection_rule": "Choose simplest model whose validation WAPE is within 1% relative of the best model. This is a project parsimony rule, not a universal scientific threshold.",
+  "untouched_test_rule": "Evaluate the frozen model once on the chronological test cohort; do not revise after seeing test.",
+  "hardware": {
+    "cpu_nodes": "Dual-socket Intel Sapphire Rapids; 104 cores; ~240-256 GB usable RAM; 100% direct liquid cooling (NLR docs / datacard)",
+    "h100_nodes": "156 GPU nodes; 4x NVIDIA H100 SXM 80GB; dual-socket AMD Genoa 128 cores (NLR Running on Kestrel). Measured job energy unsupported here."
+  },
+  "epochs_external": {
+    "eagle_decommission": "2024-06-15 America/Denver, NLR HPC announcement",
+    "kestrel_gpu_ga_approx": "2024-08-21 news of GPU nodes ready; not used as a job-energy split"
+  }
+}

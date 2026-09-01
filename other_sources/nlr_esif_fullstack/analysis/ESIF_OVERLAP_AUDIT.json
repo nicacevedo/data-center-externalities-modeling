@@ -1,0 +1,21 @@
+{
+  "esif_ts_interpretation": "timezone-naive timestamps localized as America/Denver (predeclared; catalog does not state offset)",
+  "kestrel_timestamps": "timestamptz converted to UTC",
+  "esif_n_it": 4432515,
+  "esif_min": "2016-06-12 12:00:18+00:00",
+  "esif_max": "2025-08-29 10:35:08.461000+00:00",
+  "kestrel_job_coverage_note": "submit/start from 2023-08-10; hive through 2025-12",
+  "overlap_n": 1037170,
+  "overlap_min": "2023-08-10 00:00:09+00:00",
+  "overlap_max": "2025-08-29 10:35:08.461000+00:00",
+  "median_cadence_s": 60.0,
+  "duplicate_ts": false,
+  "gaps_gt_1h": 39,
+  "it_power_kw_min": 0.10000000149011612,
+  "it_power_kw_max": 3921.3293040320277,
+  "linkage_supported": true,
+  "cooling_predictors_used": false,
+  "equality_assumption_forbidden": "P_ESIF_IT != sum P_Kestrel_jobs",
+  "low_job_baseline_kw_mean": 1389.862852684318,
+  "low_job_kestrel_kw_mean": 2.5095641517042667e-12
+}

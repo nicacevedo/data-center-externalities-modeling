@@ -38,3 +38,9 @@ other_sources/m100/results/
 other_sources/m100/logs/
 /other_sources/masanet/external/Data-Center-Water-footprint/
 /other_sources/masanet/logs/
+
+# NLR Kestrel/ESIF generated Parquet (raw zip already ignored in module .gitignore)
+other_sources/nlr_esif_fullstack/data_processed/*.parquet
+other_sources/nlr_esif_fullstack/timeseries/*.parquet
+other_sources/nlr_esif_fullstack/facility_validation/*.parquet
+other_sources/nlr_esif_fullstack/data_raw/extracted/
