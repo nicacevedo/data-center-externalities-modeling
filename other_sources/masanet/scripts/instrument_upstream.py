@@ -70,13 +70,18 @@ def write_instrumented() -> Path:
     return out
 
 
-def load_instrumented(power_it: float = 1.0, rewrite: bool = True):
+def load_instrumented(power_it: float = 1.0, rewrite: bool = True, path=None):
     import importlib.util
     import sys
 
-    path = write_instrumented() if rewrite else INSTR_DIR / "simulation_funs_DC_instrumented.py"
-    if not path.exists():
-        path = write_instrumented()
+    if path is None:
+        path = write_instrumented() if rewrite else INSTR_DIR / "simulation_funs_DC_instrumented.py"
+        if not path.exists():
+            path = write_instrumented()
+    else:
+        path = Path(path)
+        if not path.exists():
+            raise FileNotFoundError(path)
     spec = importlib.util.spec_from_file_location("masanet_instrumented", path)
     mod = importlib.util.module_from_spec(spec)
     sys.modules["masanet_instrumented"] = mod

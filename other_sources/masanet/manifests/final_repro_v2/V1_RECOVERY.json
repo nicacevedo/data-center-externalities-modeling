@@ -1,0 +1,345 @@
+{
+  "timestamp_utc": "2026-09-01T14:58:07Z",
+  "repo_head_now": "d98b0d791d4c8726b6923e57200d4befdea5a445",
+  "repo_branch_now": "main",
+  "git_status_short_now": "m Data-center-PUE-prediction-tool\n?? other_sources/masanet/scripts/final_repro_v2/\n?? other_sources/masanet/scripts/submit_arrays_final_repro_v2.sh\n?? other_sources/masanet/scripts/submit_final_repro_v2.sh\n?? other_sources/masanet/slurm/final_repro_v2/",
+  "v1_overall_status": "FAIL",
+  "v1_annual_reproduction_status": "INCONSISTENT",
+  "v1_gate": "FAIL",
+  "v1_proceed_to_adapter": false,
+  "passed": [
+    "paper_code_crosswalk",
+    "parameter_ranges",
+    "weather_8760_locked_zones",
+    "annual_smoke_short",
+    "annual_smoke_full_execution",
+    "paper_aggregation_identity",
+    "annual_rng_on_case1_1A_immaterial_zero_spread",
+    "frontier_missing_time_correction_closed",
+    "cells_2x1A_7x8_10x5A_consistent_under_v1_5th95th_bootstrap"
+  ],
+  "partial": [
+    "notebook_pue_NOTEBOOK_VALUE_NOT_REACHED_WUE_exact",
+    "final_journal_PDF_not_OA_preprint_used_for_Table3"
+  ],
+  "failed": [
+    "annual_gate_FAIL",
+    "cells_1x1A_2x8_5x2A_INCONSISTENT_under_v1_5th95th_plus_4_extra_LHS"
+  ],
+  "blocked": [
+    "adapter_tests",
+    "prineville_2022_weather_smoke"
+  ],
+  "never_completed_due_to_afterok": {
+    "PROJECT_ADAPTER_TEST": "21394445 CANCELLED",
+    "PRINEVILLE_WEATHER_SMOKE": "21394446 CANCELLED",
+    "FINALIZE_as_separate_job": "21394447 CANCELLED; gate still wrote FOLLOWUP_V1_STATUS.json"
+  },
+  "v1_slurm": {
+    "PREFLIGHT": {
+      "id": "21394438",
+      "state": "COMPLETED",
+      "exit": "0:0",
+      "elapsed": "00:00:36"
+    },
+    "NOTEBOOK": {
+      "id": "21394439",
+      "state": "COMPLETED",
+      "exit": "0:0",
+      "elapsed": "00:06:58"
+    },
+    "FRONTIER": {
+      "id": "21394440",
+      "state": "COMPLETED",
+      "exit": "0:0",
+      "elapsed": "00:00:51"
+    },
+    "ANNUAL_SMOKE": {
+      "id": "21394441",
+      "state": "COMPLETED",
+      "exit": "0:0",
+      "elapsed": "07:07:58"
+    },
+    "ANNUAL_SELECTED_ARRAY": {
+      "id": "21394442",
+      "tasks": {
+        "1": {
+          "cell": "2x8",
+          "elapsed": "02:45:07",
+          "state": "COMPLETED"
+        },
+        "2": {
+          "cell": "2x1A",
+          "elapsed": "00:51:25",
+          "state": "COMPLETED"
+        },
+        "3": {
+          "cell": "5x2A",
+          "elapsed": "04:07:22",
+          "state": "COMPLETED"
+        },
+        "4": {
+          "cell": "7x8",
+          "elapsed": "00:05:51",
+          "state": "COMPLETED"
+        },
+        "5": {
+          "cell": "10x5A",
+          "elapsed": "00:04:08",
+          "state": "COMPLETED"
+        }
+      }
+    },
+    "ANNUAL_RNG": {
+      "id": "21394443",
+      "state": "COMPLETED",
+      "exit": "0:0",
+      "elapsed": "01:05:26"
+    },
+    "ANNUAL_GATE": {
+      "id": "21394444",
+      "state": "FAILED",
+      "exit": "2:0",
+      "elapsed": "00:00:08"
+    }
+  },
+  "notebook_sweep": {
+    "status": "NOTEBOOK_VALUE_NOT_REACHED",
+    "n_seeds": 10000,
+    "pue_min": 1.4444558464700954,
+    "pue_max": 1.4448290864487232,
+    "notebook_pue": 1.339160993824991,
+    "wue_unique": 1,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/notebook_pue_sweep.json",
+    "do_not_rerun_0_9999": true
+  },
+  "frontier": {
+    "status": "CLOSED",
+    "f1_vs_f0_pointwise_conclusion_unchanged": true,
+    "thermal_check_label": "published_waste_heat_calculation_reproduction_unit_accounting_check",
+    "F2_is_contemporaneous_oracle": true,
+    "missing_hours": 575.1666666666666,
+    "coverage_fraction": 0.934341704718417,
+    "qualitative_change": false,
+    "timestamp_utc": "2026-08-27T15:35:13Z"
+  },
+  "annual_rng_v1": {
+    "status": "ANNUAL_RNG_IMMATERIAL",
+    "cell": {
+      "paper_case": 1,
+      "climate_zone": "1A",
+      "why": "large-scale airside/adiabatic; hot-humid"
+    },
+    "caveat": "V1 RNG test used case 1 / PUE_WUE_AE_Chiller, which has no live np.random helper. Zero seed spread is expected for that architecture and does not close RNG for Chiller_system cells.",
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/annual_rng.json"
+  },
+  "cells": {
+    "case1_1A": {
+      "paper_case": 1,
+      "climate_zone": "1A",
+      "v1_status": "INCONSISTENT",
+      "disposition_before_v2": "failed",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/annual_case1_1A_r0.json",
+      "exists": true,
+      "inside_first_design_bootstrap": false,
+      "n_extra_lhs": 4,
+      "reproduced": {
+        "PUE_5th": 1.146846483403564,
+        "PUE_95th": 1.3554798533509673,
+        "WUE_5th": 0.5703229718927008,
+        "WUE_95th": 2.429086030567426
+      },
+      "published": {
+        "PUE_5th": 1.16877859414092,
+        "PUE_95th": 1.34161001011244,
+        "WUE_5th": 0.772859334960102,
+        "WUE_95th": 2.36146402164908
+      },
+      "delta_hat_minus_published": {
+        "PUE_5th": -0.021932110737355792,
+        "PUE_95th": 0.013869843238527357,
+        "WUE_5th": -0.2025363630674012,
+        "WUE_95th": 0.06762200891834569
+      },
+      "fn": "PUE_WUE_AE_Chiller",
+      "stochastic_helpers": []
+    },
+    "case2_8": {
+      "paper_case": 2,
+      "climate_zone": "8",
+      "v1_status": "INCONSISTENT",
+      "disposition_before_v2": "failed",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/annual_case2_8_r0.json",
+      "exists": true,
+      "inside_first_design_bootstrap": false,
+      "n_extra_lhs": 4,
+      "reproduced": {
+        "PUE_5th": 1.0972015452250827,
+        "PUE_95th": 1.2003245219558945,
+        "WUE_5th": 1.7188081334603131,
+        "WUE_95th": 2.551088144003221
+      },
+      "published": {
+        "PUE_5th": 1.07461518697368,
+        "PUE_95th": 1.18374192188692,
+        "WUE_5th": 1.7241053627418,
+        "WUE_95th": 2.59199477869267
+      },
+      "delta_hat_minus_published": {
+        "PUE_5th": 0.02258635825140276,
+        "PUE_95th": 0.016582600068974385,
+        "WUE_5th": -0.005297229281486793,
+        "WUE_95th": -0.040906634689449106
+      },
+      "fn": "PUE_WUE_Chiller_Watereconomier",
+      "stochastic_helpers": [
+        "Chiller_system"
+      ]
+    },
+    "case2_1A": {
+      "paper_case": 2,
+      "climate_zone": "1A",
+      "v1_status": "CONSISTENT_WITH_PUBLISHED_RANGE",
+      "disposition_before_v2": "already_clearly_compatible",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/annual_case2_1A_r0.json",
+      "exists": true,
+      "inside_first_design_bootstrap": true,
+      "n_extra_lhs": 0,
+      "reproduced": {
+        "PUE_5th": 1.1150467943195805,
+        "PUE_95th": 1.2744348599781006,
+        "WUE_5th": 1.8001621313214804,
+        "WUE_95th": 2.610220289538277
+      },
+      "published": {
+        "PUE_5th": 1.1069805432227,
+        "PUE_95th": 1.2904445755882,
+        "WUE_5th": 1.76080826541016,
+        "WUE_95th": 2.6290139201753
+      },
+      "delta_hat_minus_published": {
+        "PUE_5th": 0.008066251096880528,
+        "PUE_95th": -0.01600971561009934,
+        "WUE_5th": 0.039353865911320396,
+        "WUE_95th": -0.018793630637023107
+      },
+      "fn": "PUE_WUE_Chiller_Watereconomier",
+      "stochastic_helpers": [
+        "Chiller_system"
+      ]
+    },
+    "case5_2A": {
+      "paper_case": 5,
+      "climate_zone": "2A",
+      "v1_status": "INCONSISTENT",
+      "disposition_before_v2": "failed",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/annual_case5_2A_r0.json",
+      "exists": true,
+      "inside_first_design_bootstrap": false,
+      "n_extra_lhs": 4,
+      "reproduced": {
+        "PUE_5th": 1.5311731480800417,
+        "PUE_95th": 1.8747655072947058,
+        "WUE_5th": 2.4447751466500285,
+        "WUE_95th": 3.6713343111555066
+      },
+      "published": {
+        "PUE_5th": 1.48801606302235,
+        "PUE_95th": 1.77681250140975,
+        "WUE_5th": 2.47709275254574,
+        "WUE_95th": 3.69195153435024
+      },
+      "delta_hat_minus_published": {
+        "PUE_5th": 0.04315708505769167,
+        "PUE_95th": 0.09795300588495581,
+        "WUE_5th": -0.03231760589571131,
+        "WUE_95th": -0.02061722319473347
+      },
+      "fn": "PUE_WUE_Chiller",
+      "stochastic_helpers": [
+        "Chiller_system"
+      ]
+    },
+    "case7_8": {
+      "paper_case": 7,
+      "climate_zone": "8",
+      "v1_status": "CONSISTENT_WITH_PUBLISHED_RANGE",
+      "disposition_before_v2": "already_clearly_compatible",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/annual_case7_8_r0.json",
+      "exists": true,
+      "inside_first_design_bootstrap": true,
+      "n_extra_lhs": 0,
+      "reproduced": {
+        "PUE_5th": 1.4378675847759892,
+        "PUE_95th": 1.7453150457797153,
+        "WUE_5th": 0.023015062733531478,
+        "WUE_95th": 0.09811211964724398
+      },
+      "published": {
+        "PUE_5th": 1.43124838574551,
+        "PUE_95th": 1.73644970258409,
+        "WUE_5th": 0.0235351216789278,
+        "WUE_95th": 0.0975718445578507
+      },
+      "delta_hat_minus_published": {
+        "PUE_5th": 0.006619199030479139,
+        "PUE_95th": 0.008865343195625375,
+        "WUE_5th": -0.0005200589453963206,
+        "WUE_95th": 0.0005402750893932773
+      },
+      "fn": "PUE_WUE_AIRChiller",
+      "stochastic_helpers": [
+        "Chiller_system"
+      ]
+    },
+    "case10_5A": {
+      "paper_case": 10,
+      "climate_zone": "5A",
+      "v1_status": "CONSISTENT_WITH_PUBLISHED_RANGE",
+      "disposition_before_v2": "already_clearly_compatible",
+      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/annual_case10_5A_r0.json",
+      "exists": true,
+      "inside_first_design_bootstrap": true,
+      "n_extra_lhs": 0,
+      "reproduced": {
+        "PUE_5th": 1.8732393341134579,
+        "PUE_95th": 2.3535728788702577,
+        "WUE_5th": 0.026204404741268252,
+        "WUE_95th": 0.10471367218494587
+      },
+      "published": {
+        "PUE_5th": 1.88147031545943,
+        "PUE_95th": 2.3261087300167,
+        "WUE_5th": 0.025015923621287,
+        "WUE_95th": 0.103105162799474
+      },
+      "delta_hat_minus_published": {
+        "PUE_5th": -0.008230981345972221,
+        "PUE_95th": 0.027464148853557635,
+        "WUE_5th": 0.0011884811199812523,
+        "WUE_95th": 0.0016085093854718707
+      },
+      "fn": "PUE_WUE_DX",
+      "stochastic_helpers": [
+        "Chiller_system_DX"
+      ]
+    }
+  },
+  "v1_comparison_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/annual_selected_comparison.json",
+  "v1_status_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/followup_v1/FOLLOWUP_V1_STATUS.json",
+  "v1_summary_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/docs/followup_v1/FOLLOWUP_V1_SUMMARY.md",
+  "did_not_overwrite_v1": true,
+  "did_read_meta_2023_2024_water": false,
+  "slurm_manifest": {
+    "PREFLIGHT": "21394438",
+    "NOTEBOOK": "21394439",
+    "FRONTIER": "21394440",
+    "ANNUAL_SMOKE": "21394441",
+    "ANNUAL_SELECTED_ARRAY": "21394442",
+    "ANNUAL_RNG": "21394443",
+    "ANNUAL_GATE": "21394444",
+    "PROJECT_ADAPTER_TEST": "21394445",
+    "PRINEVILLE_WEATHER_SMOKE": "21394446",
+    "FINALIZE": "21394447"
+  }
+}

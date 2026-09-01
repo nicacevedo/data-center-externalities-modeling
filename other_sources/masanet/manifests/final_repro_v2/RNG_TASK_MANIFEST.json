@@ -1,0 +1,49 @@
+{
+  "timestamp_utc": "2026-09-01T14:58:13Z",
+  "frozen_before_rng_outcomes": true,
+  "cells": [
+    {
+      "cell": "case5_2A",
+      "paper_case": 5,
+      "climate_zone": "2A",
+      "n_facility_vectors": 20,
+      "n_internal_seeds": 8,
+      "facility_lhs_seed": 916760212,
+      "internal_seeds": [
+        916760212,
+        1219850087,
+        868268678,
+        28378537,
+        396869190,
+        1319132670,
+        6370907,
+        33468587
+      ],
+      "range_rerun_lhs_seed": 916760212,
+      "range_rerun_n_internal_seeds": 8
+    },
+    {
+      "cell": "case1_1A",
+      "paper_case": 1,
+      "climate_zone": "1A",
+      "n_facility_vectors": 20,
+      "n_internal_seeds": 8,
+      "facility_lhs_seed": 1964809922,
+      "internal_seeds": [
+        1964809922,
+        992808103,
+        2070789216,
+        238429283,
+        1104442641,
+        947000292,
+        959144845,
+        1769000638
+      ]
+    }
+  ],
+  "thresholds_are_project_rules_not_lei_masanet": {
+    "f_rng_lt_10pct": "RNG small/secondary",
+    "f_rng_10_to_25pct": "material but secondary \u2192 possible PARTIAL",
+    "f_rng_gt_25pct": "potentially problematic"
+  }
+}

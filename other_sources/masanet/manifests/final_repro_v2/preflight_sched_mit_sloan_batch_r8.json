@@ -1,0 +1,25 @@
+{
+  "timestamp_utc": "2026-09-01T14:59:01Z",
+  "tag": "sched_mit_sloan_batch_r8",
+  "hostname": "node2636",
+  "platform": "Linux-4.18.0-553.147.1.el8_10.x86_64-x86_64-with-glibc2.28",
+  "executable": "/home/nacevedo/.conda/envs/masanet_lei/bin/python",
+  "python": "3.9.23",
+  "PYTHONNOUSERSITE": "1",
+  "partition": "sched_mit_sloan_batch_r8",
+  "job_id": "21749474",
+  "versions": {
+    "numpy": "1.21.6",
+    "scipy": "1.7.3",
+    "sklearn": "1.0.2",
+    "pandas": "1.3.5",
+    "scipy_file": "/home/nacevedo/.conda/envs/masanet_lei/lib/python3.9/site-packages/scipy/__init__.py",
+    "CoolProp": "6.6.0"
+  },
+  "cop_notes": [
+    "COP_air_gp: set _y_train_std=1 because normalize_y is False / attr missing"
+  ],
+  "pue": 1.4444979364282609,
+  "wue": 2.417390377483134,
+  "status": "PASS"
+}

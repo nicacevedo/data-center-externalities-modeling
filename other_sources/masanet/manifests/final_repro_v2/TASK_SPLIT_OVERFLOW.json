@@ -1,0 +1,51 @@
+{
+  "timestamp_utc": "2026-09-01T15:03:10Z",
+  "reason": "ou_sloan_batch QOSMaxSubmitJobPerUserLimit; redistribute leftover task_ids without changing already-running arrays",
+  "source_partition": "ou_sloan_batch",
+  "sched_mit_sloan_batch": [
+    0,
+    12,
+    24,
+    36,
+    48,
+    60,
+    72,
+    84,
+    96,
+    108,
+    120,
+    132,
+    144,
+    156
+  ],
+  "sched_mit_sloan_batch_r8": [
+    4,
+    16,
+    28,
+    40,
+    52,
+    64,
+    76,
+    88,
+    100,
+    112,
+    124,
+    136,
+    148
+  ],
+  "mit_normal": [
+    8,
+    20,
+    32,
+    44,
+    56,
+    68,
+    80,
+    92,
+    104,
+    116,
+    128,
+    140,
+    152
+  ]
+}

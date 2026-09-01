@@ -1,0 +1,13 @@
+{
+  "timestamp_utc": "2026-09-01T14:58:23Z",
+  "tag": "local_dc_externalities",
+  "hostname": "login009",
+  "platform": "Linux-5.14.0-687.39.1.el9_8.x86_64-x86_64-with-glibc2.28",
+  "executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+  "python": "3.11.15",
+  "PYTHONNOUSERSITE": "1",
+  "partition": null,
+  "job_id": null,
+  "status": "FAIL",
+  "error": "ModuleNotFoundError: No module named 'sklearn'"
+}

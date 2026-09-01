@@ -1,0 +1,9 @@
+{
+  "timestamp_utc": "2026-09-01T15:03:30Z",
+  "reason": "infrastructure race on shared instrumented module",
+  "sched_mit_sloan_batch_r8": [
+    62,
+    82,
+    86
+  ]
+}

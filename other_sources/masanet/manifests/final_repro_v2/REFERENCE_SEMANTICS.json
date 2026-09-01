@@ -1,0 +1,80 @@
+{
+  "timestamp_utc": "2026-09-01T14:58:08Z",
+  "ue_xlsx": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/Simulation Results/UE.xlsx",
+  "sha256": "adc2a6ca4ad96fb735361177483c27b829070031956ce6b63317b68bb86d0e96",
+  "sheets": [
+    "Sheet1"
+  ],
+  "columns": [
+    "PUE",
+    "WUE",
+    "Climate Zone",
+    "Case",
+    "Quantile"
+  ],
+  "n_rows": 300,
+  "cases": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "climate_zones": [
+    "1A",
+    "2A",
+    "2B",
+    "3A",
+    "3B",
+    "3C",
+    "4A",
+    "4B",
+    "4C",
+    "5A",
+    "5B",
+    "6A",
+    "6B",
+    "7",
+    "8"
+  ],
+  "quantile_labels_in_workbook": [
+    "5th",
+    "95th"
+  ],
+  "units_in_workbook": "not labeled in columns; paper: PUE dimensionless, WUE L/kWh onsite use / IT electricity",
+  "n_case_climate": 150,
+  "n_records_per_case_climate": 2,
+  "always_5th_lt_95th_PUE": true,
+  "always_5th_lt_95th_WUE": true,
+  "generation_code_in_public_repo": false,
+  "generation_code_search": "no UE.xlsx writer, no quantile dump, no LHS annual loop in nested clone or notebooks",
+  "final_journal_article": {
+    "doi": "10.1016/j.resconrec.2022.106323",
+    "pdf_in_workspace": false,
+    "unpaywall_is_oa_as_of_v1": false,
+    "used_instead": "Research Square preprint rs.3.rs-769999/v1 + workbook labels"
+  },
+  "paper_definition": {
+    "n_lhs": 50,
+    "distributions": "uniform over Table 3 ranges",
+    "aggregation": "annual average of hourly PUE/WUE under each sampled facility scenario",
+    "practical_minimum": "preprint \u00a74.3: 'represented by the 5th quantiles of the simulation results'",
+    "upper_label_in_workbook": "95th",
+    "not_min_max": "Workbook column is Quantile with values 5th and 95th; preprint explicitly names 5th quantiles as practical minima. Min/max of 50 scenarios is NOT the labeled statistic.",
+    "remaining_uncertainty": "Exact numpy/scipy quantile interpolation (linear vs nearest, type 7 vs Hyndman) and original LHS seed/library are not in the public code. Elsevier typeset wording was not available; preprint + UE.xlsx labels agree on 5th/95th."
+  },
+  "estimator_for_v2": {
+    "lower": "np.quantile(annual_values, 0.05)  # linear, numpy default",
+    "upper": "np.quantile(annual_values, 0.95)",
+    "numpy_interpolation": "linear (default)",
+    "not_min_max": true
+  },
+  "reference_csv": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/final_repro_v2/analysis/published_reference_table.csv",
+  "immutable": true,
+  "never_used_as_calibration_target": true
+}

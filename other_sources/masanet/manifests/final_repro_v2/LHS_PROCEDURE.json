@@ -1,0 +1,20 @@
+{
+  "timestamp_utc": "2026-09-01T14:58:13Z",
+  "paper": "McKay et al. 2000 cited; 50 uniform LHS samples of Table 3 parameters per case\u00d7climate; original seed/library not in public code",
+  "public_repo_has_lhs_driver": false,
+  "closest_recoverable_procedure": {
+    "library": "scipy.stats.qmc.LatinHypercube",
+    "version": "1.7.3 under PYTHONNOUSERSITE masanet_lei",
+    "centered": false,
+    "scramble": "not a scipy 1.7 parameter; do not use scipy>=1.8 default scramble=True",
+    "optimization": null,
+    "scaling": "scipy.stats.qmc.scale(u, lows, highs) independent per dimension",
+    "transformations_before_call": "Table 3 percent\u2192fraction, kPa\u2192Pa, RH label swap to RH_up/RH_lw as in followup_common.table3_ranges",
+    "dependencies_between_parameters": "none imposed beyond per-case N/A exclusions",
+    "categorical": "none; inactive equipment not sampled"
+  },
+  "exact_original_realization_unavailable": true,
+  "exact_numerical_equality_not_expected": true,
+  "will_not_search_seeds_to_match_UE": true,
+  "v1_used": "LatinHypercube(d, seed=seed) then scale; same as this spec when scipy is 1.7.3"
+}

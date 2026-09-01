@@ -1,0 +1,130 @@
+{
+  "timestamp_utc": "2026-09-01T14:58:13Z",
+  "hostname": "login009",
+  "platform": "Linux-5.14.0-687.39.1.el9_8.x86_64-x86_64-with-glibc2.28",
+  "repo_head": "d98b0d791d4c8726b6923e57200d4befdea5a445",
+  "repo_branch": "main",
+  "git_status_short": "m Data-center-PUE-prediction-tool\n?? other_sources/masanet/manifests/final_repro_v2/\n?? other_sources/masanet/scripts/final_repro_v2/\n?? other_sources/masanet/scripts/submit_arrays_final_repro_v2.sh\n?? other_sources/masanet/scripts/submit_final_repro_v2.sh\n?? other_sources/masanet/slurm/final_repro_v2/",
+  "upstream_commit": "2cc53bee89b0a61bdad10c02b4d170d7f673e2dc",
+  "upstream_commit_expected": "2cc53bee89b0a61bdad10c02b4d170d7f673e2dc",
+  "python_scientific": {
+    "requested_by_user": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+    "dc_externalities_cannot_load_model": "sklearn/joblib missing; CoolProp missing; numpy 2.4 vs COP pickles",
+    "used_for_science": "/home/nacevedo/.conda/envs/masanet_lei/bin/python",
+    "reason": "dc_externalities cannot import CoolProp or a working sklearn. Using masanet_lei with PYTHONNOUSERSITE=1 (scipy 1.7.3, sklearn 1.0.2) matching V1 cluster jobs. Without PYTHONNOUSERSITE, ~/.local scipy 1.13.1 shadows the env.",
+    "PYTHONNOUSERSITE": "1",
+    "version": "3.9.23",
+    "packages": {
+      "numpy": "1.21.6",
+      "pandas": "1.3.5",
+      "sklearn": "1.0.2",
+      "scipy": "1.7.3",
+      "scipy_file": "/home/nacevedo/.conda/envs/masanet_lei/lib/python3.9/site-packages/scipy/__init__.py",
+      "lhs": "scipy.stats.qmc.LatinHypercube",
+      "lhs_init_signature": "LatinHypercube(d, *, centered=False, seed=None)  # scipy 1.7.3",
+      "CoolProp": "6.6.0"
+    }
+  },
+  "sklearn_shim": {
+    "affected_model": "COP_AC.pkl",
+    "missing__y_train_std": true,
+    "shim_sets_to_1": true,
+    "reason": "normalize_y is False; identity scale",
+    "pickle_mutated_on_disk": false
+  },
+  "hashes": {
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/simulation_funs_DC.py": {
+      "sha256": "74ea9da658482a29e1a298a544234cc43b654cf514d678482842ae30c2446c01",
+      "bytes": 52202
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/Simulation Results/UE.xlsx": {
+      "sha256": "adc2a6ca4ad96fb735361177483c27b829070031956ce6b63317b68bb86d0e96",
+      "bytes": 21774
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/COP_2.pkl": {
+      "sha256": "a17f740bf3a4c4f59a6e1aedce46bf0457913fc559da51320dd3518dfa6a790a",
+      "bytes": 19788
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/COP_AC.pkl": {
+      "sha256": "e8ac8e5cabb75013a3313cdafaf43e3137853197b8029554ae73599bbf18e9a4",
+      "bytes": 25894
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/Data-Center-Water-footprint/COP_DX.pkl": {
+      "sha256": "b17e58dc27f9227946f175ff0b1d8e93f8919c2af4a974b0fe256c18b0cacf8e",
+      "bytes": 18730
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/energyplus_tmy/1A_USA_FL_Miami.Intl.AP.722020_TMY3.epw": {
+      "sha256": "e0fff5174a6e4360821555dd6ce4c4872e12e7da342f1cf87d90f0628d89bcbf",
+      "bytes": 1642067
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/energyplus_tmy/2A_USA_TX_Houston-Bush.Intercontinental.AP.722430_TMY3.epw": {
+      "sha256": "ea9d0a627725874894ed05f97828dedbdec06d102d20720292cb820b6d754592",
+      "bytes": 1636325
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/energyplus_tmy/5A_USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw": {
+      "sha256": "3cc3dc0c7bcc93e7203e8d9aab657d384315f5a0c86cdede23f792d437a0309f",
+      "bytes": 1639985
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/external/energyplus_tmy/8_USA_AK_Fairbanks.Intl.AP.702610_TMY3.epw": {
+      "sha256": "1cd8d0aa9f81596f53472f8620932268c94ea1c854500689cb55c4de06113432",
+      "bytes": 1619443
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/followup_common.py": {
+      "sha256": "ccb08d9433d53ec46e8932a8163793d952d63535ea430f8078256befd9c799e0",
+      "bytes": 17542
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/followup_annual.py": {
+      "sha256": "f0d01ff62e6a3cea69a58456679d5d555efb866c177e3e92b13ee802ee785098",
+      "bytes": 26596
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/recover_and_freeze.py": {
+      "sha256": "f83bc1eb504abb5e7134a8034ca35a48a041e65339a519918cede91594f0c178",
+      "bytes": 29201
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/analyze_and_finalize.py": {
+      "sha256": "6ad28a77b2798c93d20455dc190a8a903635be703efa98117cbd06c44d17c5e4",
+      "bytes": 33951
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/collect_preflight.py": {
+      "sha256": "dfe855c0f3e614fd448d52b69e86d11d91a2d23622cc1b46f39daeccf79af7d7",
+      "bytes": 2792
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/notebook_replay.py": {
+      "sha256": "8f2ec8e1ad714aafdab79dff6382375d2b7f43d31f89bd72c3218645c40ccc23",
+      "bytes": 5843
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/partition_preflight.py": {
+      "sha256": "c2002a98b8d6661e4c8e4e0dc2ac3aad1e89cd9145aad4069ac40db9f3c23c96",
+      "bytes": 2049
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/rng_worker.py": {
+      "sha256": "040806afa9fce4e7acf9317a1c38b5b2248e3be2ea3dc91a5fcb825a046c9c9b",
+      "bytes": 936
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/run_convergence.py": {
+      "sha256": "f103d4934c6c7f1b5cc503b45d271358d91cee0e152171b2a71fd960854e75a1",
+      "bytes": 3259
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/run_prineville_v2.py": {
+      "sha256": "53c6ce3de93a1957e45fe075e5f9258b008da33fcb25e888bce3a30ff7f505d5",
+      "bytes": 2430
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/run_replication.py": {
+      "sha256": "86932eb3913a4f495f41d1f5e270a5a71b20b21d358339c4eb23795ee88f3c6f",
+      "bytes": 7821
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/run_rng.py": {
+      "sha256": "0c56bb64afd38d80a1a9ccd24591a3cab1dc4804602294528fd21eae3feca174",
+      "bytes": 6748
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/split_tasks.py": {
+      "sha256": "132647603ae9f9ca3d26dd411d78a7f0f92730d499b07543c77d8a93f331aabb",
+      "bytes": 1409
+    },
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/scripts/final_repro_v2/v2_common.py": {
+      "sha256": "7c4399b06b74a8ac61eb20734dfa6af9acc3aa13a869e896a899fbba74b2175f",
+      "bytes": 2200
+    }
+  },
+  "did_not_mutate_pickles_or_ue_or_upstream_or_weather": true
+}

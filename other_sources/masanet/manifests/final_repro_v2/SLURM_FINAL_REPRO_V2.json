@@ -1,0 +1,43 @@
+{
+  "created_utc": "2026-09-01T14:58:48Z",
+  "git_head": "d98b0d791d4c8726b6923e57200d4befdea5a445",
+  "phase": "arrays_overflow_retry_rng_submitted",
+  "job_ids": {
+    "PRE_sched_mit_sloan_batch": "21749473",
+    "PRE_sched_mit_sloan_batch_r8": "21749474",
+    "PRE_ou_sloan_batch": "21749475",
+    "PRE_mit_normal": "21749476",
+    "UNIT_SMOKE": "21749477",
+    "ARRAYS": [
+      "21749548",
+      "21749549",
+      "21749550"
+    ],
+    "ARRAYS_OVERFLOW": [
+      "21749730",
+      "21749731",
+      "21749732"
+    ],
+    "ARRAYS_RETRY": [
+      "21749733"
+    ],
+    "RNG_var_case5": "21749734",
+    "RNG_var_case1": "21749735",
+    "RNG_range_case5": "21749763",
+    "ANALYZE": "21749779",
+    "CONVERGENCE": "21749780",
+    "PRINEVILLE": "21749781",
+    "WAIT_REPS": "21749778"
+  },
+  "notes": [
+    "Arrays are submitted after preflights by submit_arrays_final_repro_v2.sh",
+    "TASK_MANIFEST frozen before results; hash in TASK_MANIFEST.sha256"
+  ],
+  "retry_task_ids": [
+    62,
+    82,
+    86
+  ],
+  "retry_reason": "infrastructure: concurrent write of shared instrumented module; frozen unique copy; same seeds; ou QOS submit limit redistributed",
+  "depend_note": "afterany on 21749549 because 3 tasks failed (retried as 21749733 with same seeds); wait job requires 160 complete JSON files"
+}
