@@ -1,0 +1,23 @@
+{
+  "timestamp_utc": "2026-09-01T16:55:00Z",
+  "masanet_final_v2_status_file": null,
+  "disposition": "PENDING_EXTERNAL_WORKFLOW",
+  "v1_annual": {
+    "file": "other_sources/masanet/results/followup_v1/MASANET_ANNUAL_CLOSURE_STATUS.json",
+    "status": "FAIL",
+    "annual_reproduction_status": "INCONSISTENT",
+    "read_only": true,
+    "not_rerun": true
+  },
+  "v2": {
+    "file": "other_sources/masanet/docs/final_repro_v2/STATUS_IN_PROGRESS.md",
+    "status": "IN_PROGRESS",
+    "not_rerun": true
+  },
+  "fields": {
+    "SOURCE_CODE_REPRODUCTION": "PARTIAL — 2022 public air-IT hourly code runs in masanet_lei; liquid 2025 engine not public",
+    "ANNUAL_PUBLISHED_RANGE_REPRODUCTION": "FAIL_V1 / PENDING_V2 — published UE.xlsx 5th/95th not fully reproduced",
+    "EMPIRICAL_VALIDATION": "NOT_WHAT_MASANET_IS — even a future V2 PASS would not turn Lei 2025 rows into field measurements"
+  },
+  "effect_on_this_module": "Does not block freeze of the annual source-scenario proxy. Same-lineage consistency remains labeled SAME_LEI_MASANET_LINEAGE, not independent validation."
+}

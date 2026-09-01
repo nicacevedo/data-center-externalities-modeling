@@ -1,0 +1,7 @@
+{
+  "overall_classification": "materially_discrepant",
+  "rule": "PUE commissioning and PRN1 Q2 2012 WUE vs predeclared AE_AD_ACC 5B Large-scale cell; no k retuning",
+  "architecture_mismatch": "Lei AE_AD_ACC retains supplemental air-cooled chiller; Prineville 2011/2012 PRN1 has no chiller/tower",
+  "water_boundary_mismatch": "Facebook WUE is cooling-water (may include RO reject 25%); Lei air-adiabatic WUE is humidification/adiabatic intensity without RO pretreatment reject",
+  "did_not_choose_k_from_residual": true
+}

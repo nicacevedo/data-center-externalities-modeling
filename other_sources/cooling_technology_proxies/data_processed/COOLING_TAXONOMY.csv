@@ -1,13 +1,13 @@
-tech_id,source_label,IT_HEAT_CAPTURE,HEAT_TRANSPORT,HEAT_REJECTION,ECONOMIZER,MECHANICAL_COOLING,DIRECT_WATER_MECHANISM,liquid_it,lei2025_cases,confidence,notes
-DX,Direct expansion system,air,air,dry,none,DX,humidification_possible,no,"5,11",high,CRAC/DX; WUE near-humidification only
-ACC,Air-cooled chiller,air,air,dry,none,air-cooled chiller,humidification_possible,no,"4,10",high,
-WCC,Water-cooled chiller,air,air,evaporative tower,none,water-cooled chiller,cooling tower,no,"3,9",high,highest typical site WUE
-AE_ACC,Airside economizer (air-cooled chiller),air,air,dry,airside,air-cooled chiller,humidification_possible,no,2,high,chiller supplemental
-AE_WCC,Airside economizer (water-cooled chiller),air,air,evaporative tower,airside,water-cooled chiller,cooling tower,no,1,high,
-AE_AD_ACC,Airside economizer& adiabatic cooling (air-cooled chiller),air,air,hybrid dry/adiabatic,airside,air-cooled chiller,adiabatic assist,no,0,high,Lei 2022 case 6-like
-AE_AD_WCC,Airside economizer& adiabatic cooling (water-cooled chiller),air,air,hybrid dry/adiabatic plus tower if chiller,airside,water-cooled chiller,multiple,no,6,high,Lei 2022 case 1-like
-WE_WCC,Waterside economizer (water-cooled chiller),air,liquid loop,evaporative tower,waterside,water-cooled chiller,cooling tower,no,"7,8",high,Lei 2022 cases 2/4
-DRY_ACC,Dry cooler (air-cooled chiller),air,liquid loop,dry,none,air-cooled chiller,humidification_possible,no,17,high,Rmd drops from some figures
-DRY_AD_ACC,Dry cooler with adiabatic assist (air-cooled chiller),air,liquid loop,hybrid dry/adiabatic,none,air-cooled chiller,adiabatic assist,no,18,high,Rmd drops from some figures
-LIQ_DRY_AD,IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller),rear-door|direct-to-chip|immersion (pooled),liquid loop,hybrid dry/adiabatic,none,air-cooled chiller,adiabatic assist,yes,"15_1,15_2,15_3",medium,"Paper: liquid includes RDHX, cold-plate, immersion (SI Fig S6.3). Public CSV does not split those physics; only subcase IDs."
-LIQ_WE_WCC,IT Liquid cooling: waterside economizer (water-cooled chiller),rear-door|direct-to-chip|immersion (pooled),liquid loop,evaporative tower,waterside,water-cooled chiller,cooling tower,yes,"16_1,16_2,16_3",medium,Same pooling limitation
+tech_id,source_label,source_scope_status,paper_core_index,IT_HEAT_CAPTURE,HEAT_TRANSPORT,HEAT_REJECTION,ECONOMIZER,MECHANICAL_COOLING,DIRECT_WATER_MECHANISM,liquid_it,lei2025_cases,liquid_cooling_type,confidence,notes
+ACC,Air-cooled chiller,PAPER_CORE,1,air,air,dry,none,air-cooled chiller,humidification,no,"4,10",NOT_APPLICABLE,high,paper item (1)
+AE_ACC,Airside economizer (air-cooled chiller),PAPER_CORE,2,air,air,dry,airside,air-cooled chiller,humidification,no,2,NOT_APPLICABLE,high,paper item (2)
+AE_WCC,Airside economizer (water-cooled chiller),PAPER_CORE,3,air,air,evaporative tower,airside,water-cooled chiller,cooling tower,no,1,NOT_APPLICABLE,high,paper item (3)
+AE_AD_ACC,Airside economizer& adiabatic cooling (air-cooled chiller),PAPER_CORE,4,air,air,hybrid dry/adiabatic,airside,air-cooled chiller supplemental,adiabatic_and_humidification,no,0,NOT_APPLICABLE,high,paper item (4); closest but not exact PRN1 map
+AE_AD_WCC,Airside economizer& adiabatic cooling (water-cooled chiller),PAPER_CORE,5,air,air,hybrid plus tower if chiller,airside,water-cooled chiller supplemental,multiple,no,6,NOT_APPLICABLE,high,paper item (5)
+DX,Direct expansion system,PAPER_CORE,6,air,air,dry,none,DX,humidification,no,"5,11",NOT_APPLICABLE,high,paper item (6)
+WCC,Water-cooled chiller,PAPER_CORE,7,air,air,evaporative tower,none,water-cooled chiller,cooling tower,no,"3,9",NOT_APPLICABLE,high,paper item (7)
+WE_WCC,Waterside economizer (water-cooled chiller),PAPER_CORE,8,air,liquid loop,evaporative tower,waterside,water-cooled chiller supplemental,cooling tower,no,"7,8",NOT_APPLICABLE,high,paper item (8)
+LIQ_WE_WCC,IT Liquid cooling: waterside economizer (water-cooled chiller),PAPER_CORE,9,liquid subtype via Case (Original),liquid loop,evaporative tower,waterside,water-cooled chiller supplemental,cooling tower,yes,"15_1,15_2,15_3",RDHX/cold-plate/immersion via 15_1/2/3,high,paper item (9); Case integer 15 = WE (CSV verified)
+LIQ_DRY_AD,IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller),PAPER_CORE,10,liquid subtype via Case (Original),liquid loop,hybrid dry/adiabatic,none,air-cooled chiller supplemental,adiabatic assist,yes,"16_1,16_2,16_3",RDHX/cold-plate/immersion via 16_1/2/3,high,paper item (10); Case integer 16 = dry/adiabatic (CSV verified)
+DRY_ACC,Dry cooler (air-cooled chiller),SOURCE_EXTRA_EXTENDED,,air,liquid loop,dry,none,air-cooled chiller,humidification,no,17,NOT_APPLICABLE,medium,Present in UEs CSV; Rmd drops Case 17; not in paper ten
+DRY_AD_ACC,Dry cooler with adiabatic assist (air-cooled chiller),SOURCE_EXTRA_EXTENDED,,air,liquid loop,hybrid dry/adiabatic,none,air-cooled chiller,adiabatic assist,no,18,NOT_APPLICABLE,medium,Present in UEs CSV; Rmd drops Case 18; not in paper ten

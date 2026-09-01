@@ -1,0 +1,47 @@
+{
+  "authentic_facility_timeseries_recovered": false,
+  "stopped_after_bounded_search": true,
+  "production_domain": "https://www.fbpuewue.com/prineville",
+  "urls_searched": [
+    "https://www.fbpuewue.com/prineville",
+    "https://web.archive.org/cdx/search/cdx?url=www.fbpuewue.com/prineville",
+    "https://web.archive.org/web/20130420074617/https://www.fbpuewue.com/prineville",
+    "https://github.com/facebookarchive/puewue-frontend",
+    "https://github.com/facebookarchive/puewue-backend",
+    "https://www.opencompute.org/blog/water-efficiency-at-facebooks-prineville-data-center",
+    "https://engineering.fb.com/2011/04/14/core-infra/designing-a-very-efficient-data-center/"
+  ],
+  "repositories_inspected": {
+    "facebookarchive/puewue-frontend": "open-source UI boilerplate; localhost API config; not a production data dump",
+    "facebookarchive/puewue-backend": "Ruby aggregator example; /timeline/center-1/24-hours.json is a local demo path; .env.sample present; no Prineville production JSON in repo listing"
+  },
+  "archive_timestamps_html": [
+    "20130420074617",
+    "20130421085916",
+    "20130824012808",
+    "20140825054412",
+    "20141225231151"
+  ],
+  "json_cdx_search": "timed out after 25s; HTML captures are ~4.6KB JS shells",
+  "endpoint_patterns": [
+    "[host]/[uriPrefix]/[endpoint alias].json",
+    "http://localhost:5000/timeline/center-1/24-hours.json"
+  ],
+  "authentic_data_recovered": {
+    "timeseries_json": false,
+    "embedded_ttm_on_archived_html": {
+      "as_of": "end of March 2013",
+      "PUE_TTM": 1.09,
+      "WUE_TTM_L_per_kWh": 0.52,
+      "provenance": "Wayback HTML of production dashboard page",
+      "confidence": "HIGH that the archived page displayed these TTM numbers; MEDIUM that they are PRN1-only vs campus"
+    }
+  },
+  "demo_or_fixture_data": "GitHub repos are boilerplate/demo, not treated as facility measurements",
+  "periods_with_operator_point_evidence_not_from_dashboard_json": [
+    "2011 commissioning PUE 1.07",
+    "2011-04-14 to 2011-09-30 PUE 1.06-1.1",
+    "Q2 2012 PRN1 WUE 0.22"
+  ],
+  "section_14_hourly_empirical_weather_response": "SKIPPED — no authentic dashboard timeseries"
+}

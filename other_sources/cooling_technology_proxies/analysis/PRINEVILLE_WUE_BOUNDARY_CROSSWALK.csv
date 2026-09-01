@@ -1,0 +1,13 @@
+flow_id,flow,included_in_observed_PRN1_WUE,included_in_lei_AE_AD_ACC_WUE_site_model,consumptive,potentially_discharged,unknown,notes
+F1,utility/source water into outdoor storage tanks,LIKELY_YES (makeup meter after retrofit),NOT_NAMED (intensity only),no,no,source identity,OCP: booster pumps take water from outdoor storage tanks
+F2,carbon filter + water softener,if metered upstream,NO explicit,no,no,small process losses,pretreatment
+F3,RO product (~75% of RO feed),YES as cooling water if WUE is makeup,YES analogous as adiabatic/humidification water,partial (only the evaporated share),no,split,OCP: 3 of 4 parts product
+F4,RO reject (~25% blown down),UNKNOWN_LIKELY_IF_MAKEUP_UPSTREAM,NO (no RO model in AE_AD_ACC),no,YES,whether 0.22 includes reject,major boundary difference vs Lei
+F5,high-pressure mist to supply air,YES,YES analogous,mostly,no,Lei adiabatic parameterization,ECH misting
+F6,evaporated mist (~85% of misted),YES (consumptive),YES if Lei adiabatic water is evaporated to air,YES,no,Lei may not recapture 15%,OCP measured split
+F7,recaptured mist (~15%) via mist eliminator back to RO tanks,if WUE is makeup then not a second count,NO recapture model,no,no,Lei overstates use if it assumes all spray is makeup,conservation feature absent in Lei
+F8,cooling-tower evaporation,NO (no tower),NO for AE_AD_ACC (humidification/adiabatic only),n/a,n/a,none,architecture match on absence of tower
+F9,tower windage/drift,NO,NO for this Lei class,n/a,n/a,none,
+F10,tower draw-off/blowdown,NO,NO for this Lei class (YES in tower classes),n/a,n/a,none,
+F11,plumbing/office water,NO (OCP explicitly excludes),NO,no,yes,none,OCP: WUE is cooling only
+F12,groundwater pumping,NO,NO,n/a,n/a,none,out of cooling proxy

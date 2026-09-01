@@ -1,0 +1,8 @@
+observed_id,observed_value,kind,source_cell,n_source,source_p05,source_p50,source_p95,discrepancy_obs_minus_source_p50,location_vs_source_5_95,notes
+PUE_commissioning_full_load,1.07,PUE,AE_AD_ACC|5B|Large-scale|NOT_APPLICABLE,50,1.098119545,1.15065375,1.2087087849999998,-0.08065374999999997,below_source_scenario_p05,OCP/Meta 2011 commissioning; OPERATOR_REPORTED_MEASURED
+PUE_operating_range_low,1.06,PUE,AE_AD_ACC|5B|Large-scale|NOT_APPLICABLE,50,1.098119545,1.15065375,1.2087087849999998,-0.09065374999999998,below_source_scenario_p05,OCP Learning Lessons Apr–Sep 2011 histogram; OPERATOR_REPORTED_MEASURED
+PUE_operating_range_high,1.1,PUE,AE_AD_ACC|5B|Large-scale|NOT_APPLICABLE,50,1.098119545,1.15065375,1.2087087849999998,-0.05065374999999994,inside_source_scenario_5_95,same; 1.06–1.1
+WUE_PRN1_Q2_2012,0.22,WUE,AE_AD_ACC|5B|Large-scale|NOT_APPLICABLE,50,0.009278564900159835,0.02423915360122915,0.0382268359884619,0.19576084639877084,above_source_scenario_p95,OCP Water Efficiency blog; cooling-only quarterly; OPERATOR_REPORTED_MEASURED
+WUE_design_2011,0.31,WUE,AE_AD_ACC|5B|Large-scale|NOT_APPLICABLE,50,0.009278564900159835,0.02423915360122915,0.0382268359884619,0.28576084639877086,above_source_scenario_p95,"Meta engineering 2011 DESIGN point, not a meter"
+PUE_TTM_Mar2013_dashboard,1.09,PUE,AE_AD_ACC|5B|Large-scale|NOT_APPLICABLE,50,1.098119545,1.15065375,1.2087087849999998,-0.06065374999999995,below_source_scenario_p05,Wayback fbpuewue.com/prineville TTM as of end Mar 2013; OPERATOR_REPORTED_MEASURED; campus period may exceed PRN1-only
+WUE_TTM_Mar2013_dashboard,0.52,WUE,AE_AD_ACC|5B|Large-scale|NOT_APPLICABLE,50,0.009278564900159835,0.02423915360122915,0.0382268359884619,0.4957608463987709,above_source_scenario_p95,same capture; not used to choose k

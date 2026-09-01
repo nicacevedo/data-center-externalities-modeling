@@ -1,8 +1,11 @@
-quantity,identified_by_WUE_site,public_source,project_source,outreach_or_permit,likely_resolution,importance_groundwater,notes
-onsite conditioning water W_cond / WUE_site,YES as modeled intensity,Lei 2025 pairs; not site meters,gray-box evaporative index (not makeup),no,annual or hourly modeled,upstream of bridge,this module ends here
-City withdrawal/delivery to campus,NO,City meters exist in Prineville module (WATER-COMM),yes — do not treat as WUE,package already obtained,monthly,high for municipal share,not cooling-tech calibration
-reclaimed-water share,NO,city/ASR documents,partial documentary,maybe,annual/unknown,high,source allocation Ψ
-direct well / Vitesse POD,NO,OWRD WUR,yes,no for existing exports,monthly water-year,high,not WUE
-sewer/discharge / blowdown destination,NO (draw-off is inside modeled WUE but not a sewer meter),SWR METER physical direction unknown,unresolved,yes,monthly if obtained,high for return,
-consumption fraction,NO,Meta defines consumption as withdrawal-discharge or CoC; not used here,not from Lei WUE,n/a,annual if disclosed,medium,do not read 2023-24 holdout to fit this module
-source-specific pumping energy,NO,not in Lei,groundwater module,n/a,hourly/monthly,high,outside cooling proxy
+quantity,identified_by_WUE_site_model,public_source,project_source,outreach_or_permit,likely_resolution,importance_groundwater,rank,notes
+W_conditioning_model / WUE_site_model,YES as Lei source-scenario intensity,Lei 2025 paired scenarios,this module,no,annual source-scenario,upstream of bridge,0,ends the cooling-proxy module
+municipal / City delivery,NO,City WATER-COMM meters in Prineville module,yes,already obtained,monthly,high,1,not a cooling-tech calibration target
+reclaimed-water share,NO,city/ASR/OCP reuse statements,partial documentary,maybe,annual/unknown,high,2,source split Psi
+direct-well / Vitesse POD,NO,OWRD WUR,yes,no for existing exports,monthly water-year,high,3,not WUE_site_model
+RO reject,NO in Lei air-adiabatic scalar; PRN1 operator describes 25% blowdown,OCP 2012 water-efficiency blog,not a meter series,no,unknown,medium,4,required to reconcile Facebook WUE vs evaporative fraction
+cooling-tower blowdown,included in Lei tower WUE_site_model as draw-off; PRN1 early epoch has no tower,Lei 2022 code identity,n/a for PRN1 early,n/a,n/a if no tower,high if later CHW epoch,5,later PRN1 chiller epoch may create this flow
+sewer / discharge / return,NO,SWR METER direction unresolved,unresolved,yes,monthly if obtained,high,6,needed for consumption = withdrawal - discharge
+consumptive evaporative fraction,PARTIAL: Lei tower evap term is consumptive; blowdown is not; Facebook mist ~85% evaporates,OCP 2012; Lei Cooling_Tower,gray-box evaporative index,n/a,hourly/annual modeled,medium,7,do not read 2023-24 holdout to fit this module
+groundwater pumping q_gw,NO,OWRD/wells,groundwater module,n/a,monthly/hourly,high,8,next layer after source split
+source-specific pumping energy,NO,not in Lei,groundwater/energy modules,n/a,hourly/monthly,high,9,outside cooling proxy

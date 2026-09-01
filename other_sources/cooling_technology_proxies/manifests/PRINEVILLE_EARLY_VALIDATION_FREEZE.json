@@ -1,0 +1,41 @@
+{
+  "frozen_before_residuals": true,
+  "timestamp_utc": "2026-09-01T16:50:00Z",
+  "epoch": "PRN1_early_2011_2012",
+  "architecture_evidence": {
+    "class": "100% outside-air economization + direct evaporative cooling/humidification (ECH misting); no chiller; no cooling tower",
+    "sources": [
+      "META_ENGINEERING_2011",
+      "OCP Water Efficiency at Facebook Prineville Data Center",
+      "OCP Learning Lessons at the Prineville Data Center"
+    ],
+    "evidence_class": "OPERATOR_REPORTED_MEASURED for operating PUE/WUE; DESIGN for 2011 WUE 0.31"
+  },
+  "observed_operator": {
+    "PUE_commissioning_full_load": {"value": 1.07, "period": "commissioning 2011", "class": "OPERATOR_REPORTED_MEASURED"},
+    "PUE_operating_Apr_Sep_2011": {"value_range": [1.06, 1.1], "period": "2011-04-14 to 2011-09-30", "class": "OPERATOR_REPORTED_MEASURED"},
+    "WUE_PRN1_Q2_2012": {"value": 0.22, "units": "L/kWh", "period": "Q2 2012", "boundary": "cooling water only; not plumbing/offices; quarterly not annualized 12-month", "class": "OPERATOR_REPORTED_MEASURED"},
+    "WUE_design_2011": {"value": 0.31, "units": "L/kWh", "class": "DESIGN", "not_used_as_meter": true}
+  },
+  "not_used_to_select_k": [
+    "Meta 2023-2024 annual water holdout",
+    "dashboard TTM Mar 2013 WUE 0.52 (later campus window; recorded separately)"
+  ],
+  "climate_mapping": {"zone": "5B", "rationale": "IECC cool-dry; Prineville OR"},
+  "closest_source_model_class": {
+    "tech_id": "AE_AD_ACC",
+    "label": "Airside economizer& adiabatic cooling (air-cooled chiller)",
+    "facility_class": "Large-scale",
+    "liquid_subtype": "NOT_APPLICABLE",
+    "why_only_approximate": "Lei class still includes supplemental air-cooled chiller when economizer/adiabatic cannot meet load. PRN1 design/operation of this epoch has no chiller plant and no cooling tower. Direct ECH misting + RO pretreatment is not identical to Lei adiabatic humidifier parameterization."
+  },
+  "comparison_statistic": "location of observed point vs source-scenario 5th/50th/95th of the predeclared cell; no k search",
+  "decision_rules": {
+    "compatible": "both commissioning PUE 1.07 and Q2 2012 WUE 0.22 inside source 5-95",
+    "partially_compatible": "PUE inside 5-95 but WUE not, or conversely, with documented boundary caveats",
+    "materially_discrepant": "neither primary metric inside 5-95",
+    "inconclusive_boundary": "use only if water-boundary mismatch is so severe that juxtaposition is invalid — still report numbers with caveats"
+  },
+  "did_not_calibrate_lei": true,
+  "did_not_choose_closer_technology": true
+}

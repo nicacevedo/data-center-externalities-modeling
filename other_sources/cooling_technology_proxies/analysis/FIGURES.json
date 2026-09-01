@@ -1,10 +1,9 @@
 {
   "files": [
-    "pue_wue_pairs_by_technology.png",
-    "technology_energy_water_frontier.png",
-    "pue_ranges_by_climate.png",
-    "wue_ranges_by_climate.png",
-    "liquid_cooling_subtypes.png",
-    "independent_validation_coverage.png"
-  ]
+    "liquid_subtype_by_heat_rejection.png",
+    "wue_climate_liquid_faceted_subtype.png",
+    "source_model_pue_wue_technology_map.png",
+    "liquid_heat_rejection_vs_subtype.png"
+  ],
+  "note": "MODELED SOURCE ENSEMBLE"
 }

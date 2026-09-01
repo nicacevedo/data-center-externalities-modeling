@@ -1,0 +1,43 @@
+{
+  "timestamp_utc": "2026-09-01T16:45:00Z",
+  "repo_branch": "main",
+  "repo_head": "d1b503b519a9d2abccc4c561809089ebc9c987a4",
+  "head_subject": "[Feature] LNBL cooling, wue, hybrid plant data and models",
+  "git_status_short": " m Data-center-PUE-prediction-tool",
+  "module": "other_sources/cooling_technology_proxies",
+  "did_not_modify_masanet": true,
+  "did_read_meta_2023_2024_water": false,
+  "pre_correction_errors_to_fix": [
+    "Liquid subtypes described as irretrievably pooled; SI Rmd maps 15_1/16_1 RDHX, 15_2/16_2 Cold Plate, else Immersion",
+    "Taxonomy swapped Case 15/16 vs cooling-system labels (CSV Case 15 = liquid WE; Case 16 = liquid dry/adiabatic)",
+    "Rows called empirical distribution / F rather than source-model scenario ensemble",
+    "Cases 17/18 presented as equivalent catalog techs despite Rmd/paper-core exclusion",
+    "Global median 'frontier' figure implied causal technology effects across unmatched facility classes",
+    "Climate figures for liquid mixed subtypes under repeated climate labels",
+    "Operator Facebook/Meta design points labeled independent",
+    "Hourly liquid simulator claimed absent for subtypes that are only absent as hourly physics, not as annual subcases"
+  ],
+  "pre_correction_artifacts": {
+    "final_status": "results/FINAL_COOLING_PROXY_STATUS.json",
+    "taxonomy": "data_processed/COOLING_TAXONOMY.csv",
+    "parquet": "data_processed/cooling_proxy_scenarios.parquet",
+    "summary_cells": 380,
+    "scenario_rows": 19000,
+    "figures": [
+      "pue_wue_pairs_by_technology.png",
+      "technology_energy_water_frontier.png",
+      "pue_ranges_by_climate.png",
+      "wue_ranges_by_climate.png",
+      "liquid_cooling_subtypes.png",
+      "independent_validation_coverage.png"
+    ],
+    "scripts": [
+      "scripts/build_lei2025_proxy.py",
+      "scripts/write_registries.py",
+      "scripts/make_validation_coverage_figure.py"
+    ]
+  },
+  "masanet_status_file": "NOT FOUND other_sources/masanet/results/final_repro_v2/FINAL_MASANET_STATUS.json",
+  "masanet_v1": "results/followup_v1/MASANET_ANNUAL_CLOSURE_STATUS.json status FAIL annual_reproduction INCONSISTENT",
+  "masanet_v2": "docs/final_repro_v2/STATUS_IN_PROGRESS.md PENDING"
+}
