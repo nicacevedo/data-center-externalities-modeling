@@ -1,0 +1,8 @@
+category,n_rows,n_positive_energy,n_null_energy,n_zero_energy,measured_GWh,fraction_of_positive_measured_energy,directly_representable_by_frozen_cpu_model,raw_energy_additive,why,transfer_status,validated_states
+A_completed_exclusive_nonshared_CPU,4456925,4456925,0,0,9.281936564873865,0.387733375541661,True,True,Primary frozen cohort; completed exclusive CPU node-hours.,,
+B_timeout_exclusive_nonshared_CPU,362521,362521,0,0,10.326132647640295,0.4313524704437504,True,True,Same physical occupancy; transfer test decides representability.,PASS_TRANSFER,
+C_other_states_exclusive_nonshared_CPU_positive_energy,1181856,1181856,0,0,3.035140375815545,0.1267866048138348,False,True,CANCELLED exclusive non-shared CPU transferred (PASS) and is in replay v2. FAILED/NODE_FAIL/OOM did not transfer (lower W/node-hour); do not apply p_frozen to those states.,PARTIAL,['CANCELLED']
+D_shared_CPU_positive_energy,939890,939890,0,0,1.2613512239441642,0.0526902941412337,False,False,Do not sum ConsumedEnergyRaw; likely node-level copy to co-resident jobs.,,
+E_H100_GPU,1327785,0,1161754,166031,0.0,0.0,False,True,No positive ConsumedEnergyRaw in this extract.,,
+F_null_or_zero_energy_all_rows,3495027,0,1489930,2005097,0.0,0.0,False,True,No measured job-energy target.,,
+G_unresolved_positive_energy,123758,123758,0,0,0.03440640174777783,0.0014372550595091,False,True,"Other partitions (csc, project_3, multi, empty, gpu-hpe/a100) or invalid timestamps/resources.",,

@@ -90,7 +90,15 @@ Requested wallclock is a cap, not a duration forecast. B0 on requested node-hour
 
 Uniform allocation of each primary-cohort job’s energy over actual `[start, end)`. Resolutions 5 min / 15 min / 1 h / 1 day. Energy conservation relative error ~10^−14 to 10^−16 at all four resolutions (measured, EX-POST predicted, EX-ANTE predicted).
 
-This is **time-averaged job-attributed power**, not instantaneous node telemetry, and it excludes GPU energy, TIMEOUT energy, shared-partition jobs, and idle nodes. Finest defensible resolution for *this* replay is 5 min for conservation; scientific content vs the facility meter is similar from 5 min through hourly (see ESIF table). Daily aggregation raises R² by averaging noise.
+This is **time-averaged job-attributed energy replay**, not instantaneous node telemetry. Energy conservation at 5-minute bins **does not** validate 5-minute physical power shape.
+
+- daily energy accounting: supported
+- hourly average replay: useful/supported for aggregate comparison
+- 15-minute replay: scenario/accounting approximation
+- 5-minute physical transient shape: **UNSUPPORTED**
+- instantaneous/burst shape: **UNSUPPORTED** (GenAI/H100 profiles are the appropriate source)
+
+The original primary replay covers completed exclusive non-shared CPU only. Replay v2 (below) adds TIMEOUT and CANCELLED where transfer tests passed. Both remain accounting allocations. They exclude shared-partition jobs, H100, FAILED/NODE_FAIL/OOM, and idle nodes.
 
 ## I. Conditional ESIF IT-meter linkage
 
@@ -117,21 +125,98 @@ In the overlap window, completed-CPU job replay is ~7.7 GWh vs ~38.8 GWh ESIF IT
 
 | Status | Result |
 |---|---|
-| JOB_ENERGY_TARGET_QUALITY | **PARTIAL** (CPU measured energy is internally consistent; GPU energy is entirely missing; TIMEOUT holds a large energy share) |
+| JOB_ENERGY_TARGET_QUALITY | **PARTIAL** (CPU measured energy is internally consistent; GPU energy is entirely missing) |
 | JOB_ENERGY_EX_POST | **PASS** |
-| JOB_ENERGY_EX_ANTE | **FAIL** (for planning totals; requested wallclock is not runtime) |
-| TEMPORAL_JOB_POWER_REPLAY | **PASS** |
-| ESIF_IT_METER_LINKAGE | **PARTIAL** (real incremental association after Eagle; not majority reconstruction) |
-| H100_MEASURED_ENERGY | **UNSUPPORTED** |
+| JOB_ENERGY_EX_ANTE | **FAIL** (requested wallclock is not runtime; not retuned) |
+| CPU_COMPLETED_NODE_HOUR | **PASS** |
+| CPU_TIMEOUT_TRANSFER | **PASS** |
+| CPU_OTHER_STATE_TRANSFER | **PARTIAL** (CANCELLED PASS; FAILED/NODE_FAIL/OOM FAIL) |
+| SHARED_CPU_RECONSTRUCTION | **UNSUPPORTED** |
+| CPU_ENERGY_COVERAGE | **PARTIAL** (~89% of positive measured job energy in the validated exclusive/non-shared CPU law) |
+| ENERGY_CONSERVING_JOB_REPLAY | **PASS** (accounting conservation, not physical 5-minute shape) |
+| SUBHOURLY_POWER_SHAPE | **UNSUPPORTED** |
+| TEMPORAL_JOB_POWER_REPLAY | **PASS** as energy-conserving job replay; **UNSUPPORTED** as subhourly physical shape |
+| ESIF_TIMESTAMP_SEMANTICS | **AMBIGUOUS** (calendar-consistent with June 2025 power outage; Denver vs UTC hour-of-day unresolved) |
+| ESIF_IT_METER_LINKAGE | **PARTIAL** (association improves with coverage expansion; not causal; not meter equality) |
+| H100_MEASURED_JOB_ENERGY | **UNSUPPORTED_IN_KESTREL_JOB_EXTRACT** |
 
 ## K. Canonical project implication
 
-1. **Workload/resource → IT energy (CPU):** \(\hat E_j = 701\,\mathrm{W} \times N_{\mathrm{nodes},j} \times t_{\mathrm{runtime},j}\) with chronological test WAPE 13.6% and +3% energy bias. Optional partition intercepts are unnecessary at the 1% parsimony rule.
+1. **Workload/resource → IT energy (CPU, validated domain):** \(E^{IT}_{j,\mathrm{CPU}} = p_{\mathrm{KestrelCPU}} N_j \tau_j \epsilon_j\) with \(p_{\mathrm{KestrelCPU}}=700.6894574294788\,\mathrm{W/node}\) on exclusive non-shared Kestrel CPU jobs in COMPLETED, TIMEOUT, and CANCELLED, using actual occupied nodes and actual runtime. Chronological completed TEST: WAPE 0.136 (diagnostic), aggregate energy bias **+3.1%**. TIMEOUT transfer: WAPE 0.100, bias **−1.2%**. Optional partition intercepts remain unnecessary at the 1% parsimony rule.
 2. **Inputs:** actual nodes occupied and actual runtime (EX-POST). Partition is optional. Do not use measured energy, TDP energy, hashes, or post-execution efficiency as inputs to this proxy.
-3. **Uncertainty:** ~14% WAPE job-level; ~3% aggregate energy bias on later-2025 test; higher error in the far tail (RMSE 1.6 kWh vs MAE 0.29 kWh).
-4. **CPU and H100 must remain separate.** H100 measured job energy is missing from this extract.
-5. **Form is generic** (`E ≈ p_{\mathrm{node}} × \mathrm{node\text{-}hours}`); **coefficient is Kestrel-CPU-specific** (~701 W, matching dual Sapphire Rapids-class occupancy). Do not export 701 W to GPU or hyperscale CPU nodes.
-6. **ESIF does provide meaningful workload → facility-IT validation of incremental load**, not a reconstruction of the IT meter. Baseline ~1.4–2.5 MW is other/idle/GPU/unreplayed energy.
-7. **Highest-value next experiment:** recover **GPU/node-level measured power** (or wait for an extract where `ConsumedEnergyRaw` is populated on `gpu-h100`). Until GPU IT is in the job layer, ESIF IT → cooling/weather will confound missing GPU load with cooling response. GenAI sub-hourly profiles are second-priority (shape, not missing totals). Google hyperscale is the right later test of generality of the node-hour form.
+3. **Uncertainty:** point coefficient \(\approx 700.689\) W/node; aggregate completed-TEST energy bias \(\approx +3\%\); held-out residual multiplier \(\epsilon=E_{\mathrm{obs}}/(p N t)\) has median 0.879 and p05–p95 \([0.445, 1.097]\). **WAPE (0.136 on completed TEST) is an aggregate diagnostic, not a confidence interval or “~14% job-level uncertainty.”** RMSE 1.6 kWh vs MAE 0.29 kWh shows a heavy right tail.
+4. **CPU and H100 must remain separate.** H100 measured job energy is missing from this extract (`H100_MEASURED_JOB_ENERGY = UNSUPPORTED_IN_KESTREL_JOB_EXTRACT`). Do not apply 700.689 W/node to H100 or substitute TDP.
+5. **Form is generic** (`E \propto` hardware-hours); **coefficient is Kestrel-CPU-specific**. Do not export 701 W to GPU or hyperscale CPU nodes until externally validated.
+6. **ESIF:** Kestrel validated CPU job-attributed load is associated with a measurable component of ESIF total IT variation. This is **not** a causal claim that CPU jobs explain a percentage of facility IT. Baseline intercepts remain other/idle/GPU/unreplayed energy. Naive timestamps are calendar-consistent with the June 2025 ESIF power outage; Denver vs UTC hour-of-day remains **AMBIGUOUS**.
+7. **Highest-value next experiment:** NLR GenAI H100 measured power profiles, DOI `10.7799/3025227` (not executed in this pass). Shared-CPU reconstruction is unsupported and should not block that experiment.
 
 Suggested commit message (not committed): `Add NLR Kestrel job-energy EX-POST node-hour model and conditional ESIF IT-meter linkage.`
+
+---
+
+# CPU-coverage and ESIF-closure addendum
+
+Closure pass on frozen completed-job coefficient **p = 700.6894574294788 W/node**. No refit.
+
+## TIMEOUT transfer
+
+n = 362,521; measured **10.326 GWh** (95.1% of all TIMEOUT measured energy).
+
+WAPE = 0.1004; bias = -0.0123; R²(log E) = 0.9648.
+Median W/node-hour = 738.4 (p05=302.1, p95=777.2).
+
+COMPLETED frozen TEST: WAPE 0.1362, bias 0.0308, median W/node-hour 615.6.
+
+**PASS_TRANSFER.** Median W/node-hour=738.4 vs p=700.7 (relative 0.054); |bias|=0.012; WAPE ratio vs completed test=0.738; R²(log E)=0.965. Same physical occupancy law; no refit.
+
+## Coverage
+
+Validated exclusive/non-shared CPU energy now represented by the frozen law: **21.295 GWh** of 23.939 GWh positive measured job energy (**89.0%**). Shared raw sums are **not** included. H100 measured energy remains 0. Of the 3.035 GWh in other exclusive states, only CANCELLED (1.687 GWh) transferred; FAILED/NODE_FAIL/OOM did not.
+
+Shared reconstruction: **UNSUPPORTED**.
+
+## Canonical CPU domain
+
+\(E^{IT}_{j,CPU} = p_{\rm KestrelCPU} N_j \tau_j \epsilon_j\) with \(p_{\rm KestrelCPU}=700.6894574294788\,\mathrm{W/node}\).
+
+Domain: Kestrel CPU nodes; actual occupied nodes; actual runtime; exclusive/non-shared jobs; TIMEOUT (and other states only if listed as validated). Not H100. Not shared jobs. Form \(E\propto\)hardware-hours may transfer; **p is Kestrel-CPU-specific**.
+
+Planning: \(\hat E_j = p_h N_j \hat\tau_j\). Requested wallclock is not \(\hat\tau\). No new EX-ANTE energy model in this pass.
+
+## Uncertainty
+
+Held-out completed TEST residual multiplier \(\epsilon = E_{\rm obs}/(p N t)\): median 0.879; p05–p95 [0.445, 1.097]. Aggregate test bias 0.031. **WAPE is a diagnostic, not a CI.** Duration split of median ε is 0.806 vs 0.899; unconditional distribution is preferred unless that split is large.
+
+## Temporal replay
+
+Energy-conserving job replay is an accounting allocation, not 5-minute physical power shape.
+
+- daily energy accounting: supported
+- hourly average: useful for aggregate comparison
+- 15-minute: scenario/accounting approximation
+- 5-minute physical transients: **UNSUPPORTED**
+- instantaneous/burst: **UNSUPPORTED** (GenAI/H100 profiles)
+
+Replay v2 built: True.
+
+## ESIF time
+
+Disposition: **AMBIGUOUS** at hour-of-day (Denver vs UTC not uniquely identified). Naive IT has a **96.8 h dropout** after 2025-06-26 17:08 resuming 2025-06-30 17:57, matching the documented ESIF full power outage; IT recovers by 2025-07-03. The July 11–13 network outage (power on) shows no IT collapse. Daily linkage remains usable; hourly retains a ±6–7 h caveat. Offset was not chosen by maximizing Kestrel correlation.
+
+## ESIF linkage
+
+Rerun justified because replay v2 materially increased represented Kestrel CPU energy. Timezone interpretation did **not** change (still operational America/Denver with hourly caveat).
+
+Kestrel validated CPU job-attributed load is associated with a measurable component of ESIF total IT variation. This is **not** a causal statement that CPU jobs explain a share of facility IT. Omitted H100, idle, storage, network, and other systems remain possible correlated loads.
+
+| Resolution | Epoch | Replay | Pearson | R² | B (kW) | β | Kestrel/ESIF energy |
+|---|---|---|---|---|---|---|---|
+| 1 h | post_gpu_ga | completed-only (v1) | 0.51 | 0.26 | 1991 | 0.86 | 0.22 |
+| 1 h | post_gpu_ga | validated CPU v2 | 0.82 | 0.67 | 1320 | 0.93 | 0.50 |
+| 1 day | post_gpu_ga | completed-only (v1) | 0.61 | 0.37 | 1831 | 1.14 | 0.22 |
+| 1 day | post_gpu_ga | validated CPU v2 | 0.88 | 0.77 | 1216 | 1.02 | 0.49 |
+| 1 h | all | validated CPU v2 | 0.50 | 0.25 | 1831 | 0.73 | 0.43 |
+
+v1 completed-only post-GPU Kestrel share uses 4.80 GWh replay / 21.47 GWh ESIF IT in that hourly epoch. v2 uses 10.67 GWh / 21.47 GWh.
+
+H100 measured job energy: **UNSUPPORTED_IN_KESTREL_JOB_EXTRACT**. Do not apply 700.689 W/node to H100. Next separate experiment: NLR GenAI H100 measured power profiles, DOI `10.7799/3025227` (not executed).

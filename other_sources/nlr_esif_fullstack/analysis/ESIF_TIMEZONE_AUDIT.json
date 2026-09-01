@@ -1,0 +1,89 @@
+{
+  "candidates_predeclared": [
+    "America/Denver",
+    "UTC",
+    "MST_UTC-7"
+  ],
+  "correlation_with_kestrel_not_used_to_choose_offset": true,
+  "anchors": {},
+  "anchor_esif_full_power_outage_2025_06": {
+    "denver_outage": {
+      "n": 1392,
+      "median_kw": 1284.8128738145529,
+      "mean_kw": 1048.2183870039464,
+      "p05_kw": 308.3514166285187,
+      "p95_kw": 1845.6560936110259
+    },
+    "utc_outage_naive_as_utc": {
+      "n": 1392,
+      "median_kw": 1284.8128738145529,
+      "mean_kw": 1048.2183870039464,
+      "p05_kw": 308.3514166285187,
+      "p95_kw": 1845.6560936110259
+    },
+    "mst_outage": {
+      "n": 1449,
+      "median_kw": 1709.212073770821,
+      "mean_kw": 1587.4135532796474,
+      "p05_kw": 315.81658344038726,
+      "p95_kw": 2569.6910887793897
+    },
+    "denver_pre_Jun16_20": {
+      "n": 6966,
+      "median_kw": 2605.3554063142537,
+      "mean_kw": 2513.6435965563783,
+      "p05_kw": 1298.9225624278188,
+      "p95_kw": 2759.801657501772
+    },
+    "denver_post_Jul08_10": {
+      "n": 4297,
+      "median_kw": 2645.420842423022,
+      "mean_kw": 2640.269905496563,
+      "p05_kw": 2535.658943376219,
+      "p95_kw": 2719.667407512307
+    }
+  },
+  "anchor_network_outage_2025_07_negative_control": {
+    "denver_network_window": {
+      "n": 831,
+      "median_kw": 2682.1459030611513,
+      "mean_kw": 2684.998588090801,
+      "p05_kw": 2552.4857153054472,
+      "p95_kw": 2803.815982023388
+    },
+    "denver_adjacent_Jul08_10": {
+      "n": 4297,
+      "median_kw": 2645.420842423022,
+      "mean_kw": 2640.269905496563,
+      "p05_kw": 2535.658943376219,
+      "p95_kw": 2719.667407512307
+    }
+  },
+  "anchor_kestrel_gpu_integration_2024_01": {
+    "denver_kestrel_outage": {
+      "n": 13616,
+      "median_kw": 1692.4867328815162,
+      "mean_kw": 1778.416128509015,
+      "p05_kw": 1552.772030789405,
+      "p95_kw": 2498.7274479679763
+    },
+    "denver_pre_Jan20_28": {
+      "n": 12948,
+      "median_kw": 3321.823003169149,
+      "mean_kw": 3265.933694713383,
+      "p05_kw": 2607.2786943834276,
+      "p95_kw": 3508.8222477767617
+    }
+  },
+  "disposition": "AMBIGUOUS",
+  "disposition_note": "Naive IT series has a 96.8 h dropout after 2025-06-26 17:08 and resumes 2025-06-30 17:57, matching the documented ESIF full power outage calendar. Network outage July 11-13 (power stays on) shows no IT collapse. Denver vs UTC hour-of-day is not uniquely identified by a multi-day gap. Daily linkage usable; hourly retains a timezone caveat. Offset was not chosen by Kestrel correlation.",
+  "hourly_linkage_caveat": true,
+  "naive_gap_esif_power_outage": {
+    "last_sample_before_gap_naive": "2025-06-26 17:08:15",
+    "resume_naive": "2025-06-30 17:57:07",
+    "gap_hours": 96.814,
+    "june_27_28_29_sample_count": 0,
+    "july_3_median_it_kw_recovered": 2593.76,
+    "correlation_with_kestrel_not_used": true
+  }
+}

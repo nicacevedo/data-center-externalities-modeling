@@ -1,0 +1,15 @@
+{
+  "n_shared_or_positive_count_rows": 1747690,
+  "n_positive_energy": 939913,
+  "raw_sum_GWh_not_additive": 1.2615177646919447,
+  "shared_partition_completed_positive_n": 726600,
+  "median_raw_Wh": 89.28277777777777,
+  "median_shared_job_count": 4.0,
+  "nodelist_in_analysis_parquet": false,
+  "jobs_shared_not_in_analysis_parquet": true,
+  "disposition": "UNSUPPORTED",
+  "A_unique_node_time_reconstruction": false,
+  "B_dedup_without_arbitrary_allocation": false,
+  "C_defensible_bound": "Exclusive non-shared validated CPU energy is a conservative lower account of additive job-attributed CPU energy. Raw shared ConsumedEnergyRaw summed across co-resident jobs is an overcount. No tight unique shared contribution without node-interval occupancy.",
+  "why_stop": "Analysis extract omits nodelist/jobs_shared. Even in the source, ConsumedEnergyRaw appears occupancy-copied onto co-resident jobs. Interval-overlap on shared nodes would require an allocator and is not simple/reliable. No exact reconstruction in this pass."
+}

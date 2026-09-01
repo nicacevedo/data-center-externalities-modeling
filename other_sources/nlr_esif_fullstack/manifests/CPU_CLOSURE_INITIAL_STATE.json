@@ -1,0 +1,29 @@
+{
+  "pass": "CPU_COVERAGE_AND_ESIF_CLOSURE",
+  "captured_at_utc": "2026-09-01T18:30:00+00:00",
+  "git": {
+    "branch": "main",
+    "head": "3a084c3e5caa095c45fc56393121cb2729a96b07",
+    "status": "clean except pre-existing submodule Data-center-PUE-prediction-tool",
+    "origin_main": "up to date"
+  },
+  "script_hashes_sha256": {
+    "scripts/run_kestrel_job_power_experiment.py": "7c48e250ff24f2128d5f4cb63df89861c436b61e1d282f60aa0b13530a89bbf4",
+    "scripts/kestrel_paths.py": "12eb5b01ab532a5afc45b70ca48ed056d89ee6595d46de7859b14c1a19d7765a"
+  },
+  "existing_tests": "15 passed (test_kestrel_job_power.py); treated as reproducibility of frozen completed-job experiment",
+  "full_baseline_rerun": false,
+  "reason_no_full_rerun": "Committed runner, manifests, test metrics, and p_hat_W=700.6894574294788 are internally consistent; existing tests pass.",
+  "frozen_coefficient_W_per_node": 700.6894574294788,
+  "frozen_completed_test": {
+    "n": 1134746,
+    "WAPE": 0.13616455874940167,
+    "total_energy_bias": 0.030774472066324332,
+    "sum_observed_Wh": 2378005325.2269444,
+    "R2_logE": 0.9756563888920156
+  },
+  "no_h100_download": true,
+  "no_genai_download": true,
+  "no_meta": true,
+  "no_refit_completed_model": true
+}

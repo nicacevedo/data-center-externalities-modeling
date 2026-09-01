@@ -1,0 +1,100 @@
+{
+  "total_positive_measured_Wh": 23938967214.021904,
+  "n_source_rows": 10559977,
+  "categories": [
+    {
+      "category": "A_completed_exclusive_nonshared_CPU",
+      "n_rows": 4456925,
+      "n_positive_energy": 4456925,
+      "n_null_energy": 0,
+      "n_zero_energy": 0,
+      "measured_GWh": 9.281936564873865,
+      "fraction_of_positive_measured_energy": 0.387733375541661,
+      "directly_representable_by_frozen_cpu_model": true,
+      "raw_energy_additive": true,
+      "why": "Primary frozen cohort; completed exclusive CPU node-hours."
+    },
+    {
+      "category": "B_timeout_exclusive_nonshared_CPU",
+      "n_rows": 362521,
+      "n_positive_energy": 362521,
+      "n_null_energy": 0,
+      "n_zero_energy": 0,
+      "measured_GWh": 10.326132647640295,
+      "fraction_of_positive_measured_energy": 0.4313524704437504,
+      "directly_representable_by_frozen_cpu_model": true,
+      "raw_energy_additive": true,
+      "why": "Same physical occupancy; transfer test decides representability.",
+      "transfer_status": "PASS_TRANSFER"
+    },
+    {
+      "category": "C_other_states_exclusive_nonshared_CPU_positive_energy",
+      "n_rows": 1181856,
+      "n_positive_energy": 1181856,
+      "n_null_energy": 0,
+      "n_zero_energy": 0,
+      "measured_GWh": 3.035140375815545,
+      "fraction_of_positive_measured_energy": 0.12678660481383489,
+      "directly_representable_by_frozen_cpu_model": false,
+      "raw_energy_additive": true,
+      "why": "CANCELLED exclusive non-shared CPU transferred (PASS) and is in replay v2. FAILED/NODE_FAIL/OOM did not transfer (lower W/node-hour); do not apply p_frozen to those states.",
+      "transfer_status": "PARTIAL",
+      "validated_states": [
+        "CANCELLED"
+      ],
+      "cancelled_validated_GWh": 1.6873618647508335,
+      "unvalidated_failed_nodefail_oom_GWh": 1.3477785110647116
+    },
+    {
+      "category": "D_shared_CPU_positive_energy",
+      "n_rows": 939890,
+      "n_positive_energy": 939890,
+      "n_null_energy": 0,
+      "n_zero_energy": 0,
+      "measured_GWh": 1.2613512239441642,
+      "fraction_of_positive_measured_energy": 0.05269029414123371,
+      "directly_representable_by_frozen_cpu_model": false,
+      "raw_energy_additive": false,
+      "why": "Do not sum ConsumedEnergyRaw; likely node-level copy to co-resident jobs."
+    },
+    {
+      "category": "E_H100_GPU",
+      "n_rows": 1327785,
+      "n_positive_energy": 0,
+      "n_null_energy": 1161754,
+      "n_zero_energy": 166031,
+      "measured_GWh": 0.0,
+      "fraction_of_positive_measured_energy": 0.0,
+      "directly_representable_by_frozen_cpu_model": false,
+      "raw_energy_additive": true,
+      "why": "No positive ConsumedEnergyRaw in this extract."
+    },
+    {
+      "category": "F_null_or_zero_energy_all_rows",
+      "n_rows": 3495027,
+      "n_positive_energy": 0,
+      "n_null_energy": 1489930,
+      "n_zero_energy": 2005097,
+      "measured_GWh": 0.0,
+      "fraction_of_positive_measured_energy": 0.0,
+      "directly_representable_by_frozen_cpu_model": false,
+      "raw_energy_additive": true,
+      "why": "No measured job-energy target."
+    },
+    {
+      "category": "G_unresolved_positive_energy",
+      "n_rows": 123758,
+      "n_positive_energy": 123758,
+      "n_null_energy": 0,
+      "n_zero_energy": 0,
+      "measured_GWh": 0.03440640174777783,
+      "fraction_of_positive_measured_energy": 0.0014372550595091996,
+      "directly_representable_by_frozen_cpu_model": false,
+      "raw_energy_additive": true,
+      "why": "Other partitions (csc, project_3, multi, empty, gpu-hpe/a100) or invalid timestamps/resources."
+    }
+  ],
+  "validated_additive_cpu_GWh": 21.295431077264993,
+  "validated_fraction_of_positive_measured_energy": 0.8895718385374412,
+  "gwh_definition": "GWh = Wh / 1e9"
+}

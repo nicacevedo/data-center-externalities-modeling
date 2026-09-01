@@ -1,0 +1,82 @@
+{
+  "name": "TIMEOUT_EXCLUSIVE_NONSHARED_CPU_TRANSFER",
+  "frozen_before_prediction_metrics": true,
+  "no_refitting": true,
+  "p_cpu_w_per_node": 700.6894574294788,
+  "p_source": "manifests/FINAL_MODEL_FREEZE.json EX_POST_CPU.p_hat_W_per_node",
+  "tested_model": "E_hat_Wh = p_cpu_w_per_node * nodes_used * (duration_s / 3600)",
+  "cohort_rules": {
+    "state_simple": "TIMEOUT",
+    "exclusive_cpu_partitions": [
+      "standard",
+      "short",
+      "long",
+      "debug",
+      "nvme",
+      "hbw",
+      "hbwl",
+      "medmem",
+      "bigmem",
+      "bigmeml",
+      "standard-stdby",
+      "short-stdby",
+      "long-stdby",
+      "debug-stdby",
+      "hbw-stdby",
+      "bigmem-stdby",
+      "bigmeml-stdby",
+      "medmem-stdby"
+    ],
+    "valid_start_end": true,
+    "positive_actual_runtime": "duration_s > 0 AND wallclock_used_s > 0",
+    "positive_finite_measured_raw_energy": "energy_wh finite and > 0",
+    "valid_actual_nodes": "nodes_used > 0 AND processors_used > 0",
+    "NON_SHARED_JOB": "exclusive CPU partition AND (shared_job_count IS NULL OR shared_job_count = 0)",
+    "no_gpu_h100": true,
+    "no_shared_partitions": true,
+    "no_energy_tdp_filtering_beyond_target_validity": true,
+    "nodes_req_processors_req_wallclock_req_positive": true
+  },
+  "where_sql": "state_simple='TIMEOUT' AND start_time IS NOT NULL AND end_time IS NOT NULL AND duration_s > 0 AND wallclock_used_s > 0 AND nodes_used > 0 AND processors_used > 0 AND energy_wh IS NOT NULL AND isfinite(energy_wh) AND energy_wh > 0 AND hardware_branch='CPU' AND partition IN ('bigmem','bigmem-stdby','bigmeml','bigmeml-stdby','debug','debug-stdby','hbw','hbw-stdby','hbwl','long','long-stdby','medmem','medmem-stdby','nvme','short','short-stdby','standard','standard-stdby') AND (shared_job_count IS NULL OR shared_job_count = 0) AND nodes_req > 0 AND processors_req > 0 AND wallclock_req_s > 0",
+  "cohort_not_modified_after_performance": true,
+  "interpretation_rule_predeclared": {
+    "PASS_TRANSFER": "Frozen coefficient remains reasonably calibrated: aggregate |bias| comparable to completed test (~few percent) AND WAPE not many-fold worse AND W/node-hour distribution concentrated near p_frozen.",
+    "PARTIAL_TRANSFER": "Same order/structure (median W/node-hour near p_frozen; log R2 still high) but meaningful systematic state bias or WAPE inflation.",
+    "FAIL_TRANSFER": "State materially alters the node-hour relationship or energy semantics (median W/node-hour far from p_frozen, or huge bias, or energy not occupancy-like).",
+    "not_chosen_by_post_hoc_numeric_cutoff_alone": true
+  },
+  "timezone_anchors_predeclared_before_meter_inspection": {
+    "A_naive_equals_America_Denver": "primary predeclared interpretation",
+    "B_naive_equals_UTC": "alternate",
+    "C_naive_equals_MST_UTC-7_year_round": "alternate",
+    "anchors": [
+      {
+        "id": "ESIF_FULL_POWER_OUTAGE_2025_06",
+        "source": "NLR HPC announcement 'Data Center Outage: 06/26-07-03' (June 25, 2025)",
+        "event": "Campus construction requires a full ESIF power outage; HPC data center unavailable June 26 through June 30; all HPC systems including Kestrel shut down; targeted return end of day July 3.",
+        "expected_it_meter": "IT power should collapse during the power-outage calendar days and recover around July 3.",
+        "clock": "Announcement uses calendar dates without an hour; treat as America/Denver civil dates. Do not lag-optimize."
+      },
+      {
+        "id": "KESTREL_GPU_INTEGRATION_OUTAGE_2024_01",
+        "source": "NLR HPC announcement 'Kestrel Planned Outage and Phase II GPU Integration' (Jan 12, 2024)",
+        "event": "Kestrel offline Monday January 29th at 7:00 AM through Friday February 9th (login, filesystems, compute).",
+        "expected_it_meter": "Kestrel job replay ~0; ESIF IT may remain elevated because Eagle still occupied the floor until 2024-06-15.",
+        "clock": "7:00 AM is operational local time at NLR Golden (Mountain)."
+      },
+      {
+        "id": "NETWORK_OUTAGE_2025_07_NEGATIVE_CONTROL",
+        "source": "NLR HPC announcement 'Planned Network Outage: July 11-13' (July 10, 2025)",
+        "event": "Network unreachable 5 p.m. MT July 11 through 11:59 p.m. MT July 13; Kestrel remains powered-on and jobs continue.",
+        "expected_it_meter": "IT power should NOT collapse. Negative control for a power-outage signature.",
+        "clock": "Explicit MT labels."
+      }
+    ],
+    "forbidden": "Do not choose A/B/C by maximizing correlation with Kestrel job replay."
+  },
+  "n": 362521,
+  "measured_energy_wh": 10326132647.64028,
+  "measured_GWh": 10.326132647640279,
+  "pct_of_all_measured_TIMEOUT_energy": 95.10324727502885,
+  "cohort_counted_before_prediction_metrics": true
+}
