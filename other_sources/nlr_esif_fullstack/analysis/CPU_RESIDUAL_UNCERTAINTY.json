@@ -1,0 +1,31 @@
+{
+  "cohort": "COMPLETED_untouched_TEST",
+  "n": 1134746,
+  "eps_mean": 0.8064749901623706,
+  "eps_median": 0.8785453747524639,
+  "eps_p05": 0.4449585682672509,
+  "eps_p25": 0.5785061145114175,
+  "eps_p75": 0.9975813426433984,
+  "eps_p95": 1.0966824778168305,
+  "eps_p01": 0.3609903099002925,
+  "eps_p99": 1.1111264324747685,
+  "aggregate_test_bias": 0.03077447206632411,
+  "WAPE_is_not_an_uncertainty_interval": true,
+  "WAPE_completed_TEST": 0.13616455874940167,
+  "node_hour_quartile_median_eps": [
+    0.6403060677590567,
+    0.8928960618846263,
+    0.85191328199508,
+    1.0363292316639796
+  ],
+  "node_hour_quartile_median_eps_relative_spread": 0.4507714402531629,
+  "residual_dependence_on_node_hours_material": true,
+  "energy_weight_highest_node_hour_quartile": 0.9686601240024328,
+  "median_eps_highest_node_hour_quartile": 1.0363292316639796,
+  "unweighted_job_level_eps_differs_from_energy_weighted": true,
+  "recommended_representation": "POINT_MODEL_PLUS_AGGREGATE_BIAS_AND_HELD_OUT_RESIDUAL_SENSITIVITY",
+  "iid_epsilon_sampling_allowed": false,
+  "do_not_import_completed_residuals_to_TIMEOUT_or_CANCELLED": true,
+  "note": "Canonical point model is E = p N tau. 96.9% of completed-TEST measured energy sits in the highest node-hour quartile, where median epsilon is 1.036 (near 1). Unweighted median epsilon (0.879) is pulled down by huge numbers of tiny jobs that contribute almost no energy. Downstream planning should use the point estimate with the chronological TEST aggregate energy bias (+3.1%) as a diagnostic. Do not treat WAPE as a CI. Do not draw iid epsilon by default: residuals are not a calibrated noise model, are mildly node-hour dependent, and iid draws from the unweighted distribution would mis-scale large jobs.",
+  "if_stochastic_job_simulation_required": "Use at most the 4 node-hour-quartile empirical F(eps|bin) on completed TEST; do not fit ML; do not force unweighted mean to 1; TIMEOUT/CANCELLED need state-specific residuals."
+}

@@ -1,0 +1,52 @@
+{
+  "pass": "FINAL_KESTREL_CPU_FREEZE_AND_E2E_VALIDATION",
+  "captured_at_utc": "2026-09-01T19:15:00+00:00",
+  "git": {
+    "branch": "main",
+    "head": "71299acbddeed8bc12b4f6221c6fd5481eae1fca",
+    "status": "clean except pre-existing submodule Data-center-PUE-prediction-tool",
+    "origin_main": "up to date"
+  },
+  "script_hashes_sha256": {
+    "scripts/run_kestrel_job_power_experiment.py": "7c48e250ff24f2128d5f4cb63df89861c436b61e1d282f60aa0b13530a89bbf4",
+    "scripts/kestrel_paths.py": "12eb5b01ab532a5afc45b70ca48ed056d89ee6595d46de7859b14c1a19d7765a",
+    "scripts/run_cpu_closure_pass.py": "34f3db78d33c69dff2d92bc44ab2a1acca91bee2402f40c34effc7239248c600"
+  },
+  "frozen_coefficient_W_per_node": 700.6894574294788,
+  "no_refit": true,
+  "mismatches_and_tracking_gaps": {
+    "repo_root_ignores_results": "Root .gitignore has results/; compact scientific outputs in other_sources/nlr_esif_fullstack/results/ are therefore untracked.",
+    "ignored_but_scientifically_decisive": [
+      "results/cpu_state_transfer_metrics.csv",
+      "results/cpu_residual_distribution.csv",
+      "results/cpu_residual_distribution.json",
+      "results/replay_v2_conservation.json",
+      "results/FINAL_KESTREL_JOB_POWER_STATUS.json"
+    ],
+    "missing_large_product": "timeseries/kestrel_cpu_power_replay_v2.parquet is absent (gitignored; not present on disk). v1 kestrel_job_power_replay.parquet remains.",
+    "report_vs_machine_readable": [
+      "docs/KESTREL_JOB_POWER_REPORT.md labels 21.295/23.939 as ~89% of positive measured job energy without distinguishing raw-record vs additive/non-shared denominators.",
+      "analysis/CPU_ENERGY_COVERAGE.json stores validated_fraction_of_positive_measured_energy but not the additive/non-shared denominator or ESIF-share measure.",
+      "No tracked canonical FINAL status JSON with the closure capability fields; ignored results/FINAL_KESTREL_JOB_POWER_STATUS.json is behind the Markdown addendum (missing CPU_CANCELLED_TRANSFER, ESIF_PREDICTED_CPU_LINKAGE, coverage labels).",
+      "ESIF v2 metrics in facility_validation/esif_it_linkage_metrics_v2.csv are measured-energy replay only; no frozen-model predicted replay comparison.",
+      "No chronological TIMEOUT/CANCELLED DEV/VAL/TEST transfer table."
+    ]
+  },
+  "existing_tracked_closure_artifacts": [
+    "analysis/CPU_ENERGY_COVERAGE.csv",
+    "analysis/CPU_ENERGY_COVERAGE.json",
+    "analysis/TIMEOUT_TRANSFER_AUDIT.json",
+    "analysis/SHARED_CPU_RECONSTRUCTION.json",
+    "facility_validation/esif_it_linkage_metrics_v2.csv",
+    "manifests/TIMEOUT_TRANSFER_FREEZE.json",
+    "docs/KESTREL_JOB_POWER_REPORT.md"
+  ],
+  "this_pass_will_not": [
+    "refit p",
+    "reconstruct shared jobs",
+    "process H100/GenAI/Eagle",
+    "fit cooling/weather",
+    "optimize ESIF lag",
+    "retune EX-ANTE"
+  ]
+}

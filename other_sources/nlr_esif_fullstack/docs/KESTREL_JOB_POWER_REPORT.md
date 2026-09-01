@@ -132,7 +132,7 @@ In the overlap window, completed-CPU job replay is ~7.7 GWh vs ~38.8 GWh ESIF IT
 | CPU_TIMEOUT_TRANSFER | **PASS** |
 | CPU_OTHER_STATE_TRANSFER | **PARTIAL** (CANCELLED PASS; FAILED/NODE_FAIL/OOM FAIL) |
 | SHARED_CPU_RECONSTRUCTION | **UNSUPPORTED** |
-| CPU_ENERGY_COVERAGE | **PARTIAL** (~89% of positive measured job energy in the validated exclusive/non-shared CPU law) |
+| CPU_ENERGY_COVERAGE | **PARTIAL** (see freeze addendum: 89.0% of summed positive job-record energy; 93.9% of additive/non-shared; not physical Kestrel IT) |
 | ENERGY_CONSERVING_JOB_REPLAY | **PASS** (accounting conservation, not physical 5-minute shape) |
 | SUBHOURLY_POWER_SHAPE | **UNSUPPORTED** |
 | TEMPORAL_JOB_POWER_REPLAY | **PASS** as energy-conserving job replay; **UNSUPPORTED** as subhourly physical shape |
@@ -154,69 +154,84 @@ Suggested commit message (not committed): `Add NLR Kestrel job-energy EX-POST no
 
 ---
 
-# CPU-coverage and ESIF-closure addendum
+# Final Kestrel CPU freeze
 
-Closure pass on frozen completed-job coefficient **p = 700.6894574294788 W/node**. No refit.
+Pass on frozen completed-job coefficient **p = 700.6894574294788 W/node**. No refit. Shared jobs not reconstructed. H100 not processed. ESIF lag not optimized.
 
-## TIMEOUT transfer
+## Chronological transfer (exclusive non-shared CPU)
 
-n = 362,521; measured **10.326 GWh** (95.1% of all TIMEOUT measured energy).
+| State | Period | n | GWh | WAPE | bias | R²(log E) | median W/node-h | disposition |
+|---|---|---|---|---|---|---|---|---|
+| COMPLETED | TEST | 1,134,746 | 2.378 | 0.136 | +0.031 | 0.976 | 615.6 | REFERENCE |
+| TIMEOUT | full | 362,521 | 10.326 | 0.100 | -0.012 | 0.965 | 738.4 | PASS_TRANSFER |
+| TIMEOUT | DEV | 127,174 | 4.173 | 0.097 | -0.010 | 0.969 | 732.5 | CHRONO_ROBUSTNESS |
+| TIMEOUT | VAL | 105,750 | 2.759 | 0.097 | -0.013 | 0.963 | 716.1 | CHRONO_ROBUSTNESS |
+| TIMEOUT | TEST | 129,597 | 3.394 | 0.108 | -0.015 | 0.952 | 758.4 | PASS_TRANSFER |
+| CANCELLED | full | 120,486 | 1.687 | 0.131 | +0.046 | 0.960 | 689.8 | PASS_TRANSFER |
+| CANCELLED | DEV | 52,996 | 0.751 | 0.141 | +0.057 | 0.955 | 697.8 | CHRONO_ROBUSTNESS |
+| CANCELLED | VAL | 24,175 | 0.428 | 0.099 | +0.025 | 0.962 | 718.1 | CHRONO_ROBUSTNESS |
+| CANCELLED | TEST | 43,315 | 0.509 | 0.143 | +0.047 | 0.962 | 589.7 | PARTIAL_TRANSFER |
 
-WAPE = 0.1004; bias = -0.0123; R²(log E) = 0.9648.
-Median W/node-hour = 738.4 (p05=302.1, p95=777.2).
+FAILED / NODE_FAIL / OOM remain **FAIL_TRANSFER** (not re-opened). Shared reconstruction remains **UNSUPPORTED**.
 
-COMPLETED frozen TEST: WAPE 0.1362, bias 0.0308, median W/node-hour 615.6.
+Supported domain: COMPLETED, TIMEOUT, CANCELLED (exclusive, non-shared, Kestrel CPU, actual nodes × actual runtime).
 
-**PASS_TRANSFER.** Median W/node-hour=738.4 vs p=700.7 (relative 0.054); |bias|=0.012; WAPE ratio vs completed test=0.738; R²(log E)=0.965. Same physical occupancy law; no refit.
+## Coverage (three different denominators)
 
-## Coverage
+Validated additive CPU energy = **21.295 GWh**.
 
-Validated exclusive/non-shared CPU energy now represented by the frozen law: **21.295 GWh** of 23.939 GWh positive measured job energy (**89.0%**). Shared raw sums are **not** included. H100 measured energy remains 0. Of the 3.035 GWh in other exclusive states, only CANCELLED (1.687 GWh) transferred; FAILED/NODE_FAIL/OOM did not.
+1. Fraction of **summed positive measured ConsumedEnergyRaw job-record energy** represented by validated additive CPU states: **21.295/23.939 = 89.0%**. This is **not** a fraction of physical Kestrel IT, facility IT, or total CPU energy. The denominator includes non-additive shared-job records and excludes unmeasured H100 physical energy.
+2. Fraction of **additive/non-shared positive measured job-record energy** represented by validated CPU states: **21.295/22.678 = 93.9%**. Shared raw sum (1.261 GWh) is excluded because it is not additive.
+3. Validated CPU replay / ESIF IT energy, daily post-GPU-GA: measured **0.495**; frozen-model predicted **0.502**.
 
-Shared reconstruction: **UNSUPPORTED**.
+## Canonical CPU model
 
-## Canonical CPU domain
+\(E^{IT}_{j,\mathrm{CPU}} = p_{\mathrm{KestrelCPU}} N_j \tau_j\) with \(p_{\mathrm{KestrelCPU}}=700.6894574294788\,\mathrm{W/node}\).
 
-\(E^{IT}_{j,CPU} = p_{\rm KestrelCPU} N_j \tau_j \epsilon_j\) with \(p_{\rm KestrelCPU}=700.6894574294788\,\mathrm{W/node}\).
-
-Domain: Kestrel CPU nodes; actual occupied nodes; actual runtime; exclusive/non-shared jobs; TIMEOUT (and other states only if listed as validated). Not H100. Not shared jobs. Form \(E\propto\)hardware-hours may transfer; **p is Kestrel-CPU-specific**.
-
-Planning: \(\hat E_j = p_h N_j \hat\tau_j\). Requested wallclock is not \(\hat\tau\). No new EX-ANTE energy model in this pass.
+FORM \(E\propto\)hardware-hours may generalize. PARAMETER 700.689 W/node is Kestrel-CPU-specific. Do not apply to H100, Eagle, generic hyperscale CPUs, shared jobs, or unsupported states.
 
 ## Uncertainty
 
-Held-out completed TEST residual multiplier \(\epsilon = E_{\rm obs}/(p N t)\): median 0.879; p05–p95 [0.445, 1.097]. Aggregate test bias 0.031. **WAPE is a diagnostic, not a CI.** Duration split of median ε is 0.806 vs 0.899; unconditional distribution is preferred unless that split is large.
+Point model only. Completed TEST: median \(\epsilon=E_{\mathrm{obs}}/(p N \tau)\) = 0.879; p05–p95 [0.445, 1.097]; aggregate energy bias +0.031. Node-hour quartile median-\(\epsilon\) relative spread = 0.451, but **96.9% of TEST energy** is in the top quartile where median \(\epsilon=1.036\). Unweighted job-level \(\epsilon\) is not the aggregate error.
+
+**WAPE is a diagnostic, not an uncertainty interval.** Do not sample iid \(\epsilon\) by default. Do not import completed residuals onto TIMEOUT/CANCELLED.
 
 ## Temporal replay
 
-Energy-conserving job replay is an accounting allocation, not 5-minute physical power shape.
+Measured-energy and frozen-model replays use the **same** COMPLETED+TIMEOUT+CANCELLED exclusive non-shared jobs. Conservation holds at hourly and daily resolution (see `analysis/CPU_REPLAY_CONSERVATION.json`). Daily: supported for energy/accounting/facility comparison. Hourly: useful aggregate approximation (±6–7 h timezone caveat). 15 min: accounting/scenario only. 5 min: energy-conserving mathematically, **not** validated physical shape. Instantaneous/burst: **UNSUPPORTED**.
 
-- daily energy accounting: supported
-- hourly average: useful for aggregate comparison
-- 15-minute: scenario/accounting approximation
-- 5-minute physical transients: **UNSUPPORTED**
-- instantaneous/burst: **UNSUPPORTED** (GenAI/H100 profiles)
+## ESIF end-to-end (PRIMARY = daily, post-GPU-GA)
 
-Replay v2 built: True.
+Timezone remains **AMBIGUOUS** (calendar-day supported; hourly caveat). Lag was not optimized.
 
-## ESIF time
+| Replay | n | Pearson | Spearman | R² | B (kW) | β | MAE (kW) | Kestrel/ESIF |
+|---|---|---|---|---|---|---|---|---|
+| measured energy | 368 | 0.879 | 0.770 | 0.773 | 1216 | 1.019 | 127.1 | 0.495 |
+| frozen-model predicted | 368 | 0.874 | 0.663 | 0.764 | 1178 | 1.036 | 130.1 | 0.502 |
 
-Disposition: **AMBIGUOUS** at hour-of-day (Denver vs UTC not uniquely identified). Naive IT has a **96.8 h dropout** after 2025-06-26 17:08 resuming 2025-06-30 17:57, matching the documented ESIF full power outage; IT recovers by 2025-07-03. The July 11–13 network outage (power on) shows no IT collapse. Daily linkage remains usable; hourly retains a ±6–7 h caveat. Offset was not chosen by maximizing Kestrel correlation.
+End-to-end: **STRONG_END_TO_END_SUPPORT**. R2_obs=0.773 R2_pred=0.764 ratio=0.989; beta_obs=1.019 beta_pred=1.036; share_obs=0.495 share_pred=0.502. Wording: validated CPU job-attributed load is associated with a measurable component of ESIF total IT variation. Not causal.
 
-## ESIF linkage
+Hourly is secondary and retains a ±6–7 h timezone caveat. Post-GPU-GA hourly: measured R² 0.666 / β 0.935 vs predicted R² 0.657 / β 0.955 (n=8715). Same qualitative association; do not treat hourly as a verified civil-hour alignment.
 
-Rerun justified because replay v2 materially increased represented Kestrel CPU energy. Timezone interpretation did **not** change (still operational America/Denver with hourly caveat).
+## Final capability status
 
-Kestrel validated CPU job-attributed load is associated with a measurable component of ESIF total IT variation. This is **not** a causal statement that CPU jobs explain a share of facility IT. Omitted H100, idle, storage, network, and other systems remain possible correlated loads.
+| Status | Result |
+|---|---|
+| CPU_COMPLETED_NODE_HOUR | **PASS** |
+| CPU_TIMEOUT_TRANSFER | **PASS** |
+| CPU_CANCELLED_TRANSFER | **PARTIAL** |
+| CPU_OTHER_STATE_TRANSFER | **PARTIAL** |
+| CPU_VALIDATED_RAW_MEASURED_ENERGY_SHARE | **89.0%** of summed positive job-record energy |
+| CPU_VALIDATED_ADDITIVE_ENERGY_SHARE | **93.9%** of additive/non-shared job-record energy |
+| SHARED_CPU_RECONSTRUCTION | **UNSUPPORTED** |
+| H100_MEASURED_JOB_ENERGY | **UNSUPPORTED_IN_KESTREL_JOB_EXTRACT** |
+| ENERGY_CONSERVING_JOB_REPLAY | **PASS** |
+| SUBHOURLY_POWER_SHAPE | **UNSUPPORTED** |
+| ESIF_TIMESTAMP_SEMANTICS | **AMBIGUOUS** |
+| ESIF_MEASURED_CPU_LINKAGE | **PARTIAL** |
+| ESIF_PREDICTED_CPU_LINKAGE | **PASS** |
+| CPU_LAYER_FINAL_DISPOSITION | **FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS** |
 
-| Resolution | Epoch | Replay | Pearson | R² | B (kW) | β | Kestrel/ESIF energy |
-|---|---|---|---|---|---|---|---|
-| 1 h | post_gpu_ga | completed-only (v1) | 0.51 | 0.26 | 1991 | 0.86 | 0.22 |
-| 1 h | post_gpu_ga | validated CPU v2 | 0.82 | 0.67 | 1320 | 0.93 | 0.50 |
-| 1 day | post_gpu_ga | completed-only (v1) | 0.61 | 0.37 | 1831 | 1.14 | 0.22 |
-| 1 day | post_gpu_ga | validated CPU v2 | 0.88 | 0.77 | 1216 | 1.02 | 0.49 |
-| 1 h | all | validated CPU v2 | 0.50 | 0.25 | 1831 | 0.73 | 0.43 |
+## Next experiment (not executed)
 
-v1 completed-only post-GPU Kestrel share uses 4.80 GWh replay / 21.47 GWh ESIF IT in that hourly epoch. v2 uses 10.67 GWh / 21.47 GWh.
-
-H100 measured job energy: **UNSUPPORTED_IN_KESTREL_JOB_EXTRACT**. Do not apply 700.689 W/node to H100. Next separate experiment: NLR GenAI H100 measured power profiles, DOI `10.7799/3025227` (not executed).
+NLR GenAI H100 measured power profiles, DOI `10.7799/3025227`. Shared-CPU reconstruction must not delay it.

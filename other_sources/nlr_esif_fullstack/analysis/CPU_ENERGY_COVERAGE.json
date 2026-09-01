@@ -96,5 +96,18 @@
   ],
   "validated_additive_cpu_GWh": 21.295431077264993,
   "validated_fraction_of_positive_measured_energy": 0.8895718385374412,
-  "gwh_definition": "GWh = Wh / 1e9"
+  "gwh_definition": "GWh = Wh / 1e9",
+  "coverage_measures": {
+    "validated_additive_cpu_GWh": 21.295431077264993,
+    "summed_positive_measured_ConsumedEnergyRaw_job_record_GWh": 23.938967214021904,
+    "fraction_of_summed_positive_measured_ConsumedEnergyRaw_job_record_energy_represented_by_validated_additive_CPU_states": 0.8895718385374413,
+    "non_additive_shared_raw_sum_GWh": 1.2613512239441642,
+    "additive_nonshared_positive_measured_job_record_GWh": 22.67761599007774,
+    "fraction_of_additive_nonshared_positive_measured_job_record_energy_represented_by_validated_CPU_states": 0.9390506959189404,
+    "not_fraction_of_physical_Kestrel_IT": true,
+    "not_fraction_of_facility_IT": true,
+    "H100_physical_energy_excluded_because_unmeasured": true,
+    "validated_CPU_replay_over_ESIF_IT_energy_daily_post_gpu_ga_measured": 0.4949200231217013,
+    "validated_CPU_replay_over_ESIF_IT_energy_daily_post_gpu_ga_predicted": 0.5015814512287065
+  }
 }

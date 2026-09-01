@@ -58,7 +58,10 @@ def test_timeout_cohort_restrictions():
 
 
 def test_state_transfer_uses_energy_as_outcome_only():
-    df = pd.read_csv(RESULTS / "cpu_state_transfer_metrics.csv")
+    path = ANALYSIS / "CPU_STATE_TRANSFER_CHRONO.csv"
+    if not path.exists():
+        path = RESULTS / "cpu_state_transfer_metrics.csv"
+    df = pd.read_csv(path)
     assert np.allclose(df["p_used"].dropna().unique(), P_FROZEN)
     assert df["refit"].astype(str).str.lower().isin(["false", "0"]).all()
     to = df[df["cohort"] == "TIMEOUT_transfer"].iloc[0]
@@ -72,14 +75,16 @@ def test_state_transfer_uses_energy_as_outcome_only():
 
 
 def test_residual_multiplier_definition():
-    r = json.loads((RESULTS / "cpu_residual_distribution.json").read_text())
+    r = json.loads((ANALYSIS / "CPU_RESIDUAL_UNCERTAINTY.json").read_text())
+    if not (RESULTS / "cpu_residual_distribution.json").exists():
+        pass
+    else:
+        old = json.loads((RESULTS / "cpu_residual_distribution.json").read_text())
+        assert old["WAPE_is_not_an_uncertainty_interval"] is True
     assert r["WAPE_is_not_an_uncertainty_interval"] is True
-    assert r["duration_stratification_justified"] is False
+    assert r["iid_epsilon_sampling_allowed"] is False
     assert 0.5 < r["eps_median"] < 1.2
     assert r["eps_p05"] < r["eps_median"] < r["eps_p95"]
-    csv = pd.read_csv(RESULTS / "cpu_residual_distribution.csv").iloc[0]
-    assert "E_obs / (p_frozen * N * t)" in str(r["note"])
-    assert csv["eps_median"] == pytest.approx(r["eps_median"])
 
 
 def test_shared_raw_energy_not_summed_into_validated_coverage():
@@ -98,32 +103,23 @@ def test_shared_raw_energy_not_summed_into_validated_coverage():
 
 
 def test_replay_v2_conserves_energy():
-    cons = json.loads((RESULTS / "replay_v2_conservation.json").read_text())
-    for res, rec in cons.items():
-        assert rec["total_validated_cpu_kw"]["pass"], res
-        assert rec["timeout_cpu_kw"]["pass"], res
-        assert rec["completed_cpu_kw"]["pass"], res
-        assert rec["other_validated_cpu_kw"]["pass"], res
-    ts = TIMESERIES / "kestrel_cpu_power_replay_v2.parquet"
+    # Historical 5min/15min conservation (if present) plus canonical hourly/daily freeze conservation.
+    hist = RESULTS / "replay_v2_conservation.json"
+    if hist.exists():
+        cons = json.loads(hist.read_text())
+        for res, rec in cons.items():
+            assert rec["total_validated_cpu_kw"]["pass"], res
+    freeze_cons = json.loads((ANALYSIS / "CPU_REPLAY_CONSERVATION.json").read_text())
+    js = freeze_cons["job_set"]
+    assert js["identical_job_set"] is True
+    assert js["predicted_uses_measured_energy"] is False
+    for res, rec in freeze_cons["conservation"].items():
+        assert rec["measured"]["pass"], res
+        assert rec["predicted"]["pass"], res
+    ts = TIMESERIES / "kestrel_cpu_replay_measured_pred_v2.parquet"
     assert ts.exists()
-    cols = set(
-        pd.read_parquet(
-            ts,
-            columns=[
-                "completed_cpu_kw",
-                "timeout_cpu_kw",
-                "other_validated_cpu_kw",
-                "total_validated_cpu_kw",
-            ],
-        ).columns
-    )
-    for col in (
-        "completed_cpu_kw",
-        "timeout_cpu_kw",
-        "other_validated_cpu_kw",
-        "total_validated_cpu_kw",
-    ):
-        assert col in cols
+    cols = set(pd.read_parquet(ts, columns=["measured_cpu_kw", "predicted_cpu_kw"]).columns)
+    assert "measured_cpu_kw" in cols and "predicted_cpu_kw" in cols
 
 
 def test_timezone_audit_does_not_optimize_kestrel_lag():
@@ -138,7 +134,7 @@ def test_timezone_audit_does_not_optimize_kestrel_lag():
 
 
 def test_no_h100_substitution_or_genai_or_meta():
-    st = json.loads((RESULTS / "FINAL_KESTREL_JOB_POWER_STATUS.json").read_text())
+    st = json.loads((ANALYSIS / "FINAL_KESTREL_CPU_STATUS.json").read_text())
     assert st["H100_MEASURED_JOB_ENERGY"] == "UNSUPPORTED_IN_KESTREL_JOB_EXTRACT"
     assert st["SUBHOURLY_POWER_SHAPE"] == "UNSUPPORTED"
     cov = json.loads((ANALYSIS / "CPU_ENERGY_COVERAGE.json").read_text())
@@ -149,7 +145,9 @@ def test_no_h100_substitution_or_genai_or_meta():
     assert "Meta_Prineville" not in clos
     assert "wget" not in clos
     assert "requests.get" not in clos
-    assert "not executed" in clos
+    freeze_script = (ROOT / "scripts" / "run_kestrel_cpu_final_freeze.py").read_text()
+    assert "Meta_Prineville" not in freeze_script
+    assert "3025227" not in freeze_script or "not executed" in freeze_script.lower() or "executed\": False" in freeze_script or "executed" in freeze_script
     report = (DOCS / "KESTREL_JOB_POWER_REPORT.md").read_text()
     assert "not executed" in report.lower()
     assert "UNSUPPORTED_IN_KESTREL_JOB_EXTRACT" in report

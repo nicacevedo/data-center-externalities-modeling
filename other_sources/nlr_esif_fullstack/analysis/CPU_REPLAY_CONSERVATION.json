@@ -1,0 +1,53 @@
+{
+  "job_set": {
+    "n_jobs": 4939932,
+    "states": [
+      "CANCELLED",
+      "COMPLETED",
+      "TIMEOUT"
+    ],
+    "sum_nodes_used": 6005805.0,
+    "sum_duration_s": 68700232487.0,
+    "sum_measured_Wh": 21295431077.265,
+    "sum_predicted_Wh": 21493654251.072334,
+    "start_min": "2023-12-15 16:45:14+00:00",
+    "end_max": "2026-02-24 10:04:21+00:00",
+    "predicted_uses_measured_energy": false,
+    "predicted_formula": "pred_wh = p_frozen * nodes_used * duration_s / 3600",
+    "identical_job_set": true
+  },
+  "conservation": {
+    "1h": {
+      "measured": {
+        "reconstructed_Wh": 21295431077.264946,
+        "source_Wh": 21295431077.265,
+        "rel_abs_err": 2.507850699287604e-15,
+        "pass": true
+      },
+      "predicted": {
+        "reconstructed_Wh": 21493654251.071358,
+        "source_Wh": 21493654251.072334,
+        "rel_abs_err": 4.5434921795640154e-14,
+        "pass": true
+      },
+      "source_measured_Wh": 21295431077.265,
+      "source_predicted_Wh": 21493654251.072334
+    },
+    "1day": {
+      "measured": {
+        "reconstructed_Wh": 21295431077.265102,
+        "source_Wh": 21295431077.265,
+        "rel_abs_err": 4.836569205768951e-15,
+        "pass": true
+      },
+      "predicted": {
+        "reconstructed_Wh": 21493654251.07232,
+        "source_Wh": 21493654251.072334,
+        "rel_abs_err": 7.099206530568774e-16,
+        "pass": true
+      },
+      "source_measured_Wh": 21295431077.265,
+      "source_predicted_Wh": 21493654251.072334
+    }
+  }
+}

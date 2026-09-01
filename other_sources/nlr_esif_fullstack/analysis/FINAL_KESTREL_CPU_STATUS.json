@@ -1,0 +1,77 @@
+{
+  "CPU_COMPLETED_NODE_HOUR": "PASS",
+  "CPU_TIMEOUT_TRANSFER": "PASS",
+  "CPU_CANCELLED_TRANSFER": "PARTIAL",
+  "CPU_OTHER_STATE_TRANSFER": "PARTIAL",
+  "CPU_VALIDATED_RAW_MEASURED_ENERGY_SHARE": 0.8895718385374413,
+  "CPU_VALIDATED_ADDITIVE_ENERGY_SHARE": 0.9390506959189404,
+  "SHARED_CPU_RECONSTRUCTION": "UNSUPPORTED",
+  "H100_MEASURED_JOB_ENERGY": "UNSUPPORTED_IN_KESTREL_JOB_EXTRACT",
+  "ENERGY_CONSERVING_JOB_REPLAY": "PASS",
+  "SUBHOURLY_POWER_SHAPE": "UNSUPPORTED",
+  "ESIF_TIMESTAMP_SEMANTICS": "AMBIGUOUS",
+  "ESIF_MEASURED_CPU_LINKAGE": "PARTIAL",
+  "ESIF_PREDICTED_CPU_LINKAGE": "PASS",
+  "CPU_LAYER_FINAL_DISPOSITION": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+  "p_KestrelCPU_W_per_node": 700.6894574294788,
+  "validated_states": [
+    "COMPLETED",
+    "TIMEOUT",
+    "CANCELLED"
+  ],
+  "unsupported_for_coefficient": [
+    "H100",
+    "Eagle",
+    "generic_hyperscale_CPU",
+    "shared_jobs",
+    "FAILED",
+    "NODE_FAIL",
+    "OOM"
+  ],
+  "coverage": {
+    "validated_additive_cpu_GWh": 21.295431077264993,
+    "summed_positive_measured_ConsumedEnergyRaw_job_record_GWh": 23.938967214021904,
+    "fraction_of_summed_positive_measured_ConsumedEnergyRaw_job_record_energy_represented_by_validated_additive_CPU_states": 0.8895718385374413,
+    "non_additive_shared_raw_sum_GWh": 1.2613512239441642,
+    "additive_nonshared_positive_measured_job_record_GWh": 22.67761599007774,
+    "fraction_of_additive_nonshared_positive_measured_job_record_energy_represented_by_validated_CPU_states": 0.9390506959189404,
+    "not_fraction_of_physical_Kestrel_IT": true,
+    "not_fraction_of_facility_IT": true,
+    "H100_physical_energy_excluded_because_unmeasured": true,
+    "validated_CPU_replay_over_ESIF_IT_energy_daily_post_gpu_ga_measured": 0.4949200231217013,
+    "validated_CPU_replay_over_ESIF_IT_energy_daily_post_gpu_ga_predicted": 0.5015814512287065
+  },
+  "end_to_end_daily_post_gpu_ga": {
+    "status": "STRONG_END_TO_END_SUPPORT",
+    "R2_pred_over_R2_obs": 0.9893849374392479,
+    "beta_relative_abs_diff": 0.016499454633282278,
+    "share_abs_diff": 0.006661428107005152,
+    "predeclared_rule": {
+      "STRONG_END_TO_END_SUPPORT": "Predicted replay retains most of measured replay aggregate association (R2 ratio not far below 1) with similar scale (beta and energy ratio).",
+      "PARTIAL": "Same temporal structure remains but model energy bias materially degrades scale or fit.",
+      "FAIL": "Predicted replay loses the relationship substantially.",
+      "not_chosen_by_post_hoc_cutoff_alone": true
+    },
+    "rationale": "R2_obs=0.773 R2_pred=0.764 ratio=0.989; beta_obs=1.019 beta_pred=1.036; share_obs=0.495 share_pred=0.502",
+    "wording": "validated CPU job-attributed load is associated with a measurable component of ESIF total IT variation",
+    "causal": false
+  },
+  "residual": {
+    "representation": "POINT_MODEL_PLUS_AGGREGATE_BIAS_AND_HELD_OUT_RESIDUAL_SENSITIVITY",
+    "iid_epsilon_sampling_allowed": false,
+    "WAPE_is_not_uncertainty": true
+  },
+  "temporal": {
+    "daily": "supported_energy_accounting_facility_comparison",
+    "hourly": "useful_aggregate_approximation_timezone_caveat",
+    "15min": "accounting_scenario_approximation_only",
+    "5min": "energy_conserving_not_validated_physical_shape",
+    "instantaneous_burst": "UNSUPPORTED"
+  },
+  "next_experiment": {
+    "name": "NLR GENAI H100 MEASURED POWER PROFILES",
+    "doi": "10.7799/3025227",
+    "executed": false
+  },
+  "refit": false
+}
