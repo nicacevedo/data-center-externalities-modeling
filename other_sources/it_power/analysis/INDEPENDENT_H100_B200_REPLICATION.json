@@ -1,0 +1,138 @@
+{
+  "n_sessions": 32,
+  "n_H100": 16,
+  "n_B200": 16,
+  "rtx3060_processed": false,
+  "cpu_power_on_node_csvs": "ABSENT_ALL_NA",
+  "experimental_unit": "independent_session",
+  "not_n": "20ms samples",
+  "boundary": "sum of 8 GPU pynvml powers; not full-node AC",
+  "M0_M1": [
+    {
+      "hardware": "B200",
+      "model": "M0_hw_mean",
+      "n": 16,
+      "MAE": 1130.4796619927083,
+      "WAPE": 0.280181162600296,
+      "a": 4034.8168003194446,
+      "b": 0.0,
+      "energy_bias_frac": 1.2823418161165802e-16
+    },
+    {
+      "hardware": "B200",
+      "model": "M1_util",
+      "n": 16,
+      "MAE": 665.2353551633587,
+      "WAPE": 0.1648737447288042,
+      "a": -1360.6094564346658,
+      "b": 77.01036556425109,
+      "energy_bias_frac": 1.2823418161165802e-16
+    },
+    {
+      "hardware": "H100",
+      "model": "M0_hw_mean",
+      "n": 16,
+      "MAE": 1024.6257137222224,
+      "WAPE": 0.3457117658751184,
+      "a": 2963.8149894277776,
+      "b": 0.0,
+      "energy_bias_frac": -1.7457278277745225e-16
+    },
+    {
+      "hardware": "H100",
+      "model": "M1_util",
+      "n": 16,
+      "MAE": 691.4357993566819,
+      "WAPE": 0.23329249694164514,
+      "a": -349.3288835346336,
+      "b": 45.44991101685052,
+      "energy_bias_frac": 0.0
+    }
+  ],
+  "leave_one_family_out_H100": [
+    {
+      "held_out_family": "diffusion",
+      "n_test": 7,
+      "MAE": 1056.524976755965,
+      "WAPE": 0.5295664523269386,
+      "a_train": -1915.7745030602123,
+      "b_train": 71.2899406849771
+    },
+    {
+      "held_out_family": "LLM",
+      "n_test": 9,
+      "MAE": 1559.322658999571,
+      "WAPE": 0.41947956975615286,
+      "a_train": 1237.8294193307647,
+      "b_train": 11.644803772920781
+    }
+  ],
+  "transfer": {
+    "H100_to_B200": {
+      "MAE": 1246.493320752564,
+      "WAPE": 0.3089343041929132,
+      "note": "H100 M1 coefficients applied to B200 utilization; intercept not retuned"
+    },
+    "B200_to_H100": {
+      "MAE": 1289.3691813505707,
+      "WAPE": 0.4350369999307914,
+      "note": "B200 M1 coefficients applied to H100 utilization; intercept not retuned"
+    },
+    "H100_M1": {
+      "a": -349.3288835346336,
+      "b": 45.44991101685052
+    },
+    "B200_M1": {
+      "a": -1360.6094564346658,
+      "b": 77.01036556425109
+    },
+    "transfer_supported": false
+  },
+  "M2_memory": {
+    "corr_residual_vs_mem": 0.7543747042172781,
+    "run_M2": true,
+    "a": 773.3557377834663,
+    "b_gpu_util": -1.1401802857059735,
+    "c_mem_util": 92.24198086127764,
+    "MAE": 97.38376358402549,
+    "WAPE": 0.032857571721380395,
+    "note": "Diagnostic only; not a project-wide H100 model. Hardware-class H100 sessions."
+  },
+  "leave_one_session_out_H100_M1": {
+    "n": 16,
+    "MAE": 777.5122908539508,
+    "WAPE": 0.2623349614019142,
+    "experimental_unit": "independent_session"
+  },
+  "workload_means": [
+    {
+      "hardware": "B200",
+      "workload_family": "LLM",
+      "count": 9,
+      "mean": 4711.687353656791,
+      "std": 1053.4428511028086
+    },
+    {
+      "hardware": "B200",
+      "workload_family": "diffusion",
+      "count": 7,
+      "mean": 3164.5546603142857,
+      "std": 962.7376613564644
+    },
+    {
+      "hardware": "H100",
+      "workload_family": "LLM",
+      "count": 9,
+      "mean": 3717.2791511777777,
+      "std": 803.5279431157478
+    },
+    {
+      "hardware": "H100",
+      "workload_family": "diffusion",
+      "count": 7,
+      "mean": 1995.0753528920634,
+      "std": 604.0647926480771
+    }
+  ],
+  "implication": "Workload family changes session-mean GPU-sum power on both H100 and B200, replicating NLR's qualitative workload-conditioning result. GPU utilization is a useful within-hardware predictor. H100 coefficients do not transfer to B200."
+}

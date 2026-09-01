@@ -1,0 +1,43 @@
+{
+  "paper": "Elsayed, Al-Obaidi & Farag, Scientific Data 2026",
+  "source_doi": "10.1038/s41597-026-07496-6",
+  "figshare_doi": "10.6084/m9.figshare.31654879",
+  "figshare_version": "local archive as downloaded; DOI has no .vN suffix on the zip filename",
+  "local_path": "other_sources/it_power/independent_h100_b200/High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare.zip",
+  "sha256": "c0ccebea568612f5445b70c3baa7ce659935a949e5cc8f345a0af907739fa6f3",
+  "bytes": 209685111,
+  "license": "CC BY-NC-ND 4.0",
+  "license_header": "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0",
+  "rtx3060_processed": false,
+  "node_csv_copies_in_zip": 42,
+  "unique_node_session_files": 32,
+  "hardware_session_mapping": {
+    "H100": {
+      "site": "Lambda Cloud datacenter node",
+      "GPU": "8x H100 SXM 80GB",
+      "CPU": "Intel Xeon 208 vCPU",
+      "RAM_GB": 1800,
+      "OS": "Ubuntu Server 22.04",
+      "n_sessions_used": 16,
+      "sampling": "20 ms pynvml",
+      "session_duration_s": 900,
+      "boundary": "sum of 8 gpu{i}_power_W; cpu_power_W all-NaN on node CSVs"
+    },
+    "B200": {
+      "site": "Lambda Cloud datacenter node",
+      "GPU": "8x B200 180GB",
+      "CPU": "Intel Xeon 208 vCPU",
+      "RAM_GB": 2900,
+      "OS": "Ubuntu Server 22.04",
+      "n_sessions_used": 16,
+      "sampling": "20 ms pynvml",
+      "session_duration_s": 900,
+      "boundary": "sum of 8 gpu{i}_power_W; cpu_power_W all-NaN on node CSVs"
+    },
+    "RTX_3060_not_processed": {
+      "reason": "consumer desktop; not a datacenter node; no metadata dependency required it"
+    }
+  },
+  "purpose": "Independent replication of workload/util structure only; not a second primary H100 model",
+  "experimental_unit": "independent_session"
+}

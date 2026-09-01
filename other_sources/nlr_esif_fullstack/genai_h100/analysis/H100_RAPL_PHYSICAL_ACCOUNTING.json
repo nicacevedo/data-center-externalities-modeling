@@ -1,0 +1,16 @@
+{
+  "source_reproduction_cpu_definition": "package + core (authors postprocess.py)",
+  "preferred_physical_cpu": "package only",
+  "n_training_jobs_in_split": 46,
+  "median_core_fraction_of_cpu_energy": 0.0031713750490656497,
+  "mean_core_fraction_of_cpu_energy": 0.003008595633611763,
+  "median_source_minus_package_W": 3.3452336636935223,
+  "mean_source_minus_package_W": 4.780962264600246,
+  "max_source_minus_package_W": 19.234243093710948,
+  "median_package_minus_source_W_proxy": -3.3452336636935223,
+  "median_dE_cpu_Wh": 3.554462259050979,
+  "median_pct_of_cpu_gpu_compute_energy": 0.0003436834393639736,
+  "max_pct_of_cpu_gpu_compute_energy": 0.0006122075716079997,
+  "refit_because_of_this": false,
+  "reason": "Difference is <<1% of measured compute energy; keep source-reproduction totals; report package-only as physical CPU."
+}

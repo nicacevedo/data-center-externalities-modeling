@@ -81,3 +81,8 @@ with **hardware class** `h ∈ {H100-8, B200-8, H100-4 NLR, desktop-3060}` estim
 **Success criterion.** Whether a **generic** util→IT-power map is supported across H100/B200 and workload families at 1 s, and how large the **boundary gaps** (device vs SUT vs facility ICT) remain. If B200 holdout fails, the honest conclusion is hardware-class maps, not one global curve.
 
 **First download.** Figshare 31654879 + OSTI 3025227 metadata/file list (confirm GB before pulling instantaneous dumps) + MLPerf inference results CSV/tables for the latest public power-capable version. No cooling datasets.
+
+
+## CLOSURE UPDATE (do not execute obsolete plan as written)
+
+NLR GenAI H100 compute is now frozen with `p_{w,N}`. The 2026 Sci. Data H100/B200 set was used only to test workload/util transfer, not as a second primary H100 model. RTX 3060 was not processed. MLPerf was not cloned. The util→IT-power nested M0/M1 map is **hardware-class specific**; H100→B200 transfer **fails**. Public 8-GPU AC data provide an EXTERNAL envelope only. Kestrel full-node AC is still missing; see `NLR_H100_FULL_NODE_DATA_REQUEST.md`. Do not use M100 0.74–0.81 as a PSU efficiency. Next layer is ESIF cooling, not more H100 job population.

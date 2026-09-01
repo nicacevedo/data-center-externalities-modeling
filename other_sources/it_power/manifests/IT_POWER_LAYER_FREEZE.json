@@ -1,0 +1,7 @@
+{
+  "IT_POWER_LAYER_FINAL_DISPOSITION": "FROZEN_BOUNDED_WITH_EXPLICIT_NODE_UNCERTAINTY",
+  "cpu_frozen": true,
+  "h100_compute_frozen": true,
+  "h100_node_kestrel": "PARTIAL_EXTERNAL_ENVELOPE",
+  "do_not_refit_to_cooling": true
+}

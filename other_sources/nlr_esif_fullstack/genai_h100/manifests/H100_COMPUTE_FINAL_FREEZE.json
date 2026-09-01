@@ -1,0 +1,182 @@
+{
+  "H100_COMPUTE_LAYER": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+  "source": {
+    "doi": "10.7799/3025227",
+    "sha256": "dcad6de800fb565d850b163902e2eddae48aabd1ed1c7336f9a1cdaf3012f137",
+    "catalog_version": 2
+  },
+  "measurement_boundary": "P_compute = P_GPU_NVML + P_CPU_RAPL; not full-node/system power",
+  "P_other_node": "UNRESOLVED_IN_THIS_LAYER",
+  "final_experiment_count": {
+    "author_supplied_training_runs": 41,
+    "sd_n1_raw_reconstructed": 5,
+    "offline_inference": 1200,
+    "experimental_unit": "independent_run_not_time_sample"
+  },
+  "sd_n1": {
+    "n_runs": 5,
+    "provenance": "RAW_RECONSTRUCTED_SOURCE_RUN",
+    "mean_p_W_per_node": 2706.7425781499405,
+    "std_p_W_per_node": 8.762866820228012,
+    "cv": 0.003237421574909216,
+    "mean_duration_s": 24728.6,
+    "mean_energy_gpu_Wh": 16963.961709337684,
+    "mean_energy_cpu_source_Wh": 1629.1487578832755,
+    "mean_energy_compute_Wh": 18592.687780214277,
+    "supports_1_2_node_high_intensity": true
+  },
+  "rapl_physical_package_only": {
+    "source_reproduction_cpu_definition": "package + core (authors postprocess.py)",
+    "preferred_physical_cpu": "package only",
+    "n_training_jobs_in_split": 46,
+    "median_core_fraction_of_cpu_energy": 0.0031713750490656497,
+    "mean_core_fraction_of_cpu_energy": 0.003008595633611763,
+    "median_source_minus_package_W": 3.3452336636935223,
+    "mean_source_minus_package_W": 4.780962264600246,
+    "max_source_minus_package_W": 19.234243093710948,
+    "median_package_minus_source_W_proxy": -3.3452336636935223,
+    "median_dE_cpu_Wh": 3.554462259050979,
+    "median_pct_of_cpu_gpu_compute_energy": 0.0003436834393639736,
+    "max_pct_of_cpu_gpu_compute_energy": 0.0006122075716079997,
+    "refit_because_of_this": false,
+    "reason": "Difference is <<1% of measured compute energy; keep source-reproduction totals; report package-only as physical CPU."
+  },
+  "canonical_batch": "E_compute = p_{w,N} * N * tau",
+  "p_w_N_table": [
+    {
+      "workload_family": "llama2_70b_lora",
+      "nodes": 2,
+      "provenance": "AUTHOR_SUPPLIED_AGGREGATE",
+      "n_runs": 5,
+      "p_W_per_node": 2631.720663499347,
+      "p_std": 11.279603951585022,
+      "p_min": 2613.5035401552286,
+      "p_max": 2642.32745815995,
+      "cv": 0.0042860186903676
+    },
+    {
+      "workload_family": "llama2_70b_lora",
+      "nodes": 4,
+      "provenance": "AUTHOR_SUPPLIED_AGGREGATE",
+      "n_runs": 5,
+      "p_W_per_node": 2576.490195397404,
+      "p_std": 29.17308828900837,
+      "p_min": 2543.159935823643,
+      "p_max": 2616.8059155768506,
+      "cv": 0.0113228019812078
+    },
+    {
+      "workload_family": "llama2_70b_lora",
+      "nodes": 8,
+      "provenance": "AUTHOR_SUPPLIED_AGGREGATE",
+      "n_runs": 6,
+      "p_W_per_node": 2470.081188914308,
+      "p_std": 14.226164433421838,
+      "p_min": 2446.3548978909,
+      "p_max": 2490.080229641229,
+      "cv": 0.0057593914310463
+    },
+    {
+      "workload_family": "llama2_70b_lora",
+      "nodes": 16,
+      "provenance": "AUTHOR_SUPPLIED_AGGREGATE",
+      "n_runs": 5,
+      "p_W_per_node": 2402.2280768558594,
+      "p_std": 15.89813730319773,
+      "p_min": 2384.671806317355,
+      "p_max": 2424.4862146049554,
+      "cv": 0.0066180798802443
+    },
+    {
+      "workload_family": "stable_diffusion",
+      "nodes": 1,
+      "provenance": "RAW_RECONSTRUCTED_SOURCE_RUN",
+      "n_runs": 5,
+      "p_W_per_node": 2706.7425781499405,
+      "p_std": 8.762866820228066,
+      "p_min": 2692.853529026785,
+      "p_max": 2716.6749116105766,
+      "cv": 0.0032374215749092
+    },
+    {
+      "workload_family": "stable_diffusion",
+      "nodes": 2,
+      "provenance": "AUTHOR_SUPPLIED_AGGREGATE",
+      "n_runs": 6,
+      "p_W_per_node": 2656.80993285481,
+      "p_std": 15.159105446623046,
+      "p_min": 2628.1157557540187,
+      "p_max": 2672.1327486781,
+      "cv": 0.0057057545815233
+    },
+    {
+      "workload_family": "stable_diffusion",
+      "nodes": 4,
+      "provenance": "AUTHOR_SUPPLIED_AGGREGATE",
+      "n_runs": 5,
+      "p_W_per_node": 2396.9183118931,
+      "p_std": 169.74636186096026,
+      "p_min": 2093.605759734576,
+      "p_max": 2482.938022807029,
+      "cv": 0.0708185844376538
+    },
+    {
+      "workload_family": "stable_diffusion",
+      "nodes": 8,
+      "provenance": "AUTHOR_SUPPLIED_AGGREGATE",
+      "n_runs": 5,
+      "p_W_per_node": 2235.569484025365,
+      "p_std": 203.04759711367507,
+      "p_min": 2013.0890735615965,
+      "p_max": 2417.151786659756,
+      "cv": 0.0908258940572348
+    },
+    {
+      "workload_family": "stable_diffusion",
+      "nodes": 16,
+      "provenance": "AUTHOR_SUPPLIED_AGGREGATE",
+      "n_runs": 4,
+      "p_W_per_node": 2067.63440687747,
+      "p_std": 149.83179588522694,
+      "p_min": 1891.108184461292,
+      "p_max": 2234.932760895429,
+      "cv": 0.072465323360285
+    }
+  ],
+  "saturated_anchor": {
+    "canonical_batch_object": "E_compute = p_{w,N} * N * tau",
+    "not_a_universal_default": true,
+    "SATURATED_COMPUTE_SCENARIO_ANCHOR": {
+      "definition_ex_ante": "training llama2_70b_lora or stable_diffusion with N<=2 (workload + node count, not observed watts)",
+      "n_runs": 16,
+      "mean_p_W_per_node": 2664.5734878359563,
+      "std_p_W_per_node": 33.28102515472418,
+      "rounded_anchor_W_per_node": 2650.0,
+      "use": "scenario illustration only; not a predictive rule; not a universal H100 default"
+    },
+    "offline_large_batch_is_separate_config": "batch_size is an ex-ante field for offline inference; not merged into the 2650 training-N<=2 anchor"
+  },
+  "temporal": {
+    "no_universal_PAR_1_25": true,
+    "table": "analysis/H100_PAR_BY_WORKLOAD_NODE_RESOLUTION.csv",
+    "templates": "2-node llama and SD only, mean(phi)=1"
+  },
+  "online_inference": "ONLINE_INFERENCE_SCENARIO_LIBRARY not GENERAL_ONLINE_INFERENCE_MODEL",
+  "statuses": {
+    "BATCH_HARDWARE_HOURS_FORM": "PASS",
+    "WORKLOAD_INDEPENDENT_P": "FAIL",
+    "WORKLOAD_CONDITIONED_P": "PASS",
+    "WORKLOAD_SCALE_CONDITIONED_P": "PASS",
+    "ONLINE_INFERENCE_SCENARIO_LIBRARY": "PASS",
+    "GENERAL_ONLINE_INFERENCE_MODEL": "UNSUPPORTED",
+    "TEMPORAL_PROFILE_LIBRARY": "PASS",
+    "FULL_NODE_SYSTEM_POWER": "UNSUPPORTED"
+  },
+  "nlr_coefficients_will_not_be_refit_to_external_node_data": true,
+  "limitations": [
+    "CPU+GPU != full node AC",
+    "controlled benchmarks != production H100 mix",
+    "AMD RAPL partially validated",
+    "SD N=1 is RAW_RECONSTRUCTED_SOURCE_RUN"
+  ]
+}

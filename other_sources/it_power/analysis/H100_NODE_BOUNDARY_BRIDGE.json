@@ -1,0 +1,40 @@
+{
+  "label": "EXTERNAL_H100_NODE_BOUNDARY_ENVELOPE",
+  "not": "KESTREL_CALIBRATED",
+  "forbidden_operations_not_done": [
+    "halve_8gpu_node",
+    "infer_kestrel_psu_efficiency",
+    "subtract_unlike_cpu_memory_chassis",
+    "calibrate_nlr_compute_to_literature"
+  ],
+  "public_8gpu_ac_or_node": {
+    "rated_W": 10200.0,
+    "idle_W": 1860.0,
+    "idle_over_rated": 0.18235294117647058,
+    "loaded_over_rated_llama_median": 0.7764705882352941,
+    "peak_over_rated_stress": 0.8313725490196079,
+    "incremental_loaded_minus_idle_per_GPU_W": 757.5,
+    "loaded_W_per_GPU_llama": 990.0
+  },
+  "nlr_4gpu_compute_only": {
+    "component_idle_W": 418.2,
+    "component_tdp_envelope_W": 3520.0,
+    "mean_training_p_W_per_node": 2445.037024792194,
+    "N2_llama_W_per_node": 2631.720663499347,
+    "gpu_share_training": 0.9
+  },
+  "defensible_statement": "On 8-GPU H100 HGX-class nodes, measured full-node/system power sits at roughly 0.18\u00d7 rated idle and 0.78\u20130.83\u00d7 rated when loaded (Latif/Newkirk). NLR measures only CPU+GPU components on a 4-GPU Kestrel node. P_other_node cannot be identified for Kestrel from public evidence. Dimensionless 8-GPU ratios are EXTERNAL/CROSS-SYSTEM context, not coefficients. Loaded 8-GPU AC minus 8\u00d7 NLR per-GPU NVML is not a valid P_other estimator. An 8-GPU nameplate or idle value divided by two is not a Kestrel node.",
+  "envelope": {
+    "form": "P_node = P_compute + P_other_node, with P_other_node UNCERTAIN on Kestrel",
+    "external_scenario_low": "P_node >= P_compute (physical lower bound; P_other >= 0)",
+    "external_scenario_high": "NOT IDENTIFIED for the 4-GPU Kestrel node",
+    "public_8gpu_context_only": {
+      "idle_over_rated": 0.18235294117647058,
+      "loaded_over_rated_llama_median": 0.7764705882352941,
+      "peak_over_rated_stress": 0.8313725490196079
+    },
+    "use": "uncertainty flag for facility scenarios; labeled EXTERNAL/CROSS-SYSTEM; not KESTREL_CALIBRATED"
+  },
+  "KESTREL_H100_FULL_NODE": "PARTIAL_EXTERNAL_ENVELOPE",
+  "cooling_matters": "liquid vs air can move 8-GPU node power by ~1\u20131.5 kW; another reason not to transplant a single overhead"
+}

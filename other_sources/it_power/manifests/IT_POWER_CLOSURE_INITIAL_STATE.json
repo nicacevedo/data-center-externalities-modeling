@@ -1,0 +1,123 @@
+{
+  "public_baseline_commit_requested": "9355b4d035914b24df9baaaa1ef6e41e6c57a29a",
+  "git": {
+    "branch": "main",
+    "HEAD": "9355b4d035914b24df9baaaa1ef6e41e6c57a29a",
+    "status": "m Data-center-PUE-prediction-tool\n?? other_sources/it_power/.gitignore\n?? other_sources/it_power/full_node_h100/\n?? other_sources/it_power/independent_h100_b200/\n?? other_sources/it_power/scripts/\n?? other_sources/it_power/tests/"
+  },
+  "cpu": {
+    "CPU_LAYER_FINAL_DISPOSITION": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+    "expected": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+    "p_KestrelCPU_W_per_node": 700.6894574294788,
+    "read_only": true,
+    "refit": false
+  },
+  "h100_before_this_pass": {
+    "H100_GPU_POWER_MEASUREMENT": "PASS",
+    "AMD_CPU_POWER_MEASUREMENT": "PARTIAL",
+    "CPU_GPU_COMPUTE_ENERGY": "PASS",
+    "FULL_NODE_AC_POWER": "UNSUPPORTED",
+    "BATCH_HARDWARE_HOURS_FORM": "PASS",
+    "WORKLOAD_INDEPENDENT_P": "FAIL",
+    "MODE_SPECIFIC_P": "PARTIAL",
+    "WORKLOAD_SPECIFIC_P": "PASS",
+    "NODE_SCALE_EFFECT": "PARTIAL",
+    "ONLINE_INFERENCE_PROXY": "PASS",
+    "SUBSECOND_POWER_PROFILE": "PASS",
+    "MINUTE_SCALE_PROFILE": "PASS",
+    "HISTORICAL_H100_JOB_CROSSWALK": "PARTIAL",
+    "HISTORICAL_H100_REPLAY": "NOT_NEEDED",
+    "EXTERNAL_H100_SANITY_VALIDATION": "PASS",
+    "selected_batch_proxy": "M2_WORKLOAD_TABLE_WITH_TRAINING_NODE_ENVELOPE",
+    "p_universal_W_per_node": 2660.2006948942067,
+    "p_by_mode": {
+      "offline_inference": 2667.552120289359,
+      "training": 2445.037024792194
+    },
+    "p_by_workload": {
+      "llama2_70b_lora": 2517.746752964233,
+      "llama3_70b_offline_inference": 2667.552120289359,
+      "stable_diffusion": 2368.6918102115533
+    },
+    "P_other_node": "UNRESOLVED",
+    "cpu_layer": {
+      "untouched": true,
+      "CPU_LAYER_FINAL_DISPOSITION": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS"
+    },
+    "next_experiment": {
+      "name": "KESTREL_H100_FULL_NODE_AC_OR_OTHER_NODE_POWER",
+      "why": "Compute-component p is characterized for controlled GenAI modes, but P_other_node and production H100 mix remain the binding gaps for facility IT. Do not populate anonymous historical H100 jobs until workload mapping exists."
+    },
+    "crosswalk_detail": {
+      "training_slurm_ids": "PASS_EXACT_41_OF_41",
+      "inference_logging_jobs": "PARTIAL_2_OF_3_BANNER_IDS",
+      "rate_job_12146821": "NOT_IN_KESTREL_EXTRACT_WINDOW_likely_2026_01",
+      "job_record_energy_wh": "NULL_ALL_MATCHED_H100",
+      "historical_population": "NOT_PERFORMED"
+    },
+    "canonical_objects": {
+      "A_batch_like": {
+        "gpu_saturated_1_2_node": "E_compute = 2650 W/node * N * tau",
+        "full_supported_domain": "p_{h,w,N} table in H100_INTENSITY_BY_RUN.csv",
+        "boundary": "CPU+GPU component only"
+      },
+      "B_online_inference": {
+        "form": "discrete P_compute(request_rate, dataset) plus saturation near 50 rps",
+        "not": "E = p N tau",
+        "energy_per_request_token": "finite tests only; config-dependent; not a universal law"
+      },
+      "C_temporal": {
+        "training": "minute-scale phase variability; peak/mean ~1.25 from 0.2 s through 5 min; 2-node phi templates mean=1",
+        "online_rate": "nearly flat PAR~1.02\u20131.07",
+        "subsecond": "does not change facility representation of these profiles"
+      }
+    },
+    "p_gpu_saturated_1_2_node_W": 2650.0,
+    "confidence": {
+      "measurement_boundary": "HIGH",
+      "gpu_nvml": "HIGH",
+      "amd_rapl": "MEDIUM_LOW",
+      "gpu_saturated_p_h": "HIGH",
+      "p_across_all_batch_configs": "LOW",
+      "node_scale_llama": "HIGH_for_detectable_small_decline",
+      "node_scale_sd": "MEDIUM_eval_time_confounded",
+      "online_P_vs_rate": "HIGH_descriptive",
+      "full_node_ac": "NONE",
+      "historical_h100_mix": "NONE"
+    }
+  },
+  "file_sha256": {
+    "cpu_status": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9",
+    "cpu_freeze": "dcbd066b26b8e7d2800e40a23a1cb8250502bfe59563fe06318cb1be1cc4fd27",
+    "h100_status": "7d0a9fa716c315ca35d76a93e3f9ab40706d53d2a3e10d23a7b1bc9e34091579",
+    "h100_runner": "3ddb3a39dfa52ef7456e6734e1dc48e0757e71a18ef14e63d01d1bf16dd282f7",
+    "h100_intensity": "1c3b88918b707b6928e3e529e9ae8c04e2d47506580f564d7d2d5d0d39861e11",
+    "h100_summary": "775983dc90439d01907faab56194d1dddb3fcf9550777a9cf94a326b3d3c36cd",
+    "genai_zip": "dcad6de800fb565d850b163902e2eddae48aabd1ed1c7336f9a1cdaf3012f137",
+    "figshare_zip": "c0ccebea568612f5445b70c3baa7ce659935a949e5cc8f345a0af907739fa6f3",
+    "newkirk_zip": "eb09d4aa8167bc121b906fde4b7dacf12dcdd56012d621ae9ca895a512794d37"
+  },
+  "existing_it_power_files": [
+    ".gitignore",
+    "docs/SOURCE_AUDIT_AND_EXPERIMENT.md",
+    "full_node_h100/sources/newkirk_2025/2025_Cooling_Matters_Benchmarking_Large_Language_Models_and_Vision-Language_Models_on_Liquid-Cooled_Versus_Air-Cooled_H100_GPU_Systems.pdf",
+    "full_node_h100/sources/newkirk_2025/2025_Single-Node_Power_Demand_During_AI_Training_Measurements_on_an_8-GPU_NVIDIA_H100_System.pdf",
+    "full_node_h100/sources/newkirk_2025/29067572.zip",
+    "independent_h100_b200/2025_Empirically-calibrated H100 node power models.pdf",
+    "independent_h100_b200/2026_Characterization of high-resolution AI data center training workloads on single and multiple GPU nodes.pdf",
+    "independent_h100_b200/High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare.zip",
+    "scripts/it_power_paths.py",
+    "scripts/run_it_power_closure.py",
+    "tests/test_it_power_closure.py"
+  ],
+  "constraints": {
+    "do_not_refit_cpu": true,
+    "do_not_rebuild_nlr_h100_from_scratch": true,
+    "do_not_populate_historical_h100_jobs": true,
+    "do_not_fit_cooling_weather": true,
+    "do_not_halve_8gpu_as_kestrel": true,
+    "do_not_invent_psu_efficiency": true,
+    "do_not_treat_tdp_as_measured": true,
+    "no_meta_access": true
+  }
+}

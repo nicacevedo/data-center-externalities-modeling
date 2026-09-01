@@ -1,0 +1,7 @@
+# Large archives — do not commit
+independent_h100_b200/*.zip
+full_node_h100/sources/newkirk_2025/*.zip
+data_processed/*.parquet
+__pycache__/
+.pytest_cache/
+*.pyc

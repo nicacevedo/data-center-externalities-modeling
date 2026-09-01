@@ -1,0 +1,5 @@
+regime,P_other_W,label
+physical_lower_bound,0.0,P_node >= P_compute on Kestrel (measured components are a subset)
+kestrel_upper_bound,,NOT IDENTIFIED; public 8-GPU systems are a different chassis/CPU/GPU-count
+external_8gpu_idle_over_rated,,Latif/Newkirk 8-GPU idle/rated = 0.182 (EXTERNAL context only)
+external_8gpu_loaded_over_rated_llama,,Latif Llama2-13b median/rated = 0.776 (EXTERNAL context only)

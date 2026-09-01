@@ -1,0 +1,27 @@
+{
+  "CPU_NODE_ENERGY": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+  "H100_COMPUTE_ENERGY": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+  "H100_WORKLOAD_CONDITIONING": "PASS",
+  "H100_SCALE_CONDITIONING": "PASS",
+  "H100_ONLINE_INFERENCE": "PASS",
+  "H100_TEMPORAL_PROFILE": "PASS",
+  "INDEPENDENT_H100_REPLICATION": "PASS",
+  "H100_TO_B200_TRANSFER": "FAIL",
+  "H100_PUBLIC_FULL_NODE_EVIDENCE": "PASS",
+  "KESTREL_H100_FULL_NODE": "PARTIAL_EXTERNAL_ENVELOPE",
+  "H100_COMPONENT_TO_NODE_BRIDGE": "UNSUPPORTED_SAME_SYSTEM",
+  "NODE_TO_FACILITY_IT_BOUNDARY": "PARTIAL",
+  "IT_POWER_LAYER_FINAL_DISPOSITION": "FROZEN_BOUNDED_WITH_EXPLICIT_NODE_UNCERTAINTY",
+  "canonical": {
+    "CPU": "E_CPU,node = 0.7007 kW/node * N * tau  (Kestrel exclusive CPU domain only)",
+    "H100_batch_compute": "E_H100,compute = p_{w,N} * N * tau  (CPU+GPU; table)",
+    "H100_online": "discrete P_compute(request_rate, configuration)",
+    "H100_temporal": "PAR_{w,N,resolution} table; 2-node templates only",
+    "H100_node": "P_other_node = UNCERTAIN; EXTERNAL envelope only",
+    "facility_IT": "P_facility_IT = sum(P_nodes) + P_network/storage/service/idle/other; M100 residual is a boundary, not a PSU coefficient"
+  },
+  "same_system_bridge_run": false,
+  "reason_same_system_not_run": "Kestrel node AC telemetry not present in this repository",
+  "mlperf": "NO_CLEAN_MLPERF_COMPARATOR",
+  "next_layer_recommended_not_executed": "facility IT + weather \u2192 cooling/HVAC/pump power using ESIF component data"
+}

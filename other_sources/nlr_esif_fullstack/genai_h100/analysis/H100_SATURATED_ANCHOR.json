@@ -1,0 +1,13 @@
+{
+  "canonical_batch_object": "E_compute = p_{w,N} * N * tau",
+  "not_a_universal_default": true,
+  "SATURATED_COMPUTE_SCENARIO_ANCHOR": {
+    "definition_ex_ante": "training llama2_70b_lora or stable_diffusion with N<=2 (workload + node count, not observed watts)",
+    "n_runs": 16,
+    "mean_p_W_per_node": 2664.5734878359563,
+    "std_p_W_per_node": 33.28102515472418,
+    "rounded_anchor_W_per_node": 2650.0,
+    "use": "scenario illustration only; not a predictive rule; not a universal H100 default"
+  },
+  "offline_large_batch_is_separate_config": "batch_size is an ex-ante field for offline inference; not merged into the 2650 training-N<=2 anchor"
+}

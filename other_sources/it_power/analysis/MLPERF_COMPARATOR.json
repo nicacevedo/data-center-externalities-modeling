@@ -1,0 +1,7 @@
+{
+  "status": "NO_CLEAN_MLPERF_COMPARATOR",
+  "attempted": "paper-level MLPerf Power (Tschand et al. arXiv:2410.12032) + Dell XE9680 commentary; no full results-repo clone",
+  "why": "No retrieved record simultaneously gives (a) H100 datacenter SUT average watts, (b) Llama-class inference, (c) a stated measurement boundary, and (d) a 4-GPU node comparable to Kestrel. Tschand reports 111.4 J/sample for Llama2-70B as a suite-level energy/sample, not node watts. Dell discusses 8x H100 XE9680 power-capping efficiency without a usable absolute kW table here.",
+  "nlr_online": "component P_compute vs request rate on 1x 4-GPU Kestrel node; different boundary",
+  "no_new_model_fit": true
+}
