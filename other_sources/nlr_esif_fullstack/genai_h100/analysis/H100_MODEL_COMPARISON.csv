@@ -1,0 +1,4 @@
+model,in_sample_MAPE,in_sample_WAPE,n_runs,note
+M0_universal_p,0.05603865034050217,0.10064678577412206,1241,"in-sample descriptive; not selected by R2(E, Nt)"
+M1_mode_p,0.05380414990576944,0.06471708522654418,1241,"in-sample descriptive; not selected by R2(E, Nt)"
+M2_workload_p,0.05373376819573924,0.06741548287714431,1241,"in-sample descriptive; not selected by R2(E, Nt)"

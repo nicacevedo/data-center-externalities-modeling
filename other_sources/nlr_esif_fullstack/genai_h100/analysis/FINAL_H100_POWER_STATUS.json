@@ -1,0 +1,74 @@
+{
+  "H100_GPU_POWER_MEASUREMENT": "PASS",
+  "AMD_CPU_POWER_MEASUREMENT": "PARTIAL",
+  "CPU_GPU_COMPUTE_ENERGY": "PASS",
+  "FULL_NODE_AC_POWER": "UNSUPPORTED",
+  "BATCH_HARDWARE_HOURS_FORM": "PASS",
+  "WORKLOAD_INDEPENDENT_P": "FAIL",
+  "MODE_SPECIFIC_P": "PARTIAL",
+  "WORKLOAD_SPECIFIC_P": "PASS",
+  "NODE_SCALE_EFFECT": "PARTIAL",
+  "ONLINE_INFERENCE_PROXY": "PASS",
+  "SUBSECOND_POWER_PROFILE": "PASS",
+  "MINUTE_SCALE_PROFILE": "PASS",
+  "HISTORICAL_H100_JOB_CROSSWALK": "PARTIAL",
+  "HISTORICAL_H100_REPLAY": "NOT_NEEDED",
+  "EXTERNAL_H100_SANITY_VALIDATION": "PASS",
+  "selected_batch_proxy": "M2_WORKLOAD_TABLE_WITH_TRAINING_NODE_ENVELOPE",
+  "p_universal_W_per_node": 2660.2006948942067,
+  "p_by_mode": {
+    "offline_inference": 2667.552120289359,
+    "training": 2445.037024792194
+  },
+  "p_by_workload": {
+    "llama2_70b_lora": 2517.746752964233,
+    "llama3_70b_offline_inference": 2667.552120289359,
+    "stable_diffusion": 2368.6918102115533
+  },
+  "P_other_node": "UNRESOLVED",
+  "cpu_layer": {
+    "untouched": true,
+    "CPU_LAYER_FINAL_DISPOSITION": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS"
+  },
+  "next_experiment": {
+    "name": "KESTREL_H100_FULL_NODE_AC_OR_OTHER_NODE_POWER",
+    "why": "Compute-component p is characterized for controlled GenAI modes, but P_other_node and production H100 mix remain the binding gaps for facility IT. Do not populate anonymous historical H100 jobs until workload mapping exists."
+  },
+  "crosswalk_detail": {
+    "training_slurm_ids": "PASS_EXACT_41_OF_41",
+    "inference_logging_jobs": "PARTIAL_2_OF_3_BANNER_IDS",
+    "rate_job_12146821": "NOT_IN_KESTREL_EXTRACT_WINDOW_likely_2026_01",
+    "job_record_energy_wh": "NULL_ALL_MATCHED_H100",
+    "historical_population": "NOT_PERFORMED"
+  },
+  "canonical_objects": {
+    "A_batch_like": {
+      "gpu_saturated_1_2_node": "E_compute = 2650 W/node * N * tau",
+      "full_supported_domain": "p_{h,w,N} table in H100_INTENSITY_BY_RUN.csv",
+      "boundary": "CPU+GPU component only"
+    },
+    "B_online_inference": {
+      "form": "discrete P_compute(request_rate, dataset) plus saturation near 50 rps",
+      "not": "E = p N tau",
+      "energy_per_request_token": "finite tests only; config-dependent; not a universal law"
+    },
+    "C_temporal": {
+      "training": "minute-scale phase variability; peak/mean ~1.25 from 0.2 s through 5 min; 2-node phi templates mean=1",
+      "online_rate": "nearly flat PAR~1.02\u20131.07",
+      "subsecond": "does not change facility representation of these profiles"
+    }
+  },
+  "p_gpu_saturated_1_2_node_W": 2650.0,
+  "confidence": {
+    "measurement_boundary": "HIGH",
+    "gpu_nvml": "HIGH",
+    "amd_rapl": "MEDIUM_LOW",
+    "gpu_saturated_p_h": "HIGH",
+    "p_across_all_batch_configs": "LOW",
+    "node_scale_llama": "HIGH_for_detectable_small_decline",
+    "node_scale_sd": "MEDIUM_eval_time_confounded",
+    "online_P_vs_rate": "HIGH_descriptive",
+    "full_node_ac": "NONE",
+    "historical_h100_mix": "NONE"
+  }
+}

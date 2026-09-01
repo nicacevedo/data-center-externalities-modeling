@@ -1,0 +1,147 @@
+{
+  "p_universal_W_per_node": 2660.2006948942067,
+  "p_by_mode": {
+    "offline_inference": 2667.552120289359,
+    "training": 2445.037024792194
+  },
+  "p_by_workload": {
+    "llama2_70b_lora": 2517.746752964233,
+    "llama3_70b_offline_inference": 2667.552120289359,
+    "stable_diffusion": 2368.6918102115533
+  },
+  "in_sample": [
+    {
+      "model": "M0_universal_p",
+      "in_sample_MAPE": 0.05603865034050217,
+      "in_sample_WAPE": 0.10064678577412206,
+      "n_runs": 1241,
+      "note": "in-sample descriptive; not selected by R2(E, Nt)"
+    },
+    {
+      "model": "M1_mode_p",
+      "in_sample_MAPE": 0.05380414990576944,
+      "in_sample_WAPE": 0.06471708522654418,
+      "n_runs": 1241,
+      "note": "in-sample descriptive; not selected by R2(E, Nt)"
+    },
+    {
+      "model": "M2_workload_p",
+      "in_sample_MAPE": 0.05373376819573924,
+      "in_sample_WAPE": 0.06741548287714431,
+      "n_runs": 1241,
+      "note": "in-sample descriptive; not selected by R2(E, Nt)"
+    }
+  ],
+  "loo_by_workload_nodes": {
+    "n": 1241,
+    "mape": 0.05272072682482109,
+    "wape": 0.03408650444580724,
+    "status": "leave_one_replicate_out"
+  },
+  "loo_by_mode": {
+    "n": 1241,
+    "mape": 0.053901695571568625,
+    "wape": 0.06628409965481957,
+    "status": "leave_one_replicate_out"
+  },
+  "loo_by_workload": {
+    "n": 1241,
+    "mape": 0.05388637874346031,
+    "wape": 0.07081517505286493,
+    "status": "leave_one_replicate_out"
+  },
+  "node_scale": [
+    {
+      "workload_family": "llama2_70b_lora",
+      "n_runs": 21,
+      "node_levels": [
+        2,
+        4,
+        8,
+        16
+      ],
+      "p_mean_by_nodes": {
+        "2": 2631.720663499347,
+        "4": 2576.4901953974036,
+        "8": 2470.081188914308,
+        "16": 2402.228076855859
+      },
+      "p_std_by_nodes": {
+        "2": 11.279603951585022,
+        "4": 29.173088289008366,
+        "8": 14.226164433421957,
+        "16": 15.898137303197684
+      },
+      "n_by_nodes": {
+        "2": 5,
+        "4": 5,
+        "8": 6,
+        "16": 5
+      },
+      "alpha": 2718.8517227701172,
+      "beta_log2N": -79.68310124384155,
+      "p_rel_range": 0.1023358094054725,
+      "scaling_type": "WEAK_SCALING_INCREASING_GLOBAL_BATCH",
+      "typical_within_node_cv": 0.006996572995716556,
+      "scale_effect_material": true
+    },
+    {
+      "workload_family": "stable_diffusion",
+      "n_runs": 20,
+      "node_levels": [
+        2,
+        4,
+        8,
+        16
+      ],
+      "p_mean_by_nodes": {
+        "2": 2656.80993285481,
+        "4": 2396.9183118930996,
+        "8": 2235.569484025365,
+        "16": 2067.6344068774697
+      },
+      "p_std_by_nodes": {
+        "2": 15.159105446622847,
+        "4": 169.74636186096032,
+        "8": 203.047597113675,
+        "16": 149.83179588522702
+      },
+      "n_by_nodes": {
+        "2": 6,
+        "4": 5,
+        "8": 5,
+        "16": 4
+      },
+      "alpha": 2828.4283497080255,
+      "beta_log2N": -195.6325699984988,
+      "p_rel_range": 0.3297282326260305,
+      "scaling_type": "WEAK_SCALING_INCREASING_GLOBAL_BATCH",
+      "typical_within_node_cv": 0.05995388910917427,
+      "scale_effect_material": true
+    }
+  ],
+  "M3_needed": true,
+  "selected_batch_proxy": "M2_WORKLOAD_TABLE_WITH_TRAINING_NODE_ENVELOPE",
+  "selection_reason": "M0 is adequate only for GPU-saturated 1\u20132 node jobs (~2650 W/node). The full batch-like bank requires workload conditioning; training additionally needs a node-count envelope under weak scaling. M1 (mode) is not the right split: 1\u20132 node training matches large-batch offline.",
+  "parsimony_rule_applied": true,
+  "tautological_E_vs_Nt_not_used_for_selection": true,
+  "measurement_boundary": "P_compute = P_GPU + P_CPU; not full-node AC",
+  "canonical_recommendation": {
+    "one_universal_p_h_across_full_bank": "NO",
+    "reason": "Run-count-weighted M0 is dominated by 1200 offline trials (p=2660 W/node). At 1\u20132 nodes, llama LoRA, SD, and large-batch offline sit together near 2.63\u20132.75 kW/node. Pooling fails when the domain includes small-batch offline (mean 2169 W/node for batch<=100) or 8\u201316 node SD under weak scaling / eval-time mix (mean 2068 W/node at N=16).",
+    "gpu_saturated_1_to_2_node_default_W_per_node": 2650.0,
+    "gpu_saturated_support": {
+      "llama2_70b_lora_N2_mean": 2631.720663499347,
+      "llama2_70b_lora_N2_std": 11.27960395158502,
+      "stable_diffusion_N2_mean": 2656.8099328548105,
+      "stable_diffusion_N2_std": 15.15910544662288,
+      "offline_batch_gt_400_mean": 2747.061135,
+      "offline_batch_gt_400_std": 53.600039
+    },
+    "minimum_valid_batch_form": "E_compute = p_{h,w} N tau, with p tabulated by workload and, for training, node count; do not fit a smooth p(N) curve from four weak-scaling levels",
+    "M3_status": "Llama p declines 2632\u21922402 W/node from N=2\u219216 (10% relative, replicate CV 0.7%). SD declines 2657\u21922068 (33%) with large replicate SD at N>=4, consistent with the paper's eval-time fraction dropping as global batch grows. Report a table, not beta log2(N) as a physical law.",
+    "not_full_node_ac": true,
+    "equation_gpu_saturated": "E_compute_Wh = 2650 * N * tau_hours",
+    "online": "NOT_IN_BATCH_EQUATION"
+  }
+}

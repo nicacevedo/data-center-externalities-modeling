@@ -1,0 +1,151 @@
+{
+  "n_members": 3191,
+  "n_files": 3148,
+  "total_uncompressed_bytes": 2891198251,
+  "by_kind": [
+    {
+      "kind": "aggregated_parquet",
+      "count": 2467,
+      "sum": 583582888
+    },
+    {
+      "kind": "diploee_same_source_simulation",
+      "count": 8,
+      "sum": 1181221
+    },
+    {
+      "kind": "directory",
+      "count": 43,
+      "sum": 0
+    },
+    {
+      "kind": "environment_or_text",
+      "count": 1,
+      "sum": 120
+    },
+    {
+      "kind": "git_metadata",
+      "count": 17,
+      "sum": 23941
+    },
+    {
+      "kind": "metadata_csv",
+      "count": 14,
+      "sum": 235904497
+    },
+    {
+      "kind": "notebook",
+      "count": 6,
+      "sum": 4551633
+    },
+    {
+      "kind": "other.json",
+      "count": 7,
+      "sum": 2778340
+    },
+    {
+      "kind": "other.png",
+      "count": 11,
+      "sum": 2286937
+    },
+    {
+      "kind": "other.sh",
+      "count": 1,
+      "sum": 65
+    },
+    {
+      "kind": "raw_measurement_log",
+      "count": 608,
+      "sum": 2060812928
+    },
+    {
+      "kind": "readme",
+      "count": 1,
+      "sum": 3001
+    },
+    {
+      "kind": "source_script",
+      "count": 7,
+      "sum": 72680
+    }
+  ],
+  "by_prefix": [
+    {
+      "prefix": ".activate.sh",
+      "count": 1,
+      "sum": 65
+    },
+    {
+      "prefix": ".git",
+      "count": 27,
+      "sum": 23941
+    },
+    {
+      "prefix": "00_raw_datasets",
+      "count": 630,
+      "sum": 2063591268
+    },
+    {
+      "prefix": "01_aggregated_datasets",
+      "count": 2485,
+      "sum": 585272755
+    },
+    {
+      "prefix": "02_analysis_scripts",
+      "count": 18,
+      "sum": 5237496
+    },
+    {
+      "prefix": "03_whole-facility_profiles",
+      "count": 28,
+      "sum": 237069605
+    },
+    {
+      "prefix": "README.md",
+      "count": 1,
+      "sum": 3001
+    },
+    {
+      "prefix": "requirements.txt",
+      "count": 1,
+      "sum": 120
+    }
+  ],
+  "readmes": [
+    "README.md"
+  ],
+  "source_scripts": [
+    "01_aggregated_datasets/inference_offline_llama3_70b/postprocess.py",
+    "01_aggregated_datasets/inference_online_finite_llama3_70b/postprocess.py",
+    "01_aggregated_datasets/inference_online_rate_llama3_70b/postprocess.py",
+    "01_aggregated_datasets/training/postprocess.py",
+    "01_aggregated_datasets/utilities.py",
+    "02_analysis_scripts/utilities.py",
+    "03_whole-facility_profiles/utilities.py"
+  ],
+  "minimum_extract": {
+    "A_source_reproduction": [
+      "README.md",
+      "requirements.txt",
+      "01_aggregated_datasets/utilities.py",
+      "01_aggregated_datasets/training/postprocess.py",
+      "01_aggregated_datasets/inference_offline_llama3_70b/postprocess.py",
+      "representative training raw logs (1\u20132 jobs)",
+      "one offline inference window from the two shared logs"
+    ],
+    "B_experiment_level_energy": [
+      "all metadata.csv",
+      "all training aggregated parquet (41)",
+      "inference metadata mean/peak/duration (do not extract all 2400 parquet)"
+    ],
+    "C_temporal_analysis": [
+      "training aggregated parquet (native 0.2 s)",
+      "representative inference aggregated parquet (native 0.1 s)"
+    ]
+  },
+  "not_extracted": [
+    "full raw bank",
+    "all inference aggregated parquet",
+    "DIPLOEE whole-facility simulations (SAME_SOURCE_SIMULATION)"
+  ]
+}

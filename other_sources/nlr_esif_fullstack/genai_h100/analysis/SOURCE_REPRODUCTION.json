@@ -1,0 +1,18 @@
+{
+  "pass_rule": "semantic/numerical reproduction within 5% mean power and energy; not byte identity",
+  "n_compared": 6,
+  "n_pass_mean": 6,
+  "n_pass_energy": 6,
+  "status": "PASS",
+  "notes": [
+    "Source RAPL aggregation sums package+core; core energy fraction is recorded where computed.",
+    "Native-timestamp E_GPU+E_CPU vs resampled total quantifies interpolation/sync gap.",
+    "Offline inference uses a metadata time window on two shared logs, not per-run log files."
+  ],
+  "offline_window": {
+    "start_time": "2025-09-18 16:30:12.777741",
+    "end_time": "2025-09-18 16:31:03.916427",
+    "nvml_log": "00_raw_datasets/inference_offline_llama3_70b/nvml_wattameter_x3115c0s33b0n0.log",
+    "rapl_log": "00_raw_datasets/inference_offline_llama3_70b/rapl_wattameter_x3115c0s33b0n0.log"
+  }
+}

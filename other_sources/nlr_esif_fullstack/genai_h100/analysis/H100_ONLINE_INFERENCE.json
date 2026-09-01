@@ -1,0 +1,1190 @@
+{
+  "summary": {
+    "proxy": "DISCRETE_MEASURED_SCENARIO_TABLE_PLUS_MONOTONE_P_VS_RATE",
+    "not_used": "generic_response_surface",
+    "batch_equation_applied": false,
+    "rate_sweep": [
+      {
+        "dataset": "likaixin/InstructCoder",
+        "n": 100,
+        "rate_min": 1.0,
+        "rate_max": 100.0,
+        "P_at_1_rps": 2069.548984858596,
+        "P_at_10_rps": 2256.796927428762,
+        "P_at_50_rps": 2862.278419475295,
+        "P_at_100_rps": 2792.5556431476025,
+        "spearman_rate_vs_P": 0.35017101710171017,
+        "P_range_W": 819.02500497962,
+        "P_rel_range": 0.30198662102356116
+      },
+      {
+        "dataset": "mgoin/mlperf-inference-llama2-data",
+        "n": 100,
+        "rate_min": 1.0,
+        "rate_max": 100.0,
+        "P_at_1_rps": 2062.823790012028,
+        "P_at_10_rps": 2169.641624781556,
+        "P_at_50_rps": 2779.150052178197,
+        "P_at_100_rps": 2746.759266195935,
+        "spearman_rate_vs_P": 0.4527332733273327,
+        "P_range_W": 775.7169301247682,
+        "P_rel_range": 0.293645267336064
+      }
+    ],
+    "energy_per_request_supported": true,
+    "energy_per_token_supported": true,
+    "fields_present": [
+      "request_rate",
+      "num_prompts",
+      "total_input_tokens",
+      "total_output_tokens",
+      "latency_percentiles_in_finite_metadata"
+    ],
+    "fields_absent": [
+      "explicit_model_instance_count_beyond_one_node"
+    ],
+    "note": "Rate sweep is ~180 s sustained load, typically one replicate per (dataset, rate). Finite tests have repeats and token/request energy."
+  },
+  "finite_by_config": [
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 10.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2225.6802567603486,
+      "std_P_W": 53.06454742844106,
+      "mean_J_per_request": 240.6522156939127,
+      "mean_J_per_token": 0.7264436596072482
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 10.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2269.8133040534067,
+      "std_P_W": 9.257774601197982,
+      "mean_J_per_request": 252.13257168203967,
+      "mean_J_per_token": 0.7025886772962364
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 10.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2258.1554951052626,
+      "std_P_W": 26.52971980948657,
+      "mean_J_per_request": 270.10426577850063,
+      "mean_J_per_token": 0.7420281121644552
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 20.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2253.54638381109,
+      "std_P_W": 7.033693524862744,
+      "mean_J_per_request": 128.69763692562913,
+      "mean_J_per_token": 0.3885007786213629
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 20.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2293.8151868121317,
+      "std_P_W": 15.872802970770651,
+      "mean_J_per_request": 142.15735993238414,
+      "mean_J_per_token": 0.396224631310872
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 20.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2281.607831276259,
+      "std_P_W": 13.262876798588461,
+      "mean_J_per_request": 160.09224697024092,
+      "mean_J_per_token": 0.4388793131698405
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 30.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2238.5917727448605,
+      "std_P_W": 560.7928338577473,
+      "mean_J_per_request": 98.18698330561381,
+      "mean_J_per_token": 0.29658596863501646
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 30.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2435.198548773552,
+      "std_P_W": 22.073090003358885,
+      "mean_J_per_request": 112.07764017903156,
+      "mean_J_per_token": 0.3122946108332767
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 30.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2391.205289633973,
+      "std_P_W": 18.678133899839214,
+      "mean_J_per_request": 129.7961973097788,
+      "mean_J_per_token": 0.35598348462132845
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 40.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2511.5321639987687,
+      "std_P_W": 21.729074289841364,
+      "mean_J_per_request": 82.13184227829952,
+      "mean_J_per_token": 0.24794697702557375
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 40.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2513.9347527819114,
+      "std_P_W": 27.619745128100526,
+      "mean_J_per_request": 97.03327333155733,
+      "mean_J_per_token": 0.2701277429332478
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 40.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2448.852653327587,
+      "std_P_W": 25.00447789971112,
+      "mean_J_per_request": 114.95445846424438,
+      "mean_J_per_token": 0.3153892467520858
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 50.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2568.1429105831426,
+      "std_P_W": 22.665113449868954,
+      "mean_J_per_request": 72.3687116999336,
+      "mean_J_per_token": 0.21848911006683747
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 50.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2537.6773442511508,
+      "std_P_W": 30.972098985406465,
+      "mean_J_per_request": 88.16150663978331,
+      "mean_J_per_token": 0.24540421653604477
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 50.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2465.073366784263,
+      "std_P_W": 29.356966152319973,
+      "mean_J_per_request": 105.95084850355954,
+      "mean_J_per_token": 0.29076974319200133
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 60.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2579.3884628246547,
+      "std_P_W": 26.201676793129316,
+      "mean_J_per_request": 66.4666619771246,
+      "mean_J_per_token": 0.200598562426049
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 60.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2549.686297269564,
+      "std_P_W": 36.37360651647813,
+      "mean_J_per_request": 83.69496684322534,
+      "mean_J_per_token": 0.23292210909435726
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 60.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2472.757545098646,
+      "std_P_W": 32.44214352924367,
+      "mean_J_per_request": 101.18679931764693,
+      "mean_J_per_token": 0.27754876672515844
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 70.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2596.731664116217,
+      "std_P_W": 26.829443237296847,
+      "mean_J_per_request": 63.676578035253755,
+      "mean_J_per_token": 0.19221593542137583
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 70.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2552.0432751065186,
+      "std_P_W": 40.902583475353126,
+      "mean_J_per_request": 81.03859703129939,
+      "mean_J_per_token": 0.22587771118556554
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 70.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2465.3660533189623,
+      "std_P_W": 27.488823433140823,
+      "mean_J_per_request": 99.512398434473,
+      "mean_J_per_token": 0.27298078231302775
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 80.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2583.9424264799986,
+      "std_P_W": 25.64910295226339,
+      "mean_J_per_request": 62.249527163578946,
+      "mean_J_per_token": 0.18784883414883402
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 80.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2545.3374801649493,
+      "std_P_W": 43.864124853089194,
+      "mean_J_per_request": 79.60285317526446,
+      "mean_J_per_token": 0.22174920981237234
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 80.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2462.49215057001,
+      "std_P_W": 30.231011594932124,
+      "mean_J_per_request": 97.66284080874402,
+      "mean_J_per_token": 0.26795063940843156
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 90.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2568.2746734618736,
+      "std_P_W": 37.366796860720065,
+      "mean_J_per_request": 61.08766029498477,
+      "mean_J_per_token": 0.1844123589731434
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 90.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2539.7206137395583,
+      "std_P_W": 42.54966140225238,
+      "mean_J_per_request": 78.36480982650457,
+      "mean_J_per_token": 0.21834461971132757
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 90.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2452.9622909518125,
+      "std_P_W": 32.533688343747826,
+      "mean_J_per_request": 96.8577998667949,
+      "mean_J_per_token": 0.26565637300768447
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 100.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2575.8069742323705,
+      "std_P_W": 34.82026802138545,
+      "mean_J_per_request": 60.17848111625918,
+      "mean_J_per_token": 0.18167309903362602
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 100.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2533.6961966236845,
+      "std_P_W": 61.10688379182287,
+      "mean_J_per_request": 77.69097321018708,
+      "mean_J_per_token": 0.21638068496852306
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 100.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2451.0230700775555,
+      "std_P_W": 29.21457034658275,
+      "mean_J_per_request": 95.93393534164872,
+      "mean_J_per_token": 0.26314859836045595
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 200.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2568.919218434898,
+      "std_P_W": 32.8391171521976,
+      "mean_J_per_request": 56.56828035719852,
+      "mean_J_per_token": 0.17079446163392908
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 200.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2533.2120201529406,
+      "std_P_W": 40.64966908503794,
+      "mean_J_per_request": 73.72393690277877,
+      "mean_J_per_token": 0.20544389040673655
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 200.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2446.3744666016023,
+      "std_P_W": 36.831029084087504,
+      "mean_J_per_request": 92.33178398293984,
+      "mean_J_per_token": 0.2531062134490518
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 300.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2565.6251389975837,
+      "std_P_W": 34.92916965924973,
+      "mean_J_per_request": 55.30145129805157,
+      "mean_J_per_token": 0.1669729889326482
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 300.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2537.3943457670157,
+      "std_P_W": 45.436558178913344,
+      "mean_J_per_request": 72.48601691729311,
+      "mean_J_per_token": 0.20206733962268073
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 300.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2447.9894004594244,
+      "std_P_W": 35.78877420367326,
+      "mean_J_per_request": 91.06081666146599,
+      "mean_J_per_token": 0.24979622033943016
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 400.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2565.2778817370195,
+      "std_P_W": 49.35417821472295,
+      "mean_J_per_request": 54.63137510181164,
+      "mean_J_per_token": 0.1649618424580514
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 400.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2541.460588125664,
+      "std_P_W": 55.64132917763947,
+      "mean_J_per_request": 71.79737154971956,
+      "mean_J_per_token": 0.20000949266406284
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 400.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2445.320583582178,
+      "std_P_W": 33.2675267861201,
+      "mean_J_per_request": 90.56979407158283,
+      "mean_J_per_token": 0.24831960502310213
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 500.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2563.8644882863846,
+      "std_P_W": 40.64455779182173,
+      "mean_J_per_request": 54.109782069812496,
+      "mean_J_per_token": 0.16337649445401853
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 500.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2543.6055160207356,
+      "std_P_W": 48.354459436294555,
+      "mean_J_per_request": 71.29423716117077,
+      "mean_J_per_token": 0.19891876178044254
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 500.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2446.160870842799,
+      "std_P_W": 34.70645619097258,
+      "mean_J_per_request": 89.99557759813193,
+      "mean_J_per_token": 0.2470459681665963
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 600.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2561.3910183153434,
+      "std_P_W": 41.601610041307424,
+      "mean_J_per_request": 54.031265071868106,
+      "mean_J_per_token": 0.16315262702877037
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 600.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2541.4948208946103,
+      "std_P_W": 53.92682549072585,
+      "mean_J_per_request": 71.33698719006972,
+      "mean_J_per_token": 0.1987092022951613
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 600.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2447.1812018981373,
+      "std_P_W": 48.08270746754035,
+      "mean_J_per_request": 89.7967271403466,
+      "mean_J_per_token": 0.2466078535935526
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 700.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2560.2746329067127,
+      "std_P_W": 36.88597839497492,
+      "mean_J_per_request": 53.80964112972027,
+      "mean_J_per_token": 0.1624336386928571
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 700.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2519.768961667524,
+      "std_P_W": 86.11971320052919,
+      "mean_J_per_request": 71.3777555029826,
+      "mean_J_per_token": 0.19907312288008291
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 700.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2450.198491048601,
+      "std_P_W": 33.28222032887229,
+      "mean_J_per_request": 89.57473064236402,
+      "mean_J_per_token": 0.24581817145794713
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 800.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2574.2597928975215,
+      "std_P_W": 35.74694229856559,
+      "mean_J_per_request": 53.57146899755256,
+      "mean_J_per_token": 0.1617407886892846
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 800.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2545.947179830019,
+      "std_P_W": 54.340220272171834,
+      "mean_J_per_request": 70.90637146449569,
+      "mean_J_per_token": 0.19762640296545392
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 800.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2444.1114058380062,
+      "std_P_W": 39.93498611431839,
+      "mean_J_per_request": 89.64876668601815,
+      "mean_J_per_token": 0.2461769470949776
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 900.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2566.316599201153,
+      "std_P_W": 32.992503271484615,
+      "mean_J_per_request": 53.45821999870102,
+      "mean_J_per_token": 0.16143019031573036
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 900.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2536.5430270737215,
+      "std_P_W": 51.97747668252112,
+      "mean_J_per_request": 70.95490831446473,
+      "mean_J_per_token": 0.19769196941806155
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 900.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2436.4423119523535,
+      "std_P_W": 41.86377805533676,
+      "mean_J_per_request": 89.47980652328167,
+      "mean_J_per_token": 0.24580683418855948
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 1000.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2534.8496469866673,
+      "std_P_W": 88.95581892560173,
+      "mean_J_per_request": 53.7300278791384,
+      "mean_J_per_token": 0.16224667217227473
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 1000.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2542.9110732749073,
+      "std_P_W": 55.146887750999326,
+      "mean_J_per_request": 70.71102604424807,
+      "mean_J_per_token": 0.19709702487767797
+    },
+    {
+      "dataset": "likaixin/InstructCoder",
+      "request_rate": 1000.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2445.9387452731526,
+      "std_P_W": 33.447759833815795,
+      "mean_J_per_request": 89.22975881634159,
+      "mean_J_per_token": 0.24504414388677592
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 10.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2202.2091929192097,
+      "std_P_W": 32.93657735381218,
+      "mean_J_per_request": 239.14954956311112,
+      "mean_J_per_token": 0.7367490972277329
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 10.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2238.9794665829895,
+      "std_P_W": 26.86052205045426,
+      "mean_J_per_request": 249.04179620101226,
+      "mean_J_per_token": 0.6905703996163409
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 10.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2252.046049258364,
+      "std_P_W": 5.9803349704753055,
+      "mean_J_per_request": 254.01642671921672,
+      "mean_J_per_token": 0.6990067805225141
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 20.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2349.5293108325923,
+      "std_P_W": 9.354843155384208,
+      "mean_J_per_request": 136.49737480498095,
+      "mean_J_per_token": 0.42014854478710356
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 20.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2423.721970822393,
+      "std_P_W": 14.716537697425538,
+      "mean_J_per_request": 150.5818751718081,
+      "mean_J_per_token": 0.4166227624215828
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 20.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2408.322061585191,
+      "std_P_W": 20.073464919097255,
+      "mean_J_per_request": 161.54011013023597,
+      "mean_J_per_token": 0.443689681283372
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 30.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2505.728162883054,
+      "std_P_W": 15.923608478965958,
+      "mean_J_per_request": 104.91566295790204,
+      "mean_J_per_token": 0.3228238287401779
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 30.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2491.607656862143,
+      "std_P_W": 158.96874030607046,
+      "mean_J_per_request": 119.14851267549936,
+      "mean_J_per_token": 0.33009140862259684
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 30.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2490.155236876022,
+      "std_P_W": 25.152119540197624,
+      "mean_J_per_request": 132.38939019407334,
+      "mean_J_per_token": 0.36370367274353077
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 40.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2590.1533379760403,
+      "std_P_W": 25.67707357844659,
+      "mean_J_per_request": 88.69557128430837,
+      "mean_J_per_token": 0.2729532922887395
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 40.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2569.202612797006,
+      "std_P_W": 26.89586170537174,
+      "mean_J_per_request": 103.32209264710235,
+      "mean_J_per_token": 0.2859774007792945
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 40.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2501.4500002234217,
+      "std_P_W": 22.769755564439713,
+      "mean_J_per_request": 117.8956812844787,
+      "mean_J_per_token": 0.32405925755084464
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 50.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2604.50151201404,
+      "std_P_W": 28.24178412285822,
+      "mean_J_per_request": 80.76328332352557,
+      "mean_J_per_token": 0.24858145659287903
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 50.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2566.4421239876096,
+      "std_P_W": 29.086444761912833,
+      "mean_J_per_request": 98.67096240503855,
+      "mean_J_per_token": 0.27308605658909896
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 50.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2474.169759873726,
+      "std_P_W": 31.07320028566722,
+      "mean_J_per_request": 116.17682536597408,
+      "mean_J_per_token": 0.31909880846710265
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 60.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2386.365201589477,
+      "std_P_W": 618.5351301567885,
+      "mean_J_per_request": 77.49802359034767,
+      "mean_J_per_token": 0.23846366464511454
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 60.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2550.5795690775362,
+      "std_P_W": 31.962300185328022,
+      "mean_J_per_request": 96.10167331120479,
+      "mean_J_per_token": 0.2664913071649493
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 60.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2470.2586057474364,
+      "std_P_W": 19.88238289721184,
+      "mean_J_per_request": 113.27000630634865,
+      "mean_J_per_token": 0.3115431788809706
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 70.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2576.7435778765107,
+      "std_P_W": 33.859022293016594,
+      "mean_J_per_request": 75.83006605281103,
+      "mean_J_per_token": 0.23336961932721115
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 70.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2543.3479592545195,
+      "std_P_W": 32.02416880378535,
+      "mean_J_per_request": 94.56136936994265,
+      "mean_J_per_token": 0.2619624608160139
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 70.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2460.0844516104717,
+      "std_P_W": 22.280399301071217,
+      "mean_J_per_request": 112.30887949185987,
+      "mean_J_per_token": 0.308270128522939
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 80.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2571.7168099878527,
+      "std_P_W": 25.76657729612857,
+      "mean_J_per_request": 74.52285961672874,
+      "mean_J_per_token": 0.22938256861263437
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 80.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2540.9920944757364,
+      "std_P_W": 44.577149003004735,
+      "mean_J_per_request": 93.06134183311946,
+      "mean_J_per_token": 0.25816916590065825
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 80.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2456.283258024354,
+      "std_P_W": 32.29620514244808,
+      "mean_J_per_request": 110.82466570979956,
+      "mean_J_per_token": 0.30418942412093164
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 90.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2568.0631870408897,
+      "std_P_W": 27.11037659620506,
+      "mean_J_per_request": 73.53384887341059,
+      "mean_J_per_token": 0.22631940125808706
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 90.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2539.9668678326866,
+      "std_P_W": 41.71525394399631,
+      "mean_J_per_request": 92.10716888459918,
+      "mean_J_per_token": 0.2556079386465402
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 90.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2452.488606782603,
+      "std_P_W": 25.2354955074405,
+      "mean_J_per_request": 109.56055724544983,
+      "mean_J_per_token": 0.30173730928938075
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 100.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2565.1843008329906,
+      "std_P_W": 43.74844952800533,
+      "mean_J_per_request": 72.79520963766647,
+      "mean_J_per_token": 0.22400776840919046
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 100.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2540.7266084044295,
+      "std_P_W": 38.754092467890544,
+      "mean_J_per_request": 91.39459774172309,
+      "mean_J_per_token": 0.2534368465529675
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 100.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2451.7244672418274,
+      "std_P_W": 29.25376713072854,
+      "mean_J_per_request": 109.10493614892896,
+      "mean_J_per_token": 0.29975352748794015
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 200.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2559.178588810174,
+      "std_P_W": 40.11477333849994,
+      "mean_J_per_request": 69.32975163427315,
+      "mean_J_per_token": 0.21334212714745193
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 200.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2539.724129595612,
+      "std_P_W": 36.4732840045382,
+      "mean_J_per_request": 87.93782839100226,
+      "mean_J_per_token": 0.24388820575710402
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 200.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2444.159847928106,
+      "std_P_W": 35.26169185917729,
+      "mean_J_per_request": 105.829206901531,
+      "mean_J_per_token": 0.29135183226020417
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 300.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2551.4330510444624,
+      "std_P_W": 30.68616845012625,
+      "mean_J_per_request": 68.26509094443156,
+      "mean_J_per_token": 0.21014693991235378
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 300.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2536.1007256102957,
+      "std_P_W": 53.62088426616752,
+      "mean_J_per_request": 86.79990270699518,
+      "mean_J_per_token": 0.2407344931864526
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 300.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2450.8576688968365,
+      "std_P_W": 27.954843021334643,
+      "mean_J_per_request": 104.79803690470754,
+      "mean_J_per_token": 0.2884093631675681
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 400.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2549.6033034237335,
+      "std_P_W": 32.39554281487202,
+      "mean_J_per_request": 67.6472313589862,
+      "mean_J_per_token": 0.20815035077126762
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 400.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2549.593008615655,
+      "std_P_W": 31.55573576826462,
+      "mean_J_per_request": 86.01545470888291,
+      "mean_J_per_token": 0.23863519780621922
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 400.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2443.531723767913,
+      "std_P_W": 34.864003081867985,
+      "mean_J_per_request": 104.35626240870161,
+      "mean_J_per_token": 0.28675842048405964
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 500.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2549.961341038807,
+      "std_P_W": 40.027737941666174,
+      "mean_J_per_request": 67.41459514211351,
+      "mean_J_per_token": 0.20747145459893235
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 500.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2543.6333729097805,
+      "std_P_W": 34.67100993277666,
+      "mean_J_per_request": 85.5257264486835,
+      "mean_J_per_token": 0.23761775559350568
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 500.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2451.306408271516,
+      "std_P_W": 24.32022433897687,
+      "mean_J_per_request": 104.08746477018528,
+      "mean_J_per_token": 0.28593296497232945
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 600.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2537.748912679622,
+      "std_P_W": 53.81406196792766,
+      "mean_J_per_request": 67.32266321956227,
+      "mean_J_per_token": 0.20711828893928638
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 600.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2549.5610230077887,
+      "std_P_W": 40.48312310709293,
+      "mean_J_per_request": 85.36908834993648,
+      "mean_J_per_token": 0.2368740931522177
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 600.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2425.4440338905715,
+      "std_P_W": 69.71397504608063,
+      "mean_J_per_request": 104.1789002246074,
+      "mean_J_per_token": 0.28697220726426226
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 700.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2556.2787068564026,
+      "std_P_W": 28.2990575419087,
+      "mean_J_per_request": 66.97248350040576,
+      "mean_J_per_token": 0.20601321794226132
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 700.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2546.6601648304595,
+      "std_P_W": 49.39669162847556,
+      "mean_J_per_request": 85.24784057333154,
+      "mean_J_per_token": 0.2365297954430141
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 700.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2437.373756496405,
+      "std_P_W": 51.22654738301009,
+      "mean_J_per_request": 103.66117412357863,
+      "mean_J_per_token": 0.28549151876526396
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 800.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2542.9880157616826,
+      "std_P_W": 40.41337312603576,
+      "mean_J_per_request": 66.95252494486616,
+      "mean_J_per_token": 0.20611324539314005
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 800.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2547.98918788717,
+      "std_P_W": 46.43379542935908,
+      "mean_J_per_request": 85.19444529562014,
+      "mean_J_per_token": 0.2364368610404598
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 800.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2413.5840901438473,
+      "std_P_W": 92.46492931992032,
+      "mean_J_per_request": 104.35520833449378,
+      "mean_J_per_token": 0.2866914567268335
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 900.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2546.3352932898906,
+      "std_P_W": 41.492244265037854,
+      "mean_J_per_request": 66.9153413001252,
+      "mean_J_per_token": 0.20584980252403268
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 900.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2554.2442914989465,
+      "std_P_W": 34.516571801072125,
+      "mean_J_per_request": 85.14555815988336,
+      "mean_J_per_token": 0.2360569104610157
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 900.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2409.9297936160056,
+      "std_P_W": 73.67604438129382,
+      "mean_J_per_request": 104.14898750077934,
+      "mean_J_per_token": 0.28634377680005774
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 1000.0,
+      "hf_output_len": 256.0,
+      "n_replicates": 9,
+      "mean_P_W": 2537.887119953814,
+      "std_P_W": 35.63559772218076,
+      "mean_J_per_request": 66.80566478321346,
+      "mean_J_per_token": 0.20575881148994576
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 1000.0,
+      "hf_output_len": 512.0,
+      "n_replicates": 9,
+      "mean_P_W": 2542.5678334103864,
+      "std_P_W": 52.843485658090074,
+      "mean_J_per_request": 85.1266845129367,
+      "mean_J_per_token": 0.23623524817350822
+    },
+    {
+      "dataset": "mgoin/mlperf-inference-llama2-data",
+      "request_rate": 1000.0,
+      "hf_output_len": 1024.0,
+      "n_replicates": 9,
+      "mean_P_W": 2446.8603988904206,
+      "std_P_W": 23.6487793625683,
+      "mean_J_per_request": 103.42872925496174,
+      "mean_J_per_token": 0.2842876420960158
+    }
+  ]
+}

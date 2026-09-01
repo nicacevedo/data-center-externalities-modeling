@@ -1,0 +1,82 @@
+{
+  "module": "genai_h100",
+  "git": {
+    "branch": "main",
+    "HEAD": "6c62d81f2b33e9db6a82a493132026e64c719071",
+    "status": "m Data-center-PUE-prediction-tool\n M other_sources/nlr_esif_fullstack/.gitignore\n?? other_sources/nlr_esif_fullstack/genai_h100/",
+    "repo_is_git": true
+  },
+  "frozen_kestrel_cpu": {
+    "CPU_LAYER_FINAL_DISPOSITION": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+    "expected": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+    "p_KestrelCPU_W_per_node": 700.6894574294788,
+    "refit": false,
+    "read_only": true,
+    "rerun": false,
+    "file_sha256": {
+      "analysis/FINAL_KESTREL_CPU_STATUS.json": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9",
+      "manifests/FINAL_MODEL_FREEZE.json": "dcbd066b26b8e7d2800e40a23a1cb8250502bfe59563fe06318cb1be1cc4fd27",
+      "manifests/MODEL_PROTOCOL_FREEZE.json": "609e3989f05412cb68548cad49319d2d335b3165fc459c995a5e38492fbeaeb3",
+      "scripts/run_kestrel_job_power_experiment.py": "7c48e250ff24f2128d5f4cb63df89861c436b61e1d282f60aa0b13530a89bbf4",
+      "scripts/run_kestrel_cpu_final_freeze.py": "e34e9e7c16f3c145068068b8d81e8b57684fa245f0c2a747641bdcd84c4d1475",
+      "scripts/run_cpu_closure_pass.py": "34f3db78d33c69dff2d92bc44ab2a1acca91bee2402f40c34effc7239248c600",
+      "tests/test_cpu_final_freeze.py": "f180363f3b92954e8e3d19e867ca1752439825d99798cb109ed1058185cdd563",
+      "tests/test_cpu_closure_pass.py": "641baf5ca7adeb43304f14c8b00b7761b000c6abda5d16f3cfd1dcb68c06cef6",
+      "tests/test_kestrel_job_power.py": "34dd724ae22227d3de26d08c366785cd72c840213e7b5178389b0413e9974d32"
+    }
+  },
+  "nlr_fullstack_layout": {
+    "analysis": [
+      "CPU_ENERGY_COVERAGE.csv",
+      "CPU_ENERGY_COVERAGE.json",
+      "CPU_REPLAY_CONSERVATION.json",
+      "CPU_RESIDUAL_DEPENDENCE.csv",
+      "CPU_RESIDUAL_UNCERTAINTY.json",
+      "CPU_STATE_TRANSFER_CHRONO.csv",
+      "CPU_STATE_TRANSFER_FINAL.csv",
+      "CPU_STATE_TRANSFER_FINAL.json",
+      "ESIF_CPU_REPLAY_COMPARISON.csv",
+      "ESIF_CPU_REPLAY_COMPARISON.json",
+      "ESIF_OVERLAP_AUDIT.json",
+      "ESIF_TIMEZONE_AUDIT.json",
+      "FIELD_SEMANTICS.csv",
+      "FINAL_KESTREL_CPU_STATUS.json",
+      "JOB_ENERGY_QC.json",
+      "JOB_ENERGY_QC_BY_PARTITION.csv",
+      "METER_BOUNDARY_AUDIT.md",
+      "SHARED_CPU_RECONSTRUCTION.json",
+      "SHARED_CPU_RECONSTRUCTION_FEASIBILITY.md",
+      "SHARING_AUDIT.json",
+      "TIMEOUT_TRANSFER_AUDIT.json"
+    ],
+    "manifests": [
+      "CPU_CLOSURE_INITIAL_STATE.json",
+      "EXTRACTION_RECORD.json",
+      "FINAL_CPU_FREEZE_INITIAL_STATE.json",
+      "FINAL_MODEL_FREEZE.json",
+      "INITIAL_STATE.json",
+      "LOCAL_RAW_DATA_INVENTORY.csv",
+      "LOCAL_RAW_DATA_INVENTORY.json",
+      "MODEL_PROTOCOL_FREEZE.json",
+      "PRIMARY_COHORT_FREEZE.json",
+      "SOURCE_PROVENANCE.json",
+      "TIMEOUT_TRANSFER_FREEZE.json"
+    ],
+    "scripts": [
+      "kestrel_paths.py",
+      "run_cpu_closure_pass.py",
+      "run_kestrel_cpu_final_freeze.py",
+      "run_kestrel_job_power_experiment.py"
+    ],
+    "genai_zip_present": true,
+    "genai_zip_bytes": 1070866623
+  },
+  "constraints": {
+    "do_not_modify_cpu_layer": true,
+    "do_not_run_masanet_m100_cooling_google_eagle_meta": true,
+    "do_not_fit_esif_cooling_weather": true,
+    "do_not_populate_historical_h100_jobs": true,
+    "do_not_label_cpu_gpu_as_full_node_ac": true,
+    "no_meta_access": true
+  }
+}

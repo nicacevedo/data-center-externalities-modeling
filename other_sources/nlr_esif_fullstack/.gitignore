@@ -13,3 +13,5 @@ __pycache__/
 *.pyc
 .pytest_cache/
 logs/
+data_raw/genai/*.zip
+genai_h100/data_processed/*.parquet

@@ -1,0 +1,56 @@
+{
+  "dataset": {
+    "title": "Dataset of Generative AI Workload Power Profiles",
+    "doi": "10.7799/3025227",
+    "catalog_url": "https://data.nlr.gov/submissions/312",
+    "catalog_version": 2,
+    "catalog_version_date": "2026-04-10",
+    "catalog_last_updated": "2026-07-17",
+    "catalog_size_label": "1021.3 MB",
+    "catalog_notes": "Updated README file",
+    "canonical_archive": "dataset.zip",
+    "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/data_raw/genai/dataset.zip",
+    "byte_size": 1070866623,
+    "sha256": "dcad6de800fb565d850b163902e2eddae48aabd1ed1c7336f9a1cdaf3012f137",
+    "source_checksum_published": null,
+    "source_checksum_status": "NOT_PUBLISHED_ON_CATALOG",
+    "redownloaded": false,
+    "status": "LOCAL_EXISTING_VERIFIED",
+    "license": {
+      "name": "NLR Data Catalog standard terms",
+      "url": "https://data.nlr.gov/node/1/license",
+      "summary": "Use/copy without fee provided the license notice is retained; credit DOE/NREL/ALLIANCE in resulting publications. AS IS, no warranty."
+    },
+    "citation": "Vercellino, Roberto, Jared Willard, Gustavo Campos, Weslley da Silva Pereira, Olivia Hull, Matt Selensky, and Juliane Mueller. 2026. Dataset of Generative AI Workload Power Profiles. NLR Data Catalog. DOI: 10.7799/3025227."
+  },
+  "paper": {
+    "title": "Measurement of Generative AI Workload Power Profiles for Whole-Facility Data Center Infrastructure Planning",
+    "arxiv": "2604.07345",
+    "url": "https://arxiv.org/abs/2604.07345",
+    "local_pdf": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/genai_h100/sources/2026_Measurement of Generative AI Workload Power Profiles for (GenAI workloads_training-eval_prompts_tokens_power_util - Simulation).pdf",
+    "local_pdf_sha256": "73c05fff48623c9fd78ad3ef144f4499bef8136b7bb71c3060dbbc8504b884dd"
+  },
+  "wattameter": {
+    "status": "WATTAMETER_VERSION_UNRESOLVED",
+    "paper_citation": "https://github.com/NatLabRockies/WattAMeter (2025)",
+    "dataset_requirements_pin": null,
+    "dataset_git_is_wattameter": false,
+    "dataset_git_head": "refs/heads/master",
+    "note": "The archive contains a git export of the dataset repository, not a pinned WattAMeter commit. requirements.txt has no WattAMeter pin. Do not assume the current GitHub HEAD was the measurement version."
+  },
+  "hardware": {
+    "system": "NLR Kestrel GPU-accelerated nodes",
+    "gpus": "4 x NVIDIA H100 SXM 80GB",
+    "gpu_tdp_W": 700.0,
+    "cpus": "2 x AMD EPYC 9554 Genoa, 64 cores/socket",
+    "cpu_tdp_W": 360.0,
+    "node_compute_tdp_cpu_gpu_only_W": 3520.0,
+    "interconnect": "HPE Slingshot-11; intra-node NVLink",
+    "source": "Vercellino et al. 2026 Section 3.1"
+  },
+  "diploee": {
+    "classification": "SAME_SOURCE_SIMULATION",
+    "independent_validation": false,
+    "executed_in_this_module": false
+  }
+}

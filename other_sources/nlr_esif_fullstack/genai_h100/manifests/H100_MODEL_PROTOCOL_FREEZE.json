@@ -1,0 +1,67 @@
+{
+  "experimental_unit": "ONE_INDEPENDENT_RUN_OR_PROFILE",
+  "not_experimental_unit": "0.1_or_0.2s_time_sample",
+  "workload_taxonomy": {
+    "batch_like": [
+      "training_finetune_llama2_70b_lora",
+      "training_stable_diffusion",
+      "offline_inference_llama3_70b"
+    ],
+    "online_inference": [
+      "online_finite_llama3_70b",
+      "online_rate_llama3_70b"
+    ],
+    "idle_stress": "PAPER_APPENDIX_A_ONLY_NOT_IN_ARCHIVE"
+  },
+  "hardware_variables": {
+    "node_class": "Kestrel_GPU_H100_SXM_4x_plus_2x_EPYC9554",
+    "nodes": "integer allocated nodes",
+    "gpus_per_node": 4,
+    "cpu_sockets_per_node": 2
+  },
+  "candidate_pooling_hierarchy_batch_like": {
+    "M0": "one universal p_h  (W/node)",
+    "M1": "mode-specific p_{h,m}  training vs offline_inference",
+    "M2": "workload-specific p_{h,w}",
+    "M3": "p_{h,w}(N) only if M2 still shows meaningful scale dependence",
+    "start_at": "M0 then M1 then M2; do not start at M3"
+  },
+  "primary_quantity": "p_i = E_compute,i / (nodes_i * runtime_i)",
+  "not_primary": "R2 of E against node-hours (tautological in scale)",
+  "node_count_analysis": {
+    "within_workload_only": true,
+    "mlperf_training_scaling": "WEAK_SCALING_INCREASING_GLOBAL_BATCH",
+    "not": "strong scaling",
+    "diagnostic_trend": "p_i = alpha_w + beta_w * log2(N_i) only if levels support it"
+  },
+  "validation": {
+    "method": "leave_one_replicate_out or leave_one_configuration_out",
+    "forbidden": "random split of high-frequency samples from the same run",
+    "single_run_configs": "descriptive_only_no_OOS_claim"
+  },
+  "metrics": [
+    "replicate CV of p_i",
+    "effect size of mode/workload/node on p_i",
+    "MAPE of E_hat = p * N * tau vs E_obs on held-out replicates",
+    "peak/mean and CV of traces vs aggregation timescale"
+  ],
+  "parsimony_rule": "Do not prefer complexity merely because it lowers in-sample error. Pool p if between-group differences are small relative to replicate variability and MAPE improvement is not material.",
+  "measurement_boundary_restrictions": {
+    "label_cpu_gpu_as": [
+      "measured_compute_power",
+      "measured_compute_energy"
+    ],
+    "forbidden_label": "full_node_power",
+    "P_other_node": "UNRESOLVED_DO_NOT_ESTIMATE",
+    "historical_h100_jobs": "DO_NOT_ASSIGN_WORKLOAD_COEFFICIENT",
+    "online_inference": "separate_physical_object_not_forced_into_batch_equation"
+  },
+  "energy_integration": {
+    "components_on_native_timestamps": true,
+    "combined_trace_grid": {
+      "training": "0.2s linear interpolation over overlap window (source)",
+      "inference": "0.1s linear interpolation over metadata window (source)"
+    },
+    "no_silent_long_forward_fill": true
+  }
+}

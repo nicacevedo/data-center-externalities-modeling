@@ -1,0 +1,70 @@
+{
+  "attempt": "EXACT_SLURM_JOB_ID_ONLY",
+  "no_inferred_matches": true,
+  "no_timestamp_or_hash_reidentification": true,
+  "training": {
+    "n_genai_runs": 41,
+    "n_exact_matches": 41,
+    "status": "EXACT_CROSSWALK",
+    "nodes_match_rate": 1.0,
+    "energy_wh_all_null": true,
+    "states": {
+      "COMPLETED": 30,
+      "CANCELLED": 11
+    },
+    "partitions": {
+      "gpu-h100": 41
+    },
+    "hardware_branch": {
+      "H100": 41
+    },
+    "duration_rel_diff_median": -0.007218683651804703,
+    "note": "Kestrel job extract ConsumedEnergyRaw/energy_wh is null for these H100 jobs. Crosswalk validates identity, nodes, partition, and wallclock, not job-record energy."
+  },
+  "inference": {
+    "status": "PARTIAL",
+    "reason": "inference metadata rows have no Slurm job IDs",
+    "log_banner_job_ids": [
+      10720618,
+      11763012,
+      12146821
+    ],
+    "log_files": {
+      "00_raw_datasets/inference_offline_llama3_70b/nvml_wattameter_x3115c0s33b0n0.log": 10720618,
+      "00_raw_datasets/inference_offline_llama3_70b/rapl_wattameter_x3115c0s33b0n0.log": 10720618,
+      "00_raw_datasets/inference_online_finite_llama3_70b/nvml_wattameter_11763012-x3101c0s37b0n0.log": 11763012,
+      "00_raw_datasets/inference_online_finite_llama3_70b/rapl_wattameter_11763012-x3101c0s37b0n0.log": 11763012,
+      "00_raw_datasets/inference_online_finite_llama3_70b/vllm_bench.log": null,
+      "00_raw_datasets/inference_online_finite_llama3_70b/vllm_server.log": null,
+      "00_raw_datasets/inference_online_rate_llama3_70b/nvml_wattameter_12146821-x3104c0s13b0n0.log": 12146821,
+      "00_raw_datasets/inference_online_rate_llama3_70b/rapl_wattameter_12146821-x3104c0s13b0n0.log": 12146821,
+      "00_raw_datasets/inference_online_rate_llama3_70b/vllm_bench.log": null,
+      "00_raw_datasets/inference_online_rate_llama3_70b/vllm_server.log": null
+    },
+    "n_exact_banner_matches": 2,
+    "banner_matches": [
+      {
+        "job_id": 11763012,
+        "partition": "gpu-h100",
+        "state_simple": "CANCELLED",
+        "nodes_used": 1,
+        "gpus_requested": 4.0,
+        "duration_s": 71680.0,
+        "energy_wh": NaN,
+        "hardware_branch": "H100"
+      },
+      {
+        "job_id": 10720618,
+        "partition": "gpu-h100",
+        "state_simple": "CANCELLED",
+        "nodes_used": 1,
+        "gpus_requested": 4.0,
+        "duration_s": 50557.0,
+        "energy_wh": NaN,
+        "hardware_branch": "H100"
+      }
+    ],
+    "note": "Each inference campaign shares one or two WattAMeter logs. Banner 'Power data for run <id>' is an exact Slurm ID for the logging job, not a per-prompt trial ID. Metadata rows still have no slurmid."
+  },
+  "historical_h100_replay": "NOT_PERFORMED"
+}
