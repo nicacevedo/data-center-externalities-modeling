@@ -1,0 +1,25 @@
+check_id,status,severity,detail
+source_file_hashes,PASS,info,8 artifacts hashed
+primary_report_xlsx_csv_equivalence,PASS,info,"{""xlsx_rows"": 3456, ""other_rows"": 3456, ""matched"": 3456, ""xlsx_only"": 0, ""other_only"": 0, ""usage_mismatches"": 0, ""days_mismatches"": 0, ""txt_vs_xlsx_materially_equivalent"": true}"
+primary_report_csv_txt_newline_only,PASS,info,"{""csv_sha256"": ""71da94d884352f8d9c7a70a5b91b9c1aee7b1beca57c4094befca940f4683ebd"", ""txt_sha256"": ""b45cc19443b596ae984c6b7ac216234ba65ed247eb400cca11300a5ebbf86625"", ""extra_csv_byte_identical_to_csv1"": true, ""equivalent_after_newline_normalize"": true, ""csv_minus_txt_bytes"": 317}"
+primary_report_pdf_evidence_mirror,PASS,info,"{""available"": true, ""n_chars"": 1651, ""n_pages"": 3, ""tokens_found"": [""Facebook Data Center"", ""Facebook Trailer City"", ""WELL METER FOR SEW"", ""SWR METER"", ""WATER - COMM"", ""0001"", ""0002"", ""0003"", ""2012"", ""735 SW Connect Way""], ""tokens_missing"": [""Facebook Warehouse"", ""0004"", ""2026""], ""likely_image_or_vector_table"": true, ""sufficient_evidence_mirror"": true, ""note"": ""PDF is a delivery/evidence copy, not an independent observation. Extracted text is sparse relative to file size.""}"
+unit_conversion,PASS,info,1 unit = 748 gal = 2.8314880144320003 m3; 0 units = 0
+meter_id_leading_zeros,PASS,info,padded IDs n=624; stripped numeric IDs n=0
+repeated_annual_blocks,PASS,info,"years=[2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]"
+valid_year_month,PASS,info,invalid rows=0
+source_row_uniqueness,PASS,info,duplicate source_row_id+month=0
+meter_month_duplicates,PASS,info,duplicate meter-month rows=0
+monthly_sum_vs_annual_total,WARN,warning,mismatched meter-years=4
+nonzero_usage_zero_read_days,WARN,warning,n=29
+zero_usage_positive_read_days,PASS,info,"observed_zero n=501 (valid observed zeros, not missing)"
+unobserved_2026_future_periods,PASS,info,not_observed_yet n=124; latest observed=2026-7
+duplicate_bulk_bill_dates,WARN,warning,"dates with >1 row=29; preserved as separate hydrant-meter rows, summed only in monthly aggregates"
+event_ids_absent_from_consumption,WARN,warning,n=9 (includes leading-1 event IDs and unmatched); not a parser error
+consumption_ids_absent_from_events,WARN,expected_limitation,n=19; pre-2018 lifecycle is incomplete by City note
+usage_outside_lifecycle_intervals,WARN,warning,before_set=24 after_pull=0
+anomalous_event_date_1573376176,WARN,warning,Meter 1573376176 has a City set date 2026-02-15 but appears in consumption before that date. Source not corrected.
+unexpected_entities,PASS,info,"entities=['Facebook Data Center', 'Facebook Trailer City', 'Facebook Warehouse']"
+unexpected_rate_codes,PASS,info,"rate_codes=['ADD\'L WATER - 1""', 'ADD\'L WATER - 3/4""', 'ADD\'L WATER - 4""', 'SWR METER', 'WATER - COMM 1""', 'WATER - COMM 1.5""', 'WATER - COMM 2""', 'WATER - COMM 3/4""', 'WATER - COMM 4""', 'WATER - COMM 6""', 'WELL METER FOR SEW']"
+malformed_numeric_values,PASS,info,n=0
+canonical_meta_annual_untouched,PASS,info,sha256=1f6b19f466b89a0e08c4914689186bed1bc8a9574c5732bb26c17562e5a1e513
+pre_2018_lifecycle_incomplete,PASS,expected_limitation,City states meter set/swap/inactivation records are incomplete before ~2018. Absence of an event is not proof the meter did not exist.

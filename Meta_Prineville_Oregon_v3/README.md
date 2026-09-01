@@ -13,9 +13,9 @@ It is **not** a claim that public data identify Meta's private hourly IT workloa
 
 ## Current baseline
 
-**Freeze:** Prineville Public-Data Baseline v1 (git `main`).
+**Freeze:** Prineville Public-Data Baseline v2 — City utility-meter integration (git `main`).
 
-The public-data pipeline is integrated through weather, water, grid, permits, GWIS groundwater observations, measurement QC, and a groundwater identifiability screen. A documentary/regulatory layer adds PRN vs CCO identity, interconnection/service-capacity context, and City water-infrastructure legal chronology. Those documents are **not** meters and do not retune the model. Meta annual `Prineville` totals stay as reported; the PRN-vs-CCO inclusion boundary by reporting vintage is unresolved (`unresolved_prn_vs_prn_plus_cco`). No groundwater-response model is fitted. Annual electricity is closed to Meta totals (not a forecast). 2023–2024 is the water-model holdout only.
+The public-data pipeline is integrated through weather, water, grid, permits, GWIS groundwater observations, measurement QC, a groundwater identifiability screen, and City of Prineville Facebook utility-meter records. Monthly City-metered Facebook Data Center WATER-COMM + ADD'L WATER service is now observed at meter level. That series is **not** total Meta campus withdrawal. A documentary/regulatory layer adds PRN vs CCO identity, interconnection/service-capacity context, and City water-infrastructure legal chronology. Those documents are **not** meters and do not retune the annual Meta water holdout. Meta annual `Prineville` totals stay as reported; the PRN-vs-CCO inclusion boundary by reporting vintage is unresolved (`unresolved_prn_vs_prn_plus_cco`). No groundwater-response model is fitted. Annual electricity is closed to Meta totals (not a forecast). 2023–2024 remains the frozen water-model holdout for Meta annual withdrawal.
 
 | Read this | For |
 |---|---|
@@ -49,6 +49,7 @@ Expected **locally** under gitignored `data/` after following the source/manual 
 - `data/canonical/usgs/`: study HUC12 geography (site `170703051002`, local 9, HUC8 52).
 - `data/canonical/municipal_source_huc12_crosswalk.csv`: City wells → HUC12 using official coordinates only.
 - `data/processed/owrd/`, `data/processed/usgs_nwaa/`, `data/processed/water/`: source-specific then integrated water tables (`python run_prineville.py water` / `usgs` / `water-context`).
+- `data/raw/city_prineville_public_records_2026/` and `src/prepare_city_prineville_utility.py`: City Facebook utility-meter package (`python run_prineville.py city-utility`). Processed tables under `data/processed/city_prineville/`. City-metered service water is not total Meta withdrawal.
 - `data/raw/eia930/historical/PACW.xlsx` and `src/prepare_eia930.py`: canonical PACW EIA-930 history (`python run_prineville.py eia`).
 - `data/raw/ferc_form_714/` and `src/prepare_ferc714.py`: FERC Form 714 PacifiCorp-West monthly and East+West hourly filings, 2011-2018 (`python run_prineville.py ferc`). Does not overwrite `pacw_hourly.csv`.
 - `data/raw/egrid/` and `src/prepare_egrid.py`: EPA eGRID subregion output rates × Meta campus MWh (`python run_prineville.py egrid`).
@@ -210,6 +211,15 @@ python run_prineville.py groundwater-identifiability
 This stage first writes measurement-QC tables (`outputs/groundwater/gwis_measurement_model_qc.csv` and related summary/large-change files), then the identifiability audit. Eligibility uses explicit GWIS method/status only (for example PUMPING, FLOWING, INJECTING, DRY, NOT MEASURED). Unknown statuses are retained and labeled. Surprising values are not deleted for magnitude.
 
 Classifies each matched well/pumping group as `ESTIMATION_CANDIDATE` (enough overlap to attempt a validated empirical response benchmark, not identified dynamics), `VALIDATION_ONLY`, or `INSUFFICIENT`. Current candidates: SRC-GC (Heliport), SRC-JA (Millican), SRC-GB (Airport #2). Airport pumping stays the combined SRC-GA+SRC-GB group. Within-well `head_anomaly_ft = -(BLS − well-mean BLS)`. BLS and AMSL are two representations of the same measurement. Mixed datums are not compared as absolute heads. 0/1/3/6-month lag correlations are exploratory. This audit does **not** fit a groundwater-response model.
+
+### Stage 3.7c — City of Prineville utility meters (observational)
+
+```bash
+python run_prineville.py city-utility
+python run_prineville.py city-utility-models
+```
+
+`city-utility` is also part of `audit` (after OWRD water). It parses the immutable City package under `data/raw/city_prineville_public_records_2026/`, writes meter-month, bulk, lifecycle, QA, and Meta/OWRD reconciliation tables, and evaluates a model-promotion gate. `city-utility-models` runs only after that gate and after `conditional` (needs hourly evaporation). The response is `city_metered_water_service_m3` (Facebook Data Center WATER-COMM + ADD'L WATER). It is not Meta total monthly withdrawal. The 2023–2024 Meta annual water holdout is copied, not overwritten.
 
 ### Stage 3.8 — public quantity extensions (no new models)
 
@@ -445,7 +455,7 @@ Rebuilds registries, diagrams, coverage/validation figures, and `docs/PIPELINE_D
 python run_prineville.py full
 ```
 
-Thin orchestration only: annual targets/permits/OWRD audit → weather (cached KRDM+KS39, no MADIS download) → USGS panels/crosswalk/audit → grid (EIA-930 then FERC 714 then eGRID) → Oregon generators → DEQ → water-context → groundwater-context → groundwater-identifiability → conditional reconstruction/OWRD validation → public-extensions → stochastic simulation → pipeline report. Expects raw source files to already exist and does not intentionally acquire new external data. `conditional` already rebuilds reconstruction, so `validate` is not repeated. Public extensions never read a stale conditional reconstruction because `full` rebuilds `conditional` first. The current freeze label is **Prineville Public-Data Baseline v1**.
+Thin orchestration only: annual targets/permits/OWRD audit **including City utility-meter ingest** → weather (cached KRDM+KS39, no MADIS download) → USGS panels/crosswalk/audit → grid (EIA-930 then FERC 714 then eGRID) → Oregon generators → DEQ → water-context → groundwater-context → groundwater-identifiability → conditional reconstruction/OWRD validation → City-service monthly models (if the observational gate passed) → public-extensions → stochastic simulation → pipeline report. Expects raw source files to already exist and does not intentionally acquire new external data. `conditional` already rebuilds reconstruction, so `validate` is not repeated. Public extensions never read a stale conditional reconstruction because `full` rebuilds `conditional` first. The current freeze label is **Prineville Public-Data Baseline v2 — City utility-meter integration**.
 
 ## What is missing, and how to fill it
 
@@ -453,8 +463,8 @@ Thin orchestration only: annual targets/permits/OWRD audit → weather (cached K
 |---|---|---|
 | Exact hourly IT load | Meta internal telemetry | Latent utilization process constrained by annual facility energy; report uncertainty; never call recovered hourly load observed |
 | Monthly/hourly campus electricity | PacifiCorp/Meta | Public-record/cooperation request if possible; otherwise annual Meta target + physical load-shape priors |
-| Monthly campus water | City utility/Meta | Public-record request; otherwise physics-based weather shape closed to annual Meta withdrawal |
-| Site water consumption vs withdrawal | City sewer/discharge + Meta | `consumption = withdrawal - discharge` if discharge observed; otherwise use cooling mass balance/CoC range and report interval |
+| Monthly campus-total water | City meters are a customer-service component, not the Meta annual total | Keep City-service observed; do not relabel it as campus-total withdrawal; physics-based shape remains the Meta-total monthly proxy |
+| Site water consumption vs withdrawal | City sewer/discharge identity + Meta | City SWR METER is not identified as total return; `consumption = withdrawal - discharge` only if discharge is independently identified |
 | Municipal/ASR groundwater-head operations series | City/ASR records | Local GWIS well levels are already bundled; City/ASR operational hydrographs remain a separate request |
 | Building commissioning dates | Crook County/City permits | Permit/final/CO request; use change points only as statistical candidates, not facts |
 | Building-specific cooling systems | Mechanical permits/Meta | Use initial design only for initial epoch; later architecture uncertain until evidence supports it |

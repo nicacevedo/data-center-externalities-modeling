@@ -76,6 +76,22 @@ def grid():
     egrid()
 
 
+def city_utility():
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "prepare_city_prineville_utility.py")],
+        check=True,
+        cwd=ROOT,
+    )
+
+
+def city_utility_models():
+    subprocess.run(
+        [sys.executable, str(ROOT / "src" / "evaluate_city_metered_water_models.py")],
+        check=True,
+        cwd=ROOT,
+    )
+
+
 def full():
     """No-download whole-pipeline rebuild from existing raw files.
 
@@ -93,6 +109,7 @@ def full():
     groundwater_context()
     groundwater_identifiability()
     conditional()
+    city_utility_models()
     public_extensions()
     simulate()
     report()
@@ -103,6 +120,7 @@ def owrd_validate():
 def audit():
     subprocess.run([sys.executable,str(ROOT/'src'/'build_targets.py')],check=True)
     water()
+    city_utility()
     subprocess.run(
         [sys.executable, str(ROOT / "src" / "integrate_prineville_documentary_evidence.py")],
         check=True,
@@ -209,7 +227,9 @@ def main():
     elif cmd=='report': report()
     elif cmd=='weather': weather()
     elif cmd=='weather-ks39': weather_ks39()
+    elif cmd=='city-utility': city_utility()
+    elif cmd=='city-utility-models': city_utility_models()
     elif cmd=='full': full()
-    else: raise SystemExit('Usage: python run_prineville.py [audit|water|weather|water-context|groundwater-context|groundwater-identifiability|public-extensions|conditional|simulate|calibrate|validate|owrd-validate|eia|ferc|egrid|oregon|grid|deq|usgs|report|weather-ks39|full]')
+    else: raise SystemExit('Usage: python run_prineville.py [audit|water|city-utility|city-utility-models|weather|water-context|groundwater-context|groundwater-identifiability|public-extensions|conditional|simulate|calibrate|validate|owrd-validate|eia|ferc|egrid|oregon|grid|deq|usgs|report|weather-ks39|full]')
 
 if __name__=='__main__': main()

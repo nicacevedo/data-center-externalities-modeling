@@ -60,24 +60,31 @@ They include aquifer/hydrogeologic characterization, Heliport/Millican context, 
 
 The catalogued PDFs are still not under `data/raw/`. Local OWRD GWIS well-level exports are already at `data/raw/gwis_data_new/` and are the measured well-head series used by the current freeze. Do not re-download GWIS for this freeze. Prefer those tables over digitizing ASR hydrograph figures.
 
-## 3. City of Prineville public-record request — highest-value request
+## 3. City of Prineville public-record request — meter package received; remaining items
 
 Official City page: https://www.cityofprineville.com/1294/Public-Records
 
-The City states that non-police public-record requests may be submitted to `recorder@cityofprineville.com` (phone 541-447-5627, ext. 106). Use that channel; do not send this utility/infrastructure request to the police-records address.
+The City Facebook water/sewer meter report, bulk/hydrant water, meter set/swap/pull history, and explanatory note are now at `data/raw/city_prineville_public_records_2026/`. Do **not** re-request that package. Do not move, rename, or re-save those files.
 
-### Ready-to-copy request
+`python run_prineville.py city-utility` parses them. City-metered Facebook Data Center WATER-COMM + ADD'L WATER is observed monthly. That is **not** total Meta campus withdrawal, total discharge, or groundwater.
 
-> I am conducting academic research on the historical water and infrastructure impacts of the Prineville data-center campus. I request existing electronic records, preferably in CSV/XLSX format where maintained, for January 2010 through December 2025 for the following: (1) monthly potable-water volume billed/delivered to Facebook/Meta data-center accounts or, if account-level records cannot be released, monthly aggregate volume for the Facebook/Meta campus; (2) monthly reclaimed/non-potable water supplied to the campus, if any; (3) monthly wastewater/sewer discharge volume attributable to the campus, if separately metered; (4) monthly production/pumping volume for each municipal production well and the Crooked River Wellfield; (5) monthly aquifer-storage-and-recovery injection and recovery volumes; (6) groundwater level/head observations collected for the ASR or municipal well system; and (7) meter installation/replacement dates or material changes in how these quantities were measured. I am not requesting personal customer information, payment information, or security-sensitive facility details. If account-level records are exempt, please provide the least aggregated non-exempt historical time series that preserves the monthly total.
+### Remaining City follow-up (do not acquire in an automated pass)
 
-Save all responses/raw files under `data/raw/city/` and then map them into:
-- `city_meta_monthly_meter.csv`
-- `city_well_production_monthly.csv`
-- `asr_monthly.csv`
+Still not in the repository, and still worth a targeted records request if a custodian can answer:
 
-Item (6) is for City/ASR operational hydrographs. Local GWIS well levels are already bundled and are a different series.
+1. Identity of `SWR METER` and `WELL METER FOR SEW` (sewer return vs well vs other);
+2. Whether WATER-COMM / ADD'L WATER meters include parent/submeters;
+3. Mapping of customer meters to municipal production wells / ASR;
+4. Monthly municipal well production by well and ASR injection/recovery;
+5. Whether bulk/hydrant water is construction, cooling, irrigation, or other;
+6. Whether Facebook Trailer City and Facebook Warehouse are inside the Meta campus water boundary used in sustainability disclosures;
+7. Clarification of meter `1573376176` (consumption from 2024 vs set date 2026-02-15) and Warehouse 2020–2023 annual totals of 0 with nonzero months.
 
-The City utility portal can show monthly consumption to account holders (`CITY_UTILITY_INFO_FY26`). That supports this request. It is not Meta monthly water data and does not make those account records public.
+The City states that non-police public-record requests may be submitted to `recorder@cityofprineville.com` (phone 541-447-5627, ext. 106).
+
+Item (6) in the original request (City/ASR operational hydrographs) remains outstanding. Local GWIS well levels are already bundled and are a different series.
+
+The City utility portal can show monthly consumption to account holders (`CITY_UTILITY_INFO_FY26`). That is not a substitute for the public-record package already received.
 
 Do not overwrite raw records.
 

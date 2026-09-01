@@ -231,6 +231,22 @@ Finest defensible OWRD source/reporting-group × month table with USGS HUC12 con
 ## `data/processed/water/prineville_water_monthly_context.csv`
 Calendar-month spine with **separate** columns for accepted City production, Vitesse/Facebook direct POD use, Meta annual campus withdrawal (labeled annual, not monthly), site-HUC12 USGS variables, and canonical KS39/KRDM monthly weather. USGS values are missing after their official coverage ends.
 
+## City of Prineville Facebook utility meters (`python run_prineville.py city-utility`)
+
+Immutable originals: `data/raw/city_prineville_public_records_2026/`. Do not rename or re-save them.
+
+Units (City note): 1 reported unit = 100 ft³ = 748 US gallons; `usage_m3 = usage_100cf × 748 × 0.003785411784`.
+
+- `data/processed/city_prineville/city_meter_monthly_long.csv`: one row per meter × month. `meter_id_raw` is a string (preserve `0001`–`0004`). `observation_status` distinguishes `observed`, `observed_zero`, `missing`, `structurally_unavailable`, `not_observed_yet`, `source_anomaly`, `malformed`.
+- `city_water_components_monthly.csv`: independent monthly components. `city_metered_water_service_m3` is Facebook Data Center WATER-COMM + ADD'L WATER only. There is no `total_campus_water_m3`.
+- `city_bulk_water_monthly.csv`: hydrant bulk water on the **billing** convention (`bill_date` / `bill_year` / `bill_month`). Not shifted to a consumption month.
+- `city_meter_events.csv` / `city_meter_lineage_audit.csv`: set/swap/pull events; inferred leading-1 matches are not silently accepted.
+- `city_meter_qa.csv` / `city_meter_qa_exceptions.csv`: QA; anomalies are retained.
+- `city_meta_annual_reconciliation.csv`: Meta annual withdrawal vs City components. Diagnostic combinations are labeled as such.
+- `city_owrd_well_meter_compare.csv`: WELL METER FOR SEW vs OWRD direct POD. Evidence comparison only.
+
+`city_metered_water_service_m3` is a **customer-service** quantity. Meta `water_withdrawal_m3_reported` remains the campus-total annual benchmark and is not rewritten.
+
 ## Groundwater scaffold (`python run_prineville.py groundwater-context`)
 
 Existing OHA/OWRD/Meta identities remapped to well nodes and joined to local OWRD GWIS exports on official well/tag/log IDs only. HUC12 is a location attribute only, never an aquifer/network node. Combined OWRD PODs are not split across physical wells. Duplicate GWIS files are hash-deduplicated; observations are unique on `gw_measured_water_level_id`.

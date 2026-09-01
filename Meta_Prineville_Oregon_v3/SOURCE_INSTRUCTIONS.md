@@ -192,20 +192,32 @@ BLS and AMSL are two representations of the same measurement, not independent ob
 
 Do not map a Vitesse-named GWIS well to POD reports 64500/64845/64846 unless the official well/tag/log ID matches. Duplicate export files must not double-count observations.
 
-## 8. City utility records — highest-value missing site water data
+## 8. City utility records — Facebook meters received; remaining City/Meta gaps
 
 - Official public-record page: `https://www.cityofprineville.com/1294/Public-Records`
-- Non-police record requests: `recorder@cityofprineville.com`.
+- Delivery directory (immutable): `data/raw/city_prineville_public_records_2026/`
+- Parser: `python run_prineville.py city-utility`
 
-Use the ready-to-copy request in `MANUAL_ACQUISITION.md` for:
-- monthly Meta/Facebook water delivered;
-- monthly wastewater/sewer discharge if separately metered;
-- municipal well production by well;
-- ASR injection/recovery;
-- municipal/ASR operational groundwater-head series (local GWIS well levels are already bundled and are not this series);
-- meter methodology/change dates.
+The 2026 City package includes Facebook water/sewer meter consumption (XLSX primary; CSV/TXT/PDF mirrors), bulk/hydrant water, meter set/swap/pull history from ~2018, and a City note on units and timing.
 
-Raw responses go under `data/raw/city/` and are never overwritten.
+City note (treat as source metadata):
+- 1 reported unit = 100 ft³ = 748 US gallons;
+- ordinary Facebook water meters are read in the last week of the month and listed in the consumption month;
+- bulk hydrant water is organized on the billing convention (reads ~10th, billed ~15th);
+- meter lifecycle history is incomplete before ~2018.
+
+Use for:
+- observed monthly City-metered Facebook Data Center WATER-COMM + ADD'L WATER service (`city_metered_water_service_m3`);
+- separate unresolved channels (bulk, SWR METER, WELL METER FOR SEW, Trailer City, Warehouse);
+- meter lineage audit.
+
+Do **not** use for:
+- total Meta campus withdrawal (Meta annual tables remain the campus-total benchmark);
+- total wastewater return or consumptive use;
+- allocating City-delivered water to municipal wells;
+- identifying WELL METER FOR SEW as OWRD direct POD withdrawal from correlation alone.
+
+Remaining City follow-up is listed in `MANUAL_ACQUISITION.md`. Do not re-request the meter package already on disk.
 
 ## 9. Weather — NOAA/NCEI Global Hourly and NOAA MADIS KS39
 

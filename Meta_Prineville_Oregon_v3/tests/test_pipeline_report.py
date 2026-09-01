@@ -251,6 +251,10 @@ def test_not_necessary_is_distinct_from_missing_and_figure1_uses_both():
     assert water.loc[water.year.isin([2011, 2012, 2013]), "coverage_status"].eq("missing").all()
     meters = cov[cov.series.eq("Monthly campus water delivery")]
     assert meters["coverage_status"].eq("missing").all()
+    city_svc = cov[cov.series.eq("City-metered Facebook Data Center service water")]
+    if not city_svc.empty:
+        assert "reported" in set(city_svc.coverage_status)
+        assert city_svc.loc[city_svc.year.eq(2011), "coverage_status"].eq("missing").all()
     ww = cov[cov.series.eq("Monthly campus wastewater/sewer discharge")]
     assert ww["coverage_status"].eq("missing").all()
     em = cov[cov.series.eq("Monthly/hourly campus electricity meter")]
@@ -451,6 +455,7 @@ def test_figure1_user_facing_weather_and_meter_gap_rows():
     end = src.index("\ndef figure2_ground_truth")
     body = src[start:end]
     assert "Canonical weather (KS39/KRDM + KBDN fallback)" in body
+    assert "City-metered Facebook Data Center service water" in body
     assert "Monthly campus water delivery" in body
     assert "Monthly campus wastewater/sewer discharge" in body
     assert "Monthly/hourly campus electricity meter" in body

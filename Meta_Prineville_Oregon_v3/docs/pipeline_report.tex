@@ -33,11 +33,11 @@
 % ================================================================
 % Baseline metadata -- populated from current git HEAD and pipeline catalog
 % ================================================================
-\newcommand{\BaselineName}{Prineville Public-Data Baseline v1}
-\newcommand{\BaselineCommit}{\texttt{ac0adf6}}
-\newcommand{\SourceCount}{44}
-\newcommand{\QuantityCount}{76}
-\newcommand{\ModelCount}{18}
+\newcommand{\BaselineName}{Prineville Public-Data Baseline v2 --- City utility-meter integration}
+\newcommand{\BaselineCommit}{\texttt{e0b175e}}
+\newcommand{\SourceCount}{50}
+\newcommand{\QuantityCount}{82}
+\newcommand{\ModelCount}{26}
 
 % ================================================================
 % Provenance vocabulary
@@ -121,7 +121,7 @@ Facility electricity & \(E^{fac}_y\) & \Reported & Annual Meta campus electricit
 Cooling & \(Q^{cool}_t,P^{cool}_t\) & \Derived & Simplified gray-box physics driven by IT load, weather, and assumed parameters. \\
 Weather & \(T,T_d,T_{wb},p\) & \Measured / \Derived & NOAA KS39/KRDM observations; wet bulb derived psychrometrically. \\
 Campus water & \(W^{Meta}_y\) & \Reported & Annual Meta withdrawal is observed from 2014 onward. \\
-Subannual campus water & \(W_t\) & \Scenario / weak prediction & No monthly campus meter; current allocations/predictions are not telemetry. \\
+Subannual campus water & \(W_t\) & Mixed: City-service observed; campus total still reconstructed & City meters observe Facebook Data Center WATER-COMM + ADD'L WATER, not Meta campus-total withdrawal. \\
 Regional grid demand & \(D^{PACW}_t\) & \Measured / \Proxy & EIA-930 when available; FERC-constrained proxy for earlier years. \\
 Grid carbon & \(CI_t\) & \Derived / \Proxy & Regional average/accounting context; not Meta-specific marginal emissions. \\
 Generator water/emissions & \(W_{g,t},CO_{2,g,t}\) & \Reported / \Derived & Strong plant context; no claim that particular plants physically serve Meta. \\
@@ -223,7 +223,7 @@ The implementation is best understood as a sequence of evidence decisions rather
 2. QC & Check dates, units, duplicate records, missing-vs-zero, reporting conventions, and source-specific flags. & GWIS pumping/flowing observations are excluded from the state-model sample only when metadata support exclusion. \\
 3. Crosswalk & Determine whether records refer to the same physical entity and boundary. & Airport wells share combined pumping; unresolved Vitesse PODs are not automatically mapped to nearby GWIS wells. \\
 4. Canonicalize & Keep one defensible representation with provenance. & BLS and AMSL are paired representations of the same GWIS measurement, not two independent observations. \\
-5. Model & Infer only quantities that are not directly observed. & Hourly IT load and subannual campus water require reconstruction/scenario assumptions. \\
+5. Model & Infer only quantities that are not directly observed. & Hourly IT load and Meta campus-total monthly water still require reconstruction. City-metered service water is now observed. \\
 6. Validate & Compare against independent data where possible; separate prediction from accounting closure. & FERC historical demand is checked against EIA-930; exact annual electricity closure is not called a forecast. \\
 7. Scenario / decision & Use uncertain quantities only after their status is explicit. & Synthetic workload scenarios can explore interactions but cannot recover historical Meta telemetry. \\
 \bottomrule
@@ -535,7 +535,7 @@ Not yet identified & hourly Meta IT; monthly campus meters; exact source shares;
 \textbf{Relationship we want} & \textbf{Main missing / uncertain information} & \textbf{What it prevents today} \\
 \midrule
 Workload \(\rightarrow\) IT / facility operation & workload telemetry, IT power, detailed cooling state/control & Historical hourly internal-state identification. \\
-Cooling \(\rightarrow\) campus water & monthly campus water, consumption vs withdrawal, discharge/return, cooling-loop operation, source/reuse shares & Reliable subannual water prediction and source-resolved accounting. \\
+Cooling \(\rightarrow\) campus water & campus-total monthly withdrawal, consumption vs withdrawal, identified discharge/return, source/reuse shares & City-service monthly shape is now observed; total campus/source accounting remains unresolved. \\
 Pumping \(\rightarrow\) groundwater & measurement-condition uncertainty, recharge/background hydrology, other pumping; physical \(T,S,S_y\) for full model & Causal/physical groundwater response and aquifer simulation. \\
 Facility load \(\rightarrow\) grid externality & actual supply contract/serving attribution, marginal dispatch response & Meta-specific marginal carbon/water consequences. \\
 Response models \(\rightarrow\) decisions & workload flexibility, tariffs/costs, capacity constraints, validated water/GW response functions & Credible operational/siting optimization. \\
@@ -562,7 +562,8 @@ Simulation is useful when its role is explicit.
 \textbf{Not justified now:}
 \begin{itemize}
 \item recovering Meta's historical workload or hourly IT telemetry;
-\item reconstructing actual monthly campus water without a meter/stronger model;
+\item reconstructing Meta campus-total monthly water without an identified campus-total meter;
+\item mapping City-metered service water to Meta annual withdrawal, sewer return, and municipal wells;
 \item interpreting simulated pumping as the cause of an observed groundwater movement;
 \item treating scenario output as evidence of an actual historical cooling mode or source share.
 \end{itemize}
@@ -629,7 +630,7 @@ The most useful advisor feedback is not on implementation detail, but on the mod
 \begin{enumerate}
 \item Is the overall causal chain the right research abstraction: compute \(\rightarrow\) facility \(\rightarrow\) grid/water \(\rightarrow\) environmental state \(\rightarrow\) decision?
 \item Is Prineville now sufficiently grounded to serve as the empirical validation case, despite missing internal telemetry?
-\item Should the next identification effort prioritize groundwater response, or is there a higher-value missing relationship (for example monthly campus water/source shares)?
+\item Should the next identification effort prioritize groundwater response, or City/Meta water-boundary reconciliation (sewer, wells, source allocation)?
 \item Is the proposed progression---simple empirical response \(\rightarrow\) reduced-order state model \(\rightarrow\) later physical/optimization coupling---the right level of complexity?
 \item Which eventual decision problem is most scientifically valuable: operations, source selection, siting, or multi-sector water allocation?
 \end{enumerate}
@@ -673,7 +674,7 @@ Meta & Facebook's Prineville Data Center is Growing Again & \url{https://datacen
 City of Prineville & Economic Opportunities Analysis (2026 draft) & \url{https://cityofprineville.com/sites/default/files/fileattachments/city_council/page/19317/final_draft_prineville_eoa_january_22_2026.pdf} & 2010-2024; 11 data-center buildings constructed / planning/event / city / campus & city / campus & end-state campus-scale cross-check & Does not identify individual commissioning dates or MW.\\
 City of Prineville & City Water/Sewer system description & \url{https://www.cityofprineville.com/1426/WaterSewer} & current / current description / municipal system & municipal system & context for municipal ownership, wells/reservoirs, metering & Not a production time series. Monthly Meta delivery is not in this pipeline.\\
 City of Prineville & 2024 Consumer Confidence Report & \url{https://www.cityofprineville.com/DocumentCenter/View/516/2024-Consumer-Confidence-Report} & 2024; groundwater-only source statement / annual/system / PWS 00682 & PWS 00682 & named well inventory / groundwater-only statement & Not monthly production. Not Meta campus delivery.\\
-City of Prineville & Public-records request mechanism & \url{https://www.cityofprineville.com/1294/Public-Records} & current request mechanism &  & documented route for monthly Meta water, discharge, ASR/head (not acquired) & No monthly Meta water/discharge/ASR operational series is in the repository.\\
+City of Prineville & Facebook utility-meter package (2026 delivery) & local \texttt{data/raw/city\_prineville\_public\_records\_2026/} & 2012--2026 meter $\times$ month; 2026 partial through July & \texttt{src/prepare\_city\_prineville\_utility.py} & observed City-metered Facebook Data Center WATER-COMM + ADD'L WATER; not Meta campus-total withdrawal & SWR / WELL METER FOR SEW / bulk / Trailer City / Warehouse remain unresolved identities.\\
 Oregon Health Authority / Drinking Water\ldots & Prineville City PWS 00682 inventory & \url{https://yourwater.oregon.gov/inventory.php?pwsno=00682} & official source IDs, well-log IDs, source status / current/historical status / source/fac\ldots & source/facility inventory & municipal well/source identity for OWRD mapping and HUC12 join & 13 wells unresolved (no official coordinates). Yancey Well \#3 maps outside study HUC geog\ldots\\
 Oregon Water Resources Department & Water Use Report Query entity exports & \url{https://apps.wrd.state.or.us/apps/wr/wateruse_query/} & City entity WY2010-2025; Vitesse/Facebook WY2011-2024 bundled / monthly where reported /\ldots & POD / Report-ID & external municipal production and Meta/Facebook-associated direct POD evidence;\ldots & City production is not Meta delivery. Direct POD is not total Meta withdrawal. Missing mo\ldots\\
 Oregon Water Resources Department & Water Use Reporting program rules & \url{https://www.oregon.gov/owrd/programs/WaterRights/Reporting/WUR} & current / methods &  & reporting-requirement context & Not a numeric series.\\

@@ -28,21 +28,24 @@ Start with three nested utilization models and retain the simplest one that exte
 
 Never label the resulting hourly IT series measured/observed.
 
-## D. Monthly/hourly site water when only annual withdrawal is observed
-Use cooling physics/weather to determine **shape**, then annual closure determines scale in training years.
+## D. Monthly/hourly site water
 
-Recommended decomposition:
+Meta **annual** campus withdrawal remains observed only annually. Do not manufacture monthly Meta campus-total withdrawal.
+
+City of Prineville Facebook Data Center WATER-COMM + ADD'L WATER meters now provide an observed monthly **customer-service** series (`city_metered_water_service_m3`). Use that series for City-service modeling. Do not relabel it as total campus withdrawal, groundwater, consumption, or cooling water.
+
+For the Meta annual-total monthly proxy, cooling physics/weather may still determine **shape**, with annual closure determining scale in training years. That proxy is a different quantity from City-metered service.
+
+Recommended decomposition for the unresolved campus-total:
 
 `W_with(t) = W_evap(t) + W_humid(t) + W_other(t) + W_discharge_related(t)`
 
-For direct evaporative water, use psychrometric humidity-ratio change and air mass flow. Add only a small number of uncertain ancillary parameters. Fit common/epoch-level parameters across years, not one parameter per month.
-
 Validation hierarchy:
-1. held-out annual Meta water;
-2. monthly City/Meta meter data if obtained;
-3. municipal well/ASR seasonality as an external consistency constraint.
+1. held-out annual Meta water (frozen 2023–2024 experiment; do not retune after seeing City meters);
+2. monthly City-metered service water as an observed municipal-service component;
+3. municipal well/ASR seasonality and OWRD POD series as external consistency constraints on **their** boundaries.
 
-Bundled OWRD City production and Vitesse/Facebook direct POD series are used in `src/owrd_water_model_validation.py` as that external consistency layer. They are not monthly campus meter data and are not calibration targets.
+Never impute `not_observed_yet` 2026 cells as observed zero.
 
 ## E. Water consumption vs withdrawal
 Preferred:
@@ -51,7 +54,7 @@ Preferred:
 
 when both are observed on compatible boundaries.
 
-If discharge is unavailable, estimate consumption from the cooling-system mass balance / cycles-of-concentration range and report an uncertainty interval. Do not simply rename withdrawal as consumption.
+City `SWR METER` volume is **not** identified as total campus wastewater return. If discharge identity is unresolved, do not compute consumptive use by subtracting SWR from withdrawal or from City-service delivery. Estimate consumption from cooling mass balance / CoC only as an interval, never as a point labeled observed.
 
 ## F. Grid emissions
 For each hour:
