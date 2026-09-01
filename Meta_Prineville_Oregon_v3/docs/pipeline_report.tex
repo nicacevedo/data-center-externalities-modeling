@@ -121,7 +121,7 @@ Facility electricity & \(E^{fac}_y\) & \Reported & Annual Meta campus electricit
 Cooling & \(Q^{cool}_t,P^{cool}_t\) & \Derived & Simplified gray-box physics driven by IT load, weather, and assumed parameters. \\
 Weather & \(T,T_d,T_{wb},p\) & \Measured / \Derived & NOAA KS39/KRDM observations; wet bulb derived psychrometrically. \\
 Campus water & \(W^{Meta}_y\) & \Reported & Annual Meta withdrawal is observed from 2014 onward. \\
-Subannual campus water & \(W_t\) & Mixed: City-service observed; campus total still reconstructed & City meters observe Facebook Data Center WATER-COMM + ADD'L WATER, not Meta campus-total withdrawal. \\
+Subannual campus water & \(W_t\) & Mixed: City-service observed 2012--2026-07; campus total unresolved & City meters observe Facebook Data Center WATER-COMM + ADD'L WATER, not Meta campus-total withdrawal. \\
 Regional grid demand & \(D^{PACW}_t\) & \Measured / \Proxy & EIA-930 when available; FERC-constrained proxy for earlier years. \\
 Grid carbon & \(CI_t\) & \Derived / \Proxy & Regional average/accounting context; not Meta-specific marginal emissions. \\
 Generator water/emissions & \(W_{g,t},CO_{2,g,t}\) & \Reported / \Derived & Strong plant context; no claim that particular plants physically serve Meta. \\
@@ -223,7 +223,7 @@ The implementation is best understood as a sequence of evidence decisions rather
 2. QC & Check dates, units, duplicate records, missing-vs-zero, reporting conventions, and source-specific flags. & GWIS pumping/flowing observations are excluded from the state-model sample only when metadata support exclusion. \\
 3. Crosswalk & Determine whether records refer to the same physical entity and boundary. & Airport wells share combined pumping; unresolved Vitesse PODs are not automatically mapped to nearby GWIS wells. \\
 4. Canonicalize & Keep one defensible representation with provenance. & BLS and AMSL are paired representations of the same GWIS measurement, not two independent observations. \\
-5. Model & Infer only quantities that are not directly observed. & Hourly IT load and Meta campus-total monthly water still require reconstruction. City-metered service water is now observed. \\
+5. Model / infer & Infer only quantities that are not directly observed. & Hourly IT load and all-source monthly campus withdrawal still require reconstruction. City customer-service water is observed through 2026-07. \\
 6. Validate & Compare against independent data where possible; separate prediction from accounting closure. & FERC historical demand is checked against EIA-930; exact annual electricity closure is not called a forecast. \\
 7. Scenario / decision & Use uncertain quantities only after their status is explicit. & Synthetic workload scenarios can explore interactions but cannot recover historical Meta telemetry. \\
 \bottomrule
@@ -244,6 +244,7 @@ The model cannot honestly force every quantity onto the same time resolution:
 Workload / server telemetry & seconds--minutes, but unavailable for Meta \\
 Facility cooling / weather & minutes--hours \\
 Regional grid & hourly \\
+City customer-service meters & month (observed 2012--2026-07; 2012 and 2026 partial) \\
 Meta campus disclosures & annual \\
 OWRD pumping & monthly \\
 Groundwater response & monthly / seasonal for the first reduced model \\
@@ -430,7 +431,7 @@ The project is deliberately not trying to implement every ``state-of-the-art'' m
 \midrule
 National/accounting: LBNL; Siddik et al. & Explicit system boundaries, aggregate envelopes, spatial environmental accounting & Site-specific reported annual quantities + regional context & Use mainly as external order-of-magnitude / boundary checks. \\
 Facility PUE/WUE: Lei \& Masanet & Climate- and technology-dependent coupled energy/water physics & Simplified weather-driven gray-box & Better evidence on cooling technology, controls, and operating telemetry. \\
-Water footprint: Li et al.; Gupta et al.; Han et al. & Direct vs indirect water; temporal water signals; peak public-water capacity & Annual direct water + partial regional generator-water diagnostics & Monthly campus water, source shares, withdrawal/consumption/discharge, peak delivery. \\
+Water footprint: Li et al.; Gupta et al.; Han et al. & Direct vs indirect water; temporal water signals; peak public-water capacity & Annual direct water + observed monthly City-service component + partial regional generator-water diagnostics & All-source monthly campus withdrawal, source shares, withdrawal/consumption/discharge, peak delivery. \\
 Operational scheduling: WACE; Google; WaterWise; TAPAS & Workload conservation, spatial/temporal flexibility, carbon/water/thermal constraints & Stochastic scenarios only; no actual workload optimization yet & Real workload flexibility/capacity, validated environmental response signals, prices/costs. \\
 Siting/planning: PSCC project & Cost--carbon--water--equity planning backbone & Long-run target, not current implementation & Credible source-specific water and groundwater response functions. \\
 Groundwater: MODFLOW / hydro-economic models & Pumping/recharge \(\rightarrow\) head/storage dynamics; multi-sector allocation & First empirical well-level benchmark only & Recharge/background forcing and sufficient hydrogeologic/response information for reduced-order or physical calibration. \\
@@ -519,7 +520,7 @@ High-confidence evidence & Meta annual ground truth; canonical NOAA weather; EIA
 Validated proxy / reconstruction & FERC historical PACW bridge; annual-closed facility-electricity profile & Useful because constraints/overlap validation are explicit; not raw telemetry. \\
 Mechanism / scenario & cooling gray-box; stochastic workload; monthly water allocations; temporal carbon/water scenarios & Useful for sensitivity and counterfactuals, not historical identification. \\
 Weak predictor & annual campus-water models & No demonstrated holdout advantage over naive references. \\
-Not yet identified & hourly Meta IT; monthly campus meters; exact source shares; pumping-to-head causal response; aquifer dynamics; exact serving generators/marginal impacts; costs/optimization & Requires new identification or data before strong claims/optimization. \\
+Not yet identified & hourly Meta IT; all-source monthly campus withdrawal / complete campus water balance; exact source shares; pumping-to-head causal response; aquifer dynamics; exact serving generators/marginal impacts; costs/optimization & Requires new identification or data before strong claims/optimization. \\
 \bottomrule
 \end{tabularx}
 \caption{Current confidence hierarchy.}
@@ -674,7 +675,7 @@ Meta & Facebook's Prineville Data Center is Growing Again & \url{https://datacen
 City of Prineville & Economic Opportunities Analysis (2026 draft) & \url{https://cityofprineville.com/sites/default/files/fileattachments/city_council/page/19317/final_draft_prineville_eoa_january_22_2026.pdf} & 2010-2024; 11 data-center buildings constructed / planning/event / city / campus & city / campus & end-state campus-scale cross-check & Does not identify individual commissioning dates or MW.\\
 City of Prineville & City Water/Sewer system description & \url{https://www.cityofprineville.com/1426/WaterSewer} & current / current description / municipal system & municipal system & context for municipal ownership, wells/reservoirs, metering & Not a production time series. Monthly Meta delivery is not in this pipeline.\\
 City of Prineville & 2024 Consumer Confidence Report & \url{https://www.cityofprineville.com/DocumentCenter/View/516/2024-Consumer-Confidence-Report} & 2024; groundwater-only source statement / annual/system / PWS 00682 & PWS 00682 & named well inventory / groundwater-only statement & Not monthly production. Not Meta campus delivery.\\
-City of Prineville & Facebook utility-meter package (2026 delivery) & local \texttt{data/raw/city\_prineville\_public\_records\_2026/} & 2012--2026 meter $\times$ month; 2026 partial through July & \texttt{src/prepare\_city\_prineville\_utility.py} & observed City-metered Facebook Data Center WATER-COMM + ADD'L WATER; not Meta campus-total withdrawal & SWR / WELL METER FOR SEW / bulk / Trailer City / Warehouse remain unresolved identities.\\
+City of Prineville & Facebook utility-meter package (2026 delivery) & local \texttt{data/raw/city\_prineville\_public\_records\_2026/} & 2012-12 through 2026-07 (2012 and 2026 partial) & \texttt{src/prepare\_city\_prineville\_utility.py} & observed City customer-service WATER-COMM + ADD'L WATER; not Meta campus-total withdrawal & SWR physical direction unknown; WELL METER FOR SEW / bulk / Trailer City / Warehouse remain unresolved. Extra unnumbered CSV is a duplicate of (1).csv.\\
 Oregon Health Authority / Drinking Water\ldots & Prineville City PWS 00682 inventory & \url{https://yourwater.oregon.gov/inventory.php?pwsno=00682} & official source IDs, well-log IDs, source status / current/historical status / source/fac\ldots & source/facility inventory & municipal well/source identity for OWRD mapping and HUC12 join & 13 wells unresolved (no official coordinates). Yancey Well \#3 maps outside study HUC geog\ldots\\
 Oregon Water Resources Department & Water Use Report Query entity exports & \url{https://apps.wrd.state.or.us/apps/wr/wateruse_query/} & City entity WY2010-2025; Vitesse/Facebook WY2011-2024 bundled / monthly where reported /\ldots & POD / Report-ID & external municipal production and Meta/Facebook-associated direct POD evidence;\ldots & City production is not Meta delivery. Direct POD is not total Meta withdrawal. Missing mo\ldots\\
 Oregon Water Resources Department & Water Use Reporting program rules & \url{https://www.oregon.gov/owrd/programs/WaterRights/Reporting/WUR} & current / methods &  & reporting-requirement context & Not a numeric series.\\
@@ -868,7 +869,9 @@ FERC-constrained PACW-West hourly proxy & reconstruction & Within each month, us
 PACW fuel/import carbon score & validation/QA & Named sensitivity proxy only. & no\\
 Annual piecewise-linear SSE break ranking & identifiability screening & Ranks candidate break years by relative SSE reduction of two linear trends vs one, for electricity, water, and water intensity. & no\\
 IWA availability accounting identity & accounting / physical identity & Checks availab = strflow - consum in USGS IWA files. & no\\
-OWRD external water-evidence comparison & validation/QA & Aligns modeled monthly campus water proxy with City production and direct POD without using them as calibration targets or summing boundaries. & no\\
+OWRD external water-evidence comparison & validation/QA & Aligns the modeled monthly campus-water proxy (unresolved all-source campus withdrawal) with City production and direct POD without using them as calibration targets or summing boundaries. & no\\
+City-service climatology / seasonal persistence & forecastable baseline & Expanding-window month-of-year mean or previous-year same month for observed City-service water. Common-support ranking is primary. & yes (retrospective/exploratory)\\
+City-service electricity/weather models & contemporaneous explanatory & Annual electricity scale and gray-box evaporation use target-year electricity and/or realized target-month weather. Not strictly prospective. & yes (retrospective/exploratory)\\
 Oregon CAMPD/EIA generator QC & validation/QA & Join/coverage diagnostics between CAMPD and EIA-923; cooling-water coverage; unit conversions. & no\\
 Groundwater observation scaffold & accounting / physical identity & Compiles well identities, accepted OWRD pumping groups, GWIS measured water levels, construction/aquifer fields, and hydrogeologic parameter citations. & no\\
 Partial-coverage Oregon cooling EWIF & accounting / physical identity & Generation-weighted withdrawal/consumption intensity over cooling-intensity-eligible plant-months with non-missing water. & no\\

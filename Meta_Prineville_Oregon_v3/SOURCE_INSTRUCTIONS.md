@@ -144,7 +144,7 @@ OWRD is now used as an **external water-model validation / consistency layer**, 
 - OWRD Vitesse/Facebook direct groundwater POD use (facility-adjacent evidence; reports 64500/64845/64846);
 - OWRD City accepted municipal production (system context only).
 
-These three series remain separately identified. City production is not Meta meter data. Direct POD use is not assumed to be a strict lower bound on campus withdrawal. Actual monthly campus deliveries remain unavailable until City customer-meter records are obtained.
+These three series remain separately identified. City production is not Meta meter data. Direct POD use is not assumed to be a strict lower bound on campus withdrawal. City customer-service meters are now observed (Facebook Data Center WATER-COMM + ADD'L WATER through 2026-07); all-source monthly campus withdrawal remains unresolved.
 
 Additional interactive searching is only needed to refresh the exports or resolve still-unlinked sources such as DT14/DT18.
 
@@ -196,9 +196,9 @@ Do not map a Vitesse-named GWIS well to POD reports 64500/64845/64846 unless the
 
 - Official public-record page: `https://www.cityofprineville.com/1294/Public-Records`
 - Delivery directory (immutable): `data/raw/city_prineville_public_records_2026/`
-- Parser: `python run_prineville.py city-utility`
+- Parser: `python run_prineville.py water` (canonical water workflow) or `python run_prineville.py city-utility`
 
-The 2026 City package includes Facebook water/sewer meter consumption (XLSX primary; CSV/TXT/PDF mirrors), bulk/hydrant water, meter set/swap/pull history from ~2018, and a City note on units and timing.
+The 2026 City package includes Facebook water/sewer meter consumption (XLSX primary; CSV/TXT/PDF mirrors), bulk/hydrant water, meter set/swap/pull history from ~2018, and a City note on units and timing. Extra file `FB Meters and Consumption.csv` is a byte-identical local duplicate of `FB Meters and Consumption(1).csv` and is not a separate scientific source.
 
 City note (treat as source metadata):
 - 1 reported unit = 100 ft³ = 748 US gallons;
@@ -207,13 +207,13 @@ City note (treat as source metadata):
 - meter lifecycle history is incomplete before ~2018.
 
 Use for:
-- observed monthly City-metered Facebook Data Center WATER-COMM + ADD'L WATER service (`city_metered_water_service_m3`);
+- observed monthly City-metered Facebook Data Center WATER-COMM + ADD'L WATER service (`city_metered_water_service_m3`), coverage 2012–2026-07 (2012 and 2026 partial);
 - separate unresolved channels (bulk, SWR METER, WELL METER FOR SEW, Trailer City, Warehouse);
 - meter lineage audit.
 
 Do **not** use for:
 - total Meta campus withdrawal (Meta annual tables remain the campus-total benchmark);
-- total wastewater return or consumptive use;
+- total wastewater return or consumptive use (`SWR METER` physical direction is unknown);
 - allocating City-delivered water to municipal wells;
 - identifying WELL METER FOR SEW as OWRD direct POD withdrawal from correlation alone.
 

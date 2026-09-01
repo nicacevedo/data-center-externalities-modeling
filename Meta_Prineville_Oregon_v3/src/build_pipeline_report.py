@@ -865,7 +865,7 @@ def select_figure2_operational_timeline(write: bool = True) -> pd.DataFrame:
 
 
 def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.DataFrame) -> Path:
-    years = list(range(2011, 2025))
+    years = list(range(2011, 2027))
     rows_spec = []
 
     def year_status(name, mapping):
@@ -880,9 +880,12 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
     year_status("Meta facility electricity", {y: e.get(y, "missing") for y in years})
     year_status("Meta water withdrawal", {y: w.get(y, "missing") for y in years})
     year_status("Meta location Scope 2", {y: s2.get(y, "missing") for y in years})
-    year_status("Canonical weather (KS39/KRDM + KBDN fallback)", {y: "measured" for y in years})
-    year_status("Conditional IT/facility power", {y: "fitted" for y in years})
-    year_status("Water proxy (evap × scale)", {y: "proxy" if y >= 2014 else "fitted" for y in years})
+    year_status("Canonical weather (KS39/KRDM + KBDN fallback)", {y: ("measured" if y <= 2024 else "missing") for y in years})
+    year_status("Conditional IT/facility power", {y: ("fitted" if y <= 2024 else "missing") for y in years})
+    year_status(
+        "Water proxy (evap × scale)",
+        {y: ("missing" if y >= 2025 else ("proxy" if y >= 2014 else "fitted")) for y in years},
+    )
 
     pacw_map = {}
     for r in pacw_cmp.itertuples(index=False):
@@ -895,7 +898,7 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
             pacw_map[yr] = "missing"
     year_status(
         "EIA-930 PACW hourly demand",
-        {y: ("reported" if y >= 2015 else "not_necessary") for y in years},
+        {y: ("reported" if 2015 <= y <= 2024 else ("not_necessary" if y < 2015 else "missing")) for y in years},
     )
     year_status(
         "FERC PacifiCorp-West monthly",
@@ -906,7 +909,7 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
         {y: ("proxy" if 2011 <= y <= 2018 else "not_necessary") for y in years},
     )
     year_status("PACW consumed CO2 intensity", {y: pacw_map.get(y, "missing") for y in years})
-    year_status("eGRID NWPP benchmark", {y: "derived" for y in years})
+    year_status("eGRID NWPP benchmark", {y: ("derived" if y <= 2024 else "missing") for y in years})
 
     ctx = water_ctx.copy()
     ctx["year"] = ctx["calendar_year"].astype(int)
@@ -918,7 +921,7 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
     year_status("OWRD Vitesse/Facebook POD", {y: ("reported" if y in pod_years else "missing") for y in years})
     year_status("USGS IWA (site HUC12)", {y: ("proxy" if y in iwa_years else "missing") for y in years})
     year_status("USGS PS / irrigation", {y: ("proxy" if y in wd_years else "missing") for y in years})
-    year_status("Oregon CAMPD/EIA generators", {y: "measured" for y in years})
+    year_status("Oregon CAMPD/EIA generators", {y: ("measured" if y <= 2024 else "missing") for y in years})
     year_status("Hourly IT telemetry", {y: "not_necessary" for y in years})
     city_map = {y: "missing" for y in years}
     city_path = ROOT / "data" / "processed" / "city_prineville" / "city_water_components_monthly.csv"
@@ -928,8 +931,14 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
             sub = cc.loc[cc["year"].eq(y), "city_metered_water_service_m3"]
             if sub.notna().any():
                 city_map[y] = "reported"
-    year_status("City-metered Facebook Data Center service water", city_map)
-    year_status("Monthly campus water delivery", {y: "missing" for y in years})
+    year_status(
+        "City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial)",
+        city_map,
+    )
+    year_status(
+        "All-source monthly campus withdrawal / complete campus water balance",
+        {y: "missing" for y in years},
+    )
     year_status("Monthly campus wastewater/sewer discharge", {y: "missing" for y in years})
     year_status("Monthly/hourly campus electricity meter", {y: "missing" for y in years})
 
@@ -997,7 +1006,7 @@ def figure1_coverage(meta: pd.DataFrame, water_ctx: pd.DataFrame, pacw_cmp: pd.D
             COLORS["missing"],
         ]
     )
-    fig, ax = plt.subplots(figsize=(11.6, 9.0))
+    fig, ax = plt.subplots(figsize=(13.2, 9.6))
     ax.imshow(Z, aspect="auto", cmap=cmap, vmin=0, vmax=7)
     ax.set_xticks(range(len(years)))
     ax.set_xticklabels(years, rotation=0, fontsize=8)
@@ -1569,6 +1578,103 @@ def figure_graybox_sensitivity(sens: pd.DataFrame, base: dict) -> Path:
     return path
 
 
+def city_service_experiment_md() -> str:
+    """Primary City-service ranking from common-support metrics; native support is secondary."""
+    cs_path = ROOT / "outputs" / "city_prineville" / "city_service_model_metrics_common_support.csv"
+    native_path = ROOT / "outputs" / "city_prineville" / "city_metered_service_model_scores.csv"
+    beats_path = ROOT / "outputs" / "city_prineville" / "city_service_model_beats_seasonal_persistence_summary.csv"
+    info_path = ROOT / "outputs" / "city_prineville" / "city_service_model_information_sets.csv"
+    recon_path = ROOT / "data" / "processed" / "city_prineville" / "city_meta_annual_reconciliation.csv"
+    lines = [
+        "**City customer-service water (monthly experiment).** Response `city_metered_water_service_m3` is City Facebook Data Center WATER-COMM + ADD'L WATER, not Meta total withdrawal. Observed City meters are the best available evidence for this customer-service boundary. Evaluation is retrospective / exploratory chronological validation (the City files were inspected during development). Primary ranking uses **common support** (identical `(year, month)` rows for every compared model). Native-support scores are a secondary completeness diagnostic only."
+    ]
+    if cs_path.exists():
+        cs = pd.read_csv(cs_path).sort_values(["mae", "rmse"])
+        n_vals = set(int(v) for v in cs["n"])
+        n_note = f"n={next(iter(n_vals))}" if len(n_vals) == 1 else f"n differs across models: {sorted(n_vals)}"
+        start = cs["evaluation_start"].iloc[0] if "evaluation_start" in cs.columns else ""
+        end = cs["evaluation_end"].iloc[0] if "evaluation_end" in cs.columns else ""
+        winner = cs.iloc[0]
+        lines.append(
+            f"Common-support window {start}–{end} ({n_note}). Lowest MAE: **{winner['model']}** "
+            f"(MAE {float(winner['mae']):.0f} m³/month)."
+        )
+        table = [
+            "",
+            "| model | n | MAE | RMSE | sMAPE | median AE |",
+            "|---|---:|---:|---:|---:|---:|",
+        ]
+        for r in cs.itertuples(index=False):
+            table.append(
+                f"| {r.model} | {int(r.n)} | {float(r.mae):.0f} | {float(r.rmse):.0f} | "
+                f"{float(r.smape):.3f} | {float(r.median_absolute_error):.0f} |"
+            )
+        lines.append("\n".join(table))
+    if beats_path.exists():
+        beats = pd.read_csv(beats_path)
+        beat_bits = []
+        for r in beats.itertuples(index=False):
+            if r.model == "seasonal_persistence":
+                continue
+            n_b = r.n_years_beats_seasonal_persistence
+            n_y = r.n_years_compared
+            if pd.notna(n_b):
+                beat_bits.append(f"{r.model} {int(n_b)}/{int(n_y)}")
+        if beat_bits:
+            lines.append(
+                "Years beating seasonal persistence on common support: " + "; ".join(beat_bits) + "."
+            )
+    if native_path.exists():
+        nat = pd.read_csv(native_path)
+        pooled = nat[nat["scope"].eq("pooled")] if "scope" in nat.columns else nat
+        if not pooled.empty:
+            n_set = sorted(set(int(v) for v in pooled["n"] if pd.notna(v)))
+            lines.append(
+                f"Native-support pooled scores remain in [`city_metered_service_model_scores.csv`](../outputs/city_prineville/city_metered_service_model_scores.csv) "
+                f"(secondary; n differs by model: {n_set})."
+            )
+    if info_path.exists():
+        info = pd.read_csv(info_path)
+        info_lines = [
+            "",
+            "| model | evaluation_role | forecastable_ex_ante | target-month weather | target-year electricity |",
+            "|---|---|---|---|---|",
+        ]
+        for r in info.itertuples(index=False):
+            info_lines.append(
+                f"| {r.model} | {r.evaluation_role} | {r.forecastable_ex_ante} | "
+                f"{r.uses_realized_target_month_weather} | {r.uses_target_year_annual_electricity} |"
+            )
+        lines.append("Information sets (models are not rewritten to become forecastable):")
+        lines.append("\n".join(info_lines))
+    if recon_path.exists():
+        recon = pd.read_csv(recon_path)
+        have = recon[recon["meta_annual_withdrawal_m3"].notna() & recon["city_service_share_of_meta"].notna()]
+        if not have.empty:
+            shares = have["city_service_share_of_meta"]
+            lines.append(
+                f"City-service share of Meta annual withdrawal is **not historically stable** "
+                f"(range {100*float(shares.min()):.0f}–{100*float(shares.max()):.0f}% where both exist). "
+                "service + bulk (bulk allocated by observed bill year) is an accounting-date diagnostic, "
+                "not a water-balance closure. Recent close agreement in selected years does not establish "
+                "a universal accounting identity or a fixed conversion/source-share."
+            )
+    lines.append(
+        "Gray-box monthly shares show meaningful seasonality but over-concentrate use in summer. "
+        "A purely evaporation-driven level model is insufficient. Possible interpretation, not a fitted "
+        "decomposition: monthly City-service demand appears to contain a persistent facility-state / "
+        "base component plus a weather-sensitive seasonal component. That base component is **not** "
+        "identified as domestic, process, or non-cooling water."
+    )
+    lines.append(
+        "Within-year share comparison: [`outputs/city_prineville/city_metered_service_graybox_shape.csv`](../outputs/city_prineville/city_metered_service_graybox_shape.csv), "
+        "[shape figure](../outputs/city_prineville/figures/city_service_vs_graybox_shape.png). "
+        "Components: [components](../outputs/city_prineville/figures/city_water_components_monthly.png). "
+        "Annual boundary reconciliation: [Meta vs City](../outputs/city_prineville/figures/meta_city_annual_reconciliation.png)."
+    )
+    return "\n\n".join(lines)
+
+
 def write_markdown(
     sources: pd.DataFrame,
     quantities: pd.DataFrame,
@@ -1637,7 +1743,7 @@ def write_markdown(
     for r in quantities.itertuples(index=False):
         if r.quantity_id in (
             "Q_ARRIVALS", "Q_P_IT", "Q_E_FAC", "Q_PUE", "Q_W_WITH", "Q_WATER_PROXY",
-            "Q_W_CONS", "Q_CITY_PROD", "Q_DIRECT_POD", "Q_IWA_AVAIL", "Q_SCOPE2_META",
+            "Q_W_CONS", "Q_CITY_METER_SERVICE", "Q_CITY_PROD", "Q_DIRECT_POD", "Q_IWA_AVAIL", "Q_SCOPE2_META",
             "Q_SCOPE2_EGRID", "Q_GEN_OR", "Q_W_IND", "Q_DC_GW", "Q_HEAD", "Q_GW_OBS", "Q_ELEC_COST",
         ):
             q_lines.append(
@@ -1682,8 +1788,8 @@ def write_markdown(
 |---|---|---|
 | Hourly IT workload / utilization | No public traces; stochastic arrivals are scenario draws | Meta/scheduler traces or feeder+IT submetering |
 | Monthly campus electricity | Canonical table is annual; monthly Meta values are not inferred | Utility/Meta monthly electricity meters |
-| Monthly campus-total water withdrawal | City meters observe a customer-service component, not the Meta campus total | Independently identified campus-total monthly withdrawal or a documented mapping from City meters to the Meta annual boundary |
-| Site water consumption vs withdrawal | City SWR METER is not identified as total discharge; no CoC series | Identified sewer/return and reuse/storage on the campus boundary |
+| Monthly campus-total water withdrawal / complete campus water balance | City meters observe a customer-service component, not the Meta campus total | Independently identified campus-total monthly withdrawal or a documented mapping from City meters to the Meta annual boundary |
+| Site water consumption vs withdrawal | City SWR METER direction and identity are unresolved; volume is not total discharge; no CoC series | Identified sewer/return and reuse/storage on the campus boundary |
 | Campus source-share θ / groundwater extraction q_dc | City production, City customer delivery, and POD totals are different boundaries | Campus well/utility delivery meters with source IDs |
 | Generator-to-Meta attribution | Oregon CAMPD/EIA are state tables only | Contract/path/pseudo-tie evidence |
 | Indirect electricity water | Only a regional-average cooling EWIF × Meta MWh proxy exists | Generator-resolved water with attribution, or a documented BA-average used as such |
@@ -1699,7 +1805,7 @@ def write_markdown(
 
 This report is generated by `src/build_pipeline_report.py` from the registries in `src/pipeline_report_catalog.py` and from **existing** processed artifacts. It describes **implemented code**, not the intended full glossary model. Modeling logic is not changed here. After the Pipeline Audit v1 corrections, source→quantity and model I/O lineage is taken from canonical edge tables rather than a separately maintained diagram.
 
-**Freeze label: Prineville Public-Data Baseline v2 — City utility-meter integration.** This freeze adds City of Prineville Facebook utility-meter records. Monthly City-metered Facebook Data Center WATER-COMM + ADD'L WATER service is now observed. Meta annual withdrawal remains the independent campus-total benchmark. Total campus monthly withdrawal, sewer/return identity, WELL METER FOR SEW identity, bulk-water use, municipal source allocation, and groundwater-response modeling remain unresolved. The 2023–2024 Meta-annual water holdout is frozen and not retuned.
+**Freeze label: Prineville Public-Data Baseline v2 — City utility-meter integration.** This freeze adds City of Prineville Facebook utility-meter records. Monthly City customer-service water (Facebook Data Center WATER-COMM + ADD'L WATER) is observed through 2026-07 (2012 and 2026 partial). Meta annual withdrawal remains the independent campus-total benchmark. All-source monthly campus withdrawal / complete campus water balance, sewer/return identity, WELL METER FOR SEW identity, bulk-water use, municipal source allocation, and groundwater-response modeling remain unresolved. The 2023–2024 Meta-annual water holdout is frozen and not retuned.
 
 - Report seed (documentation / any stochastic diagnostic): `{RNG_SEED}`
 - Train / holdout convention: train through **{TRAIN_END_YEAR}**; **2023–2024 is the water-model holdout only** (electricity and Scope 2 are not held-out predictions)
@@ -1784,9 +1890,10 @@ Hard observations that exist:
 - **OWRD City and Vitesse/Facebook POD**: monthly reported use (different boundaries).
 - **GWIS groundwater levels**: measured well observations from the local export (not a fitted head field). OWRD pumping remains a separate accounting series.
 - **USGS NWAA**: IWA through **2020-09**; public-supply CU through 2020-12; WD/irrigation through **2020-12**. Later years are missing, not zero.
+- **City customer-service meters**: observed 2012–2026-07 (2012 and 2026 partial; Facebook Data Center WATER-COMM + ADD'L WATER). Not Meta campus-total withdrawal.
 - **Oregon generators / DEQ backup / permits**: present as documented in the inventory; not campus IT meters.
 
-Coverage statuses in Figure 1 are distinct from quantity provenance. **not an active target** (internal status `not_necessary`, black) means additional observations are not an acquisition target for that source/period because a replacement already covers the role or the quantity is intentionally latent/scenario. It does **not** mean the quantity would have no scientific value. **missing** (light gray) remains an active data gap. EIA-930 PACW hourly demand before native availability, FERC PacifiCorp-West monthly after 2018, the FERC PACW-West hourly proxy after the proxy window, and hourly IT telemetry are `not_necessary`. Hourly IT telemetry `not_necessary` means **not an active acquisition target for the current public-data pipeline**, not that hourly IT data are scientifically useless. 2011–2013 Meta water, monthly campus water delivery, monthly campus wastewater/sewer discharge, monthly/hourly campus electricity meter, early PACW consumed-CO2 intensity, post-2020 USGS hydrologic context, and 2011 Meta-reported Scope 2 remain `missing`. Those three campus-meter rows are absent as public time series in the current repository; they are not inferred from annual totals or OWRD City/POD series.
+Coverage statuses in Figure 1 are distinct from quantity provenance. **not an active target** (internal status `not_necessary`, black) means additional observations are not an acquisition target for that source/period because a replacement already covers the role or the quantity is intentionally latent/scenario. It does **not** mean the quantity would have no scientific value. **missing** (light gray) remains an active data gap. EIA-930 PACW hourly demand before native availability, FERC PacifiCorp-West monthly after 2018, the FERC PACW-West hourly proxy after the proxy window, and hourly IT telemetry are `not_necessary`. Hourly IT telemetry `not_necessary` means **not an active acquisition target for the current public-data pipeline**, not that hourly IT data are scientifically useless. 2011–2013 Meta water, all-source monthly campus withdrawal / complete campus water balance, monthly campus wastewater/sewer discharge, monthly/hourly campus electricity meter, early PACW consumed-CO2 intensity, post-2020 USGS hydrologic context, and 2011 Meta-reported Scope 2 remain `missing`. City customer-service meters are a different quantity from the unresolved all-source campus water balance. Those unresolved campus-meter rows are absent as public time series in the current repository; they are not inferred from annual totals, City-service meters, or OWRD City/POD series.
 
 **Groundwater head observations** are `measured` for a calendar year when **at least one** valid GWIS groundwater-level observation exists in that year. That status does **not** imply continuous monthly coverage or complete spatial-network coverage. Well×year density and identifiability classifications in `outputs/groundwater/` remain authoritative.
 
@@ -1834,15 +1941,15 @@ Classification avoids calling every unit conversion a predictive model. Full tab
 | M_OR_GEN_QC | Oregon generator QC | external-consistency check | no |
 | M_GW_SCAFFOLD | Groundwater observation scaffold | physics/accounting | no; no dynamics |
 | M_EWIF_PARTIAL | Partial-coverage Oregon cooling EWIF | physics/accounting | no; not Meta attribution |
-| M_CITY_SERVICE_CLIMATOLOGY | City-service month-of-year climatology | benchmark | retrospective/exploratory |
-| M_CITY_SERVICE_SEASONAL_PERSIST | City-service seasonal persistence | benchmark | retrospective/exploratory |
-| M_CITY_SERVICE_ELEC_SCALE | City-service annual-electricity scale | prediction | retrospective/exploratory |
-| M_CITY_SERVICE_GRAYBOX_LEVEL | City-service gray-box evap scale | prediction | retrospective/exploratory |
-| M_CITY_SERVICE_SCALE_EVAP | City-service electricity + evap | prediction | retrospective/exploratory |
+| M_CITY_SERVICE_CLIMATOLOGY | City-service month-of-year climatology | forecastable baseline | retrospective/exploratory |
+| M_CITY_SERVICE_SEASONAL_PERSIST | City-service seasonal persistence | forecastable baseline | retrospective/exploratory |
+| M_CITY_SERVICE_ELEC_SCALE | City-service annual-electricity scale | contemporaneous explanatory | not strictly prospective (uses target-year electricity) |
+| M_CITY_SERVICE_GRAYBOX_LEVEL | City-service gray-box evap scale | contemporaneous explanatory | uses realized target-month weather |
+| M_CITY_SERVICE_SCALE_EVAP | City-service electricity + evap | contemporaneous explanatory | uses target-year electricity and target-month weather |
 | M_CITY_SERVICE_GRAYBOX_SHAPE | Gray-box vs City-service monthly shares | external-consistency check | no |
 | M_CITY_BOUNDARY_RECONCILE | Meta annual vs City meter components | external-consistency check | no |
 
-The City-service models predict `city_metered_water_service_m3` only. They do **not** replace the frozen 2023–2024 Meta annual-withdrawal holdout.
+The City-service models predict `city_metered_water_service_m3` only. They do **not** replace the frozen 2023–2024 Meta annual-withdrawal holdout. Primary ranking is common-support MAE, not native-support completeness.
 
 ---
 
@@ -1931,7 +2038,7 @@ The first two are **not** dynamic time-series models. 2023–2024 was unused in 
 
 The current water specifications **perform poorly** on the pre-specified 2023–2024 holdout and are **not validated predictors** of the recent operating regime. With only two holdout years, this is a **strong predictive diagnostic failure**, not a formal statistical proof or falsification test. Those annual Meta-withdrawal results are **frozen**; they are not retuned after observing City meters.
 
-**City-metered service water (new monthly experiment).** Response `city_metered_water_service_m3` is City Facebook Data Center WATER-COMM + ADD'L WATER, not Meta total withdrawal. Evaluation is retrospective / exploratory chronological validation (the City files were inspected during development). Seasonal persistence currently has the lowest MAE among the predeclared set; gray-box evaporation scale does **not** beat seasonal baselines. Within-year share comparison is in [`outputs/city_prineville/city_metered_service_graybox_shape.csv`](../outputs/city_prineville/city_metered_service_graybox_shape.csv) and [shape figure](../outputs/city_prineville/figures/city_service_vs_graybox_shape.png). Component series: [components](../outputs/city_prineville/figures/city_water_components_monthly.png). Annual boundary reconciliation: [Meta vs City](../outputs/city_prineville/figures/meta_city_annual_reconciliation.png). These figures distinguish observed City records, Meta reported annuals, and model/proxy series.
+{city_service_experiment_md()}
 
 The **selected mechanistic candidate** is `{cmap['selected_mechanistic_candidate']}` (expanding-window train MAPE **{float(cmap['selected_rolling_mape']):.2f}%**; frozen-NNLS holdout MAPE **{float(cmap['selected_holdout_mape']):.1f}%**). That label means it won among the pre-registered mechanistic/covariate candidates. It is **not** a claim that it is the best predictor overall. The frozen training-mean baseline was **not** entered into selection and currently has holdout MAPE **{float(cmap['training_mean_holdout_mape']):.1f}%**, much better on these two years.
 

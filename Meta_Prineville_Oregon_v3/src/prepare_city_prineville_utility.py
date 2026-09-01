@@ -136,6 +136,7 @@ def classify_component(entity: str, rate_code: str) -> dict:
         return {
             "component_class": "trailer_city_water",
             "physical_direction": "inflow",
+            "semantic_hint": "trailer-city",
             "boundary_status": "unresolved",
             "model_use": "excluded_from_city_service",
             "semantic_note": (
@@ -147,6 +148,7 @@ def classify_component(entity: str, rate_code: str) -> dict:
         return {
             "component_class": "warehouse_water",
             "physical_direction": "inflow",
+            "semantic_hint": "warehouse",
             "boundary_status": "unresolved",
             "model_use": "excluded_from_city_service",
             "semantic_note": (
@@ -158,6 +160,7 @@ def classify_component(entity: str, rate_code: str) -> dict:
         return {
             "component_class": "bulk_water",
             "physical_direction": "inflow",
+            "semantic_hint": "bulk-hydrant",
             "boundary_status": "unresolved",
             "model_use": "excluded_from_city_service",
             "semantic_note": (
@@ -169,6 +172,7 @@ def classify_component(entity: str, rate_code: str) -> dict:
         return {
             "component_class": "well_meter_for_sew",
             "physical_direction": "unknown",
+            "semantic_hint": "unresolved-well-or-sewer-label",
             "boundary_status": "unresolved",
             "model_use": "excluded_from_city_service",
             "semantic_note": (
@@ -179,11 +183,13 @@ def classify_component(entity: str, rate_code: str) -> dict:
     if rc_u.startswith("SWR METER") or rc_u == "SWR METER":
         return {
             "component_class": "swr_meter",
-            "physical_direction": "outflow",
+            "physical_direction": "unknown",
+            "semantic_hint": "sewer-related",
             "boundary_status": "unresolved",
             "model_use": "excluded_from_city_service",
             "semantic_note": (
-                "Sewer-coded meter. Not identified as total campus wastewater return."
+                "Raw source label is SWR METER. Flow direction is not identified. "
+                "Not wastewater return, total discharge, or a consumptive-use offset."
             ),
         }
     if rc_u.startswith("WATER - COMM") or rc_u.startswith("ADD'L WATER"):
@@ -192,6 +198,7 @@ def classify_component(entity: str, rate_code: str) -> dict:
             return {
                 "component_class": kind,
                 "physical_direction": "inflow",
+                "semantic_hint": "city-metered-service",
                 "boundary_status": "provisional",
                 "model_use": "included_in_city_service",
                 "semantic_note": (
@@ -202,6 +209,7 @@ def classify_component(entity: str, rate_code: str) -> dict:
         return {
             "component_class": "other_water_coded",
             "physical_direction": "inflow",
+            "semantic_hint": "non-data-center-water-coded",
             "boundary_status": "unresolved",
             "model_use": "excluded_from_city_service",
             "semantic_note": "Water-coded meter on a non-Data-Center entity.",
@@ -209,6 +217,7 @@ def classify_component(entity: str, rate_code: str) -> dict:
     return {
         "component_class": "unexpected",
         "physical_direction": "unknown",
+        "semantic_hint": "unknown",
         "boundary_status": "unresolved",
         "model_use": "excluded_from_city_service",
         "semantic_note": "Encountered class not in the predeclared list.",
@@ -1188,6 +1197,10 @@ def meta_reconciliation(components: pd.DataFrame, meta: pd.DataFrame) -> pd.Data
     out["residual_meta_minus_service_plus_bulk_m3"] = (
         out["meta_annual_withdrawal_m3"] - out["diagnostic_service_plus_bulk_m3"]
     )
+    out["city_service_minus_meta_m3"] = out["city_metered_water_service_m3"] - out["meta_annual_withdrawal_m3"]
+    out["city_service_plus_bulk_minus_meta_m3"] = (
+        out["diagnostic_service_plus_bulk_m3"] - out["meta_annual_withdrawal_m3"]
+    )
     with np.errstate(divide="ignore", invalid="ignore"):
         out["pct_residual_service"] = np.where(
             out["meta_annual_withdrawal_m3"].abs() > 0,
@@ -1199,10 +1212,24 @@ def meta_reconciliation(components: pd.DataFrame, meta: pd.DataFrame) -> pd.Data
             100.0 * out["residual_meta_minus_service_plus_bulk_m3"] / out["meta_annual_withdrawal_m3"],
             np.nan,
         )
-    out["combination_label"] = "diagnostic_exploratory_not_canonical_total"
+        out["city_service_share_of_meta"] = np.where(
+            out["meta_annual_withdrawal_m3"].abs() > 0,
+            out["city_metered_water_service_m3"] / out["meta_annual_withdrawal_m3"],
+            np.nan,
+        )
+        out["city_service_plus_bulk_share_of_meta"] = np.where(
+            out["meta_annual_withdrawal_m3"].abs() > 0,
+            out["diagnostic_service_plus_bulk_m3"] / out["meta_annual_withdrawal_m3"],
+            np.nan,
+        )
+        out["city_service_share_of_meta_pct"] = 100.0 * out["city_service_share_of_meta"]
+        out["city_service_plus_bulk_share_of_meta_pct"] = 100.0 * out["city_service_plus_bulk_share_of_meta"]
+    out["combination_label"] = "diagnostic_service_plus_bulk_allocated_by_observed_bill_year_not_canonical_total"
     out["note"] = (
-        "Residuals are boundary-reconciliation diagnostics. Do not interpret the minimizing "
-        "combination as the physical campus water boundary."
+        "service + bulk (bulk allocated by observed bill year) is an accounting-date "
+        "reconciliation diagnostic, not proof of same-year physical campus withdrawal "
+        "and not a water-balance closure. Shares and residuals are descriptive only. "
+        "A close year is not an accounting identity."
     )
     return out
 
@@ -1277,51 +1304,76 @@ def evaluate_gate(qa: pd.DataFrame, double_count: dict, equiv_ok: bool) -> dict:
 
 
 def _inventory_rows(hashes: dict) -> pd.DataFrame:
+    # (source_id, scientific_role, intended_use, counts_as_scientific_source, canonical_filename)
     roles = {
         PRIMARY_XLSX: (
             SOURCE_ID_METER,
             "primary_structured",
             "Preferred machine-readable Facebook water/sewer meter report",
+            True,
+            PRIMARY_XLSX,
         ),
         PRIMARY_CSV: (
             SOURCE_ID_METER,
             "mirror_evidence",
             "CSV delivery of the same meter report; not an independent observation",
+            True,
+            PRIMARY_CSV,
         ),
         PRIMARY_CSV_DUP: (
             SOURCE_ID_METER,
-            "duplicate_mirror",
-            "Byte-identical duplicate of FB Meters and Consumption(1).csv",
+            "duplicate_non_source",
+            (
+                "Byte-identical extra copy of FB Meters and Consumption(1).csv. "
+                "Not an independently informative observation. Filesystem mtime "
+                "predates the rest of the unpacked package. Classified as a local "
+                "duplicate/non-source artifact created during handling. Preserved "
+                "for raw immutability; not counted as a separate scientific source."
+            ),
+            False,
+            PRIMARY_CSV,
         ),
         PRIMARY_TXT: (
             SOURCE_ID_METER,
             "mirror_evidence",
             "TXT delivery; CRLF-normalized content matches the CSV",
+            True,
+            PRIMARY_TXT,
         ),
         PRIMARY_PDF: (
             SOURCE_ID_METER,
             "mirror_evidence",
             "PDF print/evidence copy of the meter report",
+            True,
+            PRIMARY_PDF,
         ),
         BULK_XLSX: (
             SOURCE_ID_BULK,
             "primary_structured",
             "Facebook bulk/hydrant-water billing records",
+            True,
+            BULK_XLSX,
         ),
         EVENTS_XLSX: (
             SOURCE_ID_EVENTS,
             "primary_structured",
             "Meter set/swap/pull history compiled by the City from 2018 onward",
+            True,
+            EVENTS_XLSX,
         ),
         NOTE_TXT: (
             SOURCE_ID_NOTE,
             "source_metadata",
             "City explanatory note on units, read/bill timing, and lifecycle limits",
+            True,
+            NOTE_TXT,
         ),
     }
     rows = []
     for name, digest in hashes.items():
-        sid, role, intent = roles.get(name, ("UNREGISTERED", "unknown", ""))
+        sid, role, intent, counts, canonical = roles.get(
+            name, ("UNREGISTERED", "unknown", "", False, name)
+        )
         p = RAW / name
         rows.append(
             {
@@ -1335,6 +1387,9 @@ def _inventory_rows(hashes: dict) -> pd.DataFrame:
                 "scientific_role": role,
                 "intended_use": intent,
                 "immutable": True,
+                "counts_as_scientific_source": counts,
+                "canonical_filename": canonical,
+                "duplicate_of": None if name == canonical else canonical,
             }
         )
     return pd.DataFrame(rows)
@@ -1361,7 +1416,7 @@ def plot_observational_figures(
     t = month_index(components)
     ax.plot(t, components["city_metered_water_service_m3"], label="City-metered service (observed)", lw=1.8)
     ax.plot(t, components["bulk_water_bill_month_m3"], label="Bulk water (bill month, unresolved)", lw=1.2, ls="--")
-    ax.plot(t, components["swr_meter_volume_m3"], label="SWR meter (unresolved)", lw=1.0, alpha=0.8)
+    ax.plot(t, components["swr_meter_volume_m3"], label="SWR METER (unresolved direction/identity)", lw=1.0, alpha=0.8)
     ax.plot(t, components["well_meter_for_sew_volume_m3"], label="WELL METER FOR SEW (unresolved)", lw=1.0, alpha=0.8)
     ax.set_ylabel("m³ / month")
     ax.set_title("City of Prineville meter components (not a campus water balance)")
@@ -1445,14 +1500,14 @@ def plot_observational_figures(
     ax.plot(rr["year"], rr["meta_annual_withdrawal_m3"], "o-", label="Meta annual withdrawal (reported)", lw=2)
     ax.plot(rr["year"], rr["city_metered_water_service_m3"], "s--", label="City-metered service (provisional)")
     ax.plot(rr["year"], rr["bulk_water_bill_month_m3"], "d:", label="Bulk water (bill-year sum, unresolved)")
-    ax.plot(rr["year"], rr["diagnostic_service_plus_bulk_m3"], "x-", label="Diagnostic: service + bulk (not a total)")
+    ax.plot(rr["year"], rr["diagnostic_service_plus_bulk_m3"], "x-", label="service + bulk (bulk allocated by observed bill year)")
     ax.set_ylabel("m³ / year")
     ax.set_title("Meta annual withdrawal vs City meter components (boundary reconciliation)")
     ax.legend(fontsize=8)
     ax.text(
         0.01,
         -0.2,
-        "Not a fitted closure. Early-year disagreement is retained. Diagnostic sum is not a campus boundary.",
+        "Accounting-date diagnostic, not a water-balance closure. Diagnostic sum is not a campus boundary.",
         transform=ax.transAxes,
         fontsize=8,
     )
@@ -1503,7 +1558,7 @@ def _update_local_manifest(hashes: dict) -> None:
             "title": "City of Prineville Facebook water/sewer meter consumption report",
             "url": "https://www.cityofprineville.com/1294/Public-Records",
             "resolution": "meter × month",
-            "coverage": "2012-2026 (2026 partial through last read month)",
+            "coverage": "2012-12 through 2026-07 (2012 and 2026 partial)",
             "role": "observed City-metered customer-service volumes; not total Meta withdrawal",
             "authority": "official primary",
             "access": f"local immutable XLSX sha256={hashes.get(PRIMARY_XLSX, '')[:12]}…",
@@ -1570,13 +1625,21 @@ def _update_local_manifest(hashes: dict) -> None:
         if m.any():
             p.loc[m, "preferred_source"] = "City of Prineville Facebook Data Center WATER-COMM + ADD'L WATER meters"
             p.loc[m, "resolution"] = "month (consumption month per City note)"
-            p.loc[m, "coverage"] = "2012-2026 partial; Facebook Data Center service meters"
-            p.loc[m, "role_if_available"] = (
-                "observed City-metered utility/service water; NOT total Meta campus withdrawal"
+            p.loc[m, "coverage"] = (
+                "City-service observed 2012-12 through 2026-07 (2012 and 2026 partial); "
+                "all-source monthly campus withdrawal unresolved"
             )
-            p.loc[m, "fallback_if_missing"] = "physics-shaped annual closure remains the Meta-total monthly proxy"
+            p.loc[m, "role_if_available"] = (
+                "observed City customer-service water component; NOT total Meta campus withdrawal"
+            )
+            p.loc[m, "fallback_if_missing"] = (
+                "do not substitute the physics-shaped Meta-total monthly reconstruction for "
+                "observed City-service; that reconstruction remains a model-generated "
+                "proxy/scenario for unresolved all-source monthly campus withdrawal"
+            )
             p.loc[m, "validation_status"] = (
-                "acquired; provisional city_metered_water_service_m3; total campus monthly withdrawal still missing"
+                "City-service observed through 2026-07; complete campus monthly "
+                "withdrawal/source mix/return balance unresolved"
             )
         p.to_csv(pri, index=False)
 

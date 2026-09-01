@@ -4,7 +4,9 @@ import sys, subprocess
 ROOT=Path(__file__).resolve().parent
 
 def water():
-    subprocess.run([sys.executable,str(ROOT/'src'/'prepare_owrd_wateruse.py')],check=True)
+    subprocess.run([sys.executable, str(ROOT / "src" / "prepare_owrd_wateruse.py")], check=True)
+    city_utility()
+    city_utility_models()
 
 def eia():
     subprocess.run([sys.executable,str(ROOT/'src'/'prepare_eia930.py'), *sys.argv[2:]],check=True)
@@ -120,7 +122,6 @@ def owrd_validate():
 def audit():
     subprocess.run([sys.executable,str(ROOT/'src'/'build_targets.py')],check=True)
     water()
-    city_utility()
     subprocess.run(
         [sys.executable, str(ROOT / "src" / "integrate_prineville_documentary_evidence.py")],
         check=True,

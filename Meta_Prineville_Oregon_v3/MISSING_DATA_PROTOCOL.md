@@ -32,9 +32,9 @@ Never label the resulting hourly IT series measured/observed.
 
 Meta **annual** campus withdrawal remains observed only annually. Do not manufacture monthly Meta campus-total withdrawal.
 
-City of Prineville Facebook Data Center WATER-COMM + ADD'L WATER meters now provide an observed monthly **customer-service** series (`city_metered_water_service_m3`). Use that series for City-service modeling. Do not relabel it as total campus withdrawal, groundwater, consumption, or cooling water.
+City of Prineville Facebook Data Center WATER-COMM + ADD'L WATER meters now provide an observed monthly **customer-service** series (`city_metered_water_service_m3`) through 2026-07 (2012 and 2026 partial). That observed series is the best available evidence for the City-service boundary. Do not relabel it as total campus withdrawal, groundwater, consumption, or cooling water.
 
-For the Meta annual-total monthly proxy, cooling physics/weather may still determine **shape**, with annual closure determining scale in training years. That proxy is a different quantity from City-metered service.
+For unresolved all-source monthly campus withdrawal, cooling physics/weather may still determine **shape**, with annual closure determining scale in training years. That reconstruction is a **model-generated proxy/scenario** for a different quantity from City-metered service. Do not describe it as the best available monthly water evidence for the City-service component.
 
 Recommended decomposition for the unresolved campus-total:
 
@@ -54,7 +54,7 @@ Preferred:
 
 when both are observed on compatible boundaries.
 
-City `SWR METER` volume is **not** identified as total campus wastewater return. If discharge identity is unresolved, do not compute consumptive use by subtracting SWR from withdrawal or from City-service delivery. Estimate consumption from cooling mass balance / CoC only as an interval, never as a point labeled observed.
+City `SWR METER` volume is **not** identified as total campus wastewater return. Physical direction is **unknown**; `sewer-related` is a label hint only. If discharge identity is unresolved, do not compute consumptive use by subtracting SWR from withdrawal or from City-service delivery. Estimate consumption from cooling mass balance / CoC only as an interval, never as a point labeled observed.
 
 ## F. Grid emissions
 For each hour:

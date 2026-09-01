@@ -9,7 +9,6 @@ Not: Meta total monthly withdrawal, campus consumptive use, or groundwater.
 from __future__ import annotations
 
 import json
-import math
 import shutil
 from pathlib import Path
 
@@ -31,6 +30,83 @@ RESPONSE = "city_metered_water_service_m3"
 
 SUMMER = {6, 7, 8}
 
+MODEL_PRED_COLS = [
+    ("climatology", "pred_climatology_m3"),
+    ("seasonal_persistence", "pred_seasonal_persist_m3"),
+    ("annual_electricity_scale", "pred_elec_scale_m3"),
+    ("graybox_evap_scale", "pred_graybox_scaled_m3"),
+    ("scale_plus_evap", "pred_scale_plus_evap_m3"),
+]
+
+# Information actually used when predicting a target month. Roles are descriptive;
+# the model mathematics are unchanged.
+MODEL_INFORMATION_SETS = [
+    {
+        "model": "climatology",
+        "evaluation_role": "prospective_forecastable_baseline",
+        "forecastable_ex_ante": True,
+        "uses_realized_target_month_weather": False,
+        "uses_target_year_annual_electricity": False,
+        "uses_target_year_water_information": False,
+        "information_set_note": (
+            "Month-of-year mean of city_metered_water_service_m3 from earlier complete "
+            "years only. No target-month weather and no target-year electricity."
+        ),
+    },
+    {
+        "model": "seasonal_persistence",
+        "evaluation_role": "prospective_forecastable_baseline",
+        "forecastable_ex_ante": True,
+        "uses_realized_target_month_weather": False,
+        "uses_target_year_annual_electricity": False,
+        "uses_target_year_water_information": False,
+        "information_set_note": (
+            "Same calendar month from the previous complete year (climatology fallback "
+            "if that month is missing). No target-month weather and no target-year electricity."
+        ),
+    },
+    {
+        "model": "annual_electricity_scale",
+        "evaluation_role": "contemporaneous_explanatory",
+        "forecastable_ex_ante": False,
+        "uses_realized_target_month_weather": False,
+        "uses_target_year_annual_electricity": True,
+        "uses_target_year_water_information": False,
+        "information_set_note": (
+            "Train-only β maps prior-year Meta annual facility MWh to City-service annual "
+            "totals; target-month allocation uses climatology shares, but the year scale "
+            "uses realized target-year annual electricity. Not strictly prospective."
+        ),
+    },
+    {
+        "model": "graybox_evap_scale",
+        "evaluation_role": "contemporaneous_explanatory",
+        "forecastable_ex_ante": False,
+        "uses_realized_target_month_weather": True,
+        "uses_target_year_annual_electricity": True,
+        "uses_target_year_water_information": False,
+        "information_set_note": (
+            "s fitted on prior years only. Target-month raw evaporation uses realized "
+            "target-month weather and the conditional reconstruction IT scale closed to "
+            "that year's facility electricity. Contemporaneous / retrospective explanatory, "
+            "not an ex-ante forecast."
+        ),
+    },
+    {
+        "model": "scale_plus_evap",
+        "evaluation_role": "contemporaneous_explanatory",
+        "forecastable_ex_ante": False,
+        "uses_realized_target_month_weather": True,
+        "uses_target_year_annual_electricity": True,
+        "uses_target_year_water_information": False,
+        "information_set_note": (
+            "a×(E_fac,y/12)+b×raw_evap. Uses realized target-year annual electricity and "
+            "realized target-month weather (via evaporation). Contemporaneous explanatory, "
+            "not an ex-ante forecast."
+        ),
+    },
+]
+
 
 def _metrics(y, yhat) -> dict:
     y = np.asarray(y, dtype=float)
@@ -38,9 +114,16 @@ def _metrics(y, yhat) -> dict:
     mask = np.isfinite(y) & np.isfinite(yhat)
     y, yhat = y[mask], yhat[mask]
     if len(y) == 0:
-        return {"n": 0, "mae": np.nan, "rmse": np.nan, "smape": np.nan}
+        return {
+            "n": 0,
+            "mae": np.nan,
+            "rmse": np.nan,
+            "smape": np.nan,
+            "median_absolute_error": np.nan,
+        }
     err = yhat - y
-    mae = float(np.mean(np.abs(err)))
+    abs_err = np.abs(err)
+    mae = float(np.mean(abs_err))
     rmse = float(np.sqrt(np.mean(err**2)))
     denom = np.abs(y) + np.abs(yhat)
     smape_mask = denom > 0
@@ -49,11 +132,17 @@ def _metrics(y, yhat) -> dict:
         if smape_mask.any()
         else np.nan
     )
-    return {"n": int(len(y)), "mae": mae, "rmse": rmse, "smape": smape}
+    return {
+        "n": int(len(y)),
+        "mae": mae,
+        "rmse": rmse,
+        "smape": smape,
+        "median_absolute_error": float(np.median(abs_err)),
+    }
 
 
 def freeze_old_annual_holdout() -> list[str]:
-    """Copy existing annual water-holdout artifacts; do not modify originals."""
+    """Copy annual water-holdout artifacts once; never overwrite an existing freeze."""
     FREEZE_DIR.mkdir(parents=True, exist_ok=True)
     copied = []
     candidates = [
@@ -63,16 +152,20 @@ def freeze_old_annual_holdout() -> list[str]:
         ROOT / "outputs" / "pipeline_report" / "validation_scorecard.csv",
     ]
     for src in candidates:
+        dest = FREEZE_DIR / src.name
+        if dest.exists():
+            copied.append(str(dest.relative_to(ROOT)))
+            continue
         if src.exists():
-            dest = FREEZE_DIR / src.name
             shutil.copy2(src, dest)
             copied.append(str(dest.relative_to(ROOT)))
     note = FREEZE_DIR / "README.txt"
-    note.write_text(
-        "Frozen copies of pre-City-meter annual water-model artifacts.\n"
-        "These remain the 2023-2024 chronological validation of models for Meta "
-        "annual campus withdrawal. They are not retuned after observing City meters.\n"
-    )
+    if not note.exists():
+        note.write_text(
+            "Frozen copies of pre-City-meter annual water-model artifacts.\n"
+            "These remain the 2023-2024 chronological validation of models for Meta "
+            "annual campus withdrawal. They are not retuned after observing City meters.\n"
+        )
     return copied
 
 
@@ -201,22 +294,104 @@ def run_models(obs: pd.DataFrame, evap: pd.DataFrame, meta: pd.DataFrame) -> tup
                 }
             )
     preds = pd.DataFrame(pred_rows)
-    models = [
-        ("climatology", "pred_climatology_m3"),
-        ("seasonal_persistence", "pred_seasonal_persist_m3"),
-        ("annual_electricity_scale", "pred_elec_scale_m3"),
-        ("graybox_evap_scale", "pred_graybox_scaled_m3"),
-        ("scale_plus_evap", "pred_scale_plus_evap_m3"),
-    ]
+    native_scores = score_predictions(preds, support="native")
+    return preds, native_scores
+
+
+def common_support_mask(preds: pd.DataFrame) -> pd.Series:
+    """Months with observed response and a finite prediction from every compared model."""
+    mask = preds["observed_m3"].notna()
+    for _, col in MODEL_PRED_COLS:
+        mask = mask & np.isfinite(preds[col])
+    return mask
+
+
+def score_predictions(preds: pd.DataFrame, support: str) -> pd.DataFrame:
+    if preds.empty:
+        return pd.DataFrame(
+            columns=["support", "scope", "model", "n", "mae", "rmse", "smape", "median_absolute_error"]
+        )
     score_rows = []
-    for name, col in models:
+    for name, col in MODEL_PRED_COLS:
         met = _metrics(preds["observed_m3"], preds[col])
-        score_rows.append({"scope": "pooled", "model": name, **met})
+        score_rows.append({"support": support, "scope": "pooled", "model": name, **met})
         for y, g in preds.groupby("year"):
             met_y = _metrics(g["observed_m3"], g[col])
-            score_rows.append({"scope": f"year_{int(y)}", "model": name, **met_y})
-    scores = pd.DataFrame(score_rows)
-    return preds, scores
+            score_rows.append({"support": support, "scope": f"year_{int(y)}", "model": name, **met_y})
+    return pd.DataFrame(score_rows)
+
+
+def common_support_tables(preds: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Primary ranking tables: identical (year, month) rows for every model."""
+    if preds.empty:
+        empty = pd.DataFrame()
+        return empty, empty, empty, empty, empty
+    cs = preds.loc[common_support_mask(preds)].copy()
+    pooled_rows = []
+    year_rows = []
+    if cs.empty:
+        empty = pd.DataFrame()
+        return empty, empty, empty, empty, cs
+    start = cs.sort_values(["year", "month"]).iloc[0]
+    end = cs.sort_values(["year", "month"]).iloc[-1]
+    for name, col in MODEL_PRED_COLS:
+        met = _metrics(cs["observed_m3"], cs[col])
+        pooled_rows.append(
+            {
+                "model": name,
+                "n": met["n"],
+                "evaluation_start": f"{int(start.year):04d}-{int(start.month):02d}",
+                "evaluation_end": f"{int(end.year):04d}-{int(end.month):02d}",
+                "mae": met["mae"],
+                "rmse": met["rmse"],
+                "smape": met["smape"],
+                "median_absolute_error": met["median_absolute_error"],
+            }
+        )
+        for y, g in cs.groupby("year"):
+            met_y = _metrics(g["observed_m3"], g[col])
+            year_rows.append(
+                {
+                    "year": int(y),
+                    "model": name,
+                    "n_months": met_y["n"],
+                    "mae": met_y["mae"],
+                    "rmse": met_y["rmse"],
+                }
+            )
+    pooled = pd.DataFrame(pooled_rows)
+    by_year = pd.DataFrame(year_rows)
+    persist = by_year[by_year["model"].eq("seasonal_persistence")][["year", "mae"]].rename(
+        columns={"mae": "seasonal_persistence_mae"}
+    )
+    vs = by_year.merge(persist, on="year", how="left")
+    vs["beats_seasonal_persistence"] = np.where(
+        vs["model"].eq("seasonal_persistence"),
+        False,
+        vs["mae"] < vs["seasonal_persistence_mae"],
+    )
+    n_years = int(vs["year"].nunique())
+    beat_rows = []
+    for name, _col in MODEL_PRED_COLS:
+        sub = vs[vs["model"].eq(name)]
+        n_beats = (
+            np.nan
+            if name == "seasonal_persistence"
+            else int(sub["beats_seasonal_persistence"].sum())
+        )
+        beat_rows.append(
+            {
+                "model": name,
+                "n_years_compared": n_years,
+                "n_years_beats_seasonal_persistence": n_beats,
+            }
+        )
+    beats_summary = pd.DataFrame(beat_rows)
+    return pooled, by_year, vs, beats_summary, cs
+
+
+def information_set_table() -> pd.DataFrame:
+    return pd.DataFrame(MODEL_INFORMATION_SETS)
 
 
 def graybox_shape(obs: pd.DataFrame, evap: pd.DataFrame) -> pd.DataFrame:
@@ -339,7 +514,7 @@ def plot_model_ts(preds: pd.DataFrame) -> Path:
     ax.set_ylabel("m³ / month")
     ax.set_title(
         "City-metered service water: chronological expanding-window predictions\n"
-        "(retrospective / exploratory; not untouched holdout)"
+        "(retrospective / exploratory; primary ranking uses common-support months only)"
     )
     ax.legend(fontsize=7)
     fig.tight_layout()
@@ -349,8 +524,8 @@ def plot_model_ts(preds: pd.DataFrame) -> Path:
     return p
 
 
-def best_model(scores: pd.DataFrame) -> dict:
-    pooled = scores[scores["scope"].eq("pooled")].copy()
+def best_model(common_pooled: pd.DataFrame) -> dict:
+    pooled = common_pooled.copy()
     pooled = pooled.sort_values(["mae", "rmse"])
     winner = pooled.iloc[0]
     clim = pooled[pooled.model.eq("climatology")].iloc[0]
@@ -358,17 +533,19 @@ def best_model(scores: pd.DataFrame) -> dict:
     gray = pooled[pooled.model.eq("graybox_evap_scale")].iloc[0]
     weather_better = float(gray["mae"]) < min(float(clim["mae"]), float(persist["mae"]))
     return {
+        "ranking_support": "common",
         "best_by_mae": winner["model"],
         "best_mae": float(winner["mae"]),
         "best_rmse": float(winner["rmse"]),
+        "common_n": int(winner["n"]),
         "climatology_mae": float(clim["mae"]),
         "seasonal_persistence_mae": float(persist["mae"]),
         "graybox_evap_scale_mae": float(gray["mae"]),
         "weather_beats_seasonal_baselines": weather_better,
         "interpretation": (
-            "Gray-box/weather monthly levels beat climatology and seasonal persistence."
+            "On common support, gray-box/weather monthly levels beat climatology and seasonal persistence."
             if weather_better
-            else "Weather/evaporation-scaled models do not beat strong seasonal baselines on MAE."
+            else "On common support, weather/evaporation-scaled models do not beat strong seasonal baselines on MAE."
         ),
     }
 
@@ -394,17 +571,25 @@ def run() -> dict:
     obs = pd.read_csv(COMPONENTS)
     meta = pd.read_csv(META)
     evap = monthly_evap(HOURLY)
-    preds, scores = run_models(obs, evap, meta)
+    preds, native_scores = run_models(obs, evap, meta)
+    cs_pooled, cs_year, cs_vs, cs_beats, cs_preds = common_support_tables(preds)
+    info = information_set_table()
     shape = graybox_shape(obs, evap)
     figs = []
     if not preds.empty:
         figs.append(str(plot_model_ts(preds).relative_to(ROOT)))
         figs.append(str(plot_shape(obs, evap, shape).relative_to(ROOT)))
-    summary = best_model(scores) if not scores.empty else {}
+    summary = best_model(cs_pooled) if not cs_pooled.empty else {}
     pooled_shape = shape[shape.scope.eq("pooled")]
     year_shape = shape[shape.scope.eq("year")]
     preds.to_csv(MODEL_OUT / "city_metered_service_monthly_predictions.csv", index=False)
-    scores.to_csv(MODEL_OUT / "city_metered_service_model_scores.csv", index=False)
+    native_scores.to_csv(MODEL_OUT / "city_metered_service_model_scores.csv", index=False)
+    if not cs_pooled.empty:
+        cs_pooled.to_csv(MODEL_OUT / "city_service_model_metrics_common_support.csv", index=False)
+        cs_year.to_csv(MODEL_OUT / "city_service_model_metrics_common_support_by_year.csv", index=False)
+        cs_vs.to_csv(MODEL_OUT / "city_service_model_vs_seasonal_persistence_by_year.csv", index=False)
+        cs_beats.to_csv(MODEL_OUT / "city_service_model_beats_seasonal_persistence_summary.csv", index=False)
+    info.to_csv(MODEL_OUT / "city_service_model_information_sets.csv", index=False)
     shape.to_csv(MODEL_OUT / "city_metered_service_graybox_shape.csv", index=False)
     result = {
         "status": "RAN",
@@ -412,16 +597,26 @@ def run() -> dict:
         "response": RESPONSE,
         "gate": "PASS",
         "frozen_annual_holdout_copies": copied,
-        "n_prediction_months": int(len(preds)),
-        "model_scores_pooled": scores[scores.scope.eq("pooled")].to_dict(orient="records"),
+        "n_prediction_months_native": int(len(preds)),
+        "n_prediction_months_common_support": int(len(cs_preds)),
+        "primary_ranking_support": "common",
+        "model_scores_common_support_pooled": cs_pooled.to_dict(orient="records") if not cs_pooled.empty else [],
+        "model_scores_native_pooled": native_scores[native_scores.scope.eq("pooled")].to_dict(orient="records")
+        if not native_scores.empty
+        else [],
+        "beats_seasonal_persistence_summary": cs_beats.to_dict(orient="records") if not cs_beats.empty else [],
+        "information_sets": info.to_dict(orient="records"),
         "best": summary,
         "graybox_shape_pooled": pooled_shape.to_dict(orient="records"),
         "graybox_shape_years": year_shape.to_dict(orient="records"),
         "figures": figs,
         "notes": [
+            "Primary cross-model ranking uses common support (identical year-month rows).",
+            "Native-support scores are a secondary completeness diagnostic.",
             "Not untouched holdout, prospective validation, or confirmatory validation.",
             "City data were inspected during development.",
-            "Old annual Meta-withdrawal holdout artifacts were copied, not overwritten.",
+            "Old annual Meta-withdrawal holdout artifacts were copied once, not overwritten.",
+            "Electricity/weather models are contemporaneous explanatory, not strictly prospective.",
         ],
     }
     (MODEL_OUT / "city_metered_service_model_summary.json").write_text(

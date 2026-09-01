@@ -249,19 +249,25 @@ def test_not_necessary_is_distinct_from_missing_and_figure1_uses_both():
     assert it["coverage_status"].eq("not_necessary").all()
     water = cov[cov.series.eq("Meta water withdrawal")]
     assert water.loc[water.year.isin([2011, 2012, 2013]), "coverage_status"].eq("missing").all()
-    meters = cov[cov.series.eq("Monthly campus water delivery")]
+    meters = cov[cov.series.eq("All-source monthly campus withdrawal / complete campus water balance")]
     assert meters["coverage_status"].eq("missing").all()
-    city_svc = cov[cov.series.eq("City-metered Facebook Data Center service water")]
+    city_svc = cov[
+        cov.series.eq("City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial)")
+    ]
     if not city_svc.empty:
         assert "reported" in set(city_svc.coverage_status)
         assert city_svc.loc[city_svc.year.eq(2011), "coverage_status"].eq("missing").all()
+        if (city_svc.year == 2026).any():
+            assert city_svc.loc[city_svc.year.eq(2026), "coverage_status"].eq("reported").all()
     ww = cov[cov.series.eq("Monthly campus wastewater/sewer discharge")]
     assert ww["coverage_status"].eq("missing").all()
     em = cov[cov.series.eq("Monthly/hourly campus electricity meter")]
     assert em["coverage_status"].eq("missing").all()
     weather = cov[cov.series.eq("Canonical weather (KS39/KRDM + KBDN fallback)")]
     assert not weather.empty
-    assert weather["coverage_status"].eq("measured").all()
+    assert weather.loc[weather.year.le(2024), "coverage_status"].eq("measured").all()
+    if (weather.year >= 2025).any():
+        assert weather.loc[weather.year.ge(2025), "coverage_status"].eq("missing").all()
     assert "Monthly Meta water/electricity meters" not in set(cov.series)
     s2 = cov[cov.series.eq("Meta location Scope 2")]
     assert s2.loc[s2.year.eq(2011), "coverage_status"].eq("missing").all()
@@ -455,8 +461,9 @@ def test_figure1_user_facing_weather_and_meter_gap_rows():
     end = src.index("\ndef figure2_ground_truth")
     body = src[start:end]
     assert "Canonical weather (KS39/KRDM + KBDN fallback)" in body
-    assert "City-metered Facebook Data Center service water" in body
-    assert "Monthly campus water delivery" in body
+    assert "City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial)" in body
+    assert "All-source monthly campus withdrawal / complete campus water balance" in body
+    assert "Monthly campus water delivery" not in body
     assert "Monthly campus wastewater/sewer discharge" in body
     assert "Monthly/hourly campus electricity meter" in body
     assert "not an active target" in body

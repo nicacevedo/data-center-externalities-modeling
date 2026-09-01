@@ -1,0 +1,6 @@
+model,n_years_compared,n_years_beats_seasonal_persistence
+climatology,10,3.0
+seasonal_persistence,10,
+annual_electricity_scale,10,5.0
+graybox_evap_scale,10,0.0
+scale_plus_evap,10,5.0

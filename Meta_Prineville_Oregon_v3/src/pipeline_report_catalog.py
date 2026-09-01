@@ -353,18 +353,20 @@ def source_inventory() -> list[dict]:
             provider_institution="City of Prineville",
             dataset_product="Facebook water/sewer meter consumption report",
             source_url_or_acquisition_route="City public-records delivery 2026; native XLSX preferred",
-            local_raw_files="data/raw/city_prineville_public_records_2026/FB Meters and Consumption(2).xlsx (CSV/TXT/PDF mirrors)",
+            local_raw_files="data/raw/city_prineville_public_records_2026/FB Meters and Consumption(2).xlsx (CSV/TXT/PDF mirrors; extra unnumbered CSV is a duplicate/non-source copy of (1).csv)",
             spatial_resolution="named Facebook accounts / meter ID at service location",
             temporal_resolution="month (City: consumption month for ordinary meters)",
-            coverage="2012-2026; 2026 observed through July",
+            coverage="2012-12 through 2026-07 (2012 and 2026 partial)",
             reported_measured_modeled_status="reported City utility-meter usage",
             processing_script="src/prepare_city_prineville_utility.py",
             processed_outputs="data/processed/city_prineville/city_meter_monthly_long.csv; city_water_components_monthly.csv",
             model_role="primary observation of City-metered Facebook Data Center WATER-COMM + ADD'L WATER service",
             known_limitations=(
                 "Customer-service boundary, not total Meta campus withdrawal. SWR METER and WELL METER "
-                "FOR SEW remain unresolved identities. 2026 Aug–Dec are not_observed_yet. CSV/TXT are "
-                "mirrors; PDF is an evidence copy with sparse extractable text."
+                "FOR SEW remain unresolved identities; SWR physical_direction is unknown (label is not "
+                "flow direction). 2026 Aug–Dec are not_observed_yet. CSV/TXT are mirrors; PDF is an "
+                "evidence copy with sparse extractable text. Extra file FB Meters and Consumption.csv "
+                "is a byte-identical local duplicate of (1).csv and is not a separate scientific source."
             ),
             branch_group="water",
             in_source_manifest=True,
@@ -1694,7 +1696,7 @@ def quantity_registry() -> list[dict]:
             quantity_id="Q_CITY_SWR_METER",
             quantity="City SWR METER volume (unresolved identity)",
             symbol="V^{swr,meter}",
-            definition="Volume on meters with rate code SWR METER. Label is not identification as total campus wastewater return.",
+            definition="Volume on meters with rate code SWR METER. Raw label is preserved. Flow direction is unknown. Not wastewater return, total discharge, or a consumptive-use offset.",
             unit="m³",
             time_resolution="month",
             spatial_resolution="Facebook Data Center sewer-coded meters",
@@ -1706,7 +1708,7 @@ def quantity_registry() -> list[dict]:
             equation_transformation_model="same unit conversion; excluded from City-service aggregate",
             code_implementing_it="src/prepare_city_prineville_utility.py",
             fitted_parameters="",
-            modeling_assumptions="physical_direction outflow is a conservative label, not a complete return-flow identity",
+            modeling_assumptions="physical_direction is unknown; sewer-related is a semantic hint from the raw label only, not a flow-direction or return-flow identity",
             calibration_target="none; excluded from City-service models",
             independent_validation_source="none",
             accuracy_diagnostic_available="none for identity",
@@ -3390,7 +3392,7 @@ def model_registry() -> list[dict]:
             holdout_period="retrospective/exploratory chronological; City data were inspected in development",
             selection_rule="predeclared baseline; not selected by error minimization among a large library",
             is_prediction="yes (retrospective exploratory)",
-            notes="Not untouched holdout. Response is City service, not Meta total withdrawal.",
+            notes="Forecastable ex-ante baseline: earlier complete years only. Not untouched holdout. Response is City service, not Meta total withdrawal. Primary ranking uses common support.",
         ),
         _m(
             model_id="M_CITY_SERVICE_SEASONAL_PERSIST",
@@ -3407,7 +3409,7 @@ def model_registry() -> list[dict]:
             holdout_period="retrospective/exploratory chronological",
             selection_rule="predeclared baseline",
             is_prediction="yes (retrospective exploratory)",
-            notes="Strong seasonal baseline. Current best MAE among the predeclared City-service set.",
+            notes="Forecastable ex-ante baseline: previous complete year only. Strong seasonal benchmark. Common-support ranking is primary; do not rank on native-support n.",
         ),
         _m(
             model_id="M_CITY_SERVICE_ELEC_SCALE",
@@ -3424,7 +3426,7 @@ def model_registry() -> list[dict]:
             holdout_period="retrospective/exploratory chronological",
             selection_rule="predeclared",
             is_prediction="yes (retrospective exploratory)",
-            notes="Uses contemporaneous annual electricity as a year-level scale, not hourly campus load.",
+            notes="Contemporaneous explanatory: uses realized target-year annual electricity as a year-level scale. Not strictly prospective. Not hourly campus load.",
         ),
         _m(
             model_id="M_CITY_SERVICE_GRAYBOX_LEVEL",
@@ -3441,7 +3443,7 @@ def model_registry() -> list[dict]:
             holdout_period="retrospective/exploratory chronological",
             selection_rule="predeclared",
             is_prediction="yes (retrospective exploratory)",
-            notes="Tests whether weather/evap physics beats seasonal baselines for City-service levels. Does not overwrite the frozen Meta-annual water holdout.",
+            notes="Contemporaneous explanatory: uses realized target-month weather via raw evaporation and the reconstruction IT scale closed to that year's electricity. Not an ex-ante forecast. Does not overwrite the frozen Meta-annual water holdout.",
         ),
         _m(
             model_id="M_CITY_SERVICE_SCALE_EVAP",
@@ -3458,7 +3460,7 @@ def model_registry() -> list[dict]:
             holdout_period="retrospective/exploratory chronological",
             selection_rule="predeclared",
             is_prediction="yes (retrospective exploratory)",
-            notes="No ML, no hyperparameter search, no structural-break fitting.",
+            notes="Contemporaneous explanatory: uses target-year annual electricity and realized target-month weather. No ML, no hyperparameter search, no structural-break fitting. Not strictly prospective.",
         ),
         _m(
             model_id="M_CITY_SERVICE_GRAYBOX_SHAPE",
@@ -3482,7 +3484,7 @@ def model_registry() -> list[dict]:
             model_name="Meta annual vs City meter component reconciliation",
             model_class="external-consistency check",
             code_path="src/prepare_city_prineville_utility.py",
-            what_it_does="Year-by-year residuals of Meta annual withdrawal versus City-service, bulk, and diagnostic service+bulk. Not a fitted closure and not selection of a physical total.",
+            what_it_does="Year-by-year residuals and shares of Meta annual withdrawal versus City-service and service+bulk (bulk allocated by observed bill year). Descriptive diagnostics only; not a fitted closure and not selection of a physical total.",
             equations="residual = W_meta − W_component (or diagnostic sum)",
             inputs="Q_W_WITH; Q_CITY_METER_SERVICE; Q_CITY_BULK_WATER",
             outputs="city_meta_annual_reconciliation.csv",
@@ -3492,7 +3494,7 @@ def model_registry() -> list[dict]:
             holdout_period="n/a",
             selection_rule="none; minimizing residual does not identify the campus boundary",
             is_prediction="no",
-            notes="2022 City service ≈ Meta; 2023–2024 City service+bulk ≈ Meta are observed diagnostics, not physical identification.",
+            notes="Shares and residuals are descriptive. 2022 City service ≈ Meta and 2023–2024 service+bulk (bill year) ≈ Meta are accounting-date diagnostics, not water-balance closure and not physical identification. City-service/Meta share is not historically stable.",
         ),
     ]
 

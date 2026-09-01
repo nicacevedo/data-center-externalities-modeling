@@ -66,8 +66,13 @@ def test_city_service_definition_excludes_unresolved_channels():
     assert not is_city_service_row("Facebook Warehouse", 'WATER - COMM 3/4"')
     swr = classify_component(ENTITY_FACEBOOK_DC, "SWR METER")
     assert swr["boundary_status"] == "unresolved"
+    assert swr["physical_direction"] == "unknown"
+    assert swr["semantic_hint"] == "sewer-related"
+    assert swr["model_use"] == "excluded_from_city_service"
+    assert "wastewater return" not in swr["semantic_note"].lower() or "not wastewater return" in swr["semantic_note"].lower()
     well = classify_component(ENTITY_FACEBOOK_DC, "WELL METER FOR SEW")
     assert well["physical_direction"] == "unknown"
+    assert well["boundary_status"] == "unresolved"
     bulk = classify_component(ENTITY_FACEBOOK_DC, "BULK WATER")
     assert bulk["component_class"] == "bulk_water"
 
@@ -238,3 +243,135 @@ def test_promotion_gate_and_no_total_campus_water_product():
         assert not gate["double_count_investigation"]["identified_parent_submeter_double_counting"]
     products = list(PROCESSED.glob("*.csv"))
     assert not any("total_campus_water" in p.name for p in products)
+
+
+def test_water_command_includes_city_utility_dependencies():
+    import ast
+
+    src = (ROOT / "run_prineville.py").read_text(encoding="utf-8")
+    tree = ast.parse(src)
+    water_fn = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "water")
+    called = []
+    for node in ast.walk(water_fn):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+            called.append(node.func.id)
+        elif isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            called.append(node.func.attr)
+    assert "city_utility" in called
+    assert "city_utility_models" in called
+    water_src = ast.get_source_segment(src, water_fn) or src[src.index("def water(") : src.index("def eia(")]
+    assert "prepare_owrd_wateruse.py" in water_src
+    assert water_src.index("prepare_owrd_wateruse.py") < water_src.index("city_utility")
+
+
+def test_common_support_metrics_use_identical_rows():
+    from evaluate_city_metered_water_models import (
+        MODEL_PRED_COLS,
+        common_support_mask,
+        common_support_tables,
+    )
+
+    preds = pd.DataFrame(
+        {
+            "year": [2014, 2014, 2016, 2016],
+            "month": [1, 2, 1, 2],
+            "observed_m3": [10.0, 20.0, 30.0, 40.0],
+            "pred_climatology_m3": [11.0, 21.0, 31.0, 41.0],
+            "pred_seasonal_persist_m3": [12.0, 22.0, 32.0, 42.0],
+            "pred_elec_scale_m3": [13.0, float("nan"), 33.0, 43.0],
+            "pred_graybox_scaled_m3": [14.0, 24.0, 34.0, 44.0],
+            "pred_scale_plus_evap_m3": [15.0, 25.0, 35.0, 45.0],
+        }
+    )
+    mask = common_support_mask(preds)
+    assert int(mask.sum()) == 3
+    pooled, by_year, _vs, _beats, cs = common_support_tables(preds)
+    assert set(pooled["n"]) == {3}
+    keys = set(zip(cs["year"].astype(int), cs["month"].astype(int)))
+    assert keys == {(2014, 1), (2016, 1), (2016, 2)}
+    assert (2014, 2) not in keys
+    for name, col in MODEL_PRED_COLS:
+        assert cs[col].notna().all()
+
+
+@NEED_PROC
+def test_common_support_output_n_identical_across_models():
+    from evaluate_city_metered_water_models import common_support_mask
+
+    path = ROOT / "outputs" / "city_prineville" / "city_service_model_metrics_common_support.csv"
+    if not path.exists():
+        pytest.skip("common-support metrics not generated yet")
+    cs = pd.read_csv(path)
+    assert cs["n"].nunique() == 1
+    preds = pd.read_csv(ROOT / "outputs" / "city_prineville" / "city_metered_service_monthly_predictions.csv")
+    mask = common_support_mask(preds)
+    n = int(mask.sum())
+    assert (cs["n"] == n).all()
+    by_year = ROOT / "outputs" / "city_prineville" / "city_service_model_metrics_common_support_by_year.csv"
+    ytab = pd.read_csv(by_year)
+    for _year, g in ytab.groupby("year"):
+        assert g["n_months"].nunique() == 1
+
+
+@NEED_PROC
+def test_processed_swr_direction_unknown_and_latest_observed_month():
+    long = pd.read_csv(PROCESSED / "city_meter_monthly_long.csv", dtype={"meter_id_raw": str})
+    swr = long[long.rate_code_raw.eq("SWR METER")]
+    assert not swr.empty
+    assert (swr["physical_direction"] == "unknown").all()
+    assert (swr["boundary_status"] == "unresolved").all()
+    if "semantic_hint" in swr.columns:
+        assert (swr["semantic_hint"] == "sewer-related").all()
+    summary = json.loads((PROCESSED / "parser_summary.json").read_text())
+    assert summary["latest_observed"]["year"] == 2026
+    assert summary["latest_observed"]["month"] == 7
+    future = long[long.observation_status.eq("not_observed_yet")]
+    assert (future.year == 2026).all()
+    assert (future.month >= 8).all()
+
+
+@NEED_PROC
+def test_duplicate_csv_is_not_a_scientific_source():
+    inv = pd.read_csv(PROCESSED / "city_source_file_inventory.csv")
+    extra = inv[inv.filename.eq("FB Meters and Consumption.csv")]
+    one = inv[inv.filename.eq("FB Meters and Consumption(1).csv")]
+    assert not extra.empty and not one.empty
+    assert extra["scientific_role"].iloc[0] == "duplicate_non_source"
+    val = extra["counts_as_scientific_source"].iloc[0]
+    if isinstance(val, bool):
+        assert val is False
+    else:
+        assert str(val).strip().lower() in {"false", "0", "f"}
+    assert extra["sha256"].iloc[0] == one["sha256"].iloc[0]
+    sci = inv[inv["counts_as_scientific_source"].astype(str).isin(["True", "true", "1"])]
+    assert "FB Meters and Consumption.csv" not in set(sci.filename)
+    # One verified hash per counted source filename.
+    assert sci["filename"].is_unique
+    assert "wait — use exact" not in inv.to_csv(index=False)
+
+
+@NEED_PROC
+def test_annual_reconciliation_share_diagnostics_and_no_total_campus():
+    recon = pd.read_csv(PROCESSED / "city_meta_annual_reconciliation.csv")
+    comps = pd.read_csv(PROCESSED / "city_water_components_monthly.csv")
+    assert "total_campus_water_m3" not in comps.columns
+    assert "total_campus_water_m3" not in recon.columns
+    for col in (
+        "city_service_share_of_meta",
+        "city_service_plus_bulk_share_of_meta",
+        "city_service_minus_meta_m3",
+        "city_service_plus_bulk_minus_meta_m3",
+    ):
+        assert col in recon.columns
+    assert recon["combination_label"].str.contains("bill_year").all()
+    assert recon["note"].str.contains("accounting-date").all()
+
+
+def test_canonical_meta_annual_hash_constant():
+    digest = hashlib.sha256(META.read_bytes()).hexdigest()
+    assert digest == "1f6b19f466b89a0e08c4914689186bed1bc8a9574c5732bb26c17562e5a1e513"
+    freeze = ROOT / "outputs" / "city_prineville" / "frozen_annual_water_validation_v1" / "water_holdout_baseline_compare.csv"
+    live = ROOT / "outputs" / "pipeline_report" / "water_holdout_baseline_compare.csv"
+    if freeze.exists() and live.exists():
+        assert hashlib.sha256(freeze.read_bytes()).hexdigest() == hashlib.sha256(live.read_bytes()).hexdigest()
+

@@ -66,23 +66,24 @@ Official City page: https://www.cityofprineville.com/1294/Public-Records
 
 The City Facebook water/sewer meter report, bulk/hydrant water, meter set/swap/pull history, and explanatory note are now at `data/raw/city_prineville_public_records_2026/`. Do **not** re-request that package. Do not move, rename, or re-save those files.
 
-`python run_prineville.py city-utility` parses them. City-metered Facebook Data Center WATER-COMM + ADD'L WATER is observed monthly. That is **not** total Meta campus withdrawal, total discharge, or groundwater.
+`python run_prineville.py water` parses them (and regenerates City-service model comparison). `python run_prineville.py city-utility` runs ingest/QA only. City-metered Facebook Data Center WATER-COMM + ADD'L WATER is observed monthly through 2026-07 (2012 and 2026 partial). That is **not** total Meta campus withdrawal, total discharge, or groundwater.
 
 ### Remaining City follow-up (do not acquire in an automated pass)
 
-Still not in the repository, and still worth a targeted records request if a custodian can answer:
+Highest-priority unresolved City questions:
 
-1. Identity of `SWR METER` and `WELL METER FOR SEW` (sewer return vs well vs other);
-2. Whether WATER-COMM / ADD'L WATER meters include parent/submeters;
-3. Mapping of customer meters to municipal production wells / ASR;
-4. Monthly municipal well production by well and ASR injection/recovery;
-5. Whether bulk/hydrant water is construction, cooling, irrigation, or other;
-6. Whether Facebook Trailer City and Facebook Warehouse are inside the Meta campus water boundary used in sustainability disclosures;
-7. Clarification of meter `1573376176` (consumption from 2024 vs set date 2026-02-15) and Warehouse 2020–2023 annual totals of 0 with nonzero months.
+1. Are `WATER-COMM` and `ADD'L WATER` meters independent parallel service meters, or are any master/submeters?
+2. What exactly does `SWR METER` physically measure? Flow direction is currently unknown.
+3. What exactly does `WELL METER FOR SEW` physically measure?
+4. What is bulk/hydrant water generally used for, and is it within the Facebook/Meta campus operating-water boundary?
+5. Can the City clarify meter `1573376176`, which appears in 2024 usage but has a reported 2026-02-15 set date?
+6. Are the originally requested monthly municipal production by individual well, ASR injection/recovery, and groundwater-level/head records still being processed separately?
+
+Lower priority unless it affects the main Facebook Data Center response: Warehouse `1562600912` 2020–2023 annual totals of 0 with nonzero monthly usage. Trailer City / Warehouse campus-boundary inclusion remains unresolved.
 
 The City states that non-police public-record requests may be submitted to `recorder@cityofprineville.com` (phone 541-447-5627, ext. 106).
 
-Item (6) in the original request (City/ASR operational hydrographs) remains outstanding. Local GWIS well levels are already bundled and are a different series.
+Local GWIS well levels are already bundled and are a different series from City/ASR operational hydrographs.
 
 The City utility portal can show monthly consumption to account holders (`CITY_UTILITY_INFO_FY26`). That is not a substitute for the public-record package already received.
 

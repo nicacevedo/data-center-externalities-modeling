@@ -9,58 +9,198 @@
     "outputs/city_prineville/frozen_annual_water_validation_v1/owrd_water_model_validation.csv",
     "outputs/city_prineville/frozen_annual_water_validation_v1/validation_scorecard.csv"
   ],
-  "n_prediction_months": 132,
-  "model_scores_pooled": [
+  "n_prediction_months_native": 132,
+  "n_prediction_months_common_support": 120,
+  "primary_ranking_support": "common",
+  "model_scores_common_support_pooled": [
     {
+      "model": "climatology",
+      "n": 120,
+      "evaluation_start": "2014-01",
+      "evaluation_end": "2024-12",
+      "mae": 9430.125109684926,
+      "rmse": 14691.577396837629,
+      "smape": 0.8624932883399854,
+      "median_absolute_error": 5173.836474370872
+    },
+    {
+      "model": "seasonal_persistence",
+      "n": 120,
+      "evaluation_start": "2014-01",
+      "evaluation_end": "2024-12",
+      "mae": 7473.075529290018,
+      "rmse": 11164.769944572256,
+      "smape": 0.6305169573040583,
+      "median_absolute_error": 4671.9552238128
+    },
+    {
+      "model": "annual_electricity_scale",
+      "n": 120,
+      "evaluation_start": "2014-01",
+      "evaluation_end": "2024-12",
+      "mae": 8692.516427956456,
+      "rmse": 12973.238902287489,
+      "smape": 0.6477320839582436,
+      "median_absolute_error": 6236.762681297013
+    },
+    {
+      "model": "graybox_evap_scale",
+      "n": 120,
+      "evaluation_start": "2014-01",
+      "evaluation_end": "2024-12",
+      "mae": 11728.128345685942,
+      "rmse": 15879.351805203825,
+      "smape": 1.5566339821849557,
+      "median_absolute_error": 8460.50110159898
+    },
+    {
+      "model": "scale_plus_evap",
+      "n": 120,
+      "evaluation_start": "2014-01",
+      "evaluation_end": "2024-12",
+      "mae": 8518.442305606686,
+      "rmse": 12686.193392694217,
+      "smape": 0.6118921534113065,
+      "median_absolute_error": 4809.539347100272
+    }
+  ],
+  "model_scores_native_pooled": [
+    {
+      "support": "native",
       "scope": "pooled",
       "model": "climatology",
       "n": 132,
       "mae": 9021.074141755775,
       "rmse": 14126.030970453741,
-      "smape": 0.8190194383211484
+      "smape": 0.8190194383211484,
+      "median_absolute_error": 4788.046232404513
     },
     {
+      "support": "native",
       "scope": "pooled",
       "model": "seasonal_persistence",
       "n": 132,
       "mae": 8035.119464954737,
       "rmse": 12144.820380734347,
-      "smape": 0.6236194167908948
+      "smape": 0.6236194167908948,
+      "median_absolute_error": 5108.004378035332
     },
     {
+      "support": "native",
       "scope": "pooled",
       "model": "annual_electricity_scale",
       "n": 120,
       "mae": 8692.516427956456,
       "rmse": 12973.238902287489,
-      "smape": 0.6477320839582436
+      "smape": 0.6477320839582436,
+      "median_absolute_error": 6236.762681297013
     },
     {
+      "support": "native",
       "scope": "pooled",
       "model": "graybox_evap_scale",
       "n": 120,
       "mae": 11728.128345685942,
       "rmse": 15879.351805203825,
-      "smape": 1.5566339821849557
+      "smape": 1.5566339821849557,
+      "median_absolute_error": 8460.50110159898
     },
     {
+      "support": "native",
       "scope": "pooled",
       "model": "scale_plus_evap",
       "n": 120,
       "mae": 8518.442305606686,
       "rmse": 12686.193392694217,
-      "smape": 0.6118921534113065
+      "smape": 0.6118921534113065,
+      "median_absolute_error": 4809.539347100272
+    }
+  ],
+  "beats_seasonal_persistence_summary": [
+    {
+      "model": "climatology",
+      "n_years_compared": 10,
+      "n_years_beats_seasonal_persistence": 3.0
+    },
+    {
+      "model": "seasonal_persistence",
+      "n_years_compared": 10,
+      "n_years_beats_seasonal_persistence": NaN
+    },
+    {
+      "model": "annual_electricity_scale",
+      "n_years_compared": 10,
+      "n_years_beats_seasonal_persistence": 5.0
+    },
+    {
+      "model": "graybox_evap_scale",
+      "n_years_compared": 10,
+      "n_years_beats_seasonal_persistence": 0.0
+    },
+    {
+      "model": "scale_plus_evap",
+      "n_years_compared": 10,
+      "n_years_beats_seasonal_persistence": 5.0
+    }
+  ],
+  "information_sets": [
+    {
+      "model": "climatology",
+      "evaluation_role": "prospective_forecastable_baseline",
+      "forecastable_ex_ante": true,
+      "uses_realized_target_month_weather": false,
+      "uses_target_year_annual_electricity": false,
+      "uses_target_year_water_information": false,
+      "information_set_note": "Month-of-year mean of city_metered_water_service_m3 from earlier complete years only. No target-month weather and no target-year electricity."
+    },
+    {
+      "model": "seasonal_persistence",
+      "evaluation_role": "prospective_forecastable_baseline",
+      "forecastable_ex_ante": true,
+      "uses_realized_target_month_weather": false,
+      "uses_target_year_annual_electricity": false,
+      "uses_target_year_water_information": false,
+      "information_set_note": "Same calendar month from the previous complete year (climatology fallback if that month is missing). No target-month weather and no target-year electricity."
+    },
+    {
+      "model": "annual_electricity_scale",
+      "evaluation_role": "contemporaneous_explanatory",
+      "forecastable_ex_ante": false,
+      "uses_realized_target_month_weather": false,
+      "uses_target_year_annual_electricity": true,
+      "uses_target_year_water_information": false,
+      "information_set_note": "Train-only \u03b2 maps prior-year Meta annual facility MWh to City-service annual totals; target-month allocation uses climatology shares, but the year scale uses realized target-year annual electricity. Not strictly prospective."
+    },
+    {
+      "model": "graybox_evap_scale",
+      "evaluation_role": "contemporaneous_explanatory",
+      "forecastable_ex_ante": false,
+      "uses_realized_target_month_weather": true,
+      "uses_target_year_annual_electricity": true,
+      "uses_target_year_water_information": false,
+      "information_set_note": "s fitted on prior years only. Target-month raw evaporation uses realized target-month weather and the conditional reconstruction IT scale closed to that year's facility electricity. Contemporaneous / retrospective explanatory, not an ex-ante forecast."
+    },
+    {
+      "model": "scale_plus_evap",
+      "evaluation_role": "contemporaneous_explanatory",
+      "forecastable_ex_ante": false,
+      "uses_realized_target_month_weather": true,
+      "uses_target_year_annual_electricity": true,
+      "uses_target_year_water_information": false,
+      "information_set_note": "a\u00d7(E_fac,y/12)+b\u00d7raw_evap. Uses realized target-year annual electricity and realized target-month weather (via evaporation). Contemporaneous explanatory, not an ex-ante forecast."
     }
   ],
   "best": {
+    "ranking_support": "common",
     "best_by_mae": "seasonal_persistence",
-    "best_mae": 8035.119464954737,
-    "best_rmse": 12144.820380734347,
-    "climatology_mae": 9021.074141755775,
-    "seasonal_persistence_mae": 8035.119464954737,
+    "best_mae": 7473.075529290018,
+    "best_rmse": 11164.769944572256,
+    "common_n": 120,
+    "climatology_mae": 9430.125109684926,
+    "seasonal_persistence_mae": 7473.075529290018,
     "graybox_evap_scale_mae": 11728.128345685942,
     "weather_beats_seasonal_baselines": false,
-    "interpretation": "Weather/evaporation-scaled models do not beat strong seasonal baselines on MAE."
+    "interpretation": "On common support, weather/evaporation-scaled models do not beat strong seasonal baselines on MAE."
   },
   "graybox_shape_pooled": [
     {
@@ -287,8 +427,11 @@
     "outputs/city_prineville/figures/city_service_vs_graybox_shape.png"
   ],
   "notes": [
+    "Primary cross-model ranking uses common support (identical year-month rows).",
+    "Native-support scores are a secondary completeness diagnostic.",
     "Not untouched holdout, prospective validation, or confirmatory validation.",
     "City data were inspected during development.",
-    "Old annual Meta-withdrawal holdout artifacts were copied, not overwritten."
+    "Old annual Meta-withdrawal holdout artifacts were copied once, not overwritten.",
+    "Electricity/weather models are contemporaneous explanatory, not strictly prospective."
   ]
 }
