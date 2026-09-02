@@ -1,7 +1,9 @@
-# Prineville architecture audit — closed report
+# Prineville architecture audit — corrected scope (structural revision pass)
 
-Disposition: **`MINIMAL_STRUCTURAL_REVISION_REQUIRED`**
+Source-audit execution: **PASS**. Architecture source coverage: **PARTIAL** (PRN2–6, CCO complete architecture, PRN1 condenser type, building-load shares unresolved).
 
-No gray-box fit, no 2023–2024 water used for structure, no ESIF/Lei coefficient transfer, no groundwater/emissions run.
+Cooling tower: **EARLY_PRN1 = CONTRADICTED**; **LATER_PRINEVILLE = UNKNOWN** (no campus-wide contradiction).
 
-See `FINAL_PRINEVILLE_ARCHITECTURE_AUDIT_STATUS.json` and `NEXT_PRINEVILLE_CONDITIONING_EXPERIMENT.md`.
+Liquid: **DIRECT_TO_CHIP = UNSUPPORTED**; **PRN1_CHILLED_WATER_AIR_COOLING = CONFIRMED** with **INTERVAL_CENSORED** operation start (hydronic 2023-09-21; operational-by 2024-02-02).
+
+See `outputs/structural_revision/` for the evidence freeze and physics validation. This correction does not use Meta water.

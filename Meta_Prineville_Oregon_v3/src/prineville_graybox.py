@@ -3,6 +3,13 @@
 This is intentionally a scaffold, not a claimed digital twin. It provides the accounting
 and air-side physics interfaces required once monthly/hourly validation data are acquired.
 It never fabricates an 'observed' hourly IT load.
+
+`simulate()` is the structural DIRECT_OUTSIDE_AIR_EVAP path (OCP DESIGN_SPEC control,
+moist-air mixing, humidification independent of sensible cooling). Electrical proxies
+remain provisional/scenario and are not architecture-audit validated.
+
+`simulate_legacy()` retains the pre-revision single 25 C / 100% OA rule for
+synthetic OLD-vs-NEW structural comparison only. It is not used to score Meta water.
 """
 from dataclasses import dataclass
 import numpy as np
@@ -24,7 +31,12 @@ class Params:
     fan_fraction_of_it: float = 0.025
     other_facility_fraction_of_it: float = 0.035
     # These two fractions sum to 0.06, leaving room for a ~1.07 mild-weather PUE
-    # after evaporative auxiliaries. They are priors to estimate, not reported facts.
+    # after evaporative auxiliaries. They are provisional/scenario electrical
+    # proxies, not architecture-audit-validated and not refit in the structural pass.
+    # supply_target_C is retained for simulate_legacy only; the structural controller
+    # uses documented OCP DESIGN_SPEC thresholds instead of this single 25 C rule.
+    evap_aux_fraction_of_it: float = 0.005
+    airflow_method: str = "sensible_heat_balance"
 
 
 def _sat_vapor_pressure_pa(t_c):
@@ -102,11 +114,10 @@ def assert_finite_physical_outputs(out: pd.DataFrame, year=None) -> None:
         )
 
 
-def simulate(weather: pd.DataFrame, p_it_mw, params=Params()):
-    """Return hourly physical outputs for a supplied *scenario/fitted* IT-power trace.
+def simulate_legacy(weather: pd.DataFrame, p_it_mw, params=Params()):
+    """Pre-revision controller: 100% OA, water only if t_supply < t_db.
 
-    `p_it_mw` may be scalar or array. The function does not infer it from annual totals.
-    Required weather drivers must be finite; missing weather is not treated as zero.
+    Retained for synthetic structural comparison. Not a Meta-water calibration path.
     """
     w=weather.copy()
     pit=np.broadcast_to(np.asarray(p_it_mw,float),len(w)).copy() if np.ndim(p_it_mw)==0 else np.asarray(p_it_mw,float)
@@ -157,3 +168,25 @@ def simulate(weather: pd.DataFrame, p_it_mw, params=Params()):
     })
     assert_finite_physical_outputs(out)
     return out
+
+
+def simulate(weather: pd.DataFrame, p_it_mw, params=Params()):
+    """Structural early-PRN1 DIRECT_OUTSIDE_AIR_EVAP simulation.
+
+    Primary water output is CONDITIONING_SITE_WATER. The empirical mapping from
+    conditioning water to Meta annual WITHDRAWAL is a separate accounting layer and
+    is not applied here. No parameter is fitted to Meta water.
+    """
+    from prineville_structural import StructuralParams, simulate_building
+
+    sp = StructuralParams(
+        return_air_C=params.return_air_C,
+        evap_effectiveness=params.evap_effectiveness,
+        server_deltaT_C=params.server_deltaT_C,
+        dry_air_cp_J_kgK=params.dry_air_cp_J_kgK,
+        fan_fraction_of_it=params.fan_fraction_of_it,
+        other_facility_fraction_of_it=params.other_facility_fraction_of_it,
+        evap_aux_fraction_of_it=getattr(params, "evap_aux_fraction_of_it", 0.005),
+        airflow_method=getattr(params, "airflow_method", "sensible_heat_balance"),
+    )
+    return simulate_building(weather, p_it_mw, sp)

@@ -1,0 +1,17 @@
+symbol,physical_role,architecture,source,evidence_class,current_value_or_range,site_specific,identifiable_now,candidate_future_measurement,allowed_to_fit_later,must_remain_scenario,affects_layer
+oa_fraction / control_mode,OA/RA dampers and spray enable,DIRECT_OUTSIDE_AIR_EVAP early PRN1,OCP_DC_V1_2011 Appendix A,DESIGN_SPEC; as-operated UNIDENTIFIED,"region-dependent [0,1]",design yes / operated no,no as-operated,BMS damper + SAT/RH/DP,"only with independent air-side data, not annual withdrawal alone",until telemetry,CONTROL
+T_return,return-air dry-bulb for mixing,early PRN1,unused prior 35 C; OCP hot aisle,SCENARIO,35 C prior,no,no,return plenum T,yes with telemetry,until measured,PHYSICS/CONTROL
+w_return / RH_return,return humidity,early PRN1,sensible-IT approximation at DP min,SCENARIO,w at 41.9 F DP,no,no,return RH,yes with telemetry,until measured,PHYSICS
+T_supply targets,"65/80 F band, 54 F floor",early PRN1,OCP Appendix A,DESIGN_SPEC,18.3–26.7 C,design,design yes / operated no,supply T sensors,not from water,design as scenario if unverified,CONTROL
+dewpoint min / RH max,"41.9 F DP, 65% RH",early PRN1,OCP §5.1.1,DESIGN_SPEC,5.5 C / 0.65,design,design yes,supply DP/RH,not from water,until as-operated confirmed,CONTROL
+evap_effectiveness ε,approach to wet bulb,DIRECT_OUTSIDE_AIR_EVAP,generic saturator,GENERIC_PRIOR/SCENARIO,0.85,no,no,SAT vs WB; mist staging,yes only with air-side or mist flow,yes unless mist/SAT data,PHYSICS
+server/air ΔT,sensible-heat airflow,all air-cooled,generic prior,GENERIC_PRIOR/SCENARIO PRIOR_UNIDENTIFIED,12 K,no,no,supply-return ΔT or airflow,yes with airflow or ΔT,yes until measured,AIRFLOW
+m_dry_air,dry-air mass flow,early PRN1,m=Q/(cp ΔT),SUPPORTED_PHYSICS / parameter unidentified,derived,no,no,fan array / shaft flow,yes with flow meters,if ΔT stays prior,AIRFLOW
+mist efficiency / loss,unevaporated mist to drain/recycle,ECH,OCP mist eliminators,UNIDENTIFIED,implicit 1.0 in mass balance,no,no,makeup vs drain,yes with water submeter,yes until measured,PHYSICS vs ACCOUNTING
+fan_fraction_of_it,electrical fan proxy,electrical,PUE-room prior,PROVISIONAL_SCENARIO_NOT_ARCHITECTURE_VALIDATED,0.025,no,no,fan electrical meters,separate from water,yes this layer,ELECTRICAL (not conditioning water)
+other_facility_fraction_of_it,other facility electrical proxy,electrical,PUE-room prior,PROVISIONAL_SCENARIO,0.035,no,no,facility electrical,separate,yes,ELECTRICAL
+evap_aux_fraction,mist-pump electrical proxy,electrical,hardcoded prior,PROVISIONAL_SCENARIO,0.005,no,no,pump kW,separate,yes,ELECTRICAL
+lambda_b building load shares,"P_IT,b / P_IT,campus",campus aggregation,none,UNKNOWN,UNKNOWN,no,no,building electrical / IT kWh,yes with building meters; never from campus water alone,must not invent equal weights,CAMPUS AGGREGATION
+PRN1 chiller condenser type,heat rejection water mechanism,CHILLED_WATER_AIR_COOLING,permits name chiller not condenser,UNKNOWN,UNKNOWN,no,no,equipment schedule,no quantitative model until identified,yes,ARCHITECTURE
+PRN1 chiller served-load share,fraction of PRN1 IT on CHW,PRN1 hybrid,none,UNKNOWN,UNKNOWN,no,no,CRAH vs OA airflow split,no from campus water,yes,ARCHITECTURE
+conditioning→withdrawal mapping,accounting scale s,ACCOUNTING,fitted through 2022 historically,ACCOUNTING_MAPPING not physics,existing s outside psychrometrics,mapping yes,not in this pass,City meter identity; POD; sewer,only as G_site after physics freeze,must remain outside psychrometric equation,ACCOUNTING

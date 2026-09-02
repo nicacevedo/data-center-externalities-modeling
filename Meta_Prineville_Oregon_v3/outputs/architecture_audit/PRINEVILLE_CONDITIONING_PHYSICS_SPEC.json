@@ -1,4 +1,37 @@
 {
+  "by_epoch": {
+    "E1_E2_early_PRN": {
+      "controls_airflow": "VFD fan array matching load (OCP); code uses m_air \u221d P_IT",
+      "controls_water_addition": "modulating high-pressure mist vs T/RH/dewpoint setpoints",
+      "creates_conditioning_load": "IT sensible heat (plus small building/office reuse of return heat in winter)",
+      "dry_no_water_operation": true,
+      "separate_heat_rejection_loop": false,
+      "water_boundary": "CONDITIONING_SITE_WATER (mist/RO feed). Not Meta total withdrawal, City+POD split, or sewer.",
+      "water_in_air_stream": true,
+      "weather_variables": "Tdb, Twb, RH/humidity ratio, possibly dewpoint"
+    },
+    "E3_CCO": {
+      "controls_airflow": "UNKNOWN beyond ECH piping presence",
+      "controls_water_addition": "SUPPORTED ECH; details unknown",
+      "creates_conditioning_load": "IT heat in CCO halls",
+      "dry_no_water_operation": "UNKNOWN",
+      "separate_heat_rejection_loop": "UNKNOWN (IWS/IWR present)",
+      "water_boundary": "CONDITIONING_SITE_WATER if ECH; unidentified additional loops",
+      "water_in_air_stream": "SUPPORTED",
+      "weather_variables": "likely Tdb/Twb/RH if same class"
+    },
+    "E4_PRN1_2024": {
+      "controls_airflow": "CRAH plus any remaining OA path UNKNOWN split",
+      "controls_water_addition": "possible remaining mist PLUS unidentified chiller heat-rejection water",
+      "creates_conditioning_load": "IT + personnel HVAC on addition; chilled-water/CRAH/chiller CONFIRMED",
+      "dry_no_water_operation": "UNKNOWN (depends on heat-rejection type)",
+      "separate_heat_rejection_loop": true,
+      "water_boundary": "CONDITIONING_SITE_WATER split unidentified; do not assume cooling-tower makeup",
+      "water_in_air_stream": "UNKNOWN remaining fraction",
+      "weather_variables": "Tdb/Twb if towers/adiabatic; possibly weaker if air-cooled"
+    }
+  },
+  "do_not_fit_in_this_pass": true,
   "early_direct_air_pathway": [
     "outside air",
     "optional return-air mixing (winter / low Tdb)",
@@ -9,46 +42,20 @@
     "hot-aisle containment \u2192 exhaust or recirculate"
   ],
   "psychrometric_mass_balance_not_fitted": "water_added_to_air \u2248 m_da * (w_supply - w_in_to_spray)",
-  "w_in_to_spray_depends_on": "outside-air humidity ratio and mixed-air fraction; currently gray-box uses outdoor w only",
+  "structural_revision": {
+    "airflow": "m_da = Q_sensible/(cp*\u0394T); \u0394T=12 K GENERIC_PRIOR/SCENARIO",
+    "humidification_independent_of_sensible_cooling": true,
+    "mixing": "w_m=x*w_o+(1-x)*w_r; h_m=x*h_o+(1-x)*h_r; T_m from (h_m,w_m)",
+    "prn1_chw_water": "UNIDENTIFIED fail-closed",
+    "water": "m_water = m_da * max(w_supply-w_mixed,0) tagged CONDITIONING_SITE_WATER"
+  },
   "variables": {
-    "m_da": "estimated from P_IT and server \u0394T prior; not metered",
-    "OA_fraction": "documented but latent in current code",
-    "T_supply_target": "OCP 65\u201385 F band; code uses 25 C prior",
-    "RH_or_dewpoint_limits": "OCP dewpoint min 41.9 F and 65% RH max; not in code",
+    "OA_fraction": "OCP DESIGN_SPEC controller; as-operated UNIDENTIFIED; not fitted",
+    "RH_or_dewpoint_limits": "OCP dewpoint min 41.9 F and 65% RH max implemented as DESIGN_SPEC",
+    "RO_softener_inefficiency": "documented treatment; not in mass balance",
+    "T_supply_target": "OCP region-specific DESIGN_SPEC (not single 25 C)",
     "evap_effectiveness": "estimated prior 0.85",
-    "RO_softener_inefficiency": "documented treatment; not in mass balance"
+    "m_da": "estimated from P_IT and server \u0394T prior; not metered"
   },
-  "by_epoch": {
-    "E1_E2_early_PRN": {
-      "creates_conditioning_load": "IT sensible heat (plus small building/office reuse of return heat in winter)",
-      "controls_airflow": "VFD fan array matching load (OCP); code uses m_air \u221d P_IT",
-      "controls_water_addition": "modulating high-pressure mist vs T/RH/dewpoint setpoints",
-      "weather_variables": "Tdb, Twb, RH/humidity ratio, possibly dewpoint",
-      "water_in_air_stream": true,
-      "separate_heat_rejection_loop": false,
-      "dry_no_water_operation": true,
-      "water_boundary": "CONDITIONING_SITE_WATER (mist/RO feed). Not Meta total withdrawal, City+POD split, or sewer."
-    },
-    "E3_CCO": {
-      "creates_conditioning_load": "IT heat in CCO halls",
-      "controls_airflow": "UNKNOWN beyond ECH piping presence",
-      "controls_water_addition": "SUPPORTED ECH; details unknown",
-      "weather_variables": "likely Tdb/Twb/RH if same class",
-      "water_in_air_stream": "SUPPORTED",
-      "separate_heat_rejection_loop": "UNKNOWN (IWS/IWR present)",
-      "dry_no_water_operation": "UNKNOWN",
-      "water_boundary": "CONDITIONING_SITE_WATER if ECH; unidentified additional loops"
-    },
-    "E4_PRN1_2024": {
-      "creates_conditioning_load": "IT + personnel HVAC on addition; chilled-water/CRAH/chiller CONFIRMED",
-      "controls_airflow": "CRAH plus any remaining OA path UNKNOWN split",
-      "controls_water_addition": "possible remaining mist PLUS unidentified chiller heat-rejection water",
-      "weather_variables": "Tdb/Twb if towers/adiabatic; possibly weaker if air-cooled",
-      "water_in_air_stream": "UNKNOWN remaining fraction",
-      "separate_heat_rejection_loop": true,
-      "dry_no_water_operation": "UNKNOWN (depends on heat-rejection type)",
-      "water_boundary": "CONDITIONING_SITE_WATER split unidentified; do not assume cooling-tower makeup"
-    }
-  },
-  "do_not_fit_in_this_pass": true
+  "w_in_to_spray_depends_on": "mixed-air humidity ratio from full moist-air mixing (DESIGN_SPEC OA fraction)"
 }

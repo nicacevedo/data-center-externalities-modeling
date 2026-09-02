@@ -1,16 +1,20 @@
 mechanism,evidence_requirement,current_implementation,code_location,parameter_provenance,correct_physical_boundary,correct_epoch,status
-direct_evaporative_cooling,PRN1 2011 ECH mist CONFIRMED,adiabatic saturator + spray fraction vs 25 C,src/prineville_graybox.py::simulate,ε=0.85 prior,partial (air-side water yes; maps onward to withdrawal via fitted scale),early yes; later PRN1 chiller no,PRESENT_AND_SUPPORTED
-humidification,same ECH system CONFIRMED,same Δω path (cooling and humidification not separated),simulate evap_water,psychrometric identity,yes as air-side water,early,PRESENT_AND_SUPPORTED
-dry_free_outside_air,economizer CONFIRMED,"if t_db<=25 C: no spray, t_supply=t_db",simulate t_supply,25 C prior,yes,early,PRESENT_AND_SUPPORTED
-return_air_recirculation,winter mixing CONFIRMED at PRN1,return_air_C declared; unused. Mode label winter_mix uses 100% OA when cold,Params.return_air_C; cooling_mode string,unused 35 C,no (mixed-air ω missing),early missing physics,REQUIRED_MISSING
-airflow_IT_dependence,VFD fans matching load CONFIRMED in spec,m_air ∝ P_IT; p_fan = 0.025 P_IT,"simulate m_air, p_fan",linear prior,n/a,early,PRESENT_AND_SUPPORTED
-fan_power,fan wall CONFIRMED,constant fraction of IT,fan_fraction_of_it,PUE-room prior,n/a,early,KEEP_AS_SCENARIO
+direct_evaporative_cooling,PRN1 2011 ECH mist CONFIRMED,OCP regions D/E adiabatic toward 80 F; ε=0.85 GENERIC_PRIOR,src/prineville_graybox.py::simulate,ε=0.85 prior,partial (air-side water yes; maps onward to withdrawal via fitted scale),early yes; later PRN1 chiller no,PRESENT_DESIGN_SPEC
+humidification,same ECH system CONFIRMED,"Δw=max(w_supply_target-w_mixed,0) independent of t_supply<t_entering",src/prineville_structural.py::condition_direct_oa_evap,psychrometric identity,yes as air-side water,early,PRESENT_AND_SUPPORTED
+dry_free_outside_air,economizer CONFIRMED,"OCP region C: 100% OA, spray off",simulate t_supply,25 C prior,yes,early,PRESENT_DESIGN_SPEC
+return_air_recirculation,winter mixing CONFIRMED at PRN1,"OCP DESIGN_SPEC mix: w_m=x w_o+(1-x)w_r; h_m=x h_o+(1-x)h_r; T_m from (h,w)",src/prineville_psychrometrics.py; src/prineville_ocp_controller.py,x from DESIGN_SPEC; return T 35 C SCENARIO; as-operated UNIDENTIFIED,CONDITIONING_SITE_WATER on mixed-air path,early missing physics,PRESENT_DESIGN_SPEC_AS_OPERATED_UNIDENTIFIED
+airflow_IT_dependence,VFD fans matching load CONFIRMED in spec,m_air=Q_sensible/(cp*ΔT) with ΔT explicit; 12 K GENERIC_PRIOR/SCENARIO,"simulate m_air, p_fan",SERVER_DELTA_T_12K=PRIOR_UNIDENTIFIED; not fitted,,early,PRESENT_PHYSICS_PARAMETER_UNIDENTIFIED
+fan_power,fan wall CONFIRMED,constant fraction of IT,fan_fraction_of_it,PUE-room prior,,early,KEEP_AS_SCENARIO
 dry_bulb_dependence,OA/economizer CONFIRMED,t_db drives mode and spray,simulate,weather,yes,early,PRESENT_AND_SUPPORTED
 RH_wetbulb_dependence,Twb/RH/dewpoint limits in OCP spec,Twb in t_full and spray; RH in humidity ratio; dewpoint min not coded,simulate,partial,partial,early,PRESENT_AND_SUPPORTED
-supply_air_limits,cold aisle 65–85 F; 65% RH max; dewpoint min,single 25 C target,supply_target_C,prior inside band,n/a,early,KEEP_AS_SCENARIO
-architecture_epochs,multi-building / PRN1 2024 chiller CONFIRMED,single campus architecture 2011–2024,prineville_graybox.py has no A_t,n/a,n/a,no,EPOCH_MISMATCH
-PRN1_chilled_water_chiller,CONFIRMED 2024-02-02 at PRN1,"absent (no COP, no CW loop, no CRAH)",none,n/a,n/a,missing,REQUIRED_MISSING
-water_boundary_tagging,CONDITIONING_SITE_WATER vs WITHDRAWAL,raw evap then fitted scale to Meta withdrawal,conditional_reconstruction.py water_scale,fitted through 2022,no if treated as physics,n/a,BOUNDARY_MISMATCH
-SPLC,Prineville-specific install,absent,none,n/a,n/a,n/a,SECOND_ORDER_NOT_REQUIRED
-cooling_tower_campus,installed tower,absent (correct for 2011; unknown for PRN1 2024 heat rejection),none,n/a,n/a,n/a,SECOND_ORDER_NOT_REQUIRED
-Lei_Masanet_or_ESIF_coefficients,must not transfer,not in gray-box Params,prineville_graybox.py,none,n/a,n/a,PRESENT_AND_SUPPORTED
+supply_air_limits,cold aisle 65–85 F; 65% RH max; dewpoint min,"OCP DESIGN_SPEC 65/80 F, 41.9 F DP min, 65% RH max",supply_target_C,prior inside band,,early,PRESENT_DESIGN_SPEC
+architecture_epochs,multi-building / PRN1 2024 chiller CONFIRMED,"config/prineville_architecture_states.yaml A_{b,t}; campus λ UNKNOWN",src/prineville_architecture.py,,,no,PRESENT_REGISTRY_CAMPUS_TOTAL_UNIDENTIFIED
+PRN1_chilled_water_chiller,CONFIRMED 2024-02-02 at PRN1,metadata only; quantitative water fails closed UNIDENTIFIED,src/prineville_architecture.py::chilled_water_conditioning_water,,,missing,METADATA_ONLY_QUANTITATIVE_UNIDENTIFIED
+water_boundary_tagging,CONDITIONING_SITE_WATER vs WITHDRAWAL,raw evap then fitted scale to Meta withdrawal,conditional_reconstruction.py water_scale,fitted through 2022,no if treated as physics,,BOUNDARY_MISMATCH
+SPLC,Prineville-specific install,absent,none,,,,SECOND_ORDER_NOT_REQUIRED
+cooling_tower_campus,installed tower,absent; EARLY_PRN1 CONTRADICTED; LATER UNKNOWN; no tower equation,none,,,,SCOPED_NO_QUANTITATIVE_TOWER_MODEL
+Lei_Masanet_or_ESIF_coefficients,must not transfer,not in gray-box Params,prineville_graybox.py,none,,,PRESENT_AND_SUPPORTED
+ocp_psychrometric_control,OCP Appendix A eight-region sequence DESIGN_SPEC,src/prineville_ocp_controller.py,src/prineville_ocp_controller.py,DESIGN_SPEC thresholds; as-operated UNIDENTIFIED,CONTROL layer not ACCOUNTING,early PRN1,PRESENT_DESIGN_SPEC_AS_OPERATED_UNIDENTIFIED
+moist_air_mixing,full enthalpy+humidity mixing,"w_m,h_m mass/energy mix; T_m recovered",src/prineville_psychrometrics.py::mix_moist_air,physics identity,PHYSICS,early PRN1,PRESENT_AND_SUPPORTED
+ocp_psychrometric_control,OCP Appendix A eight-region sequence DESIGN_SPEC,src/prineville_ocp_controller.py,src/prineville_ocp_controller.py,DESIGN_SPEC thresholds; as-operated UNIDENTIFIED,CONTROL layer not ACCOUNTING,early PRN1,PRESENT_DESIGN_SPEC_AS_OPERATED_UNIDENTIFIED
+moist_air_mixing,full enthalpy+humidity mixing,"w_m,h_m mass/energy mix; T_m recovered",src/prineville_psychrometrics.py::mix_moist_air,physics identity,PHYSICS,early PRN1,PRESENT_AND_SUPPORTED

@@ -1,0 +1,10 @@
+rank,item,reduces
+1,PRN1 CHW condenser/heat-rejection schedule,whether CHW water is identified
+2,building/phase IT or electrical load shares,campus aggregation identifiability
+3,as-operated OA/RA/ECH sequence,control as-operated uncertainty
+4,CCO full mechanical narrative,CCO architecture class
+5,PRN2–PRN6 cooling architecture,campus mechanism mix
+6,"air-side telemetry (flow, T/RH, mist)","ΔT, ε, Δw"
+7,City meter identity/boundary,accounting G_site
+8,PacifiCorp temporal electricity,P_fac / airflow scale
+9,direct POD completeness,groundwater vs municipal split

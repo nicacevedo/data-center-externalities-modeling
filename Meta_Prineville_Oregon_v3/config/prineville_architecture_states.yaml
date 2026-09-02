@@ -1,0 +1,194 @@
+# Prineville building/phase operational architecture registry
+# Indexed by building b and time t: A_{b,t}
+# Structure from engineering evidence. Served-load shares are UNKNOWN (not estimated).
+# Do not populate unsupported architecture classes merely because the generic schema allows them.
+
+meta:
+  principle: STRUCTURE_FROM_ENGINEERING_EVIDENCE
+  campus_load_shares: UNKNOWN
+  campus_total_scientifically_identified: false
+  prn1_chw_operation_start: INTERVAL_CENSORED
+  notes: >
+    Construction/permitting intervals are FACILITY_DEVELOPMENT_TIMELINE, not automatically
+    OPERATIONAL_ARCHITECTURE_STATE. Early PRN1 negative chiller/tower evidence is not inherited
+    by PRN2–6.
+
+buildings:
+  - building_id: PRN1
+    phase: E1_EARLY_DIRECT_OA_ECH
+    architecture_class: DIRECT_OUTSIDE_AIR_EVAP
+    earliest_possible_start: "2011-04-14"
+    confirmed_operational_by: "2011-04-14"
+    end_date: null
+    date_precision: day_for_finals_month_for_class
+    air_side_mechanism: penthouse_100pct_OA_economizer_plus_OA_RA_mix_plus_ECH_mist
+    liquid_side_mechanism: none_for_IT_heat
+    heat_rejection_mechanism: air_exhaust_or_relief
+    water_consuming_mechanism: ECH_high_pressure_atomization_humidify_and_or_evap_cool
+    controller_evidence_class: DESIGN_SPEC
+    served_load_share: UNKNOWN
+    condenser_type: not_applicable
+    source_ids: META_ENG_2011_PARK; OCP_DC_V1_2011; OCP_WATER_PRN1; ELECTRONICS_COOLING_2012_MULAY
+    confidence: CONFIRMED
+    unresolved_fields: as_operated_OA_fraction; return_T_RH; airflow_deltaT; evap_effectiveness; mist_loss
+    notes: >
+      Early PRN1 architecture is source-supported DIRECT_OUTSIDE_AIR_EVAP. OA path is not
+      known to terminate when chilled water is added; load split with later CHW is UNKNOWN.
+
+  - building_id: PRN1
+    phase: E4_CHILLED_WATER_AIR_COOLING_ADDITION
+    architecture_class: CHILLED_WATER_AIR_COOLING
+    earliest_possible_start: "2023-09-21"
+    confirmed_operational_by: "2024-02-02"
+    end_date: null
+    date_precision: INTERVAL_CENSORED
+    air_side_mechanism: CRAH_chilled_water_air_cooling
+    liquid_side_mechanism: chilled_water
+    heat_rejection_mechanism: UNKNOWN
+    water_consuming_mechanism: UNIDENTIFIED
+    controller_evidence_class: UNIDENTIFIED
+    served_load_share: UNKNOWN
+    condenser_type: UNKNOWN
+    source_ids: 217-21-003734-MECH; 217-24-000066-MECH
+    confidence: CONFIRMED_FOR_PRESENCE_ONLY
+    unresolved_fields: heat_rejection_type; condenser_type; served_load_share; water_contribution; exact_first_service_date
+    notes: >
+      CHILLED_WATER_AIR_COOLING = CONFIRMED at PRN1. hydronic test 2023-09-21 is earliest
+      documented commissioning/hydronic evidence, not proven first operation of all CHW cooling.
+      Extra roof chiller operational 2024-02-02 is confirmed operational-by. Exact first-service
+      date unknown. conditioning_water_model = UNIDENTIFIED. No tower/dry-cooler/WUE equation.
+
+  - building_id: PRN2
+    phase: E2_LATER_PRN_HALL
+    architecture_class: UNKNOWN
+    earliest_possible_start: "2014-01-01"
+    confirmed_operational_by: null
+    end_date: null
+    date_precision: year
+    air_side_mechanism: POSSIBLE_copy_of_PRN1_OA_ECH
+    liquid_side_mechanism: UNKNOWN
+    heat_rejection_mechanism: UNKNOWN
+    water_consuming_mechanism: UNKNOWN
+    controller_evidence_class: UNIDENTIFIED
+    served_load_share: UNKNOWN
+    condenser_type: UNKNOWN
+    source_ids: OPUC_UM1989_2018; CITY_ORD1246_2018
+    confidence: UNKNOWN
+    unresolved_fields: architecture_class; mechanical_chiller; cooling_tower; dry_cooler; controller; load_share
+    notes: Direct OA/ECH copy = POSSIBLE. Mechanical chiller = UNKNOWN. Cooling tower = UNKNOWN. Dry cooler = UNKNOWN. Do not inherit early PRN1 negative equipment evidence.
+
+  - building_id: PRN3
+    phase: E2_LATER_PRN_HALL
+    architecture_class: UNKNOWN
+    earliest_possible_start: "2014-01-01"
+    confirmed_operational_by: null
+    end_date: null
+    date_precision: year
+    air_side_mechanism: POSSIBLE_copy_of_PRN1_OA_ECH
+    liquid_side_mechanism: UNKNOWN
+    heat_rejection_mechanism: UNKNOWN
+    water_consuming_mechanism: UNKNOWN
+    controller_evidence_class: UNIDENTIFIED
+    served_load_share: UNKNOWN
+    condenser_type: UNKNOWN
+    source_ids: OPUC_UM1989_2018; CITY_ORD1246_2018
+    confidence: UNKNOWN
+    unresolved_fields: architecture_class; mechanical_chiller; cooling_tower; dry_cooler; controller; load_share
+    notes: Direct OA/ECH copy = POSSIBLE. Mechanical chiller = UNKNOWN. Cooling tower = UNKNOWN. Dry cooler = UNKNOWN.
+
+  - building_id: PRN4
+    phase: E2_LATER_PRN_HALL
+    architecture_class: UNKNOWN
+    earliest_possible_start: "2014-01-01"
+    confirmed_operational_by: null
+    end_date: null
+    date_precision: year
+    air_side_mechanism: POSSIBLE_copy_of_PRN1_OA_ECH
+    liquid_side_mechanism: UNKNOWN
+    heat_rejection_mechanism: UNKNOWN
+    water_consuming_mechanism: UNKNOWN
+    controller_evidence_class: UNIDENTIFIED
+    served_load_share: UNKNOWN
+    condenser_type: UNKNOWN
+    source_ids: OPUC_UM1989_2018; CITY_ORD1246_2018
+    confidence: UNKNOWN
+    unresolved_fields: architecture_class; mechanical_chiller; cooling_tower; dry_cooler; controller; load_share
+    notes: Direct OA/ECH copy = POSSIBLE. Mechanical chiller = UNKNOWN. Cooling tower = UNKNOWN. Dry cooler = UNKNOWN.
+
+  - building_id: PRN5
+    phase: E2_LATER_PRN_HALL
+    architecture_class: UNKNOWN
+    earliest_possible_start: "2018-01-01"
+    confirmed_operational_by: null
+    end_date: null
+    date_precision: year
+    air_side_mechanism: POSSIBLE_copy_of_PRN1_OA_ECH
+    liquid_side_mechanism: UNKNOWN
+    heat_rejection_mechanism: UNKNOWN
+    water_consuming_mechanism: UNKNOWN
+    controller_evidence_class: UNIDENTIFIED
+    served_load_share: UNKNOWN
+    condenser_type: UNKNOWN
+    source_ids: OPUC_UM1989_2018
+    confidence: UNKNOWN
+    unresolved_fields: architecture_class; mechanical_chiller; cooling_tower; dry_cooler; controller; load_share
+    notes: Named by 2018; mechanical class unidentified.
+
+  - building_id: PRN6
+    phase: E2_LATER_PRN_HALL
+    architecture_class: UNKNOWN
+    earliest_possible_start: "2018-01-01"
+    confirmed_operational_by: null
+    end_date: null
+    date_precision: year
+    air_side_mechanism: POSSIBLE_copy_of_PRN1_OA_ECH
+    liquid_side_mechanism: UNKNOWN
+    heat_rejection_mechanism: UNKNOWN
+    water_consuming_mechanism: UNKNOWN
+    controller_evidence_class: UNIDENTIFIED
+    served_load_share: UNKNOWN
+    condenser_type: UNKNOWN
+    source_ids: OPUC_UM1989_2018
+    confidence: UNKNOWN
+    unresolved_fields: architecture_class; mechanical_chiller; cooling_tower; dry_cooler; controller; load_share
+    notes: Named by 2018; mechanical class unidentified.
+
+  - building_id: CCO1
+    phase: E3_CCO
+    architecture_class: UNKNOWN
+    earliest_possible_start: "2018-09-20"
+    confirmed_operational_by: "2020-01-01"
+    end_date: null
+    date_precision: announcement_vs_phased_hall_finals
+    air_side_mechanism: ECH_piping_SUPPORTED_full_OA_penthouse_UNKNOWN
+    liquid_side_mechanism: IWS_IWR_SUPPORTED_hall_chiller_UNKNOWN
+    heat_rejection_mechanism: UNKNOWN
+    water_consuming_mechanism: PARTIAL
+    controller_evidence_class: UNIDENTIFIED
+    served_load_share: UNKNOWN
+    condenser_type: UNKNOWN
+    source_ids: CCO_MECH_2019; 217-19-000276-MECH
+    confidence: PARTIAL
+    unresolved_fields: complete_mechanical_narrative; hall_chiller; heat_rejection; OA_sequence; load_share
+    notes: >
+      ECH piping SUPPORTED in Data Hall A. Electrical-room CRAC CONFIRMED is not hall architecture.
+      Do not copy PRN1 class as confirmed. CCO_CONDITIONING_WATER_MECHANISM = PARTIAL.
+
+  - building_id: CCO2
+    phase: E3_CCO
+    architecture_class: UNKNOWN
+    earliest_possible_start: "2018-09-20"
+    confirmed_operational_by: "2020-01-01"
+    end_date: null
+    date_precision: announcement_vs_phased_hall_finals
+    air_side_mechanism: UNKNOWN
+    liquid_side_mechanism: UNKNOWN
+    heat_rejection_mechanism: UNKNOWN
+    water_consuming_mechanism: PARTIAL
+    controller_evidence_class: UNIDENTIFIED
+    served_load_share: UNKNOWN
+    condenser_type: UNKNOWN
+    source_ids: CCO_MECH_2019; 217-19-000276-MECH
+    confidence: PARTIAL
+    unresolved_fields: complete_mechanical_narrative; hall_chiller; heat_rejection; OA_sequence; load_share
+    notes: CCO complete architecture unresolved. Do not infer from PRN1.

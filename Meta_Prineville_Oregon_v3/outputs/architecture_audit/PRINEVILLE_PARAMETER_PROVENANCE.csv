@@ -1,10 +1,10 @@
 name,value,units,current_source,prineville_specific,generic_literature,lei_masanet,meta_fleet_wide,fitted,assumed,architecture_dependent,supported_epoch,confidence,recommended_disposition
-supply_target_C,25.0,degC,code prior,no,yes (inside OCP 18.3–29.4 C band),no,no,no,yes,yes,E1–E2,medium as scenario,KEEP_AS_SCENARIO
-return_air_C,35.0,degC,unused declaration,no,n/a,no,no,no,yes,yes,E1 mixing exists but Treturn unmeasured,low,REQUIRES_NEW_EVIDENCE
-evap_effectiveness,0.85,1,generic saturator,no,yes,no,no,no,yes,yes,E1 ECH,low,REQUIRES_SITE_CALIBRATION
-server_deltaT_C,12.0,K,prior,no,yes,no,no,no,yes,yes,E1,low,REQUIRES_SITE_CALIBRATION
-fan_fraction_of_it,0.025,1,PUE-room prior,no,yes,no,no,no,yes,yes,E1 fan wall,low,KEEP_AS_SCENARIO
-other_facility_fraction_of_it,0.035,1,PUE-room prior,no,yes,no,no,no,yes,no,all electrical,low,KEEP_AS_SCENARIO
-evap_aux_fraction,0.005,1,hardcoded simulate(),no,yes,no,no,no,yes,yes,E1 mist pumps,low,KEEP_AS_SCENARIO
+supply_target_C,25.0,degC,code prior,no,yes (inside OCP 18.3–29.4 C band),no,no,no,yes,yes,E1–E2,medium as scenario,LEGACY_ONLY_STRUCTURAL_CONTROLLER_USES_OCP_BAND
+return_air_C,35.0,degC,OCP mixing uses return state; 35 C remains SCENARIO not fitted,no,,no,no,no,yes,yes,E1 mixing exists but Treturn unmeasured,low,KEEP_AS_SCENARIO_AS_OPERATED_UNIDENTIFIED
+evap_effectiveness,0.85,1,generic saturator,no,yes,no,no,no,yes,yes,E1 ECH,low,KEEP_AS_SCENARIO_GENERIC_PRIOR_NOT_FITTED
+server_deltaT_C,12.0,K,prior,no,yes,no,no,no,yes,yes,E1,low,KEEP_AS_SCENARIO_GENERIC_PRIOR_NOT_SITE_TRUTH
+fan_fraction_of_it,0.025,1,PUE-room prior,no,yes,no,no,no,yes,yes,E1 fan wall,low,KEEP_AS_PROVISIONAL_SCENARIO_NOT_ARCHITECTURE_VALIDATED
+other_facility_fraction_of_it,0.035,1,PUE-room prior,no,yes,no,no,no,yes,no,all electrical,low,KEEP_AS_PROVISIONAL_SCENARIO_NOT_ARCHITECTURE_VALIDATED
+evap_aux_fraction,0.005,1,hardcoded simulate(),no,yes,no,no,no,yes,yes,E1 mist pumps,low,KEEP_AS_PROVISIONAL_SCENARIO_NOT_ARCHITECTURE_VALIDATED
 water_scale,fitted train-only; not copied here,1,conditional reconstruction through 2022,yes (fitted mapping),no,no,no,yes,no,indirectly,mapping not physics,n/a as physics,KEEP_AS_SCENARIO
-ESIF_WUE_0.70,0.7,L/kWh,ESIF not used in gray-box,no,no,no,no,no,n/a,n/a,must not transfer,n/a,UNSUPPORTED_REMOVE_CANDIDATE
+ESIF_WUE_0.70,0.7,L/kWh,ESIF not used in gray-box,no,no,no,no,no,,,must not transfer,,UNSUPPORTED_REMOVE_CANDIDATE

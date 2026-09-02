@@ -1,0 +1,219 @@
+{
+  "META_2011_2022_WATER_NOT_USED_FOR_CALIBRATION": true,
+  "META_2023_2024_WATER_NOT_READ": true,
+  "NO_PARAMETER_FITTED": true,
+  "NO_PRINEVILLE_WITHDRAWAL_FIT": true,
+  "architecture_evidence_freeze_sha256": "e0586ba7b8d41fecb32b60bf86c0f3efdc88243e821f7646771c90965fbcd56c",
+  "architecture_registry_sha256": "1f87a1846aa8254c758ab11e3bd9b6f639e6c64bc551c36bcf8201bd65e78604",
+  "control_states": [
+    "A_MIXED_AIR_HUMIDIFICATION",
+    "B_100PCT_OA_HUMIDIFICATION_OR_COOLING",
+    "C_DRY_FREE_OUTSIDE_AIR",
+    "D_EVAPORATIVE_COOLING",
+    "E_EVAPORATIVE_COOLING_HIGH_WB",
+    "F_HIGH_HUMIDITY_MIX_SPRAY_BYPASS",
+    "G_RH_OR_TEMP_MIX_SPRAY_BYPASS",
+    "H_UNACCEPTABLE_OA_MIN_OA_RECIRC"
+  ],
+  "documented_design_thresholds": {
+    "FAN_HEAT_CLEAN_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "note": "Used only to interpret '(-fan heat)' region boundaries. Not fitted.",
+      "si_C": 0.344444444444443,
+      "source": "OCP_DC_V1_2011 Appendix A note (clean filters, direct systems in bypass)",
+      "units": "degF",
+      "value": 0.62
+    },
+    "RH_MAX": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": null,
+      "source": "OCP_DC_V1_2011 \u00a75.1.1 and Appendix A Conditions C/F/G",
+      "units": "1",
+      "value": 0.65
+    },
+    "T_DB_A_B_SPLIT_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "note": "OCP uses dry-bulb. Electronics Cooling 2012 labels 11.1 C as WB; 11.1 C = 52 F. Implementation follows OCP DB.",
+      "si_C": 11.11111111111111,
+      "source": "OCP_DC_V1_2011 Appendix A Condition A/B",
+      "units": "degF",
+      "value": 52.0
+    },
+    "T_DP_B_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 6.111111111111111,
+      "source": "OCP_DC_V1_2011 Appendix A Condition B (43 F DP)",
+      "units": "degF",
+      "value": 43.0
+    },
+    "T_DP_MID_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 15.0,
+      "source": "OCP_DC_V1_2011 Appendix A Conditions C/D/E/F/G",
+      "units": "degF",
+      "value": 59.0
+    },
+    "T_DP_MIN_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 5.499999999999999,
+      "source": "OCP_DC_V1_2011 \u00a75.1.1 and Appendix A",
+      "units": "degF",
+      "value": 41.9
+    },
+    "T_SA_MAX_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 26.666666666666668,
+      "source": "OCP_DC_V1_2011 Appendix A Conditions B/D/E/F",
+      "units": "degF",
+      "value": 80.0
+    },
+    "T_SA_MIN_BAND_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 18.333333333333332,
+      "source": "OCP_DC_V1_2011 Appendix A Conditions B/F; \u00a75.1.1 cold aisle 65\u201385 F",
+      "units": "degF",
+      "value": 65.0
+    },
+    "T_SA_MIN_FLOOR_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 12.222222222222221,
+      "source": "OCP_DC_V1_2011 Appendix A Condition A (54 F DB minimum)",
+      "units": "degF",
+      "value": 54.0
+    },
+    "T_SA_MIX_TARGET_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 18.333333333333332,
+      "source": "OCP_DC_V1_2011 Appendix A Condition A (mix OA/RA to 65 F SA)",
+      "units": "degF",
+      "value": 65.0
+    },
+    "T_SA_WB_HUMIDIFY_C": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "note": "Corroborating Prineville operations paper; OCP A uses 54 F / 42 F DP minimum.",
+      "si_C": 12.2,
+      "source": "Electronics Cooling 2012 Region A (humidify to SAT WB 12.2 C / DP 5.5 C)",
+      "units": "degC",
+      "value": 12.2
+    },
+    "T_WB_D_E_SPLIT_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 18.755555555555556,
+      "source": "OCP_DC_V1_2011 Appendix A Condition D/E",
+      "units": "degF",
+      "value": 65.76
+    },
+    "T_WB_F_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 21.27777777777778,
+      "source": "OCP_DC_V1_2011 Appendix A Condition F; \u00a75.1.2 summer WB max",
+      "units": "degF",
+      "value": 70.3
+    }
+  },
+  "equations": {
+    "airflow": "m_da = Q_sensible / (cp * \u0394T_air)  [or direct m_air]; \u0394T_air=12 K GENERIC_PRIOR/SCENARIO",
+    "conditioning_water": "m_water = m_da * max(w_supply - w_mixed, 0)  \u2192 m3/h; tag CONDITIONING_SITE_WATER",
+    "evaporative_cooling": "adiabatic toward T_SA_max using \u03b5 prior; no extra water beyond wet-bulb reach",
+    "humidification": "\u0394w_hum = max(w_supply_target - w_mixed, 0) even if T_supply >= T_entering",
+    "mixing": "w_m = x*w_o + (1-x)*w_r; h_m = x*h_o + (1-x)*h_r; T_m = T(h_m, w_m)",
+    "withdrawal_mapping": "OUTSIDE this module: W_withdrawal = G_site(W_conditioning, local_water_system)"
+  },
+  "holdout_access_record": {
+    "access_attempts": [],
+    "accessed": false,
+    "holdout_status": "DIAGNOSTIC_PREVIOUSLY_EXPOSED",
+    "protected_files": [
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/data/canonical/meta_prineville_annual.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_annual_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_water_model.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/water_holdout_baseline_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/city_prineville/frozen_annual_water_validation_v1/water_holdout_baseline_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/result_claims.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/weather_ks39/canonical_conditional_annual_compare.csv"
+    ],
+    "structural_runner_imports_holdout_data_module": false
+  },
+  "initial_HEAD": "9e6c4b4c40e35f12aec9451e0c65704f2a0bf1e6",
+  "original_graybox_sha256": "baaf685190b432767519ea1bd7dbe2ec026718a31fef1e22bdff7cf727f17b55",
+  "physics_validation_all_pass": true,
+  "revised_structural_module_sha256": {
+    "holdout_guard.py": "a0b8e84ad18a874d477761a3c139e213e21cf00ad57b92de60d213d9459ce4b3",
+    "prineville_architecture.py": "cf8d8e614fde736b9c3beb65cf1f77e1fc8e2ff29c841c7f37773fb3053407d2",
+    "prineville_architecture_states.yaml": "1f87a1846aa8254c758ab11e3bd9b6f639e6c64bc551c36bcf8201bd65e78604",
+    "prineville_graybox.py": "f9a83f5276e71f2afc8c6a773bda9f1d1d5a5a05d84d821c6b767a66d1c2efdb",
+    "prineville_ocp_controller.py": "6573aa3bbb9bc10093b18ec1a8acae3341a8004e6bea9806a2244a5be537fc93",
+    "prineville_psychrometrics.py": "077026102565df71980c0f667423c875c7d3977cf29165c8bcd1ac25bbdb15fb",
+    "prineville_structural.py": "6b38750c37a1e04c8d18a76192a5fe769b947ce8c01fe5338bb0a51892e7c619"
+  },
+  "scenario_parameters": {
+    "evap_aux_fraction_of_it": {
+      "status": "PROVISIONAL_SCENARIO_NOT_ARCHITECTURE_VALIDATED",
+      "value": 0.005
+    },
+    "evap_effectiveness": {
+      "status": "GENERIC_PRIOR / SCENARIO",
+      "value": 0.85
+    },
+    "fan_fraction_of_it": {
+      "status": "PROVISIONAL_SCENARIO_NOT_ARCHITECTURE_VALIDATED",
+      "value": 0.025
+    },
+    "other_facility_fraction_of_it": {
+      "status": "PROVISIONAL_SCENARIO_NOT_ARCHITECTURE_VALIDATED",
+      "value": 0.035
+    },
+    "return_air_C": {
+      "status": "SCENARIO",
+      "value": 35.0
+    },
+    "server_deltaT_C": {
+      "status": "GENERIC_PRIOR / SCENARIO",
+      "value": 12.0
+    }
+  },
+  "unidentified_parameters": [
+    "as_operated_OA_fraction",
+    "return_T_RH",
+    "evap_effectiveness_site",
+    "server_deltaT_site",
+    "mist_loss",
+    "lambda_b",
+    "PRN1_condenser_type",
+    "PRN1_CHW_load_share",
+    "PRN2_6_architecture",
+    "CCO_complete_architecture",
+    "exact_PRN1_CHW_first_service_date"
+  ],
+  "unresolved_building_architectures": [
+    "PRN2",
+    "PRN3",
+    "PRN4",
+    "PRN5",
+    "PRN6",
+    "CCO1",
+    "CCO2"
+  ],
+  "unresolved_building_load_shares": true,
+  "unresolved_chiller_heat_rejection": true,
+  "water_boundaries": {
+    "CONDITIONING_SITE_WATER": "primary architecture-module water (ECH \u0394w)",
+    "DIRECT_POD_WITHDRAWAL": "OWRD/POD; completeness unresolved",
+    "MUNICIPAL_SUPPLY": "City meters; boundary unresolved",
+    "RETURN_FLOW": "sewer/blowdown; not invented here",
+    "WITHDRAWAL": "Meta/accounting G_site; not inside psychrometrics"
+  }
+}

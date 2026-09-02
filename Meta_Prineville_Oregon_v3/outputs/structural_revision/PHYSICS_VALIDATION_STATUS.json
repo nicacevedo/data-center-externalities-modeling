@@ -1,0 +1,70 @@
+{
+  "all_required_checks_pass": true,
+  "checks": [
+    {
+      "check": "G_OA_RETURN_MIXING",
+      "detail": "enthalpy and humidity-ratio conservation",
+      "pass": true
+    },
+    {
+      "check": "A_COLD_DRY_HUMIDIFICATION_WITHOUT_SENSIBLE_COOLING",
+      "detail": "new humidification water > 0; legacy water ~ 0 because t_supply was not < t_entering",
+      "pass": true
+    },
+    {
+      "check": "B_COOL_SUITABLY_HUMID_NEAR_ZERO_WATER",
+      "detail": "at least one cool/humid case has ~zero conditioning water (dry/free or mix/bypass)",
+      "pass": true
+    },
+    {
+      "check": "C_HOT_DRY_EVAP_POSITIVE_WATER",
+      "detail": "evaporative cooling produces positive water",
+      "pass": true
+    },
+    {
+      "check": "D_HIGH_HUMIDITY_NO_IMPOSSIBLE_EVAP",
+      "detail": "high-humidity water=0.8235260535973434; controller mode=E_EVAPORATIVE_COOLING_HIGH_WB",
+      "dw_to_wetbulb_nonnegative": true,
+      "pass": true
+    },
+    {
+      "check": "E_AIRFLOW_INCREASES_WATER",
+      "detail": "low IT water=1.9773469467315747; high IT water=29.660204200973613",
+      "pass": true
+    },
+    {
+      "check": "F_HUMIDITY_DEFICIT_AND_DT_EXPLICIT",
+      "detail": "halving \u0394T doubles m_air at fixed P_IT; 12 K remains GENERIC_PRIOR/SCENARIO",
+      "pass": true
+    },
+    {
+      "check": "H_WATER_NEVER_NEGATIVE",
+      "detail": "min water=0.0",
+      "pass": true
+    },
+    {
+      "check": "I_RH_VALID",
+      "detail": "assert_physically_valid_state on mixed air; simulate() would raise otherwise",
+      "pass": true
+    },
+    {
+      "check": "J_ENERGY_MASS_BALANCE_MIXING",
+      "detail": "mixing conservation already checked",
+      "pass": true
+    },
+    {
+      "check": "CHW_FAIL_CLOSED",
+      "detail": "no quantitative CHW water",
+      "pass": true
+    },
+    {
+      "check": "CAMPUS_UNKNOWN_SHARES_NO_EQUAL_WEIGHT",
+      "detail": "unknown \u03bb fails closed; supplied \u03bb validated",
+      "pass": true
+    }
+  ],
+  "comparison_language": "STRUCTURALLY_MORE_COMPLETE / SOURCE_CONSISTENT_BEHAVIOR",
+  "n_cases": 18,
+  "parameter_fitted": false,
+  "scored_against_meta_water": false
+}

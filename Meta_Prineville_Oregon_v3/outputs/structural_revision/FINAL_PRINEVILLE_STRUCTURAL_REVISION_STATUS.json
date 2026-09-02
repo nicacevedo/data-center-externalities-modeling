@@ -1,0 +1,43 @@
+{
+  "AIRFLOW_PARAMETER_IDENTIFICATION": "PRIOR_UNIDENTIFIED",
+  "AIRFLOW_PHYSICS": "IMPLEMENTED_EXPLICIT_DT",
+  "ARCHITECTURE_AUDIT_CORRECTED": true,
+  "ARCHITECTURE_SOURCE_COVERAGE": "PARTIAL",
+  "BUILDING_LOAD_SHARES": "UNKNOWN",
+  "CALIBRATED": false,
+  "CAMPUS_AGGREGATION": "INTERFACE_PRESENT_TOTALS_UNIDENTIFIED",
+  "CCO_ARCHITECTURE": "PARTIAL",
+  "CONDITIONING_WATER_MASS_BALANCE": "IMPLEMENTED",
+  "EARLY_PRN1_DIRECT_AIR_ARCHITECTURE": "CONFIRMED_IMPLEMENTED",
+  "EARLY_PRN1_EVAPORATIVE_COOLING": "IMPLEMENTED_DESIGN_SPEC",
+  "EARLY_PRN1_HUMIDIFICATION_CONTROL": "IMPLEMENTED_DESIGN_SPEC",
+  "EARLY_PRN1_PSYCHROMETRIC_CONTROL": "IMPLEMENTED_DESIGN_SPEC_AS_OPERATED_UNIDENTIFIED",
+  "EARLY_PRN1_RETURN_AIR_MIXING": "IMPLEMENTED_DESIGN_SPEC",
+  "EMPIRICALLY_VALIDATED": false,
+  "HOLDOUT_ACCESS_GUARD": "PASS",
+  "MODEL_VALIDATED": false,
+  "MOIST_AIR_MIXING": "IMPLEMENTED",
+  "OPERATIONAL_ARCHITECTURE_REGISTRY": "PRESENT",
+  "PARAMETER_FITTING_PERFORMED": false,
+  "PHYSICS_VALIDATION": "PASS",
+  "PRN1_CHILLED_WATER_ARCHITECTURE": "CONFIRMED_METADATA_ONLY",
+  "PRN1_CHILLER_HEAT_REJECTION": "UNKNOWN",
+  "PRN2_6_ARCHITECTURE": "UNKNOWN",
+  "STRUCTURAL_REVISION_FINAL_DISPOSITION": "STRUCTURAL_REVISION_FROZEN_READY_FOR_SEPARATE_CALIBRATION_VALIDATION_DESIGN",
+  "WATER_BOUNDARY_SEPARATION": "CONDITIONING_SITE_WATER_VS_WITHDRAWAL",
+  "holdout": {
+    "access_attempts": [],
+    "accessed": false,
+    "holdout_status": "DIAGNOSTIC_PREVIOUSLY_EXPOSED",
+    "protected_files": [
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/data/canonical/meta_prineville_annual.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_annual_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_water_model.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/water_holdout_baseline_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/city_prineville/frozen_annual_water_validation_v1/water_holdout_baseline_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/result_claims.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/weather_ks39/canonical_conditional_annual_compare.csv"
+    ],
+    "structural_runner_imports_holdout_data_module": false
+  }
+}
