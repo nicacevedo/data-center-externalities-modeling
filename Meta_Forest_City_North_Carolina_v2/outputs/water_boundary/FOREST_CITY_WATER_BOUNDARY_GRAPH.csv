@@ -1,0 +1,14 @@
+node_or_edge,class,source_id,note
+municipal_source_Second_Broad_River,IDENTIFIED_MEASURED,NC_LWSP_FC_2023,Town PWSID 01-81-010 raw source. Not Meta.
+municipal_WTP_finished_water,IDENTIFIED_ACCOUNTING,TOWN_FC_WATER_TREATMENT,"Town WTP; UV mentioned in ENR as campus pretreatment context, not a Meta meter."
+municipal_industrial_class_flow,IDENTIFIED_ACCOUNTING,NC_LWSP_FC_2023,12 industrial connections in 2023 LWSP. NEVER assign class total to Meta.
+edge_industrial_class_to_Meta_campus,UNIDENTIFIED,,No public customer-meter identity tying industrial class to Meta.
+campus_withdrawal_Meta_EDI,IDENTIFIED_ACCOUNTING,META_EDI_ANNUAL_ELECTRICITY_WATER,Site withdrawal as reported. Not cooling evaporation.
+treatment_RO,UNIDENTIFIED,,RO not identified at Forest City. ENR: municipal then UV then evap.
+cooling_system_makeup_meter,UNIDENTIFIED,,WUE numerator / P&ID tag missing.
+air_stream_evaporation_dw,ENGINEERING_BOUNDED,OCP_2013_HOT_HUMID,dw structurally identified when spray on; m_dot UNIDENTIFIED so m3 UNIDENTIFIED.
+air_stream_evaporation_m3,SCENARIO_BOUNDED,,Only if IT design DeltaT is misused as effective; tagged SCENARIO_ONLY.
+blowdown_discharge_reuse,UNIDENTIFIED,META_FC_FACTSHEET_2025,Factsheet qualitative reuse; no meter.
+town_WWTP_NPDES_NC0025984,IDENTIFIED_ACCOUNTING,NCDEQ_NPDES_NC0025984_NOTICE,Town WWTP discharges to Second Broad. Not a Meta cooling-water meter. 5 SIUs unnamed.
+edge_cooling_makeup_to_campus_withdrawal,UNIDENTIFIED,,Other campus uses unidentified; cannot equate.
+WUE,UNIDENTIFIED,FBPUEWUE_DASHBOARD_WAYBACK,Undefined until numerator/meter identified. Screenshot not a definition.

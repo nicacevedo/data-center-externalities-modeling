@@ -1,0 +1,37 @@
+{
+  "QUANTITATIVE_PHYSICS_TRANSFER": "NOT_VALIDATED",
+  "evidence_class": "TRANSFERRED_MODEL",
+  "refit": false,
+  "rows": [
+    {
+      "IT_provenance": "SCENARIO normalized load = ESIF training-window mean",
+      "architecture_mismatch": "ESIF cooling_kw is outdoor fan/heater/filter-pump on a liquid/thermosyphon plant, not Forest City direct-evap AHU. HVAC F0 is weather-independent intercept.",
+      "corr_cooling_vs_tdb": 0.16913275973335154,
+      "evidence_class": "TRANSFERRED_MODEL",
+      "jja_minus_shoulder_overhead": NaN,
+      "mean_cooling_kw": 28.346471116280384,
+      "mean_overhead_per_it": 0.0340157268790883,
+      "n": 1253,
+      "not_fc_pue_validation": true,
+      "not_quantitative_physics_transfer": true,
+      "synthetic_IT_kw": 1406.2885351154928,
+      "weather": "KFQD"
+    },
+    {
+      "IT_provenance": "SCENARIO normalized load = ESIF training-window mean",
+      "architecture_mismatch": "ESIF cooling_kw is outdoor fan/heater/filter-pump on a liquid/thermosyphon plant, not Forest City direct-evap AHU. HVAC F0 is weather-independent intercept.",
+      "corr_cooling_vs_tdb": -0.4172642052893128,
+      "evidence_class": "TRANSFERRED_MODEL",
+      "jja_minus_shoulder_overhead": NaN,
+      "mean_cooling_kw": 14.346047777599738,
+      "mean_overhead_per_it": 0.024060143093054764,
+      "n": 1726,
+      "not_fc_pue_validation": true,
+      "not_quantitative_physics_transfer": true,
+      "synthetic_IT_kw": 1406.2885351154928,
+      "weather": "KRDM"
+    }
+  ],
+  "status": "PARTIAL",
+  "weather_signed_cooling": true
+}

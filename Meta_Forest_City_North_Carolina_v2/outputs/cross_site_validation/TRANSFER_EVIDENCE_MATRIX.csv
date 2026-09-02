@@ -1,0 +1,8 @@
+item_id,evidence,classification,v1,v2_regression,note
+B_2012_06_25_MIXING,OCP_2013 operator: high-RH mixing; DX not required,STRUCTURAL_PASS,PASS,PASS_AND_FREEZE,Frozen FC controller + shared psychrometrics. Not a water-magnitude validation.
+A_2012_07_01_EVAPORATIVE,OCP_2013 operator: evaporative/free cooling; DX not required,STRUCTURAL_PASS,PASS,PASS_AND_FREEZE,Hot/dry snapshot maps to evaporative family.
+SUMMER_2012_DX_UNUSED,OCP_2013: DX coils unused summer 2012; model DX-required hours = 0 on valid KFQD hours,STRUCTURAL_PASS,0,PASS_AND_FREEZE,June 1-20 weather missing; claim is on observed hours only.
+PSYCHROMETRIC_LAYER_HOT_HUMID,Shared Prineville psychrometrics/mixing/adiabatic evap remain physically closed under KFQD states,STRUCTURAL_PASS,TRANSFERABLE_PHYSICS_SUPPORTED,SUPPORTED,Physics transfer ≠ site water validated.
+SEASONAL_PUE_1_07,"OCP_2013 seasonal PUE 1.07; no interval electricity, no IT vs facility split recovered",UNIDENTIFIED,seasonal operator statement,boundary inadequate for quantitative PUE reconstruction,QUANTITATIVE_BOUND_PASS not claimed. Screenshot dashboard cannot supply the missing series.
+ABSOLUTE_SITE_WATER_MAGNITUDE,No cooling-water meter; airflow UNIDENTIFIED; EDI is campus withdrawal,UNIDENTIFIED,UNIDENTIFIED,UNIDENTIFIED,Do not equate STRUCTURAL_PASS with water validation.
+PRN_AH_THRESHOLDS_NOT_TRANSFERRED,"FC contract explicitly does not inherit 65% RH, 80F SAT, 54F floor, 41.9F dewpoint, regions A-H",STRUCTURAL_PASS,local_controls documented,local envelope retained,"Transfer is shared physics + local FC controls, not copied PRN1 A-H."

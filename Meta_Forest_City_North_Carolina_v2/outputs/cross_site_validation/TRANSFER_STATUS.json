@@ -1,0 +1,66 @@
+{
+  "FACILITY_EFFECTIVE_DELTA_T": "UNIDENTIFIED",
+  "MODEL_CALIBRATED": "NO",
+  "absolute_site_water_magnitude_validated": false,
+  "claim_distinction": "physics/controller transfers is not equivalent to absolute site water magnitude validated",
+  "items": [
+    {
+      "classification": "STRUCTURAL_PASS",
+      "evidence": "OCP_2013 operator: high-RH mixing; DX not required",
+      "item_id": "B_2012_06_25_MIXING",
+      "note": "Frozen FC controller + shared psychrometrics. Not a water-magnitude validation.",
+      "v1": "PASS",
+      "v2_regression": "PASS_AND_FREEZE"
+    },
+    {
+      "classification": "STRUCTURAL_PASS",
+      "evidence": "OCP_2013 operator: evaporative/free cooling; DX not required",
+      "item_id": "A_2012_07_01_EVAPORATIVE",
+      "note": "Hot/dry snapshot maps to evaporative family.",
+      "v1": "PASS",
+      "v2_regression": "PASS_AND_FREEZE"
+    },
+    {
+      "classification": "STRUCTURAL_PASS",
+      "evidence": "OCP_2013: DX coils unused summer 2012; model DX-required hours = 0 on valid KFQD hours",
+      "item_id": "SUMMER_2012_DX_UNUSED",
+      "note": "June 1-20 weather missing; claim is on observed hours only.",
+      "v1": 0,
+      "v2_regression": "PASS_AND_FREEZE"
+    },
+    {
+      "classification": "STRUCTURAL_PASS",
+      "evidence": "Shared Prineville psychrometrics/mixing/adiabatic evap remain physically closed under KFQD states",
+      "item_id": "PSYCHROMETRIC_LAYER_HOT_HUMID",
+      "note": "Physics transfer \u2260 site water validated.",
+      "v1": "TRANSFERABLE_PHYSICS_SUPPORTED",
+      "v2_regression": "SUPPORTED"
+    },
+    {
+      "classification": "UNIDENTIFIED",
+      "evidence": "OCP_2013 seasonal PUE 1.07; no interval electricity, no IT vs facility split recovered",
+      "item_id": "SEASONAL_PUE_1_07",
+      "note": "QUANTITATIVE_BOUND_PASS not claimed. Screenshot dashboard cannot supply the missing series.",
+      "v1": "seasonal operator statement",
+      "v2_regression": "boundary inadequate for quantitative PUE reconstruction"
+    },
+    {
+      "classification": "UNIDENTIFIED",
+      "evidence": "No cooling-water meter; airflow UNIDENTIFIED; EDI is campus withdrawal",
+      "item_id": "ABSOLUTE_SITE_WATER_MAGNITUDE",
+      "note": "Do not equate STRUCTURAL_PASS with water validation.",
+      "v1": "UNIDENTIFIED",
+      "v2_regression": "UNIDENTIFIED"
+    },
+    {
+      "classification": "STRUCTURAL_PASS",
+      "evidence": "FC contract explicitly does not inherit 65% RH, 80F SAT, 54F floor, 41.9F dewpoint, regions A-H",
+      "item_id": "PRN_AH_THRESHOLDS_NOT_TRANSFERRED",
+      "note": "Transfer is shared physics + local FC controls, not copied PRN1 A-H.",
+      "v1": "local_controls documented",
+      "v2_regression": "local envelope retained"
+    }
+  ],
+  "physics_controller_transfer": "SUPPORTED",
+  "v1_status_preserved": "TRANSFERABLE_PHYSICS_SUPPORTED"
+}

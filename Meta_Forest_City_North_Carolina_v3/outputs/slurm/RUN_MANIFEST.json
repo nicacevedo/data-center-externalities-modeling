@@ -1,0 +1,13 @@
+{
+  "jobs": [],
+  "local_steps": [
+    "preflight",
+    "v2_reproduction",
+    "2x2",
+    "esif_transfer",
+    "masanet_subprocess"
+  ],
+  "mit_normal_used": false,
+  "reason_local": "Core replay is deterministic and short; Masanet hourly Case-1 midpoint is a single-process intensity eval.",
+  "sloan_partitions_used": []
+}

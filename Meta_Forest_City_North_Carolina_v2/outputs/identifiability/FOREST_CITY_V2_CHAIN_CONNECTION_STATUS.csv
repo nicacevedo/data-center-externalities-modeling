@@ -1,0 +1,7 @@
+edge,v1_status,v2_status,evidence,improved,remaining_missing_observable
+weather -> psychrometrics,ENGINEERING_BOUNDED (KFQD from 2012-06-21),ENGINEERING_BOUNDED,frozen KFQD parquet hash match,False,on-site campus weather; June 1-20 2012
+psychrometrics -> controller state,STRUCTURAL_PASS on 2012-06-25 and 2012-07-01,STRUCTURAL_PASS (PASS_AND_FREEZE),regression vs v1 events/DX,False,as-operated BMS SAT/RAT/OA damper/DX enable
+controller state -> air-side conditioning,OPERATOR_OBSERVED events; summer DX hours 0,SUPPORTED + SCENARIO_BOUNDED intensity,hourly dw + sensitivity eps 0.70/0.85/1.00,True,TAB CFM; measured RAT; facility-effective DeltaT
+air-side conditioning -> cooling-water requirement,UNIDENTIFIED m3 (airflow UNIDENTIFIED),UNIDENTIFIED absolute; SCENARIO_BOUNDED per MW_IT using IT design DeltaT,dw identified; m_dot not,True,FACILITY_EFFECTIVE_DELTA_T or measured airflow
+cooling-water requirement -> campus withdrawal,UNIDENTIFIED,UNIDENTIFIED,no cooling meter; EDI is withdrawal,False,cooling-water meter name/location; WUE numerator
+campus withdrawal -> source-water externality,not ready,UNIDENTIFIED,priority 5 blocked on cooling vs withdrawal,False,identified cooling vs withdrawal split; then Second Broad / WTP allocation

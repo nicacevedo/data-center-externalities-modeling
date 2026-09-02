@@ -1,0 +1,12 @@
+{
+  "evidence_class": "DERIVED",
+  "fc_2024_electricity_MWh": 535555.0,
+  "fc_2024_intensity_recomputed": 0.02987554966343326,
+  "fc_2024_withdrawal_m3": 16000.0,
+  "layers_kept_separate": [
+    "A_climate_exposure",
+    "B_regime_controller",
+    "C_campus_annual_aggregates"
+  ],
+  "not_FRC1": true
+}

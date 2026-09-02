@@ -1,0 +1,13 @@
+claim,class
+Frozen Prineville psychrometrics/controller physics remain usable at Forest City with local 85F/90%RH envelope,SUPPORTED
+2012-06-25 mixing event reproduced,VALIDATED
+2012-07-01 evaporative event reproduced,VALIDATED
+Summer DX-required hours = 0 on valid KFQD hours,VALIDATED
+Normalized air-side evaporative dw under documented envelope,ENGINEERING_BOUNDED
+m3/h per MW_IT using 35F IT design rise as if effective,SCENARIO_BOUNDED
+Absolute cooling-water magnitude,UNIDENTIFIED
+Cooling-water to campus-withdrawal edge,UNIDENTIFIED
+Stationary 2012 architecture explains 2015-2024 campus intensity,UNIDENTIFIED
+Municipal industrial-class water is Meta campus water,FAILED
+Screenshot dashboard as numeric ground truth,FAILED
+2024 campus electricity is 2012 FRC1 load,FAILED

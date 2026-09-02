@@ -1,0 +1,4 @@
+hypothesis,testable_with_campus_annuals,reason,outcome
+H0_fixed_early_FRC1_plus_weather,False,"Annual electricity/water are campus site totals, not 2012 FRC1; withdrawal ≠ cooling water; IT load unidentified.",UNIDENTIFIED
+H1_independently_documented_epoch_bounds,False,Hard epochs exist for campus composition (2014 halls) but cooling-tech change dates remain CANDIDATE. Annuals cannot estimate those dates.,UNIDENTIFIED
+descriptive_2024_withdrawal_drop,False,2024 withdrawal 16 ML is reported. Causal link to membrane/SPLC/load mix is not identified. not_used_to_fit_2012_controller.,UNIDENTIFIED

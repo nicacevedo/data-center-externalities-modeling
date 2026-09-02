@@ -1,0 +1,83 @@
+# Frozen Forest City v2 protocol. Written BEFORE new quantitative outcomes.
+# Do not revise claim classes from later convenience. Do not calibrate.
+schema_version: 2
+protocol_status: FROZEN
+frozen_at_utc: "2026-09-02T21:50:00Z"
+parent_v1: Meta_Forest_City_North_Carolina_v1/
+do_not_modify_v1: true
+do_not_modify_prineville: true
+do_not_refit_cpu_h100_esif: true
+MODEL_CALIBRATED: "NO"
+
+scientific_role: >
+  Forest City is primarily an external hot/humid-climate validation site for
+  already-developed Prineville facility/cooling physics, while improving
+  Forest City source-boundary and architecture observability.
+
+questions:
+  Q1_CONTROL_TRANSFER: Does the frozen controller reproduce independently documented Forest City operating states?
+  Q2_PSYCHROMETRIC_TRANSFER: Does the frozen physical layer remain plausible under Forest City hot/humid weather?
+  Q3_WATER_MAGNITUDE: Can air-side evaporative requirements be connected to measured campus withdrawal?
+  Q3_default_before_new_evidence: UNIDENTIFIED
+  Q4_LONG_RUN_STATIONARITY: Can later campus annual electricity/water be interpreted under the same architecture as 2012 FRC1?
+  Q4_default: DO_NOT_ASSUME_YES
+
+invariants:
+  - no parameter calibration from Forest City annual electricity or withdrawal
+  - municipal industrial-class water is never Meta campus water
+  - campus withdrawal is never cooling-water use without source evidence
+  - WUE is undefined until numerator/meter boundary is identified
+  - 2024 campus electricity is never 2012 FRC1 load
+  - one cooling architecture is not assumed stationary 2012-2024
+  - screenshot-only dashboard reconstruction is not numeric ground truth
+  - no other data-center location in this pass
+
+source_hierarchy:
+  1: as-operated FRC1 air-side / mechanical / TAB / commissioning
+  2: cooling-water meter identity and WUE numerator boundary
+  3: building/campus interval electricity / electrical boundary
+  4: emissions only after 1-3
+  5: source-water externality only after cooling-water vs withdrawal boundary
+
+uncertainty_variables_predeclared:
+  FACILITY_EFFECTIVE_DELTA_T: UNIDENTIFIED
+  IT_DESIGN_DELTA_T_F: 35.0  # DESIGN_SPEC only; not as-operated facility DeltaT
+  SAT_MAX_F: 85.0
+  RH_MAX: 0.90
+  evap_thermal_effectiveness_bounds: [0.70, 0.85, 1.00]
+  evap_1.00_tag: IDEAL_UPPER_BOUND
+  evap_0.85_tag: GENERIC_PRIOR_SCENARIO_NOT_FOREST_CITY_SOURCED
+  evap_0.70_tag: CONSERVATIVE_ENGINEERING_BOUND
+  airflow: UNIDENTIFIED unless TAB/commissioning found
+  mixing_return_air: DESIGN_REFERENCE_SCENARIO (supply + 35F IT rise) unless measured RAT found
+
+claim_classes:
+  - VALIDATED
+  - SUPPORTED
+  - ENGINEERING_BOUNDED
+  - SCENARIO_BOUNDED
+  - UNIDENTIFIED
+  - FAILED
+  - STRUCTURAL_PASS
+  - QUANTITATIVE_BOUND_PASS
+
+architecture_epoch_rules: >
+  Hard epochs require independent documentary evidence of a construction,
+  cooling-technology, metering, or electrical-boundary change. Annual Meta
+  water/electricity trends cannot define epoch dates. Unconfirmed technology
+  changes remain CANDIDATE / UNRESOLVED.
+
+v1_status_to_preserve:
+  MODEL_CALIBRATED: NO
+  FACILITY_EFFECTIVE_DELTA_T: UNIDENTIFIED
+  IT_DELTA_T_DESIGN: IDENTIFIED_DESIGN_SPEC
+  dashboard: SCREENSHOT_ONLY
+  event_2012_06_25: PASS
+  event_2012_07_01: PASS
+  summer_DX_required_hours: 0
+  transfer: TRANSFERABLE_PHYSICS_SUPPORTED
+  water_magnitude: UNIDENTIFIED
+
+slurm:
+  preferred_partition: sched_mit_sloan_batch
+  forbid: [mit_normal]

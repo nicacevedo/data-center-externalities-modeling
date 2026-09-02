@@ -1,0 +1,5 @@
+combination,transition_rate
+FC_weather+FC_controller,0.1448
+FC_weather+PRN_controller,0.088
+PRN_weather+FC_controller,0.064
+PRN_weather+PRN_controller,0.1664

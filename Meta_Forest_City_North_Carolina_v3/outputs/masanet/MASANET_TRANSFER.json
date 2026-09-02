@@ -1,0 +1,78 @@
+{
+  "status": "PARTIAL",
+  "refit": false,
+  "paper_case": 1,
+  "fn": "PUE_WUE_AE_Chiller",
+  "P_IT": 1.0,
+  "seed": 2025,
+  "theta_midpoint": {
+    "UPS_e": 0.9450000000000001,
+    "PD_lr": 0.01,
+    "L_percentage": 0.001,
+    "delta_T_air": 16.65,
+    "Fan_Pressure_CRAC": 650.0,
+    "Fan_e_CRAC": 0.775,
+    "Pump_Pressure_HD": 7000000.0,
+    "Pump_e_HD": 0.7,
+    "AT_CT": 4.75,
+    "Chiller_load": 0.5,
+    "delta_T_water": 7.5,
+    "Pump_Pressure_CW": 143650.0,
+    "Pump_e_CW": 0.7,
+    "delta_T_CT": 5.0,
+    "Pump_Pressure_CT": 208650.0,
+    "Pump_e_CT": 0.7,
+    "Windage_p": 0.002525,
+    "CC": 9.0,
+    "Fan_Pressure_CT": 250.0,
+    "Fan_e_CT": 0.775,
+    "SHR": 0.97,
+    "LGRatio": 2.1,
+    "T_up": 31.0,
+    "T_lw": 14.0,
+    "dp_up": 21.0,
+    "dp_lw": -10.5,
+    "RH_up": 77.5,
+    "RH_lw": 14.0,
+    "pcop": 0.0
+  },
+  "theta_provenance": "SCENARIO Table 3 midpoints; not Forest City calibrated",
+  "architecture_note": "Paper Case 1 = airside economizer + adiabatic cooling + water-cooled chiller (PUE_WUE_AE_Chiller). Forest City documented architecture is direct evaporative with unused DX backup. This is a transfer stress test, not calibration.",
+  "QUANTITATIVE_PHYSICS_TRANSFER": "NOT_VALIDATED",
+  "suitable": [
+    "directional consistency of climate response",
+    "seasonal consistency of intensity",
+    "scenario mismatch vs Forest City direct-evap"
+  ],
+  "not_suitable": [
+    "Forest City PUE validated",
+    "Forest City WUE validated",
+    "Forest City cooling-water magnitude validated"
+  ],
+  "summaries": [
+    {
+      "weather": "KFQD",
+      "n": 1251,
+      "PUE_mean": 1.2612452755966646,
+      "WUE_mean": 1.8414056560403977,
+      "corr_PUE_vs_tdb": -0.20555230451104822,
+      "evidence_class": "TRANSFERRED_MODEL",
+      "not_fc_pue_validation": true,
+      "not_fc_wue_validation": true,
+      "not_cooling_water_magnitude_validation": true
+    },
+    {
+      "weather": "KRDM",
+      "n": 1251,
+      "PUE_mean": 1.1368745435564376,
+      "WUE_mean": 0.282140492039992,
+      "corr_PUE_vs_tdb": 0.5235720246531989,
+      "evidence_class": "TRANSFERRED_MODEL",
+      "not_fc_pue_validation": true,
+      "not_fc_wue_validation": true,
+      "not_cooling_water_magnitude_validation": true
+    }
+  ],
+  "fc_pue_minus_prn_pue": 0.12437073204022697,
+  "both_positive_tdb_pue_corr": false
+}

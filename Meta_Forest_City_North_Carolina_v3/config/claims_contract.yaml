@@ -1,0 +1,31 @@
+# Forest City v3 claims / evidence contract
+# A TRANSFERRED_MODEL or SCENARIO value MUST NOT be reported as OBSERVED
+# or as empirically calibrated.
+
+evidence_classes:
+  OBSERVED:
+    meaning: Directly measured or operator-published at the stated boundary.
+  DERIVED:
+    meaning: Algebraic identity from observed quantities at the same boundary (no model).
+  MODEL_REPLAY:
+    meaning: Frozen site controller applied to observed weather. Not a fit.
+  TRANSFERRED_MODEL:
+    meaning: Frozen external model (Masanet/ESIF) applied without refit.
+  SCENARIO:
+    meaning: Documented range or synthetic IT/parameter choice. Not as-operated.
+  UNIDENTIFIED:
+    meaning: Not closed by public evidence.
+
+prohibited:
+  - treating 35 F IT design rise as FACILITY_EFFECTIVE_DELTA_T
+  - converting missing KFQD hours into observations
+  - selecting a weather station because it yields zero DX
+  - mapping 2023-2024 campus totals onto 2012 FRC1
+  - choosing Delta-T to match annual water
+  - QUANTITATIVE_PHYSICS_TRANSFER=PASS from annual-aggregate agreement with a transferred model
+
+frozen_findings_from_v2:
+  QUANTITATIVE_PHYSICS_TRANSFER: NOT_VALIDATED
+  FACILITY_EFFECTIVE_DELTA_T: UNIDENTIFIED
+  FRC1_ADDRESS: INTERVAL/SET_UNRESOLVED
+  dashboard: SCREENSHOT_ONLY

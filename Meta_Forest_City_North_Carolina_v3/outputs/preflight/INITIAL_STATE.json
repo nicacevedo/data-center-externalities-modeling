@@ -1,0 +1,123 @@
+{
+  "HEAD": "da7fd6f55e1aef5216ceabe80bfc3e31265f7927",
+  "MODEL_CALIBRATED": "NO",
+  "branch": "main",
+  "git_status_short": "m Data-center-PUE-prediction-tool\n M Meta_Forest_City_North_Carolina_v2/README.md\n D Meta_Forest_City_North_Carolina_v2/config/FOREST_CITY_ADDRESS_ENTITY_CROSSWALK.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/AIRFLOW_IDENTIFICATION_REQUIREMENTS.md\n D Meta_Forest_City_North_Carolina_v2/outputs/COMMON_TAXONOMY_NATIVE_MAPPING.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/FOREST_CITY_ADDRESS_RESOLUTION.json\n D Meta_Forest_City_North_Carolina_v2/outputs/FOREST_CITY_MANUAL_DATA_REQUEST_PACKAGE.md\n D Meta_Forest_City_North_Carolina_v2/outputs/FOREST_CITY_V2_CHAIN_STATUS.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/FOREST_CITY_V2_FREEZE.json\n D Meta_Forest_City_North_Carolina_v2/outputs/FOREST_CITY_V2_STATUS.json\n D Meta_Forest_City_North_Carolina_v2/outputs/INITIAL_STATE.json\n D Meta_Forest_City_North_Carolina_v2/outputs/V1_INHERITANCE_MANIFEST.json\n D Meta_Forest_City_North_Carolina_v2/outputs/V1_SCIENTIFIC_CORRECTIONS.json\n D Meta_Forest_City_North_Carolina_v2/outputs/annual_accounting/FOREST_CITY_2023_2024_WATER_BREAK_AUDIT.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/annual_accounting/FOREST_CITY_2023_2024_WATER_BREAK_AUDIT.json\n D Meta_Forest_City_North_Carolina_v2/outputs/annual_accounting/FOREST_CITY_META_ANNUAL_CANONICAL.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/annual_accounting/FOREST_CITY_MUNICIPAL_SOURCE_ACCOUNTING.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/annual_accounting/FOREST_CITY_SITE_WITHDRAWAL_INTENSITY.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/cross_site_same_period/PRN_FC_COMMON_TAXONOMY_RESULTS.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/cross_site_same_period/PRN_FC_COMMON_TAXONOMY_RESULTS.json\n D Meta_Forest_City_North_Carolina_v2/outputs/cross_site_same_period/WEATHER_CONTROLLER_FACTORIAL.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/cross_site_same_period/WEATHER_CONTROLLER_FACTORIAL.json\n D Meta_Forest_City_North_Carolina_v2/outputs/emissions/FOREST_CITY_LOCATION_EMISSIONS_VALIDATION.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/emissions/FOREST_CITY_LOCATION_EMISSIONS_VALIDATION.json\n D Meta_Forest_City_North_Carolina_v2/outputs/figures/fig01_jja_station_coverage_overlap.png\n D Meta_Forest_City_North_Carolina_v2/outputs/figures/fig02_full_jja_dx_by_station.png\n D Meta_Forest_City_North_Carolina_v2/outputs/figures/fig03_same_period_prn_fc_taxonomy.png\n D Meta_Forest_City_North_Carolina_v2/outputs/figures/fig04_weather_controller_factorial.png\n D Meta_Forest_City_North_Carolina_v2/outputs/figures/fig05_return_air_design_sensitivity.png\n D Meta_Forest_City_North_Carolina_v2/outputs/figures/fig06_annual_electricity_withdrawal_intensity.png\n D Meta_Forest_City_North_Carolina_v2/outputs/operator_events/OPERATOR_EVENT_CONTROL_CONSISTENCY.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/operator_events/OPERATOR_EVENT_CONTROL_CONSISTENCY.json\n D Meta_Forest_City_North_Carolina_v2/outputs/return_air_robustness/RETURN_AIR_DESIGN_SENSITIVITY.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/return_air_robustness/RETURN_AIR_DESIGN_SENSITIVITY.json\n D Meta_Forest_City_North_Carolina_v2/outputs/weather_robustness/FULL_JJA_STATION_REPLICATION.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/weather_robustness/FULL_JJA_STATION_REPLICATION.json\n D Meta_Forest_City_North_Carolina_v2/outputs/weather_robustness/STATION_OVERLAP_DIAGNOSTICS.csv\n D Meta_Forest_City_North_Carolina_v2/outputs/weather_robustness/STATION_SELECTION.json\n D Meta_Forest_City_North_Carolina_v2/scripts/00_record_initial_state.py\n D Meta_Forest_City_North_Carolina_v2/scripts/run_pipeline.py\n M Meta_Forest_City_North_Carolina_v2/src/__init__.py\n D Meta_Forest_City_North_Carolina_v2/src/common_mechanism_taxonomy.py\n D Meta_Forest_City_North_Carolina_v2/src/fc_design_return_air.py\n M Meta_Forest_City_North_Carolina_v2/src/hashes.py\n D Meta_Forest_City_North_Carolina_v2/src/paths.py\n M Meta_Forest_City_North_Carolina_v2/src/v1_bridge.py\n D Meta_Forest_City_North_Carolina_v2/src/weather_hourly.py\n D Meta_Forest_City_North_Carolina_v2/tests/__init__.py\n M Meta_Forest_City_North_Carolina_v2/tests/test_v2_guards.py\n D Meta_Forest_City_North_Carolina_v2/weather/FOREST_CITY_2012_NEARBY_ISD_INVENTORY.csv\n D Meta_Forest_City_North_Carolina_v2/weather/FOREST_CITY_2012_STATION_AUDIT.csv\n?? Meta_Forest_City_North_Carolina_v2/.gitignore\n?? Meta_Forest_City_North_Carolina_v2/config/FOREST_CITY_V2_PROTOCOL.yaml\n?? Meta_Forest_City_North_Carolina_v2/outputs/airside/\n?? Meta_Forest_City_North_Carolina_v2/outputs/annual_accounting/FOREST_CITY_ANNUAL_BY_EPOCH.csv\n?? Meta_Forest_City_North_Carolina_v2/outputs/annual_accounting/FOREST_CITY_ANNUAL_INTERPRETABILITY.csv\n?? Meta_Forest_City_North_Carolina_v2/outputs/architecture/\n?? Meta_Forest_City_North_Carolina_v2/outputs/controller_validation/\n?? Meta_Forest_City_North_Carolina_v2/outputs/cross_site_validation/\n?? Meta_Forest_City_North_Carolina_v2/outputs/electricity/\n?? Meta_Forest_City_North_Carolina_v2/outputs/emissions/FOREST_CITY_EMISSIONS_GATE.json\n?? Meta_Forest_City_North_Carolina_v2/outputs/figures/fig1_psychrometric_envelope.png\n?? Meta_Forest_City_North_Carolina_v2/outputs/figures/fig2_controller_mode_map_2012.png\n?? Meta_Forest_City_North_Carolina_v2/outputs/figures/fig3_normalized_evap_sensitivity.png\n?? Meta_Forest_City_North_Carolina_v2/outputs/figures/fig4_transfer_evidence.png\n?? Meta_Forest_City_North_Carolina_v2/outputs/figures/fig5_annual_intensity_by_epoch.png\n?? Meta_Forest_City_North_Carolina_v2/outputs/figures/fig6_identifiability_chain.png\n?? Meta_Forest_City_North_Carolina_v2/outputs/identifiability/\n?? Meta_Forest_City_North_Carolina_v2/outputs/preflight/\n?? Meta_Forest_City_North_Carolina_v2/outputs/reports/\n?? Meta_Forest_City_North_Carolina_v2/outputs/source_audit/\n?? Meta_Forest_City_North_Carolina_v2/outputs/water_boundary/\n?? Meta_Forest_City_North_Carolina_v2/outputs/weather/\n?? Meta_Forest_City_North_Carolina_v2/scripts/00_preflight.py\n?? Meta_Forest_City_North_Carolina_v2/scripts/run_v2_pipeline.py\n?? Meta_Forest_City_North_Carolina_v2/slurm/\n?? Meta_Forest_City_North_Carolina_v2/src/fc2_paths.py\n?? Meta_Forest_City_North_Carolina_v2_prior_untracked/\n?? Meta_Forest_City_North_Carolina_v3/",
+  "hashes": {
+    "hashes": {
+      "cpu": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/analysis/FINAL_KESTREL_CPU_STATUS.json",
+        "sha256": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9"
+      },
+      "esif": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/heat_rejection_water/manifests/ESIF_HEAT_WATER_RESULT_FREEZE.json",
+        "sha256": "4e01139dd9365f62824ac00ff944468839e7873e47a5cea3df4714854af1b02c"
+      },
+      "esif_selected": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/facility_overhead/analysis/COMPONENT_SELECTED_MODELS.json",
+        "sha256": "fc15039e713578316877f5df9e1009e2a719128bd2458cde74a822ff1aa877dd"
+      },
+      "fc_airflow_contract": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/config/FOREST_CITY_AIRFLOW_BOUNDARY_CONTRACT.json",
+        "sha256": "f1cdc03bea8f5103e8951c6fbef7e965d16248e511fd4ad4874e19d5054ddc37"
+      },
+      "fc_control_contract": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/config/FOREST_CITY_REFERENCE_CONTROL_CONTRACT.json",
+        "sha256": "56d3ef12b0ab3584886892a3283f068ebe7bcfc0adc827543dc6b8910da450c2"
+      },
+      "fc_controller": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/src/forest_city_controller.py",
+        "sha256": "99ecc213fa181ab1fe7144087da5874b0a8f3f79478a6a8b5aed83fe0ea77c78"
+      },
+      "fc_structural": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/src/forest_city_structural_reference_v1.py",
+        "sha256": "085a893cd63665b37d027877e9d80efbc99489a6c813a9f8da150e41a529568d"
+      },
+      "h100": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/genai_h100/manifests/H100_COMPUTE_FINAL_FREEZE.json",
+        "sha256": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076"
+      },
+      "kfqd_parquet": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/processed/forest_city_weather_2012_hourly.parquet",
+        "sha256": "f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9"
+      },
+      "masanet_first": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/FIRST_RUN_STATUS.json",
+        "sha256": "70782ac8597d81d8d970fdbffb427969cc5618526df0191146b382e7cb1d1d8a"
+      },
+      "prn_arch": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/config/prineville_architecture_states.yaml",
+        "sha256": "1f87a1846aa8254c758ab11e3bd9b6f639e6c64bc551c36bcf8201bd65e78604"
+      },
+      "prn_graybox": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/src/prineville_graybox.py",
+        "sha256": "8275ca5bfc23042e3af19b72f2adb260304ac95d692d0b3ecbcb526b020f0609"
+      },
+      "prn_psych": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/src/prineville_psychrometrics.py",
+        "sha256": "c10e1487a00ce32023bf3b630f915b2fe9ba303917951ff5f5bcbec3a3aafd30"
+      },
+      "prn_structural": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/src/prineville_structural_v1.py",
+        "sha256": "f9649c489196cdc3e617f5b28574334aaaace5a94e7ade5ce461f6da22809a6a"
+      },
+      "q2_krdm": {
+        "exists": true,
+        "match": true,
+        "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/prn1_q2_2012_public_validation_v1/weather/Q2_2012_KRDM_hourly.parquet",
+        "sha256": "87c0beaf1f8223ebb9f4d02ff13b9efd9d2286aaddfec0a3cce9af4c4279d925"
+      }
+    },
+    "mismatches": [],
+    "tag": "start",
+    "trees": {
+      "prn_src_HEAD": "3eea7255eaa85a6aff4bad7627a7e2c9eb14e7aa",
+      "v1_tree_HEAD": "badbbad946c1b0bda96d4907f5d76f98ac54d496",
+      "v2_tree_HEAD": "01fad3c0e02cf63b96b3f0f8e48c1ec69fc90b8b"
+    }
+  },
+  "note": "v2 working tree may be mid-rewrite; v3 does not write there. Reproduction targets are HEAD-committed v2 JJA shares.",
+  "prineville": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3",
+  "python": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+  "repository_root": "/home/nacevedo/RA/data-center-externalities-modeling",
+  "submodule": "fatal: no submodule mapping found in .gitmodules for path 'Data-center-PUE-prediction-tool'",
+  "utc": "2026-09-02T22:20:45.686918+00:00",
+  "v1": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1",
+  "v2": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v2",
+  "writes_forbidden": [
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v2",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3",
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet",
+    "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Data-center-PUE-prediction-tool"
+  ]
+}

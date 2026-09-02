@@ -1,0 +1,69 @@
+{
+  "MODEL_CALIBRATED": "NO",
+  "controller_not_modified": true,
+  "rows": [
+    {
+      "PASS": true,
+      "dx_hours_match": true,
+      "item": "B_2012_06_25",
+      "n_hours_match": true,
+      "status_match": true,
+      "synthetic_dx_match": true,
+      "v1_dx_hours": 0,
+      "v1_status": "PASS",
+      "v2_dx_hours": 0,
+      "v2_family": "RETURN_AIR_MIXING",
+      "v2_synthetic_mode": "HIGH_RH_RETURN_AIR_MIXING"
+    },
+    {
+      "PASS": true,
+      "dx_hours_match": true,
+      "item": "A_2012_07_01",
+      "n_hours_match": true,
+      "status_match": true,
+      "synthetic_dx_match": true,
+      "v1_dx_hours": 0,
+      "v1_status": "PASS",
+      "v2_dx_hours": 0,
+      "v2_family": "EVAPORATIVE_COOLING",
+      "v2_synthetic_mode": "EVAPORATIVE_COOLING"
+    },
+    {
+      "PASS": true,
+      "item": "summer_DX_eps1",
+      "v1": 0,
+      "v2": 0
+    },
+    {
+      "PASS": true,
+      "item": "summer_DX_eps085",
+      "v1": 0,
+      "v2": 0
+    },
+    {
+      "PASS": true,
+      "item": "summer_classified_hours",
+      "v1": 1253,
+      "v2": 1253
+    },
+    {
+      "PASS": true,
+      "item": "weather_parquet_sha256",
+      "v1": "f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9",
+      "v2": "f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9"
+    },
+    {
+      "PASS": true,
+      "item": "weather_usable_JJA",
+      "v1": 1253,
+      "v2": 1253
+    },
+    {
+      "PASS": true,
+      "item": "transfer_status",
+      "v1": "TRANSFERABLE_PHYSICS_SUPPORTED",
+      "v2": "TRANSFERABLE_PHYSICS_SUPPORTED"
+    }
+  ],
+  "verdict": "PASS_AND_FREEZE"
+}

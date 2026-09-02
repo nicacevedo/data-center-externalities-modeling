@@ -1,4 +1,3 @@
-"""SHA-256 helpers. Hash existing files; do not rewrite frozen artifacts."""
 from __future__ import annotations
 
 import hashlib

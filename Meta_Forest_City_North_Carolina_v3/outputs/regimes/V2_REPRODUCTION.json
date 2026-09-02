@@ -1,0 +1,27 @@
+{
+  "V2_REPRODUCTION": "PASS",
+  "evidence_class": "MODEL_REPLAY",
+  "reproduced": {
+    "DX_required_hours": 0,
+    "EVAP_COOLING": 133,
+    "HIGH_RH_MIXING": 443,
+    "HUMIDIFICATION": 0,
+    "MECHANICAL_COOLING": 0,
+    "OA_FREE": 677,
+    "UNRESOLVED": 0,
+    "valid_hours": 1253,
+    "weather_missing_hours": 955
+  },
+  "target": {
+    "DX_required_hours": 0,
+    "EVAP_COOLING": 133,
+    "HIGH_RH_MIXING": 443,
+    "HUMIDIFICATION": 0,
+    "MECHANICAL_COOLING": 0,
+    "OA_FREE": 677,
+    "UNRESOLVED": 0,
+    "valid_hours": 1253,
+    "weather_missing_hours": 955
+  },
+  "tolerance": "exact hour counts"
+}

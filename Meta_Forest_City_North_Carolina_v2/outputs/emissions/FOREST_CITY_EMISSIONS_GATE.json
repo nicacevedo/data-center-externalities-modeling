@@ -1,0 +1,15 @@
+{
+  "electricity_reporting_boundary_verified_for_emissions_factor": false,
+  "meta_location_based_series_exists": true,
+  "quantity_compatible_with_factor": false,
+  "reason": [
+    "Electricity series is FOREST_CITY_SITE_AS_REPORTED annual campus totals, not FRC1 interval load.",
+    "v1: GRID_RECONSTRUCTION_INSUFFICIENT_INPUTS; year-matched eGRID xlsx not used in this pass.",
+    "Do not create faux hourly emissions from annual campus electricity.",
+    "Emissions remain behind acquisition priorities 1-3."
+  ],
+  "reconstructed_here": false,
+  "service_territory_grid_region_verified_by_source_and_year": false,
+  "status": "EMISSIONS_BOUNDARY_NOT_READY",
+  "v1_status": "META_SERIES_CANONICAL; GRID_RECONSTRUCTION_INSUFFICIENT_INPUTS"
+}

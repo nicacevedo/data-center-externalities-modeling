@@ -1,0 +1,13 @@
+{
+  "FACILITY_EFFECTIVE_DELTA_T": "UNIDENTIFIED",
+  "MODEL_CALIBRATED": "NO",
+  "QUANTITATIVE_PHYSICS_TRANSFER": "NOT_VALIDATED",
+  "STOP": true,
+  "prineville_untouched": true,
+  "slurm": {
+    "policy": "Sloan CPU first (sched_mit_sloan_batch_r8 then sched_mit_sloan_batch); never default mit_normal",
+    "this_run": "local_core_deterministic; Masanet via masanet_lei subprocess; mit_normal not used"
+  },
+  "v1_untouched": true,
+  "v2_untouched": true
+}

@@ -1,0 +1,9 @@
+item,status_match,v1_status,v2_synthetic_mode,v2_family,v2_dx_hours,v1_dx_hours,dx_hours_match,synthetic_dx_match,n_hours_match,PASS,v1,v2
+B_2012_06_25,True,PASS,HIGH_RH_RETURN_AIR_MIXING,RETURN_AIR_MIXING,0,0,True,True,True,True,,
+A_2012_07_01,True,PASS,EVAPORATIVE_COOLING,EVAPORATIVE_COOLING,0,0,True,True,True,True,,
+summer_DX_eps1,,,,,,,,,,True,0,0
+summer_DX_eps085,,,,,,,,,,True,0,0
+summer_classified_hours,,,,,,,,,,True,1253,1253
+weather_parquet_sha256,,,,,,,,,,True,f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9,f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9
+weather_usable_JJA,,,,,,,,,,True,1253,1253
+transfer_status,,,,,,,,,,True,TRANSFERABLE_PHYSICS_SUPPORTED,TRANSFERABLE_PHYSICS_SUPPORTED

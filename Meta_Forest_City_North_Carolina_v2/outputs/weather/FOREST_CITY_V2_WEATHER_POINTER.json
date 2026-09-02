@@ -1,0 +1,21 @@
+{
+  "columns": [
+    "timestamp_utc",
+    "hour",
+    "t_db_C",
+    "t_dew_C",
+    "slp_hPa",
+    "altimeter_hPa",
+    "n_reports",
+    "rh_pct",
+    "pressure_Pa",
+    "t_wb_C",
+    "station",
+    "station_id",
+    "source_station",
+    "timestamp_local"
+  ],
+  "n_rows": 8784,
+  "parquet_sha256": "f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9",
+  "referenced_not_copied": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/processed/forest_city_weather_2012_hourly.parquet"
+}

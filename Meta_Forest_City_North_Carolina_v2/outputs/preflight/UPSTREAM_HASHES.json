@@ -1,0 +1,133 @@
+{
+  "expected": {
+    "cpu": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9",
+    "esif": "4e01139dd9365f62824ac00ff944468839e7873e47a5cea3df4714854af1b02c",
+    "fc_airflow_contract": "f1cdc03bea8f5103e8951c6fbef7e965d16248e511fd4ad4874e19d5054ddc37",
+    "fc_control_contract": "56d3ef12b0ab3584886892a3283f068ebe7bcfc0adc827543dc6b8910da450c2",
+    "fc_controller": "99ecc213fa181ab1fe7144087da5874b0a8f3f79478a6a8b5aed83fe0ea77c78",
+    "fc_structural": "085a893cd63665b37d027877e9d80efbc99489a6c813a9f8da150e41a529568d",
+    "fc_weather_parquet": "f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9",
+    "h100": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076",
+    "prn_graybox": "8275ca5bfc23042e3af19b72f2adb260304ac95d692d0b3ecbcb526b020f0609",
+    "prn_psychrometrics": "c10e1487a00ce32023bf3b630f915b2fe9ba303917951ff5f5bcbec3a3aafd30",
+    "prn_registry": "1f87a1846aa8254c758ab11e3bd9b6f639e6c64bc551c36bcf8201bd65e78604",
+    "prn_structural_v1": "f9649c489196cdc3e617f5b28574334aaaace5a94e7ade5ce461f6da22809a6a"
+  },
+  "mismatches": [],
+  "observed": {
+    "cpu": {
+      "bytes": 3456,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/analysis/FINAL_KESTREL_CPU_STATUS.json",
+      "sha256": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9"
+    },
+    "esif": {
+      "bytes": 2148,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/heat_rejection_water/manifests/ESIF_HEAT_WATER_RESULT_FREEZE.json",
+      "sha256": "4e01139dd9365f62824ac00ff944468839e7873e47a5cea3df4714854af1b02c"
+    },
+    "fc_airflow_contract": {
+      "bytes": 2288,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/config/FOREST_CITY_AIRFLOW_BOUNDARY_CONTRACT.json",
+      "sha256": "f1cdc03bea8f5103e8951c6fbef7e965d16248e511fd4ad4874e19d5054ddc37"
+    },
+    "fc_control_contract": {
+      "bytes": 5460,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/config/FOREST_CITY_REFERENCE_CONTROL_CONTRACT.json",
+      "sha256": "56d3ef12b0ab3584886892a3283f068ebe7bcfc0adc827543dc6b8910da450c2"
+    },
+    "fc_controller": {
+      "bytes": 8774,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/src/forest_city_controller.py",
+      "sha256": "99ecc213fa181ab1fe7144087da5874b0a8f3f79478a6a8b5aed83fe0ea77c78"
+    },
+    "fc_event_validation": {
+      "bytes": 2629,
+      "exists": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/outputs/control_validation/HISTORICAL_EVENT_VALIDATION.json",
+      "sha256": "88b7eec3133b6e40a26c54aadb82b872435c80a2c2196acfe247392f62c39c9b"
+    },
+    "fc_structural": {
+      "bytes": 12216,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/src/forest_city_structural_reference_v1.py",
+      "sha256": "085a893cd63665b37d027877e9d80efbc99489a6c813a9f8da150e41a529568d"
+    },
+    "fc_summer_dx": {
+      "bytes": 1754,
+      "exists": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/outputs/control_validation/SUMMER_2012_DX_VALIDATION.json",
+      "sha256": "8f5f3bdba4ca1a0abbc0ed3802af42c185d3feb597ade60bf32c5aeed8a83b9b"
+    },
+    "fc_validation_freeze": {
+      "bytes": 1243,
+      "exists": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/outputs/FOREST_CITY_PUBLIC_VALIDATION_FREEZE.json",
+      "sha256": "d5d8f69676f8269fcdb6445ed0f68dbd8793677da427e1986f85661d236d7a54"
+    },
+    "fc_validation_status": {
+      "bytes": 416,
+      "exists": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/outputs/FOREST_CITY_PUBLIC_VALIDATION_STATUS.json",
+      "sha256": "2ab3e92aa60f1d535f3e368ff668d7626e6ed3cd03d349cf90691c7135fac9e8"
+    },
+    "fc_weather_parquet": {
+      "bytes": 325592,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/processed/forest_city_weather_2012_hourly.parquet",
+      "sha256": "f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9"
+    },
+    "fc_weather_qa": {
+      "bytes": 1535,
+      "exists": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/outputs/weather/FOREST_CITY_2012_WEATHER_QA.json",
+      "sha256": "ee077cf8c7b5614dead67b01ea846d26eb3ac150b5aed26a8bb94f0635dcc009"
+    },
+    "h100": {
+      "bytes": 6446,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/genai_h100/manifests/H100_COMPUTE_FINAL_FREEZE.json",
+      "sha256": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076"
+    },
+    "prn_graybox": {
+      "bytes": 11379,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/src/prineville_graybox.py",
+      "sha256": "8275ca5bfc23042e3af19b72f2adb260304ac95d692d0b3ecbcb526b020f0609"
+    },
+    "prn_psychrometrics": {
+      "bytes": 8406,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/src/prineville_psychrometrics.py",
+      "sha256": "c10e1487a00ce32023bf3b630f915b2fe9ba303917951ff5f5bcbec3a3aafd30"
+    },
+    "prn_registry": {
+      "bytes": 8383,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/config/prineville_architecture_states.yaml",
+      "sha256": "1f87a1846aa8254c758ab11e3bd9b6f639e6c64bc551c36bcf8201bd65e78604"
+    },
+    "prn_structural_v1": {
+      "bytes": 25603,
+      "exists": true,
+      "match": true,
+      "path": "/orcd/home/002/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/src/prineville_structural_v1.py",
+      "sha256": "f9649c489196cdc3e617f5b28574334aaaace5a94e7ade5ce461f6da22809a6a"
+    }
+  }
+}

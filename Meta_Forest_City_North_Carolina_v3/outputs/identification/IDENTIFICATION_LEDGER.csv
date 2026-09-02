@@ -1,0 +1,14 @@
+quantity,identification,evidence_class,notes
+annual aggregate electricity,IDENTIFIED,OBSERVED,"Meta site row, campus scope"
+annual aggregate water,IDENTIFIED,OBSERVED,"Meta site withdrawal, campus scope"
+aggregate L/kWh intensity,IDENTIFIED,DERIVED,withdrawal/electricity at campus; not FRC1 WUE
+regime frequencies,BOUNDED,MODEL_REPLAY,frozen controllers on observed weather
+station sensitivity,BOUNDED,OBSERVED,KFQD/KEHO/KGSP independent; not chosen by DX
+effective facility Delta-T,UNIDENTIFIED,UNIDENTIFIED,35F is IT design rise only; circular water fit prohibited
+facility airflow / CFM,UNIDENTIFIED,UNIDENTIFIED,needs TAB/BMS
+cooling-only makeup water,UNIDENTIFIED,UNIDENTIFIED,needs meter IDs
+blowdown,UNIDENTIFIED,UNIDENTIFIED,
+reuse / return,UNIDENTIFIED,UNIDENTIFIED,
+withdrawal vs consumption,UNIDENTIFIED,UNIDENTIFIED,Meta reports withdrawal
+FRC1 vs campus mapping,UNIDENTIFIED,UNIDENTIFIED,FRC1_ADDRESS set unresolved
+quantitative cooling-water transfer,UNIDENTIFIED,UNIDENTIFIED,QUANTITATIVE_PHYSICS_TRANSFER=NOT_VALIDATED

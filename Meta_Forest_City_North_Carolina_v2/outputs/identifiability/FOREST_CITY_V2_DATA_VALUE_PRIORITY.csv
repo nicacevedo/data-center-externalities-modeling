@@ -1,0 +1,6 @@
+rank,dataset,why
+1,"as-operated FRC1 air-side / TAB / commissioning (CFM, SAT/RAT, sequence, DX enable)",only path to FACILITY_EFFECTIVE_DELTA_T and absolute air-side water
+2,cooling-water meter identity and WUE numerator boundary,connects dw to site water; currently UNIDENTIFIED
+3,FRC1/building and campus interval electricity / electrical boundary,blocks 2012 load and emissions factor compatibility
+4,emissions factors year-matched to a verified electricity quantity,gated until 3
+5,source-water externality after cooling vs withdrawal is resolved,gated until 2
