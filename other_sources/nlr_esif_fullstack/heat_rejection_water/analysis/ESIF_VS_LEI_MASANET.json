@@ -1,0 +1,36 @@
+{
+  "ESIF_MEASURED_OR_SOURCE_DERIVED": {
+    "WUE": 0.7,
+    "PUE": 1.034,
+    "WUE_cf_reuse": 1.27,
+    "WUE_cf_tower": 1.42
+  },
+  "LEI_MASANET_MODELED_SCENARIO_primary": {
+    "tech_id": "LIQ_DRY_AD",
+    "Cooling system": "IT Liquid cooling: dry cooler with adiabatic assist (air-cooled chiller)",
+    "Climate Zone": "5B",
+    "PUE_p05": 1.054486905,
+    "PUE_p95": 1.14249678,
+    "WUE_site_p05": 0.1441899806261062,
+    "WUE_site_p95": 0.2593732252717018,
+    "evidence_status": "SOURCE_MODEL_SCENARIO_SAME_LINEAGE"
+  },
+  "LEI_MASANET_MODELED_SCENARIO_contrast_tower": {
+    "tech_id": "WE_WCC",
+    "Cooling system": "Waterside economizer (water-cooled chiller)",
+    "Climate Zone": "5B",
+    "PUE_p05": 1.065990415,
+    "PUE_p95": 1.161221775,
+    "WUE_site_p05": 1.874289029836655,
+    "WUE_site_p95": 2.5514143347740177,
+    "evidence_status": "SOURCE_MODEL_SCENARIO_SAME_LINEAGE"
+  },
+  "architecture_match": "PARTIAL",
+  "lineage": "Lei scenarios are the same Lei-Masanet modeled lineage; agreement is NOT independent validation of that lineage",
+  "direction_of_technology_effect": "ESIF source: adding dry TSC after reuse reduces engineering-counterfactual WUE 1.27 \u2192 0.70. Lei LIQ_DRY_AD in 5B has low WUE relative to WE_WCC in 5B (dry vs evaporative-tower water). Direction (dry rejection uses less site water than open-tower evaporation) is consistent. Magnitudes are not comparable as the same object.",
+  "PUE_WUE_tradeoff": "ESIF: TSC saved water without reported PUE degradation (PUE 1.034). Lei dry-liquid PUE also low; not a calibrated match.",
+  "weather_dependence": "ESIF documents cold-season TSC dominance; Lei hourly simulator for liquid cases is not in the public bank used here.",
+  "dry_vs_evaporative_routing": "ESIF has explicit series routing reuse\u2192dry TSC\u2192wet tower. Lei closest case does not encode that series hierarchy.",
+  "no_retuning": true,
+  "esif_results_unchanged_after_comparison": true
+}

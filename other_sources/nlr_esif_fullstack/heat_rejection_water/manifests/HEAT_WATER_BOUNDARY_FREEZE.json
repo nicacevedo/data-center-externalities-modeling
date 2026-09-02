@@ -1,0 +1,44 @@
+{
+  "thermal_hierarchy": [
+    "Q_IT",
+    "Q_reuse",
+    "Q_TSC",
+    "Q_tower"
+  ],
+  "routing": "Q_IT \u2192 Q_reuse; remaining \u2192 Q_TSC when temperatures permit; remaining \u2192 Q_tower",
+  "closure": "Q_IT \u2248 Q_reuse + Q_TSC + Q_tower subject to storage, uncertainty, unmeasured terms; equality NOT forced",
+  "first_year_shares": {
+    "reuse": 0.105,
+    "TSC": 0.425,
+    "tower": 0.47,
+    "sum": 1.0,
+    "evidence_class": "MEASUREMENT_DERIVED"
+  },
+  "water_canonical_name": "W_ESIF_reported_cooling",
+  "water_definition": "Meter 1 + Meter 2 + estimated sand-filter blowdown",
+  "water_boundary_tags": [
+    "CONDITIONING_SITE_WATER",
+    "TOWER_MAKEUP"
+  ],
+  "includes": [
+    "city water to softeners/sumps",
+    "softener regeneration via Meter 2",
+    "estimated sand-filter blowdown"
+  ],
+  "excludes": [
+    "MAU humidification (unmetered)",
+    "WUESOURCE / power-plant water",
+    "groundwater",
+    "Prineville/Meta water"
+  ],
+  "not_automatically": [
+    "WITHDRAWAL source split",
+    "CONSUMPTION vs RETURN_FLOW beyond sewer discharge of regen/blowdown",
+    "total facility water"
+  ],
+  "WUE_definition": "Green Grid site WUE using W_ESIF_reported_cooling / E_IT; MAU excluded so not complete Green Grid humidification-inclusive WUE",
+  "electrical_not_thermal": [
+    "hvac_kw",
+    "cooling_kw"
+  ]
+}

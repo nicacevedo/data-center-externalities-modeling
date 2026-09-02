@@ -1,0 +1,54 @@
+{
+  "purpose": "Freeze starting state for ESIF heat-rejection \u2192 conditioning-water / WUE experiment. Does not modify closed electrical layers.",
+  "public_baseline_commit_requested": "92eeec4b064563915a8eb28d097995b54f586094",
+  "git": {
+    "branch": "main",
+    "HEAD": "92eeec4b064563915a8eb28d097995b54f586094",
+    "status": "m Data-center-PUE-prediction-tool"
+  },
+  "facility_overhead": {
+    "FACILITY_OVERHEAD_FINAL_DISPOSITION": "PARTIAL",
+    "READY_FOR_HEAT_REJECTION_WATER_WUE": "PASS_WITH_BOUNDARY_RESTRICTIONS",
+    "layer_freeze_sha256": "bac8f706fa407f89a21ccbb73e2675cfed9b5bbc5443f43aea8572157e5c67e5",
+    "canonical_status_sha256": "ae7c50a0a5ab4c6ecd52f0fe55607ca423295458755226515ee5c46e2c3542d2",
+    "read_only": true
+  },
+  "cpu": {
+    "sha256": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9",
+    "freeze_sha256": "dcbd066b26b8e7d2800e40a23a1cb8250502bfe59563fe06318cb1be1cc4fd27",
+    "read_only": true,
+    "refit": false
+  },
+  "h100": {
+    "sha256": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076",
+    "read_only": true,
+    "refit": false
+  },
+  "esif_raw": {
+    "power_sha256": "19cd12405dde9144b1a360e8c8418666c399a3d0d15a7f846880d71ab22f9dd4",
+    "weather_sha256": "97b424993fa77a15117fb2c4659a2c327fc83280f943fab47d9036260289a6a0",
+    "readme_sha256": "f69d32f1af598c48a899d54d48b26def2ca78a0c11d848516169570ecae4c029",
+    "power_bytes": 109685321,
+    "weather_bytes": 58865468
+  },
+  "cannot_modify": [
+    "CPU",
+    "H100",
+    "IT-power",
+    "facility-overhead",
+    "Prineville",
+    "Meta"
+  ],
+  "constraints": {
+    "no_hvac_kw_as_heat_rejection": true,
+    "no_cooling_kw_as_heat_rejection": true,
+    "no_2024_hvac_as_water_predictor": true,
+    "no_kestrel_replay_as_IT": true,
+    "no_prineville_water": true,
+    "no_meta_water": true,
+    "no_lei_to_select_esif_models": true,
+    "no_tdp_as_thermal_heat": true,
+    "no_assumed_hourly_water": true
+  },
+  "recorded_utc": "2026-09-02T14:19:32Z"
+}

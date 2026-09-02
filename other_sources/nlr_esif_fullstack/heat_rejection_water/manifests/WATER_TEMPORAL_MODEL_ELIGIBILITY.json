@@ -1,0 +1,11 @@
+{
+  "WATER_TEMPORAL_RESOLUTION": "STRUCTURAL_ACCOUNTING_ONLY",
+  "rationale": "Public water evidence is annual WUE/volume plus a monthly bar figure without a numeric table. Meters were read manually. No hourly or daily independent water observations are public. High-resolution IT/weather must not upgrade water resolution.",
+  "HOURLY_SUPPORTED": false,
+  "DAILY_SUPPORTED": false,
+  "MONTHLY_SUPPORTED": false,
+  "STRUCTURAL_ACCOUNTING_ONLY": true,
+  "figure_digitization_performed": false,
+  "figure_digitization_reason_skipped": "No table exists; digitizing Fig 4 would not create independent monthly targets and would invite false precision. Seasonal mechanism is taken from source prose.",
+  "fit_finer_than_gate": false
+}

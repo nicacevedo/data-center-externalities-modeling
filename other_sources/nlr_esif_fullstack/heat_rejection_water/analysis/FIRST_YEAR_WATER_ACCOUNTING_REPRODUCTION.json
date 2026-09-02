@@ -1,0 +1,117 @@
+{
+  "FIRST_YEAR_ACCOUNTING_REPRODUCTION": "PASS",
+  "E_IT_kWh": 7776000.0,
+  "W_obs_m3_from_WUE": 5443.2,
+  "W_cf_reuse_m3": 9875.52,
+  "W_cf_tower_m3": 11041.92,
+  "delta_TSC_m3_from_WUE": 4432.320000000001,
+  "delta_reuse_m3_from_WUE": 1166.3999999999996,
+  "PUE_from_stated_energies": 1.0336291152263375,
+  "predeclared_water_tolerance_m3": 50.0,
+  "rows": [
+    {
+      "item": "period",
+      "source": "2016-09-01 through 2017-08-31",
+      "independent": "same",
+      "status": "PASS"
+    },
+    {
+      "item": "mean_IT_kW",
+      "source": 888.0,
+      "independent": 888.0,
+      "status": "PASS"
+    },
+    {
+      "item": "IT_energy_MWh",
+      "source": 7776.0,
+      "independent": 7778.88,
+      "delta": -2.880000000000109,
+      "note": "888 kW \u00d7 8760 h = 7778.88 MWh; 2.88 MWh (0.037%) vs stated 7776",
+      "status": "PASS"
+    },
+    {
+      "item": "PUE",
+      "source": 1.034,
+      "independent": 1.033629,
+      "note": "8,037,500 / 7,776,000 = 1.03356; matches 1.034 to reported precision",
+      "status": "PASS"
+    },
+    {
+      "item": "WUE_obs_L_per_kWh",
+      "source": 0.7,
+      "independent": 0.7,
+      "evidence_class": "MEASUREMENT_DERIVED",
+      "status": "PASS"
+    },
+    {
+      "item": "W_obs_from_WUE_m3",
+      "source": "not printed as m3; implied",
+      "independent": 5443.2,
+      "status": "PASS"
+    },
+    {
+      "item": "WUE_cf_reuse_L_per_kWh",
+      "source": 1.27,
+      "evidence_class": "MODELED_COUNTERFACTUAL",
+      "status": "PASS"
+    },
+    {
+      "item": "WUE_cf_tower_L_per_kWh",
+      "source": 1.42,
+      "evidence_class": "MODELED_COUNTERFACTUAL",
+      "status": "PASS"
+    },
+    {
+      "item": "W_cf_reuse_m3",
+      "independent": 9875.52,
+      "evidence_class": "MODELED_COUNTERFACTUAL"
+    },
+    {
+      "item": "W_cf_tower_m3",
+      "independent": 11041.92,
+      "evidence_class": "MODELED_COUNTERFACTUAL"
+    },
+    {
+      "item": "TSC_savings_m3",
+      "source": 4400.0,
+      "independent": 4432.320000000001,
+      "delta": 32.32000000000062,
+      "note": "0.57 L/kWh \u00d7 7776 MWh = 4432.3 m3 vs 4400; 2-decimal WUE rounding",
+      "status": "PASS"
+    },
+    {
+      "item": "TSC_savings_gal_million",
+      "source": 1.16,
+      "independent": 1.1623570303751998,
+      "status": "PASS"
+    },
+    {
+      "item": "savings_24mo_m3",
+      "source": 7950.0,
+      "independent": "not independently reconstructable without year-2 water",
+      "status": "PARTIAL"
+    },
+    {
+      "item": "savings_24mo_gal_million",
+      "source": 2.1,
+      "independent": 2.1001678162461,
+      "status": "PASS"
+    },
+    {
+      "item": "reuse_delta_L_per_kWh",
+      "independent": 0.1499999999999999,
+      "evidence_class": "MODELED_COUNTERFACTUAL"
+    },
+    {
+      "item": "TSC_delta_L_per_kWh",
+      "independent": 0.5700000000000001,
+      "evidence_class": "MODELED_COUNTERFACTUAL"
+    },
+    {
+      "item": "reuse_savings_m3",
+      "independent": 1166.3999999999996,
+      "evidence_class": "MODELED_COUNTERFACTUAL"
+    }
+  ],
+  "stop_before_modeling_if_fail": false
+}

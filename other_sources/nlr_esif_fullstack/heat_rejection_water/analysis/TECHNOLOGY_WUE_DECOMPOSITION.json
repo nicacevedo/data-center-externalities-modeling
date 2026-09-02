@@ -1,0 +1,37 @@
+{
+  "scenarios": [
+    {
+      "id": "A_tower_only",
+      "architecture": "evaporative cooling towers only",
+      "WUE_L_per_kWh": 1.42,
+      "implied_water_m3": 11041.92,
+      "evidence_class": "MODELED_COUNTERFACTUAL",
+      "observed_or_counterfactual": "counterfactual",
+      "reduction_vs_previous": null
+    },
+    {
+      "id": "B_reuse_plus_tower",
+      "architecture": "building heat reuse + towers",
+      "WUE_L_per_kWh": 1.27,
+      "implied_water_m3": 9875.52,
+      "evidence_class": "MODELED_COUNTERFACTUAL",
+      "observed_or_counterfactual": "counterfactual",
+      "delta_reuse_L_per_kWh": 0.15,
+      "delta_reuse_m3": 1166.3999999999996,
+      "language": "source-engineering counterfactual technology effect"
+    },
+    {
+      "id": "C_reuse_TSC_tower",
+      "architecture": "reuse + TSC + towers (as operated)",
+      "WUE_L_per_kWh": 0.7,
+      "implied_water_m3": 5443.2,
+      "evidence_class": "MEASUREMENT_DERIVED",
+      "observed_or_counterfactual": "observed/source-derived",
+      "delta_TSC_L_per_kWh": 0.57,
+      "delta_TSC_m3_from_WUE_identity": 4432.320000000001,
+      "delta_TSC_m3_source_stated": 4400.0,
+      "language": "source-engineering counterfactual technology effect vs B; not a randomized treatment effect"
+    }
+  ],
+  "never_call_counterfactual_a_measured_treatment_effect": true
+}

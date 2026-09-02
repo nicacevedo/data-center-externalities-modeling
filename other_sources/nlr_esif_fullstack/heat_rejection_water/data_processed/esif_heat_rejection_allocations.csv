@@ -1,0 +1,2 @@
+period,Q_IT_basis,E_IT_kWh,share_reuse,share_TSC,share_tower,evidence_class,source,Tdb,do_not_expand_to_hourly
+2016-09-01/2017-08-31,IT electrical energy as heat-source proxy only; not a calorimeter closure,7776000.0,0.105,0.425,0.47,MEASUREMENT_DERIVED,Sickinger Fig 4 pie / §2.2,annual; see weather mechanism monthly,True

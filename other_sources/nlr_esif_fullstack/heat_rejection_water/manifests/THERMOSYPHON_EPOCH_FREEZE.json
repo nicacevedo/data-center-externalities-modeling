@@ -1,0 +1,10 @@
+{
+  "common_electrical_weather_start": "2016-06-12",
+  "pre_tsc_available": "2016-06-12 through 2016-07-31",
+  "commissioning_transition": "2016-08",
+  "sickinger_figure3_operational_date": "2016-08-16",
+  "use_2016_08_16_as_fitted_breakpoint": false,
+  "first_full_operating_year": "2016-09-01 through 2017-08-31",
+  "copied_from_facility_overhead": true,
+  "new_intervention_date_not_estimated": true
+}

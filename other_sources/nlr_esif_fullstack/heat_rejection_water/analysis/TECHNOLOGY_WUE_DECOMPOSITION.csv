@@ -1,0 +1,4 @@
+id,architecture,WUE_L_per_kWh,implied_water_m3,evidence_class,observed_or_counterfactual,reduction_vs_previous,delta_reuse_L_per_kWh,delta_reuse_m3,language,delta_TSC_L_per_kWh,delta_TSC_m3_from_WUE_identity,delta_TSC_m3_source_stated
+A_tower_only,evaporative cooling towers only,1.42,11041.92,MODELED_COUNTERFACTUAL,counterfactual,,,,,,,
+B_reuse_plus_tower,building heat reuse + towers,1.27,9875.52,MODELED_COUNTERFACTUAL,counterfactual,,0.15,1166.3999999999996,source-engineering counterfactual technology effect,,,
+C_reuse_TSC_tower,reuse + TSC + towers (as operated),0.7,5443.2,MEASUREMENT_DERIVED,observed/source-derived,,,,source-engineering counterfactual technology effect vs B; not a randomized treatment effect,0.57,4432.320000000001,4400.0

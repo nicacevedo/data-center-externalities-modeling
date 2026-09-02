@@ -1,0 +1,42 @@
+{
+  "frozen_before_lei_comparison": true,
+  "FIRST_YEAR_ACCOUNTING_REPRODUCTION": "PASS",
+  "WATER_TEMPORAL_RESOLUTION": "STRUCTURAL_ACCOUNTING_ONLY",
+  "WATER_MODEL_IDENTIFIABILITY": "NO_FITTED_MODEL_REQUIRED",
+  "WUE_obs": 0.7,
+  "WUE_cf_reuse": 1.27,
+  "WUE_cf_tower": 1.42,
+  "shares": {
+    "reuse": 0.105,
+    "TSC": 0.425,
+    "tower": 0.47
+  },
+  "water_boundary": "W_ESIF_reported_cooling",
+  "no_esif_result_may_change_based_on_lei": true,
+  "lei_mapping_architecture_only": {
+    "closest_primary": {
+      "tech_id": "LIQ_DRY_AD",
+      "climate": "5B",
+      "size": "Large-scale",
+      "liquid_cooling_type": "DIRECT_TO_CHIP_COLD_PLATE",
+      "reason": "closest Lei public case with IT liquid cooling and a dry heat-rejection device in climate 5B",
+      "mismatches": [
+        "Lei case includes adiabatic assist and air-cooled chiller; ESIF is chiller-less",
+        "Lei case has no building heat-reuse-first hierarchy",
+        "Lei case has no open evaporative cooling tower as remaining-heat sink",
+        "ESIF TSC is a refrigerant thermosyphon, not Lei adiabatic dry cooler"
+      ]
+    },
+    "contrast_evaporative_tower_water": {
+      "tech_id": "WE_WCC",
+      "climate": "5B",
+      "size": "Large-scale",
+      "reason": "closest Lei public large-scale 5B case that includes an evaporative cooling-tower water term",
+      "mismatches": [
+        "water-cooled chiller + waterside economizer; not ESIF liquid+reuse+TSC"
+      ]
+    },
+    "exact_esif_architecture_in_lei_bank": false,
+    "mapping_frozen_before_reading_PUE_WUE_outcomes": true
+  }
+}

@@ -1,0 +1,18 @@
+item,source,independent,status,delta,note,evidence_class
+period,2016-09-01 through 2017-08-31,same,PASS,,,
+mean_IT_kW,888.0,888.0,PASS,,,
+IT_energy_MWh,7776.0,7778.88,PASS,-2.880000000000109,888 kW × 8760 h = 7778.88 MWh; 2.88 MWh (0.037%) vs stated 7776,
+PUE,1.034,1.033629,PASS,,"8,037,500 / 7,776,000 = 1.03356; matches 1.034 to reported precision",
+WUE_obs_L_per_kWh,0.7,0.7,PASS,,,MEASUREMENT_DERIVED
+W_obs_from_WUE_m3,not printed as m3; implied,5443.2,PASS,,,
+WUE_cf_reuse_L_per_kWh,1.27,,PASS,,,MODELED_COUNTERFACTUAL
+WUE_cf_tower_L_per_kWh,1.42,,PASS,,,MODELED_COUNTERFACTUAL
+W_cf_reuse_m3,,9875.52,,,,MODELED_COUNTERFACTUAL
+W_cf_tower_m3,,11041.92,,,,MODELED_COUNTERFACTUAL
+TSC_savings_m3,4400.0,4432.320000000001,PASS,32.32000000000062,0.57 L/kWh × 7776 MWh = 4432.3 m3 vs 4400; 2-decimal WUE rounding,
+TSC_savings_gal_million,1.16,1.1623570303751998,PASS,,,
+savings_24mo_m3,7950.0,not independently reconstructable without year-2 water,PARTIAL,,,
+savings_24mo_gal_million,2.1,2.1001678162461,PASS,,,
+reuse_delta_L_per_kWh,,0.1499999999999999,,,,MODELED_COUNTERFACTUAL
+TSC_delta_L_per_kWh,,0.5700000000000001,,,,MODELED_COUNTERFACTUAL
+reuse_savings_m3,,1166.3999999999996,,,,MODELED_COUNTERFACTUAL

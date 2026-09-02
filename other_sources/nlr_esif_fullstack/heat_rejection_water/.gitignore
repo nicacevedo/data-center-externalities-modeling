@@ -1,0 +1,6 @@
+data_processed/*.parquet
+!data_processed/esif_heat_rejection_allocations.parquet
+sources/*.txt
+__pycache__/
+.pytest_cache/
+*.pyc

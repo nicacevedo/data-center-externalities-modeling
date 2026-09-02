@@ -1,0 +1,21 @@
+{
+  "not_one_global_CI": true,
+  "DIRECT_MEASUREMENT": {
+    "IT_energy_vs_mean_load": "2.88 MWh vs 7776 MWh (~0.04%)",
+    "manual_water_meters": "two entities; no published meter precision; digital meters recommended but not used for the paper"
+  },
+  "MEASUREMENT_DERIVED": {
+    "WUE_two_decimals": "0.70 L/kWh; implied water 5443 m3; 0.005 L/kWh \u2248 39 m3",
+    "PUE_three_decimals": "1.034 vs 1.03356 from stated energies",
+    "heat_shares": "published to 0.1 percentage point; origin is heat-sink instrumentation aggregated to a pie"
+  },
+  "FIGURE_DIGITIZATION": {
+    "performed": false,
+    "uncertainty": "n/a"
+  },
+  "ENGINEERING_COUNTERFACTUAL": {
+    "WUE_1.27_and_1.42": "source engineering/model; not sampling error",
+    "Carter_preinstall_3700_m3_vs_observed_implied_5443_m3": "model-vs-measured discrepancy; do not treat Carter projection as observation",
+    "4400_vs_4432_m3": "rounding, not a second measurement"
+  }
+}

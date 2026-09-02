@@ -1,0 +1,90 @@
+{
+  "search_order_exhausted": [
+    "official tabular supplementary data: NONE FOUND",
+    "official spreadsheets: NONE FOUND",
+    "companion data repository for water meters: NONE FOUND",
+    "code-generated tables: NONE FOUND",
+    "report tables: annual metrics in prose; no monthly water table",
+    "report figures: Fig 4 monthly water bars exist; not digitized (false precision avoided)"
+  ],
+  "resources": [
+    {
+      "source_id": "SICKINGER_72196",
+      "title": "Thermosyphon Cooler Hybrid System for Water Savings in an Energy-Efficient HPC Data Center: Results from 24 Months and the Impact on Water Usage Effectiveness",
+      "doi": "10.2172/1471661",
+      "publication_date": "2018-09",
+      "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/heat_rejection_water/sources/nrel_tp_2c00_72196.pdf",
+      "url": "https://www.osti.gov/biblio/1471661",
+      "bytes": 1030424,
+      "sha256": "c850d6b4bc344b244a6fd4e8351c7f0d1496b71e880bd29712b1c9e34b60da14",
+      "license": "DOE/NREL public technical report",
+      "embedded_supplemental_files": 0
+    },
+    {
+      "source_id": "CARTER_66690",
+      "title": "Thermosyphon Cooler Hybrid System for Water Savings in an Energy-Efficient HPC Data Center: Modeling and Installation: Preprint",
+      "doi": "10.2172/1343488",
+      "publication_date": "2017-01",
+      "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/heat_rejection_water/sources/nrel_cp_2c00_66690.pdf",
+      "url": "https://www.osti.gov/biblio/1343488",
+      "bytes": 1153125,
+      "sha256": "d99942a6fa141ae1bf970fd4eef679c6c04cfb1af89e6df2fdd72c14a38871c2",
+      "license": "DOE/NREL public preprint NREL/CP-2C00-66690",
+      "embedded_supplemental_files": 0
+    },
+    {
+      "source_id": "NLR_WUE_PAGE",
+      "title": "High-Performance Computing Data Center Water Usage Efficiency",
+      "doi": null,
+      "publication_date": "accessed-2026-09-02",
+      "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/heat_rejection_water/sources/nlr_reducing_water_usage.html",
+      "url": "https://www.nlr.gov/computational-science/reducing-water-usage",
+      "bytes": 28744,
+      "sha256": "6b76075caaafad29ef9a67eef0a615353fe882865d9b8cde962a727bba9ecac3",
+      "license": "NLR public web page",
+      "embedded_supplemental_files": null
+    },
+    {
+      "source_id": "ESIF_PUE_README",
+      "title": "NLR HPC Facility Power Usage Effectiveness (PUE) Data README",
+      "doi": "10.7799/3015212",
+      "publication_date": "catalog",
+      "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/data_raw/esif_pue/README.md",
+      "url": "https://data.nlr.gov/submissions/300",
+      "bytes": 1877,
+      "sha256": "f69d32f1af598c48a899d54d48b26def2ca78a0c11d848516169570ecae4c029",
+      "license": null,
+      "embedded_supplemental_files": null
+    },
+    {
+      "source_id": "ESIF_POWER_PARQUET",
+      "title": "ESIF DC Power Metrics Timeseries",
+      "doi": "10.7799/3015212",
+      "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/data_raw/esif_pue/esif.influx.buildingData.PUE.combined.parquet",
+      "bytes": 109685321,
+      "sha256": "19cd12405dde9144b1a360e8c8418666c399a3d0d15a7f846880d71ab22f9dd4",
+      "note": "Electricity only. Used only for independent IT-energy cross-check of Sickinger annual IT if needed; not as water. This experiment does not scan native-minute power for water modeling.",
+      "water_content": false
+    },
+    {
+      "source_id": "ESIF_WEATHER_PARQUET",
+      "title": "ESIF DC Outside Weather Station Timeseries",
+      "doi": "10.7799/3015212",
+      "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/data_raw/esif_pue/esif.influx.buildingData.outside.combined.parquet",
+      "bytes": 58865468,
+      "sha256": "97b424993fa77a15117fb2c4659a2c327fc83280f943fab47d9036260289a6a0",
+      "note": "Independent weather for documented-threshold hour fractions. Not a water series."
+    },
+    {
+      "source_id": "MURPHY_ESIF_HEATFLOW_GITHUB",
+      "title": "Data-Centre-Waste-Heat (1-min supply/return T and cooling power, ESIF)",
+      "url": "https://github.com/M-D-Murphy/Data-Centre-Waste-Heat",
+      "acquired": false,
+      "reason_not_acquired": "Not a Sickinger water-meter package. README describes 12-month 1-minute air/liquid cooling temperature and cooling-power (electrical/thermal loop), not tower makeup meters or WUE. Not used; would not upgrade water temporal eligibility."
+    },
+    {
+      "source_id": "OSTI_SUPPLEMENTAL_SEARCH",
+      "note": "OSTI 1471661 and 1343488 PDF packages contain 0 embedded files. No official spreadsheet/CSV water dump was listed alongside the technical reports."
+    }
+  ]
+}

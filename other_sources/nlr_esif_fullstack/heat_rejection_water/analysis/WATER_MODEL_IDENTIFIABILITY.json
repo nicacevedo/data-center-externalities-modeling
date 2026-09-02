@@ -1,0 +1,15 @@
+{
+  "n_independent_water_observations": "one annual WUE/volume for year 1; 24-month cumulative savings; no public meter time series",
+  "temporal_resolution": "STRUCTURAL_ACCOUNTING_ONLY",
+  "n_complete_seasonal_cycles_with_numeric_water": 0,
+  "Q_tower_independently_observed_or_derived": "annual share only (0.47); not a time series",
+  "weather_independently_observed_compatible_resolution": true,
+  "weather_does_not_create_water_target": true,
+  "COC_measured_or_annual_only": "annual 12.8",
+  "tower_blowdown": "sewer blowdown occurs; sand-filter blowdown estimated; not a published time series",
+  "enough_variation_for_OOT_validation": false,
+  "choice": "NO_FITTED_MODEL_REQUIRED",
+  "WATER_MODEL": "NOT_NEEDED",
+  "reason": "Fitting W0\u2013W2 would either recast the annual identity W=WUE*E_IT or train on digitized figure points. Structural/accounting validation is the correct endpoint.",
+  "successful_outcome_if_structural_only": true
+}

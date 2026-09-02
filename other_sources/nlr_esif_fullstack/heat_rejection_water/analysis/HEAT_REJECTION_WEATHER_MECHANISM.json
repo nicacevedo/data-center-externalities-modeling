@@ -1,0 +1,79 @@
+{
+  "question": "Does colder weather shift rejected heat from evaporative tower toward dry TSC?",
+  "threshold_source": "DOCUMENTED_CONTROL_RULE not estimated from outcomes",
+  "Tdb_threshold_C": 9.4,
+  "Tdb_threshold_F": 49.0,
+  "n_weather_samples_first_TSC_year": 458429,
+  "fraction_hours_Tdb_below_threshold": 0.3346843240719937,
+  "Carter_66690_stated_approx_50pct_year_below_threshold": 0.5,
+  "source_prose_Nov_Apr_TSC_rejected_most_heat": true,
+  "independent_weather_NovApr_mean_Tdb_C": 6.5012692245771175,
+  "independent_weather_MayOct_mean_Tdb_C": 19.234050699369988,
+  "NovApr_colder_than_MayOct": true,
+  "classification": "descriptive/structural validation",
+  "causality_overclaim": false,
+  "Q_TSC_share_vs_Tdb_numeric_series": "NOT_PUBLIC",
+  "monthly": [
+    {
+      "month": "2016-09",
+      "tdb_c": 18.612461020557376,
+      "source_TSC_expected_dominant": false
+    },
+    {
+      "month": "2016-10",
+      "tdb_c": 14.779089102789433,
+      "source_TSC_expected_dominant": false
+    },
+    {
+      "month": "2016-11",
+      "tdb_c": 8.801981856503353,
+      "source_TSC_expected_dominant": true
+    },
+    {
+      "month": "2016-12",
+      "tdb_c": 0.8233382596018475,
+      "source_TSC_expected_dominant": true
+    },
+    {
+      "month": "2017-01",
+      "tdb_c": 1.593365577003354,
+      "source_TSC_expected_dominant": true
+    },
+    {
+      "month": "2017-02",
+      "tdb_c": 7.092586387902344,
+      "source_TSC_expected_dominant": true
+    },
+    {
+      "month": "2017-03",
+      "tdb_c": 9.51723120552385,
+      "source_TSC_expected_dominant": true
+    },
+    {
+      "month": "2017-04",
+      "tdb_c": 11.179112060927958,
+      "source_TSC_expected_dominant": true
+    },
+    {
+      "month": "2017-05",
+      "tdb_c": 14.275264214114278,
+      "source_TSC_expected_dominant": false
+    },
+    {
+      "month": "2017-06",
+      "tdb_c": 21.77634091421463,
+      "source_TSC_expected_dominant": false
+    },
+    {
+      "month": "2017-07",
+      "tdb_c": 24.528048002141208,
+      "source_TSC_expected_dominant": false
+    },
+    {
+      "month": "2017-08",
+      "tdb_c": 21.433100942402998,
+      "source_TSC_expected_dominant": false
+    }
+  ],
+  "note": "Weather confirms the documented cold season exists; it does not independently measure Q_TSC(t)."
+}
