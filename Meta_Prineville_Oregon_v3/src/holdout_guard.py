@@ -40,7 +40,7 @@ def is_protected_path(path: Path, root: Path | None = None) -> bool:
 
 
 class HoldoutGuard:
-    """Wrap builtins.open so protected Meta-water files cannot be read."""
+    """Wrap common file readers so protected Meta-water files cannot be read."""
 
     def __init__(self, root: Path | None = None):
         self.root = (root or ROOT).resolve()
@@ -50,6 +50,9 @@ class HoldoutGuard:
         self._installed = False
         self._orig_open = None
         self._orig_io_open = None
+        self._pandas_patches: list[tuple[object, str, object]] = []
+        self._pyarrow_parquet = None
+        self._orig_pq_read_table = None
 
     def _check(self, file) -> None:
         if isinstance(file, (int, bytes)):
@@ -88,6 +91,38 @@ class HoldoutGuard:
 
         builtins.open = _guarded_open
         io.open = _guarded_io_open
+        try:
+            import pandas as pd
+
+            for name in ("read_csv", "read_parquet", "read_table", "read_fwf", "read_excel"):
+                if not hasattr(pd, name):
+                    continue
+                orig = getattr(pd, name)
+
+                def _make(o):
+                    def _guarded(filepath_or_buffer, *args, **kwargs):
+                        self._check(filepath_or_buffer)
+                        return o(filepath_or_buffer, *args, **kwargs)
+
+                    return _guarded
+
+                setattr(pd, name, _make(orig))
+                self._pandas_patches.append((pd, name, orig))
+        except Exception:
+            pass
+        try:
+            import pyarrow.parquet as pq
+
+            self._pyarrow_parquet = pq
+            self._orig_pq_read_table = pq.read_table
+
+            def _guarded_pq(source, *args, **kwargs):
+                self._check(source)
+                return self._orig_pq_read_table(source, *args, **kwargs)
+
+            pq.read_table = _guarded_pq
+        except Exception:
+            pass
         self._installed = True
 
     def uninstall(self) -> None:
@@ -96,6 +131,11 @@ class HoldoutGuard:
                 builtins.open = self._orig_open
             if self._orig_io_open is not None:
                 io.open = self._orig_io_open
+            for obj, name, orig in self._pandas_patches:
+                setattr(obj, name, orig)
+            self._pandas_patches = []
+            if self._pyarrow_parquet is not None and self._orig_pq_read_table is not None:
+                self._pyarrow_parquet.read_table = self._orig_pq_read_table
         self._installed = False
 
     def record(self) -> dict:

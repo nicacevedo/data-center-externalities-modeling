@@ -225,3 +225,14 @@ def assert_physically_valid_state(state: MoistAirState, *, rh_abs_max: float = 1
 
 def water_m3_h_from_delta_w(m_dry_air_kg_s: float, dw: float) -> float:
     return float(m_dry_air_kg_s) * float(max(dw, 0.0)) * 3600.0 / WATER_DENSITY_KG_M3
+
+
+def state_on_constant_enthalpy(entering: MoistAirState, t_out_c: float) -> MoistAirState:
+    """Ideal direct-evaporation state: h_supply ≈ h_entering; recover w from (h, T)."""
+    w_out = humidity_ratio_from_enthalpy_t(entering.h_J_per_kg_da, t_out_c)
+    w_out = max(float(w_out), float(entering.w))
+    return moist_air_state(float(t_out_c), w_out, entering.P_Pa)
+
+
+def humidity_ratio_saturation(t_c: float, p_pa: float) -> float:
+    return humidity_ratio_from_rh(t_c, 1.0, p_pa)

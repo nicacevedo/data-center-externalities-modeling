@@ -1,0 +1,63 @@
+{
+  "META_WATER_NOT_READ": true,
+  "NO_CANONICAL_PRODUCTION_OUTPUT_REGENERATED": true,
+  "NO_PARAMETER_FITTED": true,
+  "architecture_registry_sha256": "1f87a1846aa8254c758ab11e3bd9b6f639e6c64bc551c36bcf8201bd65e78604",
+  "baseline_commit": "99abd3563cb936ed0c244e5f5200993563f8f048",
+  "equations": {
+    "direct_evap": "h_supply\u2248h_entering; w_supply>=w_entering; T_supply<=T_entering; eps_T=(T_in-T_out)/(T_in-T_wb)",
+    "mixing": "w_m=x w_o+(1-x) w_r; h_m=x h_o+(1-x) h_r; T_m=T(h_m,w_m)"
+  },
+  "holdout": {
+    "access_attempts": [],
+    "accessed": false,
+    "holdout_status": "DIAGNOSTIC_PREVIOUSLY_EXPOSED",
+    "protected_files": [
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/data/canonical/meta_prineville_annual.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_annual_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_water_model.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/water_holdout_baseline_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/city_prineville/frozen_annual_water_validation_v1/water_holdout_baseline_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/result_claims.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/weather_ks39/canonical_conditional_annual_compare.csv"
+    ],
+    "structural_runner_imports_holdout_data_module": false
+  },
+  "model_api": {
+    "simulate_default": "canonical_legacy",
+    "simulate_legacy": "canonical alias",
+    "simulate_structural_reference_v0": "uncalibrated v0",
+    "simulate_structural_reference_v1": "explicit candidate"
+  },
+  "physics_all_pass": true,
+  "unresolved_campus": [
+    "PRN2",
+    "PRN3",
+    "PRN4",
+    "PRN5",
+    "PRN6",
+    "CCO1",
+    "CCO2",
+    "lambda_b"
+  ],
+  "unresolved_chw": [
+    "condenser",
+    "heat_rejection",
+    "served_load_share",
+    "quantitative_water"
+  ],
+  "v0_hashes": {
+    "architecture_registry": "1f87a1846aa8254c758ab11e3bd9b6f639e6c64bc551c36bcf8201bd65e78604",
+    "evidence_freeze": "e0586ba7b8d41fecb32b60bf86c0f3efdc88243e821f7646771c90965fbcd56c",
+    "graybox_at_v0": "f9a83f5276e71f2afc8c6a773bda9f1d1d5a5a05d84d821c6b767a66d1c2efdb",
+    "structural_freeze": "a0bdd12561064c6156dbdc3b4a48cff2057096b71188a65243b800de1eb002c1"
+  },
+  "v1_hashes": {
+    "control_contract": "b320525efd2af8b553bbc933b6740605a2ddcecffca84677b8ba0ae4df316e4e",
+    "holdout_guard.py": "8de1e5f4d6ed93edae00085d43bdb38f7cd2c7f2a018aa2a7a09ab54957b31f3",
+    "prineville_graybox.py": "8275ca5bfc23042e3af19b72f2adb260304ac95d692d0b3ecbcb526b020f0609",
+    "prineville_psychrometrics.py": "c10e1487a00ce32023bf3b630f915b2fe9ba303917951ff5f5bcbec3a3aafd30",
+    "prineville_structural_v1.py": "f9649c489196cdc3e617f5b28574334aaaace5a94e7ade5ce461f6da22809a6a"
+  },
+  "water_output": "AIR_STREAM_EVAPORATED_WATER"
+}

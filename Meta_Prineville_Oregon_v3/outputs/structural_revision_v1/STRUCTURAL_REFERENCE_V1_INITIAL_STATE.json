@@ -1,0 +1,40 @@
+{
+  "HEAD": "99abd3563cb936ed0c244e5f5200993563f8f048",
+  "architecture_registry_sha256": "1f87a1846aa8254c758ab11e3bd9b6f639e6c64bc551c36bcf8201bd65e78604",
+  "branch": "main",
+  "captured_at_utc": "2026-09-02T16:49:08.258970+00:00",
+  "cpu_freeze": "dcbd066b26b8e7d2800e40a23a1cb8250502bfe59563fe06318cb1be1cc4fd27",
+  "cpu_status": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9",
+  "esif_fo_layer": "bac8f706fa407f89a21ccbb73e2675cfed9b5bbc5443f43aea8572157e5c67e5",
+  "esif_fo_status": "ae7c50a0a5ab4c6ecd52f0fe55607ca423295458755226515ee5c46e2c3542d2",
+  "esif_hw_result": "4e01139dd9365f62824ac00ff944468839e7873e47a5cea3df4714854af1b02c",
+  "esif_hw_status": "9cdd12920ae9d8eedeb2ee9251897b27b55d75ab8041be778660f63c1491e063",
+  "fail_closed_concurrent_impl": [
+    " M Meta_Prineville_Oregon_v3/src/prineville_graybox.py"
+  ],
+  "git_status": "M Data-center-PUE-prediction-tool\n M Meta_Prineville_Oregon_v3/src/holdout_guard.py\n M Meta_Prineville_Oregon_v3/src/prineville_graybox.py\n M Meta_Prineville_Oregon_v3/src/prineville_psychrometrics.py\n M Meta_Prineville_Oregon_v3/tests/test_structural_revision.py\n?? Meta_Prineville_Oregon_v3/scripts/run_structural_reference_v1.py\n?? Meta_Prineville_Oregon_v3/src/prineville_structural_v1.py\n?? Meta_Prineville_Oregon_v3/tests/test_structural_reference_v1.py",
+  "h100_freeze": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076",
+  "holdout": {
+    "access_attempts": [],
+    "accessed": false,
+    "holdout_status": "DIAGNOSTIC_PREVIOUSLY_EXPOSED",
+    "protected_files": [
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/data/canonical/meta_prineville_annual.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_annual_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_water_model.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/water_holdout_baseline_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/city_prineville/frozen_annual_water_validation_v1/water_holdout_baseline_compare.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/result_claims.csv",
+      "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/weather_ks39/canonical_conditional_annual_compare.csv"
+    ],
+    "structural_runner_imports_holdout_data_module": false
+  },
+  "public_baseline_requested": "99abd3563cb936ed0c244e5f5200993563f8f048",
+  "simulate_default": "canonical_legacy",
+  "submodule_status": "fatal: no submodule mapping found in .gitmodules for path 'Data-center-PUE-prediction-tool'",
+  "unrelated_dirty_submodule_only_expected": "Data-center-PUE-prediction-tool",
+  "v0_evidence_freeze_sha256": "e0586ba7b8d41fecb32b60bf86c0f3efdc88243e821f7646771c90965fbcd56c",
+  "v0_graybox_sha256_at_baseline": "f9a83f5276e71f2afc8c6a773bda9f1d1d5a5a05d84d821c6b767a66d1c2efdb",
+  "v0_outputs_not_overwritten": true,
+  "v0_structural_freeze_sha256": "a0bdd12561064c6156dbdc3b4a48cff2057096b71188a65243b800de1eb002c1"
+}

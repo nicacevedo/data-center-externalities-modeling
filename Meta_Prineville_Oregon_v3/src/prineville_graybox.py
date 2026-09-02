@@ -4,12 +4,17 @@ This is intentionally a scaffold, not a claimed digital twin. It provides the ac
 and air-side physics interfaces required once monthly/hourly validation data are acquired.
 It never fabricates an 'observed' hourly IT load.
 
-`simulate()` is the structural DIRECT_OUTSIDE_AIR_EVAP path (OCP DESIGN_SPEC control,
-moist-air mixing, humidification independent of sensible cooling). Electrical proxies
-remain provisional/scenario and are not architecture-audit validated.
+API / versioning (structural-reference-v1 pass):
 
-`simulate_legacy()` retains the pre-revision single 25 C / 100% OA rule for
-synthetic OLD-vs-NEW structural comparison only. It is not used to score Meta water.
+* `simulate()` defaults to the **canonical/legacy** frozen pre-structural model.
+  Downstream reconstruction must not silently pick up the uncalibrated candidate.
+* `simulate_legacy()` is the same canonical model (explicit alias).
+* `simulate_structural_reference_v0()` is the uncalibrated v0 structural path
+  (isothermal-by-default humidification) retained for synthetic comparison only.
+* `simulate_structural_reference_v1()` is the corrected adiabatic candidate.
+  calibration_status=NOT_CALIBRATED, validation_status=PHYSICS_ONLY.
+
+Do not promote v1 to production without a separate identification/validation pass.
 """
 from dataclasses import dataclass
 import numpy as np
@@ -167,16 +172,20 @@ def simulate_legacy(weather: pd.DataFrame, p_it_mw, params=Params()):
         'provenance':'scenario/fitted IT power + physics-derived facility outputs'
     })
     assert_finite_physical_outputs(out)
+    out = out.copy()
+    out["model_version"] = "canonical_legacy"
+    out["calibration_status"] = "NOT_REOPENED_THIS_PASS"
+    out["validation_status"] = "PRODUCTION_CANONICAL_UNCHANGED"
     return out
 
 
-def simulate(weather: pd.DataFrame, p_it_mw, params=Params()):
-    """Structural early-PRN1 DIRECT_OUTSIDE_AIR_EVAP simulation.
+def simulate_canonical(weather: pd.DataFrame, p_it_mw, params=Params()):
+    """Canonical frozen gray-box (pre-structural 25 C / 100% OA rule)."""
+    return simulate_legacy(weather, p_it_mw, params)
 
-    Primary water output is CONDITIONING_SITE_WATER. The empirical mapping from
-    conditioning water to Meta annual WITHDRAWAL is a separate accounting layer and
-    is not applied here. No parameter is fitted to Meta water.
-    """
+
+def simulate_structural_reference_v0(weather: pd.DataFrame, p_it_mw, params=Params()):
+    """Uncalibrated structural-reference-v0 (synthetic comparison only)."""
     from prineville_structural import StructuralParams, simulate_building
 
     sp = StructuralParams(
@@ -189,4 +198,53 @@ def simulate(weather: pd.DataFrame, p_it_mw, params=Params()):
         evap_aux_fraction_of_it=getattr(params, "evap_aux_fraction_of_it", 0.005),
         airflow_method=getattr(params, "airflow_method", "sensible_heat_balance"),
     )
-    return simulate_building(weather, p_it_mw, sp)
+    out = simulate_building(weather, p_it_mw, sp)
+    out = out.copy()
+    out["model_version"] = "structural_reference_v0"
+    out["calibration_status"] = "NOT_CALIBRATED"
+    out["validation_status"] = "STRUCTURAL_BEHAVIOR_ONLY"
+    return out
+
+
+def simulate_structural_reference_v1(weather: pd.DataFrame, p_it_mw, params=Params(), **kwargs):
+    """Corrected adiabatic structural candidate. Not the default simulate() path."""
+    from prineville_structural_v1 import (
+        StructuralV1Params,
+        simulate_structural_reference_v1 as _v1,
+    )
+
+    sp = StructuralV1Params(
+        evap_thermal_effectiveness=getattr(params, "evap_thermal_effectiveness", params.evap_effectiveness),
+        server_deltaT_C=params.server_deltaT_C,
+        dry_air_cp_J_kgK=params.dry_air_cp_J_kgK,
+        fan_fraction_of_it=params.fan_fraction_of_it,
+        other_facility_fraction_of_it=params.other_facility_fraction_of_it,
+        evap_aux_fraction_of_it=getattr(params, "evap_aux_fraction_of_it", 0.005),
+        airflow_method=getattr(params, "airflow_method", "sensible_heat_balance"),
+    )
+    return _v1(weather, p_it_mw, sp, **kwargs)
+
+
+def simulate(weather: pd.DataFrame, p_it_mw, params=Params(), *, model_version: str = "canonical"):
+    """Dispatch. Default is the canonical/legacy frozen model, not structural-reference-v1.
+
+    model_version:
+      canonical | legacy | canonical_legacy — frozen pre-structural gray-box
+      structural_reference_v0 | v0 — uncalibrated v0 structural path
+      structural_reference_v1 | v1 — requires explicit kwargs (return_air); not a silent default
+    """
+    mv = (model_version or "canonical").lower()
+    if mv in ("canonical", "legacy", "canonical_legacy", "canonical_legacy_v0_pre_structural"):
+        return simulate_canonical(weather, p_it_mw, params)
+    if mv in ("structural_reference_v0", "v0"):
+        return simulate_structural_reference_v0(weather, p_it_mw, params)
+    if mv in ("structural_reference_v1", "v1"):
+        raise TypeError(
+            "simulate(..., model_version='structural_reference_v1') is not a silent default. "
+            "Call simulate_structural_reference_v1(..., return_air=ReturnAirSpec(...)) explicitly. "
+            "v1 is NOT_CALIBRATED / PHYSICS_ONLY and must not replace canonical production results."
+        )
+    raise ValueError(
+        f"Unknown model_version={model_version!r}. "
+        "Use canonical (default), structural_reference_v0, or simulate_structural_reference_v1()."
+    )

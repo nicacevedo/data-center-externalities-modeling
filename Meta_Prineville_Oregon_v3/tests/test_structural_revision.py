@@ -23,7 +23,12 @@ from prineville_architecture import (  # noqa: E402
     load_architecture_registry,
     validate_load_shares,
 )
-from prineville_graybox import Params, simulate, simulate_legacy  # noqa: E402
+from prineville_graybox import (  # noqa: E402
+    Params,
+    simulate,
+    simulate_legacy,
+    simulate_structural_reference_v0,
+)
 from prineville_ocp_controller import classify_ocp_region, ocp_reference_controller  # noqa: E402
 from prineville_psychrometrics import (  # noqa: E402
     assert_physically_valid_state,
@@ -86,7 +91,8 @@ def test_holdout_guard_blocks_protected_files_and_synthetic_simulate_still_works
         with pytest.raises(HoldoutAccessError):
             protected.open("r")
         out = simulate(_weather(0.0, 20.0, -5.0), 10.0)
-        assert float(out.water_conditioning_total_m3_h.iloc[0]) >= 0
+        assert float(out.evap_water_m3_per_h.iloc[0]) >= 0
+        assert str(out.model_version.iloc[0]) == "canonical_legacy"
     assert guard.accessed is True
     assert guard.access_attempts
 
@@ -133,7 +139,7 @@ def test_moist_air_mixing_conserves_w_and_h():
 
 def test_cold_dry_humidification_independent_of_sensible_cooling():
     w = _weather(0.0, 18.0, -6.0)
-    new = simulate(w, 10.0)
+    new = simulate_structural_reference_v0(w, 10.0)
     old = simulate_legacy(w, 10.0)
     assert float(new.water_humidification_m3_h.iloc[0]) > 0
     assert float(new.water_conditioning_total_m3_h.iloc[0]) > 0
@@ -145,11 +151,11 @@ def test_cold_dry_humidification_independent_of_sensible_cooling():
 
 
 def test_dry_free_and_hot_dry_and_high_humidity_and_no_negative_water():
-    mild = simulate(_weather(22.0, 48.0, 14.0), 10.0)
+    mild = simulate_structural_reference_v0(_weather(22.0, 48.0, 14.0), 10.0)
     assert float(mild.water_conditioning_total_m3_h.iloc[0]) < 1e-6
-    hot = simulate(_weather(35.0, 12.0, 16.0), 10.0)
+    hot = simulate_structural_reference_v0(_weather(35.0, 12.0, 16.0), 10.0)
     assert float(hot.water_conditioning_total_m3_h.iloc[0]) > 0
-    humid = simulate(_weather(32.0, 78.0, 27.0), 10.0)
+    humid = simulate_structural_reference_v0(_weather(32.0, 78.0, 27.0), 10.0)
     assert float(humid.water_conditioning_total_m3_h.iloc[0]) >= 0
     oa = state_from_t_rh(32.0, 78.0, P, t_wb_c=27.0)
     assert classify_ocp_region(oa) in {"D", "E", "F", "G"}
@@ -166,7 +172,7 @@ def test_airflow_delta_t_explicit_not_fitted():
     assert prov == AIRFLOW_DT_PROVENANCE
     assert "GENERIC_PRIOR" in prov
     assert abs(float(m6[0]) / float(m12[0]) - 2.0) < 1e-9
-    out = simulate(_weather(35.0, 12.0, 16.0), 10.0)
+    out = simulate_structural_reference_v0(_weather(35.0, 12.0, 16.0), 10.0)
     assert str(out.airflow_parameter_provenance.iloc[0]) == AIRFLOW_DT_PROVENANCE
     text = (ROOT / "src" / "prineville_structural.py").read_text()
     assert "fit" not in text.lower() or "not fitted" in text.lower()
@@ -200,14 +206,11 @@ def test_campus_weights_and_unknown_shares():
 
 
 def test_conditioning_water_not_labeled_withdrawal():
-    out = simulate(_weather(0.0, 20.0, -5.0), 8.0)
+    out = simulate_structural_reference_v0(_weather(0.0, 20.0, -5.0), 8.0)
     assert str(out.water_boundary.iloc[0]) == "CONDITIONING_SITE_WATER"
     assert "withdrawal" not in str(out.water_boundary.iloc[0]).lower()
-    gb = (ROOT / "src" / "prineville_graybox.py").read_text()
-    assert "WITHDRAWAL is a separate accounting layer" in gb or "WITHDRAWAL" in gb
-    assert "p_evap_aux=0.005*pit*spray" in simulate_legacy.__wrapped__.__code__.co_filename if False else True
-    legacy = (ROOT / "src" / "prineville_graybox.py").read_text().replace(" ", "")
-    assert "p_evap_aux=0.005*pit*spray" in legacy
+    can = simulate(_weather(0.0, 20.0, -5.0), 8.0)
+    assert str(can.model_version.iloc[0]) == "canonical_legacy"
 
 
 def test_original_graybox_hash_is_recorded_not_silently_refit():

@@ -1,0 +1,16 @@
+class,item,status,notes
+A_STRUCTURE_KNOWN,early PRN1 DIRECT_OUTSIDE_AIR_EVAP,KNOWN,frozen architecture
+A_STRUCTURE_KNOWN,"OA/RA mixing form w,h",KNOWN,physics
+A_STRUCTURE_KNOWN,adiabatic direct-evap mass/energy,KNOWN,constant-h approximation
+A_STRUCTURE_KNOWN,OCP design regions A–H,KNOWN,DESIGN_SPEC
+B_DESIGN_SPEC,thresholds 52 F / 41.9 F DP / 65% RH / 65–80 F,DESIGN_SPEC,as-operated unidentified
+C_AS_OPERATED_UNKNOWN,OA damper trajectory,UNIDENTIFIED,not fitted
+C_AS_OPERATED_UNKNOWN,actual return T/RH,UNIDENTIFIED,explicit interface; scenario in tests
+C_AS_OPERATED_UNKNOWN,actual SAT targets over years,UNIDENTIFIED,
+D_PHYSICAL_PARAMETERS,airflow / ΔT 12 K,SCENARIO_ONLY,GENERIC_PRIOR_SCENARIO
+D_PHYSICAL_PARAMETERS,evap_thermal_effectiveness 0.85,SCENARIO_ONLY,NOT mist fraction
+D_PHYSICAL_PARAMETERS,mist-loop behavior,UNIDENTIFIED,
+E_WATER_SYSTEM,spray circulation / recapture / RO / makeup,UNIDENTIFIED,do not invert 0.85
+F_CAMPUS,"lambda_b, PRN2-6, CCO, CHW condenser",UNIDENTIFIED,fail closed
+G_ACCOUNTING,conditioning→withdrawal map,BOUNDARY_MAPPING,outside physics; not fit this pass
+PROHIBITION,one annual Meta residual identifying A–G together,FORBIDDEN,

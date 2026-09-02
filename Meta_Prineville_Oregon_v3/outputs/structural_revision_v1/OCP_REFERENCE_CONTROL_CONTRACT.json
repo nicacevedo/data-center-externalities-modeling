@@ -1,0 +1,316 @@
+{
+  "as_operated_status": "UNIDENTIFIED",
+  "available_early_prn1_actuators": [
+    "OA_RA_MIXING",
+    "DIRECT_EVAPORATIVE_WATER_ADDITION",
+    "SPRAY_BYPASS_ON_OFF",
+    "FAN_AIRFLOW_CONTROL"
+  ],
+  "corroborating_source": "Electronics Cooling 2012 Mulay (same eight regions; some threshold labels differ)",
+  "discrepancies_silently_reconciled": false,
+  "evidence_class": "DESIGN_SPEC",
+  "not_invented": [
+    "HEATER",
+    "MECHANICAL_REFRIGERATION",
+    "INDIRECT_EVAPORATIVE_COOLER",
+    "COOLING_TOWER",
+    "SPLC"
+  ],
+  "primary_source": "OCP_DC_V1_2011 Appendix A",
+  "regions": [
+    {
+      "RH": "not the primary A classifier",
+      "as_operated_status": "UNIDENTIFIED",
+      "dewpoint": "<41.9 F DP",
+      "documented_actuators": [
+        "OA_RA_MIXING",
+        "DIRECT_EVAPORATIVE_WATER_ADDITION",
+        "FAN_AIRFLOW_CONTROL"
+      ],
+      "dry_bulb": "<52 F DB (OCP). Electronics Cooling 2012 writes <11.1 C WB; 11.1 C = 52 F. DISCREPANCY PRESERVED; implementation uses OCP DB.",
+      "evidence_class": "DESIGN_SPEC",
+      "oa_fraction_rule": "mix OA/RA to 65 F SA",
+      "region": "A",
+      "return_air_mixing_rule": "economizer mixes OA/RA",
+      "source_discrepancy": "Simultaneous post-ECH SAT=18.3 C and humidification is not adiabatic; OCP 65 F is a mix target before ECH plus a 54 F floor.",
+      "source_text_location": "OCP Data Center v1.0 (7 Apr 2011) Appendix A Condition A",
+      "spray": "ON (humidification)",
+      "supply_humidity_target": "OCP: 42 F DP minimum. Electronics Cooling: humidify to SAT WB 12.2 C and DP 5.5 C.",
+      "supply_temperature_target": "OCP: mix to 65 F SA; also 54 F DB minimum. Electronics Cooling: target SAT 18.3 C.",
+      "unavailable_actuators": [
+        "HEATER",
+        "MECHANICAL_REFRIGERATION",
+        "IEC",
+        "COOLING_TOWER",
+        "SPLC"
+      ]
+    },
+    {
+      "RH": "not the primary B classifier",
+      "as_operated_status": "UNIDENTIFIED",
+      "dewpoint": "<41.9 F DP",
+      "documented_actuators": [
+        "DIRECT_EVAPORATIVE_WATER_ADDITION",
+        "FAN_AIRFLOW_CONTROL"
+      ],
+      "dry_bulb": ">52 F DB (OCP)",
+      "evidence_class": "DESIGN_SPEC",
+      "oa_fraction_rule": "100% OA; RA dampers closed",
+      "region": "B",
+      "return_air_mixing_rule": "no mix",
+      "source_discrepancy": "SAT min 65 F at 100% OA cannot be met without heat if OA is between 52 F and 65 F.",
+      "source_text_location": "OCP Appendix A Condition B",
+      "spray": "ON (humidify and/or cool)",
+      "supply_humidity_target": "OCP 43 F DP; Electronics Cooling DP 5.5 C",
+      "supply_temperature_target": "65\u201380 F band (OCP); Electronics Cooling 18.3\u201326.6 C",
+      "unavailable_actuators": [
+        "HEATER"
+      ]
+    },
+    {
+      "RH": "<65% RH",
+      "as_operated_status": "UNIDENTIFIED",
+      "dewpoint": ">41.9 F and <59 F DP",
+      "documented_actuators": [
+        "FAN_AIRFLOW_CONTROL",
+        "SPRAY_BYPASS_ON_OFF"
+      ],
+      "dry_bulb": ">65 F and <80 F DB after fan-heat language",
+      "evidence_class": "DESIGN_SPEC",
+      "oa_fraction_rule": "100% OA",
+      "region": "C",
+      "return_air_mixing_rule": "no mix",
+      "source_discrepancy": null,
+      "source_text_location": "OCP Appendix A Condition C",
+      "spray": "OFF",
+      "supply_humidity_target": "as-is",
+      "supply_temperature_target": "as-is (already in envelope)",
+      "unavailable_actuators": []
+    },
+    {
+      "RH": "WB < 65.76 F",
+      "as_operated_status": "UNIDENTIFIED",
+      "dewpoint": ">41.9 F DP",
+      "documented_actuators": [
+        "DIRECT_EVAPORATIVE_WATER_ADDITION",
+        "FAN_AIRFLOW_CONTROL"
+      ],
+      "dry_bulb": ">80 F DB (-fan heat)",
+      "evidence_class": "DESIGN_SPEC",
+      "oa_fraction_rule": "100% OA",
+      "region": "D",
+      "return_air_mixing_rule": "no mix",
+      "source_discrepancy": null,
+      "source_text_location": "OCP Appendix A Condition D",
+      "spray": "ON (cooling)",
+      "supply_humidity_target": "DP float 42\u201359 F",
+      "supply_temperature_target": "80 F DB",
+      "unavailable_actuators": [
+        "MECHANICAL_REFRIGERATION",
+        "IEC"
+      ]
+    },
+    {
+      "RH": "WB > 65.76 F",
+      "as_operated_status": "UNIDENTIFIED",
+      "dewpoint": ">41.9 F DP",
+      "documented_actuators": [
+        "DIRECT_EVAPORATIVE_WATER_ADDITION",
+        "FAN_AIRFLOW_CONTROL"
+      ],
+      "dry_bulb": ">80 F DB (-fan heat)",
+      "evidence_class": "DESIGN_SPEC",
+      "oa_fraction_rule": "100% OA",
+      "region": "E",
+      "return_air_mixing_rule": "no mix",
+      "source_discrepancy": "Appendix B IEC is specified as an option for E/H and was not installed at Prineville.",
+      "source_text_location": "OCP Appendix A Condition E",
+      "spray": "ON (limited cooling)",
+      "supply_humidity_target": "DP above 59 F",
+      "supply_temperature_target": "80 F DB (may be unreachable)",
+      "unavailable_actuators": [
+        "IEC (capability not installed)",
+        "COOLING_TOWER"
+      ]
+    },
+    {
+      "RH": "WB > 70.3 F",
+      "as_operated_status": "UNIDENTIFIED",
+      "dewpoint": ">59 F DP",
+      "documented_actuators": [
+        "OA_RA_MIXING",
+        "SPRAY_BYPASS_ON_OFF",
+        "FAN_AIRFLOW_CONTROL"
+      ],
+      "dry_bulb": "<80 F DB (-fan heat)",
+      "evidence_class": "DESIGN_SPEC",
+      "oa_fraction_rule": "mix OA/RA to cap RH 65%",
+      "region": "F",
+      "return_air_mixing_rule": "mix",
+      "source_discrepancy": null,
+      "source_text_location": "OCP Appendix A Condition F",
+      "spray": "BYPASSED",
+      "supply_humidity_target": "room DP >59 F; no humidification",
+      "supply_temperature_target": "65\u201380 F; RH override",
+      "unavailable_actuators": [
+        "HEATER",
+        "MECHANICAL_REFRIGERATION"
+      ]
+    },
+    {
+      "RH": ">65% RH in the first clause",
+      "as_operated_status": "UNIDENTIFIED",
+      "dewpoint": "<59 F DP in the documented clauses",
+      "documented_actuators": [
+        "OA_RA_MIXING",
+        "SPRAY_BYPASS_ON_OFF",
+        "FAN_AIRFLOW_CONTROL"
+      ],
+      "dry_bulb": "OCP: (>65 F and <59 F DP and >65% RH) OR (<65 F and >41.9 F DP and <59 F DP)",
+      "evidence_class": "DESIGN_SPEC",
+      "oa_fraction_rule": "mix OA/RA",
+      "region": "G",
+      "return_air_mixing_rule": "mix",
+      "source_discrepancy": "OCP vs Electronics Cooling Region G boolean grouping is not identical; both bypass spray.",
+      "source_text_location": "OCP Appendix A Condition G; Electronics Cooling Region G wording differs slightly",
+      "spray": "BYPASSED",
+      "supply_humidity_target": "no spray",
+      "supply_temperature_target": "65 F minimum or 65% RH maximum",
+      "unavailable_actuators": [
+        "HEATER"
+      ]
+    },
+    {
+      "RH": "n/a",
+      "as_operated_status": "UNIDENTIFIED",
+      "dewpoint": "n/a",
+      "documented_actuators": [
+        "OA_RA_MIXING",
+        "DIRECT_EVAPORATIVE_WATER_ADDITION",
+        "FAN_AIRFLOW_CONTROL"
+      ],
+      "dry_bulb": "not a weather bin; smoke/dust",
+      "evidence_class": "DESIGN_SPEC",
+      "oa_fraction_rule": "minimum OA / recirculation",
+      "region": "H",
+      "return_air_mixing_rule": "recirculation",
+      "source_discrepancy": null,
+      "source_text_location": "OCP Appendix A Condition H",
+      "spray": "may be ON",
+      "supply_humidity_target": "ECH may run; IEC provision in Appendix B not installed",
+      "supply_temperature_target": "not a normal economizer target",
+      "unavailable_actuators": [
+        "IEC_NOT_INSTALLED"
+      ]
+    }
+  ],
+  "thresholds": {
+    "FAN_HEAT_CLEAN_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "note": "Used only to interpret '(-fan heat)' region boundaries. Not fitted.",
+      "si_C": 0.344444444444443,
+      "source": "OCP_DC_V1_2011 Appendix A note (clean filters, direct systems in bypass)",
+      "units": "degF",
+      "value": 0.62
+    },
+    "RH_MAX": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": null,
+      "source": "OCP_DC_V1_2011 \u00a75.1.1 and Appendix A Conditions C/F/G",
+      "units": "1",
+      "value": 0.65
+    },
+    "T_DB_A_B_SPLIT_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "note": "OCP uses dry-bulb. Electronics Cooling 2012 labels 11.1 C as WB; 11.1 C = 52 F. Implementation follows OCP DB.",
+      "si_C": 11.11111111111111,
+      "source": "OCP_DC_V1_2011 Appendix A Condition A/B",
+      "units": "degF",
+      "value": 52.0
+    },
+    "T_DP_B_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 6.111111111111111,
+      "source": "OCP_DC_V1_2011 Appendix A Condition B (43 F DP)",
+      "units": "degF",
+      "value": 43.0
+    },
+    "T_DP_MID_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 15.0,
+      "source": "OCP_DC_V1_2011 Appendix A Conditions C/D/E/F/G",
+      "units": "degF",
+      "value": 59.0
+    },
+    "T_DP_MIN_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 5.499999999999999,
+      "source": "OCP_DC_V1_2011 \u00a75.1.1 and Appendix A",
+      "units": "degF",
+      "value": 41.9
+    },
+    "T_SA_MAX_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 26.666666666666668,
+      "source": "OCP_DC_V1_2011 Appendix A Conditions B/D/E/F",
+      "units": "degF",
+      "value": 80.0
+    },
+    "T_SA_MIN_BAND_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 18.333333333333332,
+      "source": "OCP_DC_V1_2011 Appendix A Conditions B/F; \u00a75.1.1 cold aisle 65\u201385 F",
+      "units": "degF",
+      "value": 65.0
+    },
+    "T_SA_MIN_FLOOR_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 12.222222222222221,
+      "source": "OCP_DC_V1_2011 Appendix A Condition A (54 F DB minimum)",
+      "units": "degF",
+      "value": 54.0
+    },
+    "T_SA_MIX_TARGET_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 18.333333333333332,
+      "source": "OCP_DC_V1_2011 Appendix A Condition A (mix OA/RA to 65 F SA)",
+      "units": "degF",
+      "value": 65.0
+    },
+    "T_SA_WB_HUMIDIFY_C": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "note": "Corroborating Prineville operations paper; OCP A uses 54 F / 42 F DP minimum.",
+      "si_C": 12.2,
+      "source": "Electronics Cooling 2012 Region A (humidify to SAT WB 12.2 C / DP 5.5 C)",
+      "units": "degC",
+      "value": 12.2
+    },
+    "T_WB_D_E_SPLIT_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 18.755555555555556,
+      "source": "OCP_DC_V1_2011 Appendix A Condition D/E",
+      "units": "degF",
+      "value": 65.76
+    },
+    "T_WB_F_F": {
+      "as_operated": "UNIDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "si_C": 21.27777777777778,
+      "source": "OCP_DC_V1_2011 Appendix A Condition F; \u00a75.1.2 summer WB max",
+      "units": "degF",
+      "value": 70.3
+    }
+  }
+}

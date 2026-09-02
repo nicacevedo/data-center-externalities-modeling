@@ -1,0 +1,88 @@
+{
+  "all_required_checks_pass": true,
+  "checks": [
+    {
+      "check": "A_MIXING_CONSERVATION",
+      "pass": true
+    },
+    {
+      "check": "B_DIRECT_EVAP_ENERGY_BALANCE",
+      "max_residual": 0.0,
+      "pass": true
+    },
+    {
+      "check": "C_EVAPORATIVE_DIRECTION",
+      "pass": true
+    },
+    {
+      "check": "D_E_RH_AND_SATURATION",
+      "detail": "assert_physically_valid_state inside solver",
+      "pass": true
+    },
+    {
+      "check": "F_WATER_NONNEGATIVE",
+      "pass": true
+    },
+    {
+      "check": "G_COLD_DRY_HUMIDIFY_AND_T_DROP",
+      "pass": true
+    },
+    {
+      "check": "H_COOL_HUMID_NEAR_ZERO_WATER",
+      "pass": true
+    },
+    {
+      "check": "I_HOT_DRY_POSITIVE_AIR_VAPOR",
+      "pass": true
+    },
+    {
+      "Tsup": 28.652865934844844,
+      "check": "J_HOT_HUMID_WB_LIMITED",
+      "pass": true
+    },
+    {
+      "check": "K_CONTROL_CONSTRAINTS_REPORTED",
+      "pass": true
+    },
+    {
+      "check": "L_INFEASIBLE_ISOTHERMAL_HUMIDIFICATION_FLAGGED",
+      "pass": true
+    },
+    {
+      "check": "M_RETURN_MOISTURE_AFFECTS_MIX",
+      "pass": true
+    },
+    {
+      "check": "N_EFFECTIVENESS_BOUNDS",
+      "detail": "0<=eps<=1 enforced",
+      "pass": true
+    },
+    {
+      "check": "O_85PCT_NAMING_SEPARATION",
+      "pass": true
+    },
+    {
+      "check": "P_WATER_BOUNDARY_TAG",
+      "pass": true
+    },
+    {
+      "check": "CANONICAL_DEFAULT_PROTECTED",
+      "pass": true
+    },
+    {
+      "check": "CHW_AND_LAMBDA_FAIL_CLOSED",
+      "pass": true
+    },
+    {
+      "check": "EXPLICIT_RETURN_AIR_REQUIRED_FOR_MIX",
+      "pass": true
+    }
+  ],
+  "comparison_language": "STRUCTURALLY_AND_THERMODYNAMICALLY_MORE_COMPLETE",
+  "enthalpy_tolerance_J_per_kg": 80.0,
+  "max_enthalpy_residual_J_per_kg": 0.0,
+  "n_cases": 36,
+  "not_allowed_language": "BETTER_PREDICTIVE_MODEL",
+  "parameter_fitted": false,
+  "scored_against_meta_water": false
+}
