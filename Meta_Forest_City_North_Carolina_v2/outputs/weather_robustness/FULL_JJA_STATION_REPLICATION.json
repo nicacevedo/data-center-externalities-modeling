@@ -1,0 +1,92 @@
+{
+  "SUMMER_DX_ROBUSTNESS": "STRONG_SUPPORT",
+  "negligible_rule": "DX hours == 0 or < 0.5% of valid hours at every credible station",
+  "preferred_local_still_KFQD": true,
+  "selection_used_dx_outcome": false,
+  "stations": [
+    {
+      "DX_required_hours": 0,
+      "EVAP_COOLING_fraction": 0.10614525139664804,
+      "HIGH_RH_MIXING_fraction": 0.35355147645650437,
+      "HUMIDIFICATION_fraction": 0.0,
+      "MECHANICAL_COOLING_fraction": 0.0,
+      "OA_FREE_fraction": 0.5403032721468476,
+      "UNRESOLVED_fraction": 0.0,
+      "category_counts": {
+        "EVAP_COOLING": 133,
+        "HIGH_RH_MIXING": 443,
+        "HUMIDIFICATION": 0,
+        "MECHANICAL_COOLING": 0,
+        "OA_FREE": 677,
+        "UNRESOLVED": 0
+      },
+      "independent_series": true,
+      "native_mode_counts": {
+        "EVAPORATIVE_COOLING": 133,
+        "HIGH_RH_RETURN_AIR_MIXING": 443,
+        "OA_FREE_COOLING": 677
+      },
+      "period": "2012-06-01/2012-08-31 UTC",
+      "station": "KFQD",
+      "stitched": false,
+      "valid_hours": 1253,
+      "weather_missing_hours": 955
+    },
+    {
+      "DX_required_hours": 0,
+      "EVAP_COOLING_fraction": 0.09081419624217119,
+      "HIGH_RH_MIXING_fraction": 0.2588726513569937,
+      "HUMIDIFICATION_fraction": 0.0,
+      "MECHANICAL_COOLING_fraction": 0.0,
+      "OA_FREE_fraction": 0.6503131524008351,
+      "UNRESOLVED_fraction": 0.0,
+      "category_counts": {
+        "EVAP_COOLING": 174,
+        "HIGH_RH_MIXING": 496,
+        "HUMIDIFICATION": 0,
+        "MECHANICAL_COOLING": 0,
+        "OA_FREE": 1246,
+        "UNRESOLVED": 0
+      },
+      "independent_series": true,
+      "native_mode_counts": {
+        "EVAPORATIVE_COOLING": 174,
+        "HIGH_RH_RETURN_AIR_MIXING": 496,
+        "OA_FREE_COOLING": 1246
+      },
+      "period": "2012-06-01/2012-08-31 UTC",
+      "station": "KEHO",
+      "stitched": false,
+      "valid_hours": 1916,
+      "weather_missing_hours": 292
+    },
+    {
+      "DX_required_hours": 0,
+      "EVAP_COOLING_fraction": 0.1644021739130435,
+      "HIGH_RH_MIXING_fraction": 0.19429347826086957,
+      "HUMIDIFICATION_fraction": 0.0,
+      "MECHANICAL_COOLING_fraction": 0.0,
+      "OA_FREE_fraction": 0.6413043478260869,
+      "UNRESOLVED_fraction": 0.0,
+      "category_counts": {
+        "EVAP_COOLING": 363,
+        "HIGH_RH_MIXING": 429,
+        "HUMIDIFICATION": 0,
+        "MECHANICAL_COOLING": 0,
+        "OA_FREE": 1416,
+        "UNRESOLVED": 0
+      },
+      "independent_series": true,
+      "native_mode_counts": {
+        "EVAPORATIVE_COOLING": 363,
+        "HIGH_RH_RETURN_AIR_MIXING": 429,
+        "OA_FREE_COOLING": 1416
+      },
+      "period": "2012-06-01/2012-08-31 UTC",
+      "station": "KGSP",
+      "stitched": false,
+      "valid_hours": 2208,
+      "weather_missing_hours": 0
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "events": [
+    {
+      "controller_not_modified": true,
+      "date": "2012-06-25",
+      "event": "B_2012_06_25",
+      "expect_dx": false,
+      "expect_family": "HIGH_RH_MIXING",
+      "implementation_consistent": true,
+      "independent_predictive_validation": false,
+      "kfqd_day_dx_hours": 0,
+      "kfqd_day_valid_hours": 24,
+      "observed": "high RH / low DB; return-air mixing; DX not used",
+      "operator_RH": 0.97,
+      "operator_T_F": 68.0,
+      "status": "OPERATOR_EVENT_CONTROL_IMPLEMENTATION_CONSISTENCY_PASS",
+      "synthetic_common_category": "HIGH_RH_MIXING",
+      "synthetic_dx": false,
+      "synthetic_mode": "HIGH_RH_RETURN_AIR_MIXING",
+      "synthetic_oa_fraction": 0.94,
+      "synthetic_rh_supply": 0.8985495780132209,
+      "synthetic_t_supply_F": 70.23404255328656
+    },
+    {
+      "controller_not_modified": true,
+      "date": "2012-07-01",
+      "event": "A_2012_07_01",
+      "expect_dx": false,
+      "expect_family": "EVAP_COOLING",
+      "implementation_consistent": true,
+      "independent_predictive_validation": false,
+      "kfqd_day_dx_hours": 0,
+      "kfqd_day_valid_hours": 24,
+      "observed": "hot/dry; evaporative cooling sufficient; no DX",
+      "operator_RH": 0.26,
+      "operator_T_F": 102.0,
+      "status": "OPERATOR_EVENT_CONTROL_IMPLEMENTATION_CONSISTENCY_PASS",
+      "synthetic_common_category": "EVAP_COOLING",
+      "synthetic_dx": false,
+      "synthetic_mode": "EVAPORATIVE_COOLING",
+      "synthetic_oa_fraction": 1.0,
+      "synthetic_rh_supply": 0.5840062167989324,
+      "synthetic_t_supply_F": 85.0
+    }
+  ],
+  "label": "OPERATOR_EVENT_CONTROL_CONSISTENCY",
+  "not_independent_validation": true,
+  "overall": "PASS"
+}

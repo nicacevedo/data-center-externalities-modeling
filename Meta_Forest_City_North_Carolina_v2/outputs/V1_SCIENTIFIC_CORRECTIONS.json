@@ -1,0 +1,41 @@
+{
+  "MODEL_CALIBRATED": "NO",
+  "corrections": {
+    "A_operator_events": {
+      "new": "OPERATOR_EVENT_CONTROL_IMPLEMENTATION_CONSISTENCY = PASS",
+      "old": "HISTORICAL_EVENT_VALIDATION = PASS",
+      "reason": "June 25 and July 1 operator cases were themselves used to define the Forest City controller (high-RH mixing; hot/dry evaporative; DX backup unused). They are source-implementation checks, not independent predictive validations.",
+      "scientific_consequence": "Event PASS cannot be counted as out-of-sample evidence that the controller predicts unseen Forest City behavior."
+    },
+    "B_summer_dx": {
+      "new": "SUMMER_DX_CONSISTENCY = PASS_ON_OBSERVED_KFQD_HOURS",
+      "old": "full-calendar summer DX interpretation from v1 JJA",
+      "reason": "KFQD has no records before 2012-06-21; 955 JJA hours were WEATHER_MISSING.",
+      "scientific_consequence": "Do not claim full-calendar summer until missing-weather robustness is assessed with independent station replications."
+    },
+    "C_cross_climate": {
+      "new_default_before_v2_tests": {
+        "CROSS_CLIMATE_MECHANISM_CONSISTENCY": "PRELIMINARY_SUPPORT",
+        "QUANTITATIVE_PHYSICS_TRANSFER": "NOT_VALIDATED"
+      },
+      "old": "TRANSFERABLE_PHYSICS_SUPPORTED",
+      "reason": "v1 compared PRN1 Q2 frozen modes to Forest City JJA KFQD. Seasons differed. No mutually exclusive taxonomy. No identified Forest City airflow/water boundary."
+    },
+    "D_overlapping_prn_filters": {
+      "consequence": "v1 Prineville-vs-Forest-City mode fractions were not a clean probability comparison.",
+      "new_requirement": "mutually exclusive common taxonomy; sum(category_indicators)==1",
+      "old_method": "PRN categories constructed by overlapping substring searches (HUMID, EVAP, MIX|RH_OR)"
+    },
+    "E_delta_t": {
+      "FACILITY_EFFECTIVE_DELTA_T": "UNIDENTIFIED",
+      "IT_EQUIPMENT_DELTA_T_DESIGN": "IDENTIFIED (35 F / 19.44 K Maguire 2011)",
+      "do_not": "equate 35F IT/server DeltaT with AHU or effective facility DeltaT"
+    },
+    "F_frc1_address": {
+      "FRC1_ADDRESS": "INTERVAL/SET_UNRESOLVED",
+      "note": "Original-campus street-address mapping was unresolved in v1 and remains a set, not a single PIN."
+    }
+  },
+  "pass": "forest_city_v2_scientific_correction",
+  "v1_figure5": "DO_NOT_REUSE_AS_EVIDENCE"
+}

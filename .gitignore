@@ -37,6 +37,11 @@ Meta_Forest_City_North_Carolina_v1/outputs/control_validation/EVENT_*_HOURS.csv
 Meta_Forest_City_North_Carolina_v1/.pytest_cache/
 Meta_Forest_City_North_Carolina_v1/pytest-cache-files-*/
 
+# Forest City v2: rebuilt hourly weather and station-hour dumps
+Meta_Forest_City_North_Carolina_v2/data/processed/*.parquet
+Meta_Forest_City_North_Carolina_v2/outputs/weather_robustness/FULL_JJA_*_HOURS.csv
+Meta_Forest_City_North_Carolina_v2/.pytest_cache/
+
 # Slurm job logs
 Meta_Prineville_Oregon_v3/outputs/slurm_logs/
 

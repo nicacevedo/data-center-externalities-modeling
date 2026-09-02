@@ -1,0 +1,13 @@
+edge,v1_label,v2_class,v2_status,note
+v1_operator_events,HISTORICAL_EVENT_VALIDATION=PASS,SOURCE_IMPLEMENTATION_CONSISTENT,PASS,June 25 / July 1 defined the controller; not independent validation
+summer_control_robustness,observed KFQD JJA DX=0,ENGINEERING_BOUNDED,STRONG_SUPPORT,independent station replications; not a stitched series
+cross_climate_mechanism,"TRANSFERABLE_PHYSICS_SUPPORTED (qualitative, overlapping filters)",SOURCE_IMPLEMENTATION_CONSISTENT,SUPPORTED_HUMIDIFICATION_AND_MIXING_SHIFT_EVAP_NOT_HIGHER_AT_FC,same UTC window; mutually exclusive taxonomy; FC mixing up; PRN humidification up; FC evap not higher
+quantitative_physics_transfer,not validated,UNIDENTIFIED,NOT_VALIDATED,no independent quantitative criterion; airflow unidentified
+IT_DELTA_T_DESIGN,IDENTIFIED 35F,DESIGN_SPEC,IDENTIFIED,never auto-promoted to facility effective DeltaT
+FACILITY_EFFECTIVE_DELTA_T,UNIDENTIFIED,UNIDENTIFIED,UNIDENTIFIED,return-air 25/35F tests are SCENARIO_ONLY
+return_air_design_reference,35F iterated w_RA=w_supply,SCENARIO_ONLY,DX_CONCLUSION_NOT_STRONGLY_DEPENDENT,not as-operated RAT confidence bounds
+water_magnitude,UNIDENTIFIED,UNIDENTIFIED,NOT_VALIDATED,"annual series is accounting, not 2012 controller water"
+municipal_source,Forest City WTP / Second Broad River,DIRECTLY_MEASURED,ACCOUNTING_CONTEXT_ONLY,industrial class is not Meta
+as_operated_validation,UNIDENTIFIED,UNIDENTIFIED,UNIDENTIFIED,no BMS/TAB/as-operated SAT-RAT
+FRC1_address,unresolved,UNIDENTIFIED,INTERVAL/SET_UNRESOLVED,284/404/408 remain a set
+2023_2024_water_break,PUBLICLY_UNRESOLVED,UNIDENTIFIED,CAUSE_PUBLICLY_UNRESOLVED,no causal fit

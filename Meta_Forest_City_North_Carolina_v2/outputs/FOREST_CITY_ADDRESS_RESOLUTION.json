@@ -1,0 +1,17 @@
+{
+  "404_Social_Circle": "2016 elevator FACEBOOK DATA CENTER; campus mailing/marketing; not FRC1",
+  "FRC1_ADDRESS": "INTERVAL/SET_UNRESOLVED",
+  "FRC1_address_set": [
+    "284 Social Circle (Andale Data Center elevator 2011; SOS principal office)",
+    "campus / unnamed Building 1 opened 2012-04-19"
+  ],
+  "FRC3_ADDRESS": "408 Social Circle (elevator occupant FACEBOOK FRC 3, installed 2012-07-31)",
+  "FRC3_confidence": "HIGH_for_occupant_label; not independently tied to 2014 tour Building 3 identity",
+  "do_not_guess_one_street_for_records_request": true,
+  "gis_tax_portals_inspected": [
+    "https://lrcpwa.ncptscloud.com/Rutherford/parcel-search",
+    "https://gis.rutherfordcountync.gov/maps/"
+  ],
+  "parcel_extract": "PIN not recovered from the public PWA/GIS landing pages in this pass (interactive search required).",
+  "parcel_id": "UNIDENTIFIED"
+}

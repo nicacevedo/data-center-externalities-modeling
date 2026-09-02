@@ -1,0 +1,15 @@
+year,electricity_MWh,withdrawal_m3,SITE_WITHDRAWAL_INTENSITY,unit,not_WUE,note,intensity_name,denominator
+2011,6000.0,,,m3_per_MWh_equals_L_per_kWh_facility,True,intensity undefined unless both canonical preferred series exist,,
+2012,98000.0,,,m3_per_MWh_equals_L_per_kWh_facility,True,intensity undefined unless both canonical preferred series exist,,
+2013,225000.0,,,m3_per_MWh_equals_L_per_kWh_facility,True,intensity undefined unless both canonical preferred series exist,,
+2014,322000.0,117347.765304,0.36443405373913046,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2015,310000.0,125675.6712288,0.40540539106064516,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2016,339000.0,123000.0,0.36283185840707965,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2017,433000.0,129000.0,0.2979214780600462,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2018,547000.0,99000.0,0.1809872029250457,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2019,614000.0,85000.0,0.13843648208469056,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2020,595000.0,68000.0,0.11428571428571428,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2021,580842.0,64053.0,0.11027611639654157,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2022,492786.0,62853.0,0.12754623710900878,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2023,507068.0,55000.0,0.10846671452349586,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"
+2024,535555.0,16000.0,0.02987554966343326,m3_per_MWh_equals_L_per_kWh_facility,True,Never call this WUE. Not used to tune the 2012 controller.,SITE_WITHDRAWAL_INTENSITY,"facility electricity, not IT load"

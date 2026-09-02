@@ -1,0 +1,93 @@
+{
+  "CAUSE_PUBLICLY_UNRESOLVED": true,
+  "canonical_2023_m3": 55000,
+  "canonical_2024_m3": 16000,
+  "causal_claim": false,
+  "drop_m3": -39000,
+  "electricity_2023_MWh": 507068,
+  "electricity_2024_MWh": 535555,
+  "hypotheses": [
+    {
+      "boundary": "site water withdrawal",
+      "confidence": "LOW_as_cause_of_55_to_16",
+      "evidence_date": "2025-10",
+      "expected_direction": "possible rounding, not a 3x drop",
+      "mechanism": "EDI unit/methodology change (m3 -> ML)",
+      "notes": "2023 55 ML vs 55,000 m3 is consistent. 2024 16 ML is a new year, not a restatement of 2023.",
+      "source": "Meta_2025_EDI vs Meta_2023_EDI",
+      "supported": false
+    },
+    {
+      "boundary": "site electricity vs site withdrawal",
+      "confidence": "HIGH_that_load_decline_is_not_the_explanation",
+      "evidence_date": "2024",
+      "expected_direction": "water down if load-driven evaporative use",
+      "mechanism": "IT/facility electricity decline",
+      "notes": "Electricity rose while withdrawal fell. Intensity fell. Not a simple load effect.",
+      "source": "Meta_2025_EDI electricity 507068 -> 535555 MWh",
+      "supported": false
+    },
+    {
+      "boundary": "as-operated cooling",
+      "confidence": "UNIDENTIFIED",
+      "evidence_date": "none_public",
+      "expected_direction": "withdrawal down if evaporative use reduced",
+      "mechanism": "2022-2024 cooling/mechanical upgrade or DX/chiller change",
+      "notes": "No public TAB/SOO/permit evidence of a 2022-2024 cooling retrofit.",
+      "source": "Town permit portal requires login; no public permit numbers recovered",
+      "supported": false
+    },
+    {
+      "boundary": "qualitative campus water efficiency",
+      "confidence": "LOW_as_dated_2023_2024_cause",
+      "evidence_date": "undated_factsheet_2025",
+      "expected_direction": "withdrawal down",
+      "mechanism": "Water reuse / higher cycles of concentration / treatment change",
+      "notes": "Undated qualitative claims. Not a dated 2023-2024 retrofit record.",
+      "source": "Meta Forest City factsheet 2025: reuses water numerous times; rainwater capture",
+      "supported": false
+    },
+    {
+      "boundary": "2012-era water treatment narrative",
+      "confidence": "REJECTED_as_2024_explanation",
+      "evidence_date": "circa_2013",
+      "expected_direction": "withdrawal down in the early 2010s, not specifically 2024",
+      "mechanism": "Early-2010s membrane vs misters transition",
+      "notes": "Do not use the early-2010s membrane/media transition as a 2024 explanation without a distinct later retrofit.",
+      "source": "ITNEWS_MCCAMMON_FC",
+      "supported": false
+    },
+    {
+      "boundary": "site total vs original campus",
+      "confidence": "LOW",
+      "evidence_date": "2014-2016 campus growth already in the series",
+      "expected_direction": "ambiguous",
+      "mechanism": "New building / cold-storage mix / reporting boundary change",
+      "notes": "Later buildings are already in 2017-2023 totals. No public 2024 boundary restatement specific to Forest City.",
+      "source": "elevator 404 Social Circle 2016; 2014 FRC4 cold storage",
+      "supported": false
+    },
+    {
+      "boundary": "ACCOUNTING_CONTEXT_ONLY",
+      "confidence": "n/a",
+      "evidence_date": "2023-2024 LWSP",
+      "expected_direction": "industrial class is not Meta",
+      "mechanism": "Municipal industrial-class demand change",
+      "notes": "Industrial class must not be inferred as Meta usage. Tagged ACCOUNTING_CONTEXT_ONLY.",
+      "source": "NC LWSP 01-81-010",
+      "supported": false
+    },
+    {
+      "boundary": "global construction vs site operational",
+      "confidence": "LOW_as_Forest_City_2024_cause",
+      "evidence_date": "2025 EDI",
+      "expected_direction": "operational totals exclude construction water",
+      "mechanism": "Global construction-water exclusion note",
+      "notes": "Company-wide construction exclusion, not a Forest City operational-meter explanation.",
+      "source": "Meta_2025_EDI note: additional 1,019 ML construction water not in 2024 withdrawal",
+      "supported": false
+    }
+  ],
+  "not_used_to_tune_2012_controller": true,
+  "regression_or_fit": false
+}

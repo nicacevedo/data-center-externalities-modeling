@@ -1,0 +1,67 @@
+{
+  "intersection_hours": 1251,
+  "name": "WEATHER_CONTROLLER_FACTORIAL_DIAGNOSTIC",
+  "not_causal": true,
+  "rows": [
+    {
+      "DX_required_hours": 0,
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "P(EVAP_COOLING)": 0.22621902478017586,
+      "P(HIGH_RH_MIXING)": 0.20623501199040767,
+      "P(HUMIDIFICATION)": 0.43005595523581136,
+      "P(MECHANICAL_COOLING)": 0.0,
+      "P(OA_FREE)": 0.1374900079936051,
+      "P(UNRESOLVED)": 0.0,
+      "combination": "PRN_weather+PRN_controller",
+      "constraint_unsatisfied_fraction": NaN,
+      "n_hours_intersection": 1251,
+      "sample_hours": 1251,
+      "weather_missing_hours": 0
+    },
+    {
+      "DX_required_hours": 0,
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "P(EVAP_COOLING)": 0.13269384492406075,
+      "P(HIGH_RH_MIXING)": 0.03117505995203837,
+      "P(HUMIDIFICATION)": 0.0,
+      "P(MECHANICAL_COOLING)": 0.0,
+      "P(OA_FREE)": 0.8361310951239008,
+      "P(UNRESOLVED)": 0.0,
+      "combination": "PRN_weather+FC_controller",
+      "constraint_unsatisfied_fraction": 0.0,
+      "n_hours_intersection": 1251,
+      "sample_hours": 1251,
+      "weather_missing_hours": 0
+    },
+    {
+      "DX_required_hours": 0,
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "P(EVAP_COOLING)": 0.23501199040767387,
+      "P(HIGH_RH_MIXING)": 0.7450039968025579,
+      "P(HUMIDIFICATION)": 0.0,
+      "P(MECHANICAL_COOLING)": 0.0,
+      "P(OA_FREE)": 0.019984012789768184,
+      "P(UNRESOLVED)": 0.0,
+      "combination": "FC_weather+PRN_controller",
+      "constraint_unsatisfied_fraction": NaN,
+      "n_hours_intersection": 1251,
+      "sample_hours": 1251,
+      "weather_missing_hours": 0
+    },
+    {
+      "DX_required_hours": 0,
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "P(EVAP_COOLING)": 0.10631494804156674,
+      "P(HIGH_RH_MIXING)": 0.35411670663469225,
+      "P(HUMIDIFICATION)": 0.0,
+      "P(MECHANICAL_COOLING)": 0.0,
+      "P(OA_FREE)": 0.539568345323741,
+      "P(UNRESOLVED)": 0.0,
+      "combination": "FC_weather+FC_controller",
+      "constraint_unsatisfied_fraction": 0.0,
+      "n_hours_intersection": 1251,
+      "sample_hours": 1251,
+      "weather_missing_hours": 0
+    }
+  ]
+}

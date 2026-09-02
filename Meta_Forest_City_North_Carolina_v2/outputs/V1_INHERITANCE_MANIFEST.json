@@ -1,0 +1,23 @@
+{
+  "note": "v2 imports v1/Prineville modules read-only. Large weather/PDF files are referenced, not copied.",
+  "prineville_structural_v1_sha256": "f9649c489196cdc3e617f5b28574334aaaace5a94e7ade5ce461f6da22809a6a",
+  "prn1_q2_weather_sha256": "87c0beaf1f8223ebb9f4d02ff13b9efd9d2286aaddfec0a3cce9af4c4279d925",
+  "reuse_by_path_do_not_duplicate": {
+    "krdm_hourly_csv": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/data/processed/weather_krdm_hourly.csv",
+    "krdm_q2_parquet": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/prn1_q2_2012_public_validation_v1/weather/Q2_2012_KRDM_hourly.parquet",
+    "v1_annual_electricity": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/processed/FOREST_CITY_ANNUAL_ELECTRICITY.csv",
+    "v1_annual_water": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/processed/FOREST_CITY_ANNUAL_WATER_WITHDRAWAL.csv",
+    "v1_lwsp": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp",
+    "v1_municipal_monthly": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/processed/forest_city_municipal_water_monthly.csv",
+    "v1_processed_kfq_parquet": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/processed/forest_city_weather_2012_hourly.parquet",
+    "v1_raw_weather": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/weather",
+    "v1_scope2": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/processed/FOREST_CITY_SCOPE2_LOCATION.csv",
+    "v1_sustainability_pdfs": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sustainability"
+  },
+  "v1_airflow_contract_sha256": "f1cdc03bea8f5103e8951c6fbef7e965d16248e511fd4ad4874e19d5054ddc37",
+  "v1_control_contract_sha256": "56d3ef12b0ab3584886892a3283f068ebe7bcfc0adc827543dc6b8910da450c2",
+  "v1_controller_sha256": "99ecc213fa181ab1fe7144087da5874b0a8f3f79478a6a8b5aed83fe0ea77c78",
+  "v1_root": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1",
+  "v1_structural_sha256": "085a893cd63665b37d027877e9d80efbc99489a6c813a9f8da150e41a529568d",
+  "v1_validation_freeze_sha256": "d5d8f69676f8269fcdb6445ed0f68dbd8793677da427e1986f85661d236d7a54"
+}

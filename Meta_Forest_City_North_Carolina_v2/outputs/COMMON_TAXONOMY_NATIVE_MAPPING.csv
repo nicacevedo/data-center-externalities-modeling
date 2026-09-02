@@ -1,0 +1,15 @@
+site,native_mode,split_key,common_category_if_HUMIDIFICATION,common_category_if_COOLING,notes,common_category
+PRN1,B_100PCT_OA_HUMIDIFICATION_OR_COOLING,primary_control_objective,HUMIDIFICATION,EVAP_COOLING,"Split: primary_control_objective HUMIDIFICATION -> HUMIDIFICATION; COOLING (OA above SAT max, temperature-driven direct evap) -> EVAP_COOLING. Not both; not substring search.",
+PRN1,A_MIXED_AIR_HUMIDIFICATION,,,,Humidity-target mixed-air ECH. Primary objective HUMIDIFICATION.,HUMIDIFICATION
+PRN1,C_DRY_FREE_OUTSIDE_AIR,,,,100% OA; spray off; envelope already satisfied.,OA_FREE
+PRN1,D_EVAPORATIVE_COOLING,,,,Temperature-driven 100% OA direct evap toward SAT max.,EVAP_COOLING
+PRN1,E_EVAPORATIVE_COOLING_HIGH_WB,,,,Same actuator purpose as D at higher wet-bulb.,EVAP_COOLING
+PRN1,F_HIGH_HUMIDITY_MIX_SPRAY_BYPASS,,,,OA/RA mix to cap RH; spray bypassed.,HIGH_RH_MIXING
+PRN1,G_RH_OR_TEMP_MIX_SPRAY_BYPASS,,,,OA/RA mix to cap RH or SAT; spray bypassed.,HIGH_RH_MIXING
+PRN1,H_UNACCEPTABLE_OA_MIN_OA_RECIRC,,,,Smoke/dust recirculation; IEC not installed. Not a weather-driven cooling mode.,UNRESOLVED
+FC,OA_FREE_COOLING,,,,OA already inside 85 F / 90% RH; evaporative and DX off.,OA_FREE
+FC,HIGH_RH_RETURN_AIR_MIXING,,,,Hot-RA mix to meet 90% RH cap; evaporative off.,HIGH_RH_MIXING
+FC,EVAPORATIVE_COOLING,,,,100% OA evaporative cooling toward 85 F.,EVAP_COOLING
+FC,DX_REQUIRED,,,,Documented DX backup when evaporative/mix cannot meet envelope.,MECHANICAL_COOLING
+FC,DX_REQUIRED_DEHUMIDIFY,,,,DX backup when mix cannot meet RH and T caps.,MECHANICAL_COOLING
+FC,WEATHER_MISSING,,,,No outdoor state; not a physical mode.,UNRESOLVED

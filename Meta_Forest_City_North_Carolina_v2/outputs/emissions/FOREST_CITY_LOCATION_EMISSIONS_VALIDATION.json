@@ -1,0 +1,8 @@
+{
+  "candidate_egrid_subregion": "SRVC",
+  "completed_or_stopped": "STOPPED",
+  "do_not_refit": true,
+  "reason": "Year-matched eGRID SRVC workbooks, DUK EIA-930, EIA generation, and CAMPD serving-plant mapping were not reconstructed in this bounded secondary task. Meta location-based Scope 2 is canonical where published (2012-2016 regional/location-based; 2020-2024 EDI). Do not fit emission factors to Meta.",
+  "status": "INSUFFICIENT_BOUNDARY_INFORMATION",
+  "utility": "Duke Energy Carolinas / DUK BA"
+}

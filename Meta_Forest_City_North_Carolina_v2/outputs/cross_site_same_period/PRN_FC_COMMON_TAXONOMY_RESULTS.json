@@ -1,0 +1,47 @@
+{
+  "calendar": [
+    "2012-06-21T00:00Z",
+    "2012-08-31T23:00Z"
+  ],
+  "identical_calendar_dates": true,
+  "question": "Does FC shift toward HIGH_RH_MIXING and EVAP_COOLING vs PRN humidification on the same dates?",
+  "results": [
+    {
+      "DX_required_hours": 0,
+      "P(EVAP_COOLING)": 0.22479721900347624,
+      "P(HIGH_RH_MIXING)": 0.21263035921205098,
+      "P(HUMIDIFICATION)": 0.4200463499420626,
+      "P(MECHANICAL_COOLING)": 0.0,
+      "P(OA_FREE)": 0.1425260718424102,
+      "P(UNRESOLVED)": 0.0,
+      "calendar_end_utc": "2012-09-01 00:00:00+00:00",
+      "calendar_start_utc": "2012-06-21 00:00:00+00:00",
+      "controller": "PRN1_OCP_frozen",
+      "feasibility_note": "PRN feasibility from structural-reference-v1; FC constraint = 85F/90%RH",
+      "sample_hours": 1726,
+      "site": "PRN1",
+      "weather": "KRDM",
+      "weather_distributions": "{\"n\": 1726, \"t_db_C_mean\": 19.311467748165313, \"t_db_C_p50\": 18.9, \"t_db_F_p95\": 89.96000000000001, \"rh_pct_mean\": 44.50806674448833, \"rh_pct_p90\": 79.39028664218273, \"t_dew_C_mean\": 4.468935882580147, \"t_wb_C_mean\": 11.079032441979848}",
+      "weather_missing_hours": 2
+    },
+    {
+      "DX_required_hours": 0,
+      "P(EVAP_COOLING)": 0.10614525139664804,
+      "P(HIGH_RH_MIXING)": 0.35355147645650437,
+      "P(HUMIDIFICATION)": 0.0,
+      "P(MECHANICAL_COOLING)": 0.0,
+      "P(OA_FREE)": 0.5403032721468476,
+      "P(UNRESOLVED)": 0.0,
+      "calendar_end_utc": "2012-09-01 00:00:00+00:00",
+      "calendar_start_utc": "2012-06-21 00:00:00+00:00",
+      "controller": "FC_v1_frozen",
+      "feasibility_note": "PRN feasibility from structural-reference-v1; FC constraint = 85F/90%RH",
+      "sample_hours": 1253,
+      "site": "FOREST_CITY",
+      "weather": "KFQD",
+      "weather_distributions": "{\"n\": 1253, \"t_db_C_mean\": 24.00106411279596, \"t_db_C_p50\": 23.0, \"t_db_F_p95\": 89.6, \"rh_pct_mean\": 77.9177133142029, \"rh_pct_p90\": 97.98536016287395, \"t_dew_C_mean\": 19.380420324554404, \"t_wb_C_mean\": 20.786520628369146}",
+      "weather_missing_hours": 475
+    }
+  ],
+  "water_magnitude_used": false
+}
