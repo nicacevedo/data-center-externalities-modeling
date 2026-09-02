@@ -1,0 +1,14 @@
+{
+  "method": "7-day moving/block bootstrap of TEST hours, 200 replicates",
+  "not_iid_hourly": true,
+  "TEST_aux_component_sum_WAPE_point": 0.601323602681023,
+  "bootstrap_p05": 0.5803334624698266,
+  "bootstrap_p50": 0.6001473459678562,
+  "bootstrap_p95": 0.6225355452001176,
+  "residual_depends_on": {
+    "IT_resid_corr": -0.21775464839514375,
+    "Tdb_resid_corr": -0.1477066986252403,
+    "Twb_resid_corr": -0.18604992350173546
+  },
+  "held_out_residuals_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/facility_overhead/data_processed/esif_test_residuals.parquet"
+}

@@ -1,0 +1,33 @@
+{
+  "HEAT_REUSE_RESIDUAL_EFFECT": "LOW",
+  "n_test_with_energy_reuse": 8470,
+  "resid_mean_by_quartile": [
+    {
+      "reuse_bin": "(-5.423, -1.392]",
+      "n": "2118",
+      "mean_resid": "97.89554313937937",
+      "wape_proxy": "97.89554313937937"
+    },
+    {
+      "reuse_bin": "(-1.392, 0.284]",
+      "n": "2117",
+      "mean_resid": "115.03662914700243",
+      "wape_proxy": "115.03662914700243"
+    },
+    {
+      "reuse_bin": "(0.284, 0.553]",
+      "n": "2117",
+      "mean_resid": "122.85633578812062",
+      "wape_proxy": "122.85633578812062"
+    },
+    {
+      "reuse_bin": "(0.553, 189.825]",
+      "n": "2118",
+      "mean_resid": "116.32216985698899",
+      "wape_proxy": "116.32216985698899"
+    }
+  ],
+  "spread_of_mean_resid": 24.960792648741247,
+  "mean_abs_resid_aux": 113.02627188830739,
+  "not_added_as_predictor": true
+}

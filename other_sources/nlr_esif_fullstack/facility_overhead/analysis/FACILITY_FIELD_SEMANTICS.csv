@@ -1,0 +1,14 @@
+field,unit,measured_or_derived,physical_equipment,source_wording,known_exclusions_or_caveats,modeling_role
+ts,timestamp (naive),measured,sample time,Timestamp,timezone not stated in catalog,Do not infer UTC vs America/Denver by correlation
+it_power_kw,kW,measured,IT equipment on the data-center floor,Captures power used by the IT equipment on the data center floor.,not cooling/HVAC/pumps; not a single cluster,PRIMARY MODEL INPUT; not Kestrel replay
+cooling_kw,kW,measured,"outdoor cooling fans, pipe trace heaters, dedicated tower filter pump (~2.67 kW)",fans and pipe trace heaters associated with outdoor cooling equipment. The dedicated tower filter pump power is also captured as cooling load.,not HVAC fan walls; not ERW/tower-loop pumps (those are pump_kw),canonical target; includes ~2.67 kW filter pump
+hvac_kw,kW,measured,"fan walls, electrical-room fan coils, make-up air","fan walls, fan coils that support the data center electrical rooms, and the make-up air unit",not outdoor cooling equipment fans,canonical target
+pump_kw,kW,measured,"ERW loop, tower-water loop, fan-wall boost pumps","pumps that move water in the data center Energy Recover Water loop and the Tower Water loops, and also captures power used by the boost pumps that circulate water through the fan walls",tower filter pump ~2.67 kW is NOT in this field,canonical target
+plug_and_light_kw,kW,measured,DC/mechanical-room plugs/lights; standby-generator crank-case heater,power associated with the data center and dedicated mechanical room. The crank-case heater for the emergency standby generator is also captured as light and plug load,not IT floor,canonical target
+pue,dimensionless,derived by source,facility PUE as published,Power Usage Effectiveness,component reconstruction may not match if other terms exist,NOT a regression target
+energy_reuse,source ERE field,measured/derived by source,energy reuse effectiveness,Energy Reuse Effectiveness,78% missing at native resolution; starts 2023-08-30,NOT a canonical predictor
+ere,source field,"present in parquet, not in README list",parallel ERE-like column,not in README field list,do not substitute for energy_reuse,QA only
+outside_air_temp,degrees Fahrenheit,measured,outside air dry-bulb,Outside air temperature - Degrees Fahrenheit,parquet column outdoor_air_temp,mapped from outdoor_air_temp
+outside_air_humidity,percent RH,measured,outside air relative humidity,Outside air humidity - Relative humidity percent,parquet column outdoor_air_humidity,mapped from outdoor_air_humidity
+pump_physical_kw,kW,descriptive reclass only,pump_kw + 2.67 kW tower filter pump,README note on filter pump,not a canonical field,do not replace pump_kw
+cooling_fans_trace_kw,kW,descriptive reclass only,cooling_kw - 2.67,README note on filter pump,not a canonical field,do not replace cooling_kw

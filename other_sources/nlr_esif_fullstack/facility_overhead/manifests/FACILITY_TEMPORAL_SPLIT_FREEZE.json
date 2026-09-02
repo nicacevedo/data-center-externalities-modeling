@@ -1,0 +1,29 @@
+{
+  "rule": "TEST=final_365_consecutive_days",
+  "timestamps_only": true,
+  "no_random_split": true,
+  "common_valid_span": [
+    "2016-06-12 06:00:00",
+    "2025-08-29 03:00:00"
+  ],
+  "span_days": 3364,
+  "DEV": {
+    "start": "2016-06-12 06:00:00",
+    "end_exclusive": "2024-08-29 03:00:00"
+  },
+  "TEST": {
+    "start": "2024-08-29 03:00:00",
+    "end_inclusive": "2025-08-29 03:00:00"
+  },
+  "n_common_valid_hours": 66952,
+  "n_DEV_hours": 58482,
+  "n_TEST_hours": 8470,
+  "cv": {
+    "type": "expanding_window_rolling_origin",
+    "min_train_days": 180,
+    "val_block_days": 60,
+    "folds_built_on_DEV_only": true
+  },
+  "incomplete_seasonal_validation": false,
+  "test_not_used_for_selection": true
+}

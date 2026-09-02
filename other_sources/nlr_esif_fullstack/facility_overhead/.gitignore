@@ -1,0 +1,4 @@
+data_processed/*.parquet
+__pycache__/
+.pytest_cache/
+*.pyc

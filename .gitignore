@@ -43,4 +43,5 @@ other_sources/m100/logs/
 other_sources/nlr_esif_fullstack/data_processed/*.parquet
 other_sources/nlr_esif_fullstack/timeseries/*.parquet
 other_sources/nlr_esif_fullstack/facility_validation/*.parquet
+other_sources/nlr_esif_fullstack/facility_overhead/data_processed/*.parquet
 other_sources/nlr_esif_fullstack/data_raw/extracted/

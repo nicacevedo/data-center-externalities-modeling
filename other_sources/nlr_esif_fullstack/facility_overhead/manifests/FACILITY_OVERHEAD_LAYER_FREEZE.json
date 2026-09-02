@@ -1,0 +1,6 @@
+{
+  "cpu_frozen": true,
+  "h100_frozen": true,
+  "prineville_coefficient_transfer": "NOT_ALLOWED",
+  "disposition": "PARTIAL"
+}

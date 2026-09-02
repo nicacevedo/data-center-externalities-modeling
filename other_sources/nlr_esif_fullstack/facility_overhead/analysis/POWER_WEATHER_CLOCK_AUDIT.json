@@ -1,0 +1,22 @@
+{
+  "question": "Are weather and power synchronized to the same physical moments?",
+  "not_the_question": "Is source ts UTC or America/Denver?",
+  "timezone_optimization": "NOT_PERFORMED",
+  "power_span": [
+    "2015-11-10 03:00:01",
+    "2025-08-29 04:35:08.461000"
+  ],
+  "weather_span_excluding_epoch": [
+    "2016-06-12 06:00:18",
+    "2025-08-29 18:51:19.790000"
+  ],
+  "power_cadence_s_median": 60.0,
+  "weather_cadence_s_median": 60.0,
+  "alignment_tolerance_s_frozen_from_cadence": 60.0,
+  "exact_second_match_n": 975872,
+  "exact_second_match_share_of_power": 0.2135600868620779,
+  "nearest_within_tolerance_frac": 0.8970207742874944,
+  "nearest_distance_s_p50": 12.0,
+  "nearest_distance_s_p90": 29.0,
+  "disposition": "ALIGNED_SAME_CLOCK_NEAREST_CADENCE"
+}

@@ -1,0 +1,11 @@
+{
+  "dev_cooling_acf": {
+    "lag_1h": 0.8288581320055117,
+    "lag_6h": 0.5862897847418319,
+    "lag_24h": 0.5458957558201557
+  },
+  "current_input_models_fail_predeclared_WAPE_gt_0.25": true,
+  "lagged_input_extension_tested": false,
+  "protocol_deviation": true,
+  "reason_no_lagged_target": "lagged TARGET values forbidden; lagged inputs only if DEV consistently fails"
+}

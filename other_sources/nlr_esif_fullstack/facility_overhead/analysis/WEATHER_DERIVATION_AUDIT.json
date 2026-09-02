@@ -1,0 +1,13 @@
+{
+  "tdb_source": "outside_air_temp mapped from parquet outdoor_air_temp",
+  "tdb_unit_source": "degrees Fahrenheit",
+  "rh_source": "outside_air_humidity mapped from parquet outdoor_air_humidity",
+  "rh_unit": "percent",
+  "twb_method": "Stull 2011 J. Appl. Meteor. Climatol. empirical wet-bulb",
+  "twb_equation": "Twb=T*atan(0.151977*(RH+8.313659)^0.5)+atan(T+RH)-atan(RH-1.676331)+0.00391838*RH^1.5*atan(0.023101*RH)-4.686035",
+  "twb_input_units": "T in Celsius, RH in percent",
+  "pressure_series": "NONE; formula does not use pressure",
+  "elevation_not_used_as_pressure_proxy_for_Twb": true,
+  "validity_domain": "RH clipped to formula evaluation in 5\u201399%; Tdb -40 to 50 C",
+  "raw_comparator_retained": "Tdb_F + RH and Tdb_C + RH (F2_RAW)"
+}

@@ -1,0 +1,14 @@
+{
+  "component_sum_spec": {
+    "cooling_kw": "F4",
+    "hvac_kw": "F0",
+    "pump_kw": "F4",
+    "plug_and_light_kw": "F2_PHYS"
+  },
+  "direct_aux_spec": "F2_PHYS",
+  "DEV_component_sum_daily_WAPE": 0.3973052844267838,
+  "DEV_direct_daily_WAPE": 0.3881925639634263,
+  "prefer": "component_decomposition",
+  "note": "Direct model is diagnostic. Prefer components if within parsimony band (error cancellation is not a reason to discard components).",
+  "component_within_parsimony_of_direct": true
+}

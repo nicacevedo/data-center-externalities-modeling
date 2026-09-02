@@ -8,6 +8,7 @@ data_raw/esif_pue/*.zip
 data_processed/*.parquet
 timeseries/*.parquet
 facility_validation/*.parquet
+facility_overhead/data_processed/*.parquet
 
 __pycache__/
 *.pyc

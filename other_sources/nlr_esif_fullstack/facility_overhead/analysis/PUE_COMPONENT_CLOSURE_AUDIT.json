@@ -1,0 +1,14 @@
+{
+  "n_compared": 4432570,
+  "median_recon_minus_source": 0.0,
+  "MAE": 0.00019318802912700873,
+  "p50_abs": 0.00017636235541729217,
+  "p90_abs": 0.0004354212847985206,
+  "p99_abs": 0.0004935368508697534,
+  "mean_source_pue": 1.0453198898733267,
+  "mean_recon_pue": 1.0453194843263178,
+  "corr": 0.9999999689082875,
+  "low_it_lt_200kW_MAE": 0.00024558417695463587,
+  "PUE_COMPONENT_CLOSURE": "PASS",
+  "missing_accounting_if_fail": "If recon systematically differs from source pue, additional unlisted facility terms or a different PUE formula (e.g. reuse) may exist. Do not force closure."
+}

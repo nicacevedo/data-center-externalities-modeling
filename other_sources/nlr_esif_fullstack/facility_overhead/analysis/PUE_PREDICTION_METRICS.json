@@ -1,0 +1,13 @@
+{
+  "target": "PUE_from_components",
+  "split": "TEST",
+  "hourly_MAE": 0.05159275775320173,
+  "hourly_WAPE": 0.04765268741658699,
+  "energy_weighted_obs": 1.0761144657368609,
+  "energy_weighted_pred": 1.0303450409838304,
+  "energy_weighted_bias": -0.045769424753030474,
+  "facility_kwh_obs": 22508462.406190697,
+  "facility_kwh_pred": 21551129.88329673,
+  "facility_energy_bias": -0.04253211550472954,
+  "note": "PUE was not fitted; derived from measured IT plus predicted auxiliary components"
+}

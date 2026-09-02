@@ -1,0 +1,41 @@
+{
+  "public_baseline_commit_requested": "efb9d520e956830ccadf71ab0bee53cd8cc5b01d",
+  "git": {
+    "branch": "main",
+    "HEAD": "efb9d520e956830ccadf71ab0bee53cd8cc5b01d",
+    "status": "M .gitignore\n m Data-center-PUE-prediction-tool\n M other_sources/nlr_esif_fullstack/.gitignore\n?? other_sources/nlr_esif_fullstack/facility_overhead/"
+  },
+  "cpu": {
+    "CPU_LAYER_FINAL_DISPOSITION": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+    "expected": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+    "sha256": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9",
+    "freeze_sha256": "dcbd066b26b8e7d2800e40a23a1cb8250502bfe59563fe06318cb1be1cc4fd27",
+    "read_only": true,
+    "refit": false
+  },
+  "h100": {
+    "H100_COMPUTE_LAYER": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+    "expected": "FROZEN_PASS_WITH_DOMAIN_RESTRICTIONS",
+    "sha256": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076",
+    "read_only": true,
+    "refit": false
+  },
+  "esif_raw": {
+    "power": "other_sources/nlr_esif_fullstack/data_raw/esif_pue/esif.influx.buildingData.PUE.combined.parquet",
+    "weather": "other_sources/nlr_esif_fullstack/data_raw/esif_pue/esif.influx.buildingData.outside.combined.parquet",
+    "readme": "other_sources/nlr_esif_fullstack/data_raw/esif_pue/README.md",
+    "power_bytes": 109685321,
+    "weather_bytes": 58865468
+  },
+  "constraints": {
+    "input_is_measured_facility_it_power_kw": true,
+    "do_not_use_kestrel_cpu_replay": true,
+    "do_not_use_h100_replay": true,
+    "do_not_use_tdp": true,
+    "do_not_use_m100": true,
+    "do_not_use_meta": true,
+    "do_not_fit_pue": true,
+    "do_not_fit_water": true,
+    "do_not_transfer_coefficients_to_prineville": true
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "title": "NLR HPC Facility Power Usage Effectiveness (PUE) Data",
+  "doi": "10.7799/3015212",
+  "catalog_url": "https://data.nlr.gov/submissions/300",
+  "citation": "Clark, Struan, and Justin Strelka. 2025. NLR HPC Facility Power Usage Effectiveness (PUE) Data. NLR Data Catalog. DOI: 10.7799/3015212.",
+  "resources": [
+    {
+      "source_filename": "esif.influx.buildingData.PUE.combined.parquet",
+      "catalog_name": "ESIF DC Power Metrics Timeseries Data (Parquet)",
+      "catalog_version": 3,
+      "bytes": 109685321,
+      "sha256": "19cd12405dde9144b1a360e8c8418666c399a3d0d15a7f846880d71ab22f9dd4",
+      "expected_sha256": "19cd12405dde9144b1a360e8c8418666c399a3d0d15a7f846880d71ab22f9dd4",
+      "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/data_raw/esif_pue/esif.influx.buildingData.PUE.combined.parquet",
+      "download_url": "https://data.nlr.gov/system/files/300/1757103411-esif.influx.buildingData.PUE.combined.parquet",
+      "redownloaded": false
+    },
+    {
+      "source_filename": "esif.influx.buildingData.outside.combined.parquet",
+      "catalog_name": "ESIF DC Outside Weather Station Timeseries Data (Parquet)",
+      "catalog_version": 2,
+      "bytes": 58865468,
+      "sha256": "97b424993fa77a15117fb2c4659a2c327fc83280f943fab47d9036260289a6a0",
+      "expected_sha256": "97b424993fa77a15117fb2c4659a2c327fc83280f943fab47d9036260289a6a0",
+      "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/data_raw/esif_pue/esif.influx.buildingData.outside.combined.parquet",
+      "download_url": "https://data.nlr.gov/system/files/300/1757105566-esif.influx.buildingData.outside.combined_2.parquet",
+      "note": "Catalog title uses outside.combined.parquet; payload filename on the current version URL is outside.combined_2.parquet. Stored locally under the catalog title name.",
+      "redownloaded_because_absent": true
+    },
+    {
+      "source_filename": "README.md",
+      "catalog_name": "README",
+      "bytes": 1877,
+      "sha256": "f69d32f1af598c48a899d54d48b26def2ca78a0c11d848516169570ecae4c029",
+      "expected_sha256": "f69d32f1af598c48a899d54d48b26def2ca78a0c11d848516169570ecae4c029",
+      "local_path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/data_raw/esif_pue/README.md"
+    }
+  ],
+  "column_name_note": {
+    "readme_weather": [
+      "outside_air_temp",
+      "outside_air_humidity"
+    ],
+    "parquet_weather": [
+      "outdoor_air_temp",
+      "outdoor_air_humidity"
+    ],
+    "mapping": "README names are the official semantics; parquet uses outdoor_* . Canonical hourly columns use README names after mapping."
+  },
+  "raw_unaltered": true
+}

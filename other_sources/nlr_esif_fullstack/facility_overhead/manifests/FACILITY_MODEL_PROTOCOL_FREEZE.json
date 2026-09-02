@@ -1,0 +1,54 @@
+{
+  "targets": [
+    "cooling_kw",
+    "hvac_kw",
+    "pump_kw",
+    "plug_and_light_kw",
+    "aux_source_kw (direct diagnostic only)"
+  ],
+  "hierarchy": [
+    "F0",
+    "F1",
+    "F2_PHYS",
+    "F2_RAW",
+    "F3",
+    "F4"
+  ],
+  "primary_selection_metric": "equal-weight mean of fold daily-energy WAPE",
+  "parsimony": {
+    "relative_WAPE_band": 0.01,
+    "energy_bias_pp": 0.01,
+    "simplicity_order": [
+      "F0",
+      "F1",
+      "F2_PHYS",
+      "F2_RAW",
+      "F3",
+      "F4"
+    ],
+    "F2_PHYS_preferred_to_F2_RAW_if_equivalent": true
+  },
+  "F3_F4_scaling": "center/scale training-window IT, Tdb, Twb only; polynomials of scaled variables",
+  "forbidden": [
+    "LightGBM",
+    "RF",
+    "XGBoost",
+    "NN",
+    "Optuna",
+    "large GAM",
+    "target autoregression",
+    "direct PUE fit",
+    "p-value feature selection",
+    "correlation-based lag search"
+  ],
+  "input": "measured it_power_kw + weather",
+  "not_inputs": [
+    "Kestrel CPU replay",
+    "H100 replay",
+    "TDP",
+    "M100",
+    "Meta",
+    "energy_reuse"
+  ],
+  "test_not_used_for_selection": true
+}
