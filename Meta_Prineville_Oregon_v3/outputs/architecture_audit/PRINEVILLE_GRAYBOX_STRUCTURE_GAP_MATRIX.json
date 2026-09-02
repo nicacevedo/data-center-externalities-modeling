@@ -1,0 +1,157 @@
+{
+  "n": 15,
+  "items": [
+    {
+      "mechanism": "direct_evaporative_cooling",
+      "evidence_requirement": "PRN1 2011 ECH mist CONFIRMED",
+      "current_implementation": "adiabatic saturator + spray fraction vs 25 C",
+      "code_location": "src/prineville_graybox.py::simulate",
+      "parameter_provenance": "\u03b5=0.85 prior",
+      "correct_physical_boundary": "partial (air-side water yes; maps onward to withdrawal via fitted scale)",
+      "correct_epoch": "early yes; later PRN1 chiller no",
+      "status": "PRESENT_AND_SUPPORTED"
+    },
+    {
+      "mechanism": "humidification",
+      "evidence_requirement": "same ECH system CONFIRMED",
+      "current_implementation": "same \u0394\u03c9 path (cooling and humidification not separated)",
+      "code_location": "simulate evap_water",
+      "parameter_provenance": "psychrometric identity",
+      "correct_physical_boundary": "yes as air-side water",
+      "correct_epoch": "early",
+      "status": "PRESENT_AND_SUPPORTED"
+    },
+    {
+      "mechanism": "dry_free_outside_air",
+      "evidence_requirement": "economizer CONFIRMED",
+      "current_implementation": "if t_db<=25 C: no spray, t_supply=t_db",
+      "code_location": "simulate t_supply",
+      "parameter_provenance": "25 C prior",
+      "correct_physical_boundary": "yes",
+      "correct_epoch": "early",
+      "status": "PRESENT_AND_SUPPORTED"
+    },
+    {
+      "mechanism": "return_air_recirculation",
+      "evidence_requirement": "winter mixing CONFIRMED at PRN1",
+      "current_implementation": "return_air_C declared; unused. Mode label winter_mix uses 100% OA when cold",
+      "code_location": "Params.return_air_C; cooling_mode string",
+      "parameter_provenance": "unused 35 C",
+      "correct_physical_boundary": "no (mixed-air \u03c9 missing)",
+      "correct_epoch": "early missing physics",
+      "status": "REQUIRED_MISSING"
+    },
+    {
+      "mechanism": "airflow_IT_dependence",
+      "evidence_requirement": "VFD fans matching load CONFIRMED in spec",
+      "current_implementation": "m_air \u221d P_IT; p_fan = 0.025 P_IT",
+      "code_location": "simulate m_air, p_fan",
+      "parameter_provenance": "linear prior",
+      "correct_physical_boundary": "n/a",
+      "correct_epoch": "early",
+      "status": "PRESENT_AND_SUPPORTED"
+    },
+    {
+      "mechanism": "fan_power",
+      "evidence_requirement": "fan wall CONFIRMED",
+      "current_implementation": "constant fraction of IT",
+      "code_location": "fan_fraction_of_it",
+      "parameter_provenance": "PUE-room prior",
+      "correct_physical_boundary": "n/a",
+      "correct_epoch": "early",
+      "status": "KEEP_AS_SCENARIO"
+    },
+    {
+      "mechanism": "dry_bulb_dependence",
+      "evidence_requirement": "OA/economizer CONFIRMED",
+      "current_implementation": "t_db drives mode and spray",
+      "code_location": "simulate",
+      "parameter_provenance": "weather",
+      "correct_physical_boundary": "yes",
+      "correct_epoch": "early",
+      "status": "PRESENT_AND_SUPPORTED"
+    },
+    {
+      "mechanism": "RH_wetbulb_dependence",
+      "evidence_requirement": "Twb/RH/dewpoint limits in OCP spec",
+      "current_implementation": "Twb in t_full and spray; RH in humidity ratio; dewpoint min not coded",
+      "code_location": "simulate",
+      "parameter_provenance": "partial",
+      "correct_physical_boundary": "partial",
+      "correct_epoch": "early",
+      "status": "PRESENT_AND_SUPPORTED"
+    },
+    {
+      "mechanism": "supply_air_limits",
+      "evidence_requirement": "cold aisle 65\u201385 F; 65% RH max; dewpoint min",
+      "current_implementation": "single 25 C target",
+      "code_location": "supply_target_C",
+      "parameter_provenance": "prior inside band",
+      "correct_physical_boundary": "n/a",
+      "correct_epoch": "early",
+      "status": "KEEP_AS_SCENARIO"
+    },
+    {
+      "mechanism": "architecture_epochs",
+      "evidence_requirement": "multi-building / PRN1 2024 chiller CONFIRMED",
+      "current_implementation": "single campus architecture 2011\u20132024",
+      "code_location": "prineville_graybox.py has no A_t",
+      "parameter_provenance": "n/a",
+      "correct_physical_boundary": "n/a",
+      "correct_epoch": "no",
+      "status": "EPOCH_MISMATCH"
+    },
+    {
+      "mechanism": "PRN1_chilled_water_chiller",
+      "evidence_requirement": "CONFIRMED 2024-02-02 at PRN1",
+      "current_implementation": "absent (no COP, no CW loop, no CRAH)",
+      "code_location": "none",
+      "parameter_provenance": "n/a",
+      "correct_physical_boundary": "n/a",
+      "correct_epoch": "missing",
+      "status": "REQUIRED_MISSING"
+    },
+    {
+      "mechanism": "water_boundary_tagging",
+      "evidence_requirement": "CONDITIONING_SITE_WATER vs WITHDRAWAL",
+      "current_implementation": "raw evap then fitted scale to Meta withdrawal",
+      "code_location": "conditional_reconstruction.py water_scale",
+      "parameter_provenance": "fitted through 2022",
+      "correct_physical_boundary": "no if treated as physics",
+      "correct_epoch": "n/a",
+      "status": "BOUNDARY_MISMATCH"
+    },
+    {
+      "mechanism": "SPLC",
+      "evidence_requirement": "Prineville-specific install",
+      "current_implementation": "absent",
+      "code_location": "none",
+      "parameter_provenance": "n/a",
+      "correct_physical_boundary": "n/a",
+      "correct_epoch": "n/a",
+      "status": "SECOND_ORDER_NOT_REQUIRED"
+    },
+    {
+      "mechanism": "cooling_tower_campus",
+      "evidence_requirement": "installed tower",
+      "current_implementation": "absent (correct for 2011; unknown for PRN1 2024 heat rejection)",
+      "code_location": "none",
+      "parameter_provenance": "n/a",
+      "correct_physical_boundary": "n/a",
+      "correct_epoch": "n/a",
+      "status": "SECOND_ORDER_NOT_REQUIRED"
+    },
+    {
+      "mechanism": "Lei_Masanet_or_ESIF_coefficients",
+      "evidence_requirement": "must not transfer",
+      "current_implementation": "not in gray-box Params",
+      "code_location": "prineville_graybox.py",
+      "parameter_provenance": "none",
+      "correct_physical_boundary": "n/a",
+      "correct_epoch": "n/a",
+      "status": "PRESENT_AND_SUPPORTED"
+    }
+  ],
+  "structural_disposition": "MINIMAL_STRUCTURAL_REVISION_REQUIRED",
+  "not_judged_by_water_holdout": true
+}

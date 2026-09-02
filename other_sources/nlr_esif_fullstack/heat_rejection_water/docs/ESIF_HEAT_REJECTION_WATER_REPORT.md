@@ -29,9 +29,9 @@ OSTI PDFs have **zero** embedded supplemental files. No official water spreadshe
 
 Thermal: reuse then TSC then tower. Water: `W_ESIF_reported_cooling` = Meter 1 + Meter 2 + estimated sand-filter blowdown. MAU humidification **unmetered and excluded**. Not groundwater, not WUESOURCE.
 
-## First-year reproduction — PASS
+## First-year reproduction — PASS (source accounting / arithmetic consistency)
 
-Period 2016-09-01 through 2017-08-31.
+Period 2016-09-01 through 2017-08-31. This is **source-accounting reproduction / independent arithmetic consistency**, not an independently re-observed annual meter total.
 
 | Quantity | Source | Independent arithmetic |
 | --- | --- | --- |
@@ -70,7 +70,7 @@ A fitted time-series water model is **not justified**. Annual identity `W = WUE 
 
 Preregistered closest: `LIQ_DRY_AD`, climate **5B**, Large-scale, direct-to-chip. Architecture match **PARTIAL**. Contrast: `WE_WCC` 5B Large (evaporative-tower water).
 
-Lei LIQ_DRY_AD 5B WUE p05–p95 ≈ 0.14–0.26; WE_WCC 5B ≈ 1.87–2.55. ESIF observed 0.70 sits between dry-liquid and open-tower Lei water, as expected for a **hybrid**. Direction consistent; magnitudes not transferable. **Not independent validation** of Lei.
+Lei LIQ_DRY_AD 5B WUE p05–p95 ≈ 0.14–0.26; WE_WCC 5B ≈ 1.87–2.55. ESIF observed 0.70 sits between dry-liquid and open-tower Lei water, as expected for a **hybrid**. Direction consistent; magnitudes not transferable. ESIF evidence is **independent** of the Lei modeled lineage; architecture mismatch prevents coefficient validation (`PARTIAL_INDEPENDENT_EXTERNAL_STRUCTURAL_VALIDATION`).
 
 ## Project implications
 

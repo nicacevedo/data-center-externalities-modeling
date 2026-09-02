@@ -33,7 +33,7 @@ ESIF supports:
 
 ## Lei/Masanet
 
-The public Lei bank has **no exact ESIF architecture**. Closest preregistered case is `LIQ_DRY_AD` in climate 5B (liquid + dry cooler) — missing reuse-first and open-tower remainder, and it includes adiabatic/ACC. Direction (dry rejection uses less site water than open-tower evaporation) is consistent. Magnitudes are **not** a calibration target. Agreement is **not** independent validation of Lei (same modeled lineage).
+The public Lei bank has **no exact ESIF architecture**. Closest preregistered case is `LIQ_DRY_AD` in climate 5B (liquid + dry cooler) — missing reuse-first and open-tower remainder, and it includes adiabatic/ACC. Direction (dry rejection uses less site water than open-tower evaporation) is consistent. Magnitudes are **not** a calibration target. ESIF Sickinger/NREL evidence is **independent** of the Lei/Masanet modeled lineage; architecture mismatch prevents direct coefficient validation (`PARTIAL_INDEPENDENT_EXTERNAL_STRUCTURAL_VALIDATION`).
 
 ## Prineville — review, do not refit
 
@@ -52,4 +52,4 @@ Every water quantity must carry one primary tag:
 
 `CONDITIONING_SITE_WATER` | `TOWER_MAKEUP` | `EVAPORATION` | `BLOWDOWN` | `WITHDRAWAL` | `MUNICIPAL_SUPPLY` | `GROUNDWATER_WITHDRAWAL` | `SURFACE_WATER_WITHDRAWAL` | `CONSUMPTION` | `RETURN_FLOW`
 
-Do not sum across tags. ESIF 0.70 L/kWh is `CONDITIONING_SITE_WATER` (tower-loop makeup identity above), not groundwater.
+Do not sum across tags. ESIF 0.70 L/kWh is primarily `CONDITIONING_SITE_WATER` (Meter 1 + Meter 2 + estimated filter blowdown), not groundwater and not the Meter-1 tower-makeup subcomponent alone.

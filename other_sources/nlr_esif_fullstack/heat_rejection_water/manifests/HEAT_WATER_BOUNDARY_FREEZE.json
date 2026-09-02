@@ -17,9 +17,16 @@
   "water_canonical_name": "W_ESIF_reported_cooling",
   "water_definition": "Meter 1 + Meter 2 + estimated sand-filter blowdown",
   "water_boundary_tags": [
-    "CONDITIONING_SITE_WATER",
-    "TOWER_MAKEUP"
+    "CONDITIONING_SITE_WATER"
   ],
+  "primary_boundary_tag": "CONDITIONING_SITE_WATER",
+  "subcomponent_tags_where_supported": {
+    "Meter_1": "TOWER_MAKEUP (majority path; not the entire reported total)",
+    "Meter_2": "RETURN_FLOW",
+    "sand_filter_blowdown_estimate": "BLOWDOWN",
+    "tower_evaporation": "CONSUMPTION (occurs; not separately published)"
+  },
+  "do_not_classify_entire_reported_total_as": "TOWER_MAKEUP",
   "includes": [
     "city water to softeners/sumps",
     "softener regeneration via Meter 2",

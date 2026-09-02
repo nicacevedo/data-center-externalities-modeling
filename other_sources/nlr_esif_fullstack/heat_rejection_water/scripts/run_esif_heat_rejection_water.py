@@ -242,7 +242,7 @@ def inventory() -> list[dict]:
              evidence_class="MEASUREMENT_DERIVED",
              physical_meaning="Meter 1 + Meter 2 + estimated sand-filter blowdown; city/softened cooling-tower loop water",
              source="Sickinger §3.2.1; implied by WUE×E_IT",
-             water_thermal_boundary="CONDITIONING_SITE_WATER / TOWER_MAKEUP_PLUS_SOFTENER_REGEN_PLUS_FILTER_BLOWDOWN_ESTIMATE",
+             water_thermal_boundary="CONDITIONING_SITE_WATER",
              observation="meters + estimate", usable_as_model_target=True, usable_as_model_predictor=False,
              usable_as_validation_only=True, notes="MAU humidification excluded; not groundwater; not WUESOURCE"),
         dict(quantity="WUE_site_observed", symbol="WUE", units="L/kWh", date_range="2016-09-01/2017-08-31",
@@ -426,7 +426,15 @@ def freeze_boundaries() -> None:
             "first_year_shares": {"reuse": 0.105, "TSC": 0.425, "tower": 0.47, "sum": 1.0, "evidence_class": "MEASUREMENT_DERIVED"},
             "water_canonical_name": "W_ESIF_reported_cooling",
             "water_definition": "Meter 1 + Meter 2 + estimated sand-filter blowdown",
-            "water_boundary_tags": ["CONDITIONING_SITE_WATER", "TOWER_MAKEUP"],
+            "water_boundary_tags": ["CONDITIONING_SITE_WATER"],
+            "primary_boundary_tag": "CONDITIONING_SITE_WATER",
+            "subcomponent_tags_where_supported": {
+                "Meter_1": "TOWER_MAKEUP (majority path; not the entire reported total)",
+                "Meter_2": "RETURN_FLOW",
+                "sand_filter_blowdown_estimate": "BLOWDOWN",
+                "tower_evaporation": "CONSUMPTION (occurs; not separately published)",
+            },
+            "do_not_classify_entire_reported_total_as": "TOWER_MAKEUP",
             "includes": ["city water to softeners/sumps", "softener regeneration via Meter 2", "estimated sand-filter blowdown"],
             "excludes": ["MAU humidification (unmetered)", "WUESOURCE / power-plant water", "groundwater", "Prineville/Meta water"],
             "not_automatically": ["WITHDRAWAL source split", "CONSUMPTION vs RETURN_FLOW beyond sewer discharge of regen/blowdown", "total facility water"],
@@ -498,6 +506,10 @@ def first_year_accounting() -> dict:
     status = "PASS" if (tsc_ok and pue_ok and energy_ok) else "PARTIAL"
     rec = {
         "FIRST_YEAR_ACCOUNTING_REPRODUCTION": status,
+        "FIRST_YEAR_SOURCE_ACCOUNTING_REPRODUCTION": status,
+        "FIRST_YEAR_ARITHMETIC_CONSISTENCY": status,
+        "FIRST_YEAR_INDEPENDENT_METER_REOBSERVATION": "NOT_AVAILABLE",
+        "reproduction_meaning": "Independent arithmetic consistency with published source identities. Not an independently re-observed annual meter total.",
         "E_IT_kWh": e_it_kwh,
         "W_obs_m3_from_WUE": w_obs_m3,
         "W_cf_reuse_m3": w_reuse_m3,
@@ -517,10 +529,13 @@ def first_year_accounting() -> dict:
 def temporal_eligibility() -> dict:
     rec = {
         "WATER_TEMPORAL_RESOLUTION": "STRUCTURAL_ACCOUNTING_ONLY",
+        "WATER_MODEL_ELIGIBILITY": "STRUCTURAL_ACCOUNTING_ONLY",
+        "NUMERIC_TABULAR_WATER_RESOLUTION": "ANNUAL",
+        "GRAPHICAL_REPORTED_WATER_RESOLUTION": "MONTHLY",
         "rationale": (
-            "Public water evidence is annual WUE/volume plus a monthly bar figure without a numeric table. "
+            "Public numeric/tabular water evidence is annual WUE/volume. Sickinger Fig 4 reports monthly bars graphically without a numeric table. "
             "Meters were read manually. No hourly or daily independent water observations are public. "
-            "High-resolution IT/weather must not upgrade water resolution."
+            "High-resolution IT/weather must not upgrade water resolution. Graphical monthly reporting does not make MONTHLY_SUPPORTED."
         ),
         "HOURLY_SUPPORTED": False,
         "DAILY_SUPPORTED": False,
@@ -695,8 +710,18 @@ def freeze_esif_result(acct, elig, ident, wx) -> dict:
     rec = {
         "frozen_before_lei_comparison": True,
         "FIRST_YEAR_ACCOUNTING_REPRODUCTION": acct["FIRST_YEAR_ACCOUNTING_REPRODUCTION"],
+        "FIRST_YEAR_SOURCE_ACCOUNTING_REPRODUCTION": acct["FIRST_YEAR_ACCOUNTING_REPRODUCTION"],
+        "FIRST_YEAR_ARITHMETIC_CONSISTENCY": acct["FIRST_YEAR_ACCOUNTING_REPRODUCTION"],
         "WATER_TEMPORAL_RESOLUTION": elig["WATER_TEMPORAL_RESOLUTION"],
+        "WATER_MODEL_ELIGIBILITY": "STRUCTURAL_ACCOUNTING_ONLY",
+        "NUMERIC_TABULAR_WATER_RESOLUTION": "ANNUAL",
+        "GRAPHICAL_REPORTED_WATER_RESOLUTION": "MONTHLY",
         "WATER_MODEL_IDENTIFIABILITY": ident["choice"],
+        "TSC_SOURCE_COUNTERFACTUAL_WATER_REDUCTION": "PASS",
+        "HEAT_REUSE_SOURCE_COUNTERFACTUAL_WATER_REDUCTION": "PASS",
+        "TSC_CAUSAL_TREATMENT_EFFECT": "NOT_IDENTIFIED",
+        "HEAT_REUSE_CAUSAL_TREATMENT_EFFECT": "NOT_IDENTIFIED",
+        "ESIF_VS_LEI_MASANET": "PARTIAL_INDEPENDENT_EXTERNAL_STRUCTURAL_VALIDATION",
         "WUE_obs": 0.70,
         "WUE_cf_reuse": 1.27,
         "WUE_cf_tower": 1.42,
@@ -763,7 +788,11 @@ def lei_compare(freeze: dict) -> dict:
         "LEI_MASANET_MODELED_SCENARIO_primary": p,
         "LEI_MASANET_MODELED_SCENARIO_contrast_tower": c,
         "architecture_match": "PARTIAL",
-        "lineage": "Lei scenarios are the same Lei-Masanet modeled lineage; agreement is NOT independent validation of that lineage",
+        "lineage": (
+            "ESIF Sickinger/NREL empirical/source-derived evidence is independent from the Lei/Masanet modeled scenario lineage. "
+            "Architecture mismatch prevents direct coefficient validation. Directional dry-vs-evaporative water ordering is an external structural consistency check, not coefficient validation."
+        ),
+        "ESIF_VS_LEI_MASANET": "PARTIAL_INDEPENDENT_EXTERNAL_STRUCTURAL_VALIDATION",
         "direction_of_technology_effect": (
             "ESIF source: adding dry TSC after reuse reduces engineering-counterfactual WUE 1.27 → 0.70. "
             "Lei LIQ_DRY_AD in 5B has low WUE relative to WE_WCC in 5B (dry vs evaporative-tower water). "
@@ -852,7 +881,7 @@ def figures(acct, wx, lei) -> None:
     ax.set_xticks([0, 1, 2])
     ax.set_xticklabels(["ESIF", "Lei dry-liquid", "Lei tower+chiller"])
     ax.set_ylabel("site WUE L/kWh")
-    ax.set_title("Architecture-preregistered Lei comparison\n(not independent validation; no retuning)")
+    ax.set_title("Architecture-preregistered Lei comparison\n(independent ESIF source vs modeled Lei scenarios; mismatch blocks coefficient validation)")
     ax.legend(fontsize=7)
     fig.tight_layout()
     fig.savefig(FIGURES / "06_esif_vs_lei.png", dpi=120)
@@ -863,13 +892,15 @@ def figures(acct, wx, lei) -> None:
     ax.axis("off")
     ax.set_xlim(0, 10)
     ax.set_ylim(0, 3)
-    boxes = [(0.3, 1, "Q_IT"), (2.3, 1, "Q_reuse"), (4.3, 1, "Q_TSC dry"), (6.3, 1, "Q_tower evap"), (8.3, 1, "W_cooling")]
+    boxes = [(0.3, 1, "Q_IT"), (2.3, 1, "remaining"), (4.3, 1, "Q_TSC dry"), (6.3, 1, "remaining"), (8.3, 1, "W_cooling")]
     for x, y, lab in boxes:
         ax.add_patch(plt.Rectangle((x, y), 1.6, 1, fill=True, facecolor="#e8e8e8", edgecolor="k"))
         ax.text(x + 0.8, y + 0.5, lab, ha="center", va="center", fontsize=8)
     for x in (1.9, 3.9, 5.9, 7.9):
         ax.annotate("", xy=(x + 0.4, 1.5), xytext=(x, 1.5), arrowprops=dict(arrowstyle="->"))
-    ax.set_title("Documented ESIF heat→water hierarchy (structure, not coefficients)")
+    ax.text(3.1, 2.15, "Q_reuse", ha="center", fontsize=8)
+    ax.text(7.1, 2.15, "Q_tower evap", ha="center", fontsize=8)
+    ax.set_title("Documented ESIF heat→water hierarchy (remaining thermal load; structure, not coefficients)")
     fig.tight_layout()
     fig.savefig(FIGURES / "01_thermal_water_hierarchy.png", dpi=120)
     plt.close()
@@ -881,18 +912,28 @@ def write_status(acct, elig, ident, lei) -> dict:
         "WATER_BOUNDARY_IDENTIFIED": "PASS",
         "THERMAL_BOUNDARY_IDENTIFIED": "PASS",
         "FIRST_YEAR_ACCOUNTING_REPRODUCTION": acct["FIRST_YEAR_ACCOUNTING_REPRODUCTION"],
+        "FIRST_YEAR_SOURCE_ACCOUNTING_REPRODUCTION": acct["FIRST_YEAR_ACCOUNTING_REPRODUCTION"],
+        "FIRST_YEAR_ARITHMETIC_CONSISTENCY": acct["FIRST_YEAR_ACCOUNTING_REPRODUCTION"],
+        "FIRST_YEAR_INDEPENDENT_METER_REOBSERVATION": "NOT_AVAILABLE",
         "WATER_TEMPORAL_RESOLUTION": "STRUCTURAL_ONLY",
+        "WATER_MODEL_ELIGIBILITY": "STRUCTURAL_ACCOUNTING_ONLY",
+        "NUMERIC_TABULAR_WATER_RESOLUTION": "ANNUAL",
+        "GRAPHICAL_REPORTED_WATER_RESOLUTION": "MONTHLY",
         "WATER_MODEL_IDENTIFIABILITY": "NO_FITTED_MODEL_REQUIRED",
         "HEAT_REJECTION_ALLOCATION": "PASS",
         "WEATHER_REGIME_MECHANISM": "PARTIAL",
         "TSC_WATER_REDUCTION": "PASS",
+        "TSC_SOURCE_COUNTERFACTUAL_WATER_REDUCTION": "PASS",
         "HEAT_REUSE_WATER_REDUCTION": "PASS",
+        "HEAT_REUSE_SOURCE_COUNTERFACTUAL_WATER_REDUCTION": "PASS",
+        "TSC_CAUSAL_TREATMENT_EFFECT": "NOT_IDENTIFIED",
+        "HEAT_REUSE_CAUSAL_TREATMENT_EFFECT": "NOT_IDENTIFIED",
         "OBSERVED_WUE": "PASS",
         "COUNTERFACTUAL_WUE": "PASS",
         "MONTHLY_WATER_RECONSTRUCTION": "UNSUPPORTED",
         "WATER_MODEL": "NOT_NEEDED",
         "WATER_MODEL_OUT_OF_TIME_VALIDATION": "NOT_NEEDED",
-        "ESIF_VS_LEI_MASANET": "PARTIAL",
+        "ESIF_VS_LEI_MASANET": "PARTIAL_INDEPENDENT_EXTERNAL_STRUCTURAL_VALIDATION",
         "PRINEVILLE_COEFFICIENT_TRANSFER": "NOT_ALLOWED",
         "HEAT_WATER_FINAL_DISPOSITION": "STRUCTURAL_ACCOUNTING_VALIDATION",
         "cpu_untouched": True,

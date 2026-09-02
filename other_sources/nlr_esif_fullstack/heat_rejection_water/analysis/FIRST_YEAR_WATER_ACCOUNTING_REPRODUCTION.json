@@ -1,5 +1,9 @@
 {
   "FIRST_YEAR_ACCOUNTING_REPRODUCTION": "PASS",
+  "FIRST_YEAR_SOURCE_ACCOUNTING_REPRODUCTION": "PASS",
+  "FIRST_YEAR_ARITHMETIC_CONSISTENCY": "PASS",
+  "FIRST_YEAR_INDEPENDENT_METER_REOBSERVATION": "NOT_AVAILABLE",
+  "reproduction_meaning": "Independent arithmetic consistency with published source identities (WUE x IT energy, PUE from stated energies, gallon conversions). Not an independently re-observed annual meter total.",
   "E_IT_kWh": 7776000.0,
   "W_obs_m3_from_WUE": 5443.2,
   "W_cf_reuse_m3": 9875.52,

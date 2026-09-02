@@ -275,6 +275,8 @@ def test_lei_mapping_frozen_before_outcome_comparison():
     assert freeze["WUE_obs"] == lei["ESIF_MEASURED_OR_SOURCE_DERIVED"]["WUE"] == 0.70
     assert lei["no_retuning"] is True
     assert lei["esif_results_unchanged_after_comparison"] is True
+    assert lei["ESIF_VS_LEI_MASANET"] == "PARTIAL_INDEPENDENT_EXTERNAL_STRUCTURAL_VALIDATION"
+    assert "independent from the Lei/Masanet modeled scenario lineage" in lei["lineage"]
     st = _j(ANALYSIS / "FINAL_ESIF_HEAT_WATER_STATUS.json")
     assert st["lei_mapping_frozen_before_outcome_comparison"] is True
     assert st["esif_result_changed_after_lei"] is False
@@ -285,6 +287,9 @@ def test_lei_mapping_frozen_before_outcome_comparison():
 def test_water_boundary_canonical_name():
     bnd = _j(MANIFESTS / "HEAT_WATER_BOUNDARY_FREEZE.json")
     assert bnd["water_canonical_name"] == "W_ESIF_reported_cooling"
+    assert bnd["primary_boundary_tag"] == "CONDITIONING_SITE_WATER"
+    assert bnd["water_boundary_tags"] == ["CONDITIONING_SITE_WATER"]
+    assert bnd["do_not_classify_entire_reported_total_as"] == "TOWER_MAKEUP"
     assert "MAU humidification" in " ".join(bnd["excludes"])
     assert bnd["first_year_shares"]["evidence_class"] == "MEASUREMENT_DERIVED"
     assert abs(bnd["first_year_shares"]["sum"] - 1.0) < 1e-12
@@ -294,6 +299,12 @@ def test_final_disposition_structural_validation():
     st = _j(ANALYSIS / "FINAL_ESIF_HEAT_WATER_STATUS.json")
     assert st["HEAT_WATER_FINAL_DISPOSITION"] == "STRUCTURAL_ACCOUNTING_VALIDATION"
     assert st["FIRST_YEAR_ACCOUNTING_REPRODUCTION"] == "PASS"
+    assert st["FIRST_YEAR_SOURCE_ACCOUNTING_REPRODUCTION"] == "PASS"
+    assert st["FIRST_YEAR_ARITHMETIC_CONSISTENCY"] == "PASS"
+    assert st["TSC_CAUSAL_TREATMENT_EFFECT"] == "NOT_IDENTIFIED"
+    assert st["ESIF_VS_LEI_MASANET"] == "PARTIAL_INDEPENDENT_EXTERNAL_STRUCTURAL_VALIDATION"
+    assert st["NUMERIC_TABULAR_WATER_RESOLUTION"] == "ANNUAL"
+    assert st["GRAPHICAL_REPORTED_WATER_RESOLUTION"] == "MONTHLY"
     assert st["cpu_untouched"] is True
     assert st["h100_untouched"] is True
     assert st["facility_overhead_untouched"] is True

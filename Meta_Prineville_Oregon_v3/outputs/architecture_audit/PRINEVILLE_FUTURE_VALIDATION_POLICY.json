@@ -1,0 +1,35 @@
+{
+  "existing_meta_2023_2024_water_benchmark": {
+    "years": [
+      2023,
+      2024
+    ],
+    "status": "PREVIOUSLY_EXPOSED",
+    "not_pristine_new_TEST": true,
+    "this_audit_did_not_inspect_outcomes_for_structure": true
+  },
+  "development_calibration_evidence_allowed": [
+    "2011\u20132022 Meta annual electricity (closure, labeled closure)",
+    "2011\u20132022 weather",
+    "2011 OCP/Meta design physics",
+    "permit-documented architecture epochs",
+    "City monthly service meters as a DIFFERENT boundary (not Meta total)"
+  ],
+  "development_calibration_evidence_forbidden_for_structure_selection": [
+    "Meta 2023\u20132024 annual water outcomes",
+    "holdout MAPE / WAPE as architecture chooser"
+  ],
+  "previously_exposed_benchmark": "Meta 2023\u20132024 annual water (already used in prior pipeline reports)",
+  "genuinely_new_validation_candidates": [
+    "new City monthly data at a documented meter identity after a freeze date",
+    "future Meta annual water vintages not yet used in this repo",
+    "PacifiCorp interval/monthly campus electricity if acquired",
+    "direct campus SAT/RH/airflow/mist-water telemetry if acquired",
+    "another appropriate site (not ESIF coefficients)"
+  ],
+  "rules": [
+    "Freeze structural revision before inspecting 2023\u20132024 water.",
+    "Do not add chiller/SPLC/tower terms because holdout water failed.",
+    "If 2023\u20132024 is reported, label DIAGNOSTIC_PREVIOUSLY_EXPOSED."
+  ]
+}

@@ -22,13 +22,18 @@ First full year (2016-09-01 through 2017-08-31), Sickinger Fig. 4 pie / §2.2 �
 
 Canonical quantity: **`W_ESIF_reported_cooling`**.
 
+Primary project tag: **`CONDITIONING_SITE_WATER`**.
+
+Do **not** classify the entire Meter 1 + Meter 2 + estimated-filter total narrowly as `TOWER_MAKEUP`.
+
 Sickinger §3.2.1:
 
-- City water → softeners; regeneration to sewer through **Meter 2**.
+- City water → softeners; regeneration to sewer through **Meter 2** (`RETURN_FLOW`).
 - Softened water mixed with city water → sumps.
-- Side-stream sand filter flushed with city water to sewer a few times per month (**estimated** blowdown).
-- Sumps → cooling towers: evaporation, return to sumps, or blowdown to sewer.
-- **Total reported water = Meter 1 + Meter 2 + estimated sand-filter blowdown.**
+- Side-stream sand filter flushed with city water to sewer a few times per month (**estimated** blowdown; `BLOWDOWN`).
+- Sumps → cooling towers: evaporation (`CONSUMPTION`, not separately published), return to sumps, or blowdown to sewer.
+- **Total reported water = Meter 1 + Meter 2 + estimated sand-filter blowdown** (`CONDITIONING_SITE_WATER`).
+- Meter 1 is the majority **tower-makeup path**, a subcomponent, not the whole reported total.
 - **Meter 3** → cycles of concentration (TDS ratio). First-year COC = **12.8**.
 - Manual readings by two entities. Digital meters recommended, not used for the paper.
 
@@ -45,7 +50,7 @@ This is **not** automatically:
 Project tags that apply:
 
 - `CONDITIONING_SITE_WATER` (primary)
-- `TOWER_MAKEUP` (majority of Meter 1 path)
+- `TOWER_MAKEUP` (Meter 1 majority path only; not the entire reported total)
 - `EVAPORATION` / `BLOWDOWN` (occur; not separately published as time series)
 - `MUNICIPAL_SUPPLY` (city water)
 - `RETURN_FLOW` (softener regen + blowdown to sewer)

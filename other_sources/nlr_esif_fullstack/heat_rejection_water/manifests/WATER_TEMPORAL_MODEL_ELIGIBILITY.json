@@ -1,6 +1,9 @@
 {
   "WATER_TEMPORAL_RESOLUTION": "STRUCTURAL_ACCOUNTING_ONLY",
-  "rationale": "Public water evidence is annual WUE/volume plus a monthly bar figure without a numeric table. Meters were read manually. No hourly or daily independent water observations are public. High-resolution IT/weather must not upgrade water resolution.",
+  "WATER_MODEL_ELIGIBILITY": "STRUCTURAL_ACCOUNTING_ONLY",
+  "NUMERIC_TABULAR_WATER_RESOLUTION": "ANNUAL",
+  "GRAPHICAL_REPORTED_WATER_RESOLUTION": "MONTHLY",
+  "rationale": "Public numeric/tabular water evidence is annual WUE/volume. Sickinger Fig 4 reports monthly bars graphically without a numeric table. Meters were read manually. No hourly or daily independent water observations are public. High-resolution IT/weather must not upgrade water resolution. Graphical monthly reporting does not make MONTHLY_SUPPORTED.",
   "HOURLY_SUPPORTED": false,
   "DAILY_SUPPORTED": false,
   "MONTHLY_SUPPORTED": false,

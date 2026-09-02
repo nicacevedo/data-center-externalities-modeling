@@ -1,0 +1,16 @@
+mechanism,evidence_requirement,current_implementation,code_location,parameter_provenance,correct_physical_boundary,correct_epoch,status
+direct_evaporative_cooling,PRN1 2011 ECH mist CONFIRMED,adiabatic saturator + spray fraction vs 25 C,src/prineville_graybox.py::simulate,ε=0.85 prior,partial (air-side water yes; maps onward to withdrawal via fitted scale),early yes; later PRN1 chiller no,PRESENT_AND_SUPPORTED
+humidification,same ECH system CONFIRMED,same Δω path (cooling and humidification not separated),simulate evap_water,psychrometric identity,yes as air-side water,early,PRESENT_AND_SUPPORTED
+dry_free_outside_air,economizer CONFIRMED,"if t_db<=25 C: no spray, t_supply=t_db",simulate t_supply,25 C prior,yes,early,PRESENT_AND_SUPPORTED
+return_air_recirculation,winter mixing CONFIRMED at PRN1,return_air_C declared; unused. Mode label winter_mix uses 100% OA when cold,Params.return_air_C; cooling_mode string,unused 35 C,no (mixed-air ω missing),early missing physics,REQUIRED_MISSING
+airflow_IT_dependence,VFD fans matching load CONFIRMED in spec,m_air ∝ P_IT; p_fan = 0.025 P_IT,"simulate m_air, p_fan",linear prior,n/a,early,PRESENT_AND_SUPPORTED
+fan_power,fan wall CONFIRMED,constant fraction of IT,fan_fraction_of_it,PUE-room prior,n/a,early,KEEP_AS_SCENARIO
+dry_bulb_dependence,OA/economizer CONFIRMED,t_db drives mode and spray,simulate,weather,yes,early,PRESENT_AND_SUPPORTED
+RH_wetbulb_dependence,Twb/RH/dewpoint limits in OCP spec,Twb in t_full and spray; RH in humidity ratio; dewpoint min not coded,simulate,partial,partial,early,PRESENT_AND_SUPPORTED
+supply_air_limits,cold aisle 65–85 F; 65% RH max; dewpoint min,single 25 C target,supply_target_C,prior inside band,n/a,early,KEEP_AS_SCENARIO
+architecture_epochs,multi-building / PRN1 2024 chiller CONFIRMED,single campus architecture 2011–2024,prineville_graybox.py has no A_t,n/a,n/a,no,EPOCH_MISMATCH
+PRN1_chilled_water_chiller,CONFIRMED 2024-02-02 at PRN1,"absent (no COP, no CW loop, no CRAH)",none,n/a,n/a,missing,REQUIRED_MISSING
+water_boundary_tagging,CONDITIONING_SITE_WATER vs WITHDRAWAL,raw evap then fitted scale to Meta withdrawal,conditional_reconstruction.py water_scale,fitted through 2022,no if treated as physics,n/a,BOUNDARY_MISMATCH
+SPLC,Prineville-specific install,absent,none,n/a,n/a,n/a,SECOND_ORDER_NOT_REQUIRED
+cooling_tower_campus,installed tower,absent (correct for 2011; unknown for PRN1 2024 heat rejection),none,n/a,n/a,n/a,SECOND_ORDER_NOT_REQUIRED
+Lei_Masanet_or_ESIF_coefficients,must not transfer,not in gray-box Params,prineville_graybox.py,none,n/a,n/a,PRESENT_AND_SUPPORTED

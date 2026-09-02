@@ -1,0 +1,21 @@
+{
+  "numerical_esif_outputs_changed": false,
+  "experiment_rerun": false,
+  "files": [
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/manifests/WATER_TEMPORAL_MODEL_ELIGIBILITY.json",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/manifests/HEAT_WATER_BOUNDARY_FREEZE.json",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/manifests/ESIF_HEAT_WATER_RESULT_FREEZE.json",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/FINAL_ESIF_HEAT_WATER_STATUS.json",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/FIRST_YEAR_WATER_ACCOUNTING_REPRODUCTION.json",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/ESIF_VS_LEI_MASANET.json",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/WATER_EVIDENCE_INVENTORY.json",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/WATER_EVIDENCE_INVENTORY.csv",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/docs/ESIF_HEAT_WATER_BOUNDARY.md",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/docs/ESIF_HEAT_WATER_PROJECT_INTEGRATION.md",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/docs/ESIF_HEAT_REJECTION_WATER_REPORT.md",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/scripts/run_esif_heat_rejection_water.py",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/tests/test_heat_rejection_water.py",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/figures/01_thermal_water_hierarchy.png",
+    "other_sources/nlr_esif_fullstack/heat_rejection_water/figures/06_esif_vs_lei.png"
+  ]
+}

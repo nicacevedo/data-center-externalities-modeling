@@ -1,0 +1,42 @@
+{
+  "purpose": "Fail-closed starting state for Prineville architecture audit. No model fit.",
+  "public_reference_baseline": "340c6fd352b913e3e360b26b5d745bd94c2d600b",
+  "git": {
+    "branch": "main",
+    "HEAD": "340c6fd352b913e3e360b26b5d745bd94c2d600b",
+    "status": "m Data-center-PUE-prediction-tool\n M other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/ESIF_VS_LEI_MASANET.json\n M other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/FINAL_ESIF_HEAT_WATER_STATUS.json\n M other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/FIRST_YEAR_WATER_ACCOUNTING_REPRODUCTION.json\n M other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/WATER_EVIDENCE_INVENTORY.csv\n M other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/WATER_EVIDENCE_INVENTORY.json\n M other_sources/nlr_esif_fullstack/heat_rejection_water/docs/ESIF_HEAT_REJECTION_WATER_REPORT.md\n M other_sources/nlr_esif_fullstack/heat_rejection_water/docs/ESIF_HEAT_WATER_BOUNDARY.md\n M other_sources/nlr_esif_fullstack/heat_rejection_water/docs/ESIF_HEAT_WATER_PROJECT_INTEGRATION.md\n M other_sources/nlr_esif_fullstack/heat_rejection_water/figures/01_thermal_water_hierarchy.png\n M other_sources/nlr_esif_fullstack/heat_rejection_water/figures/06_esif_vs_lei.png\n M other_sources/nlr_esif_fullstack/heat_rejection_water/manifests/ESIF_HEAT_WATER_RESULT_FREEZE.json\n M other_sources/nlr_esif_fullstack/heat_rejection_water/manifests/HEAT_WATER_BOUNDARY_FREEZE.json\n M other_sources/nlr_esif_fullstack/heat_rejection_water/manifests/WATER_TEMPORAL_MODEL_ELIGIBILITY.json\n M other_sources/nlr_esif_fullstack/heat_rejection_water/scripts/run_esif_heat_rejection_water.py\n M other_sources/nlr_esif_fullstack/heat_rejection_water/tests/test_heat_rejection_water.py\n?? Meta_Prineville_Oregon_v3/scripts/run_architecture_audit.py\n?? Meta_Prineville_Oregon_v3/tests/test_architecture_audit.py\n?? docs/",
+    "dirty_submodule": "Data-center-PUE-prediction-tool"
+  },
+  "head_matches_public_baseline": true,
+  "unrelated_dirty_work": "submodule pointer only; heat_rejection_water already committed at baseline; this audit writes only architecture_audit/ plus ESIF semantic docs/status",
+  "frozen_hashes_at_audit_start": {
+    "cpu_status": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9",
+    "cpu_freeze": "dcbd066b26b8e7d2800e40a23a1cb8250502bfe59563fe06318cb1be1cc4fd27",
+    "h100_freeze": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076",
+    "fo_status": "ae7c50a0a5ab4c6ecd52f0fe55607ca423295458755226515ee5c46e2c3542d2",
+    "fo_layer_freeze": "bac8f706fa407f89a21ccbb73e2675cfed9b5bbc5443f43aea8572157e5c67e5",
+    "hw_status_after_semantic_patch_expected_to_change": true,
+    "hw_status_at_this_write": "9cdd12920ae9d8eedeb2ee9251897b27b55d75ab8041be778660f63c1491e063",
+    "hw_result_freeze_at_this_write": "4e01139dd9365f62824ac00ff944468839e7873e47a5cea3df4714854af1b02c",
+    "graybox": "baaf685190b432767519ea1bd7dbe2ec026718a31fef1e22bdff7cf727f17b55"
+  },
+  "prineville_live_graybox": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/src/prineville_graybox.py",
+  "known_frozen_water_holdout_specification": {
+    "holdout_years": [
+      2023,
+      2024
+    ],
+    "source": "config/prineville.yaml",
+    "note": "Specification recorded. Outcomes are NOT inspected for structural decisions in this pass."
+  },
+  "cannot_modify": [
+    "CPU",
+    "H100",
+    "IT-power",
+    "facility-overhead numerics",
+    "ESIF heat/water numerics",
+    "Prineville gray-box coefficients",
+    "Prineville production predictions"
+  ],
+  "recorded_utc": "2026-09-02T15:12:35Z"
+}
