@@ -1,0 +1,48 @@
+{
+  "corrections": [
+    {
+      "corrected_claim": "RECIRCULATION_TOPOLOGY = PRODUCT_STORAGE_RETURN_CONFIRMED. Hypothetical RO-feed topology removed from the scientific feasible set.",
+      "evidence": "OCP: recaptured water through micron filter and UV then brought back to the RO water storage tanks. ITherm Fig. 8 / Sec. V: recapture via polishing skid UV+micron filter piped back into the RO storage tanks.",
+      "id": "A_recirculation_topology",
+      "previous_claim": "Two feasible topologies: recapture to product tanks OR hypothetical recapture to RO feed (1.392x vapor).",
+      "scientific_consequence": "Steady-state P = E; F = E/r. Makeup is not E/0.85 and not 1.392 E."
+    },
+    {
+      "corrected_claim": "RO_RECOVERY_SOURCE_STATE = DISCREPANT_{0.67,0.75}. Not a probability distribution. Not replaced by a hard 75%.",
+      "evidence": "ITherm 2012 (Facebook-authored, ~May 2012): RO produces \u224867% purified water from input well water. OCP blog 2013-08-07: 75% of water brought into the data center used for cooling; 3 of 4 parts of RO water are product.",
+      "id": "B_RO_recovery",
+      "previous_claim": "r=0.75 as OCP operator split (with 1.333 topology A).",
+      "scientific_consequence": "Evaluate r=0.67 and r=0.75 separately. Dates, denominators, and metering retrofit differ."
+    },
+    {
+      "corrected_claim": "Q2_2012_BUILDING_SCOPE = PRN1_ONLY.",
+      "evidence": "OCP: Prineville 1; second building WUE available next year when that building is online.",
+      "id": "C_Q2_2012_scope",
+      "previous_claim": "Campus \u03bb unidentified after 2011; Q2-2012 WUE used as public benchmark without restating building scope in the proxy freeze.",
+      "scientific_consequence": "This consistency test is building-specific. Do not generalize to PRN2\u20136 or CCO."
+    },
+    {
+      "corrected_claim": "Ontology CONFIRMED_OPERATING / POSSIBLY_OPERATING / NOT_YET_OPERATING. PRN4 completed 2016 (Southland) is NOT hard-activated in 2014.",
+      "evidence": "Southland PRN4 completed 2016. OPUC early-2014 four buildings is campus chronology, not confirmed CO for PRN4.",
+      "id": "D_operating_chronology",
+      "previous_claim": "LOAD_SHARE_EXTREMA activated PRN2 from 2013 and PRN1\u20134 from 2014 as active buildings.",
+      "scientific_consequence": "2014 four-building simplex was a heuristic, not confirmed operations."
+    },
+    {
+      "corrected_claim": "Phase one: one 2 MW hall. Phase two: '2 MW data halls' plural. Hall count not established. Do not collapse to exactly 4 MW.",
+      "evidence": "Southland PRN4 project page wording.",
+      "id": "E_PRN4_capacity",
+      "previous_claim": "phase_sum about 4 MW if 2 plus 2.",
+      "scientific_consequence": "PRN4 MW remains interval-censored, not a point."
+    },
+    {
+      "corrected_claim": "Those numbers were expert-priority placeholders. Campus water has no finite identified baseline envelope, so numeric range reduction was not measured.",
+      "evidence": "public-proxy PUBLIC_PROXY_ENVELOPE_STATUS campus_total_meaningfully_bounded=false.",
+      "id": "F_VoI",
+      "previous_claim": "normalized_range_reduction values 1.0 / 0.8 / 0.7 treated as measured reductions.",
+      "scientific_consequence": "Replace with categorical expected_information_value. Numeric reduction only where a finite public interval exists."
+    }
+  ],
+  "does_not_rewrite_public_proxy_v1_freeze": true,
+  "public_proxy_v1_freeze_sha256_at_correction": "1d88ba5c3429d0978e64e9caea9b7b9d2cfe5287bf3fb3c2afbb5b81b0a699e2"
+}

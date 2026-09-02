@@ -1,0 +1,11 @@
+{
+  "frac_infeasible": 0.7692307692307693,
+  "hourly_sha256": "2f58e874053a822d0833d3154aeb3f6c6d3408ae3ad12a970a650e6700be5a90",
+  "load_weighting_air_stream_max": 0.37328590130595896,
+  "load_weighting_air_stream_min": 0.3686994318257435,
+  "load_weighting_relative_span": 0.012286747139845016,
+  "n_usable": 2171,
+  "no_monte_carlo": true,
+  "predictions_frozen_before_0.22_comparison": true,
+  "primary_air_stream_WUE_L_per_kWh_IT": 0.37328590130595896
+}

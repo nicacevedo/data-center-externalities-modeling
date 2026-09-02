@@ -1,0 +1,37 @@
+{
+  "bounded_search": [
+    "repo PRINEVILLE_WUE_BOUNDARY_CROSSWALK.csv/md",
+    "OCP Water Efficiency at Facebook's Prineville Data Center (2013-08-07, Q2-2012 0.22)",
+    "Frachtenberg et al. ITherm 2012 PDF + author pubs page (water-cycle only)",
+    "fbpuewue dashboard Wayback + facebookarchive/puewue frontend/backend (DASHBOARD_RECOVERY_MANIFEST)",
+    "Green Grid WUE definition as cited in repo WATER_BOUNDARY.md / Patterson 2011 via Lei-Masanet"
+  ],
+  "building": "PRN1",
+  "confidence": "HIGH_that_boundary_is_unresolved;_HIGH_that_office_water_is_excluded",
+  "discrete_hypotheses": [
+    {
+      "id": "RAW_COOLING_WATER_INPUT",
+      "meaning": "external raw/well/city water into outdoor storage / RO feed",
+      "steady_state": "W_obs = E / r",
+      "support": "outdoor tanks; ITherm well+city into outdoor tank; Green Grid source-water convention; OCP 25% blown down discussed as part of water brought into DC"
+    },
+    {
+      "id": "RO_PRODUCT_OR_ECH_MAKEUP",
+      "meaning": "net new RO product / ECH makeup after RO (P=E at SS)",
+      "steady_state": "W_obs = E",
+      "support": "OCP 'used for cooling' as product; recapture already in product tanks so not double-counted"
+    }
+  ],
+  "excludes": "office_plumbing",
+  "not_used": [
+    "E/0.85",
+    "1.392_topology",
+    "closest_to_0.22"
+  ],
+  "observed_WUE_L_per_kWh_IT": 0.22,
+  "period": "Q2_2012",
+  "reason": "OCP states cooling-water WUE after adding water metering but does not name the meter relative to outdoor storage, RO feed, or RO product. ITherm does not name a WUE meter. Green Grid WUE is typically source water / IT energy, which would include RO reject if the meter is upstream of RO. OCP's 75% 'used for cooling' vs 25% blowdown language is compatible with either a raw-input meter (reject included) or a product-side cooling meter (reject discussed separately). Do not select by closeness to 0.22.",
+  "selected_by_closeness_to_0.22": false,
+  "status": "PARTIAL_UNRESOLVED",
+  "stopped_after_bounded_audit": true
+}

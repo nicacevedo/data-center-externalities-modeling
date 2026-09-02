@@ -1,0 +1,60 @@
+{
+  "HEAD": "1ac460f35ef55f787fe53fcf9e45c5a2d1e7914d",
+  "IT_load_primary": "CONSTANT_NORMALIZED_IT_LOAD",
+  "IT_load_sensitivity": [
+    "AMPLITUDE_0.10_TDB_CORRELATED_LOAD_WEIGHTING_SENSITIVITY_NOT_EMPIRICAL_BOUND",
+    "AMPLITUDE_0.25_TDB_CORRELATED_LOAD_WEIGHTING_SENSITIVITY_NOT_EMPIRICAL_BOUND"
+  ],
+  "RO_source_states": [
+    0.67,
+    0.75
+  ],
+  "WUE_boundary_states": [
+    "RAW_COOLING_WATER_INPUT",
+    "RO_PRODUCT_OR_ECH_MAKEUP"
+  ],
+  "consistency_criteria_predeclared": {
+    "BOUNDARY_UNRESOLVED_PREVENTS_DECISION": "if unique-boundary claim cannot be made because hypotheses disagree",
+    "CONSISTENT": "0.67 <= obs/pred <= 1.5",
+    "INCONSISTENT": "otherwise when pred finite",
+    "PARTIALLY_CONSISTENT": "0.40 <= obs/pred <= 2.5 and not CONSISTENT"
+  },
+  "control_infeasibility_treatment": "retain v1 feasibility labels; include finite water hours in the mean; report infeasible fraction",
+  "controller": "OCP_DESIGN_SPEC structural-reference-v1",
+  "deltaT_sensitivity_K": [
+    8.0,
+    16.0
+  ],
+  "deltaT_sensitivity_status": "SENSITIVITY_NOT_PUBLIC_BOUND",
+  "deltaT_status": "GENERIC_PRIOR_SCENARIO",
+  "evap_thermal_effectiveness": 0.85,
+  "evap_thermal_effectiveness_provenance": "GENERIC_PRIOR_SCENARIO_not_spray_fraction",
+  "missing_weather_rule": "exclude hours with any nonfinite required driver; do not impute",
+  "n_usable_hours": 2171,
+  "n_weather_hours": 2184,
+  "not_chosen_using_0.22": [
+    "deltaT",
+    "return_air",
+    "r_RO",
+    "WUE_boundary",
+    "control_mode",
+    "load_weights"
+  ],
+  "pressure": "KRDM_station_pressure_Pa",
+  "primary_deltaT_K": 12.0,
+  "return_air_primary": {
+    "T_C": 35.0,
+    "label": "RA_DRY_HOT_35C_15RH",
+    "provenance": "DESIGN_REFERENCE_SCENARIO",
+    "rh_pct": 15.0
+  },
+  "return_air_sensitivity": {
+    "T_C": 30.0,
+    "label": "RA_30C_20RH_SENSITIVITY_NOT_FITTED",
+    "provenance": "DESIGN_REFERENCE_SCENARIO",
+    "rh_pct": 20.0
+  },
+  "structural_reference_v1_sha256": "f9649c489196cdc3e617f5b28574334aaaace5a94e7ade5ce461f6da22809a6a",
+  "v1_freeze_sha256": "decd095f59cc2249eee66d5b94ad30d30a53555eadbec3358bbb9aa80caaa81d",
+  "weather_parquet_sha256": "87c0beaf1f8223ebb9f4d02ff13b9efd9d2286aaddfec0a3cce9af4c4279d925"
+}

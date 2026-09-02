@@ -1,0 +1,3 @@
+quantity,value,compare_to,label,promoted
+water_boundary_factor_implied,0.5893605925922175,1.0 if product meter; 1/0.75=1.333 if raw and r=0.75; 1/0.67=1.493 if raw and r=0.67,POSTHOC_DIAGNOSTIC_ONLY,False
+DeltaT_implied_if_W_proportional_to_1_over_DT_product_meter,20.361049162143217,12 K GENERIC_PRIOR; OCP rack CFM unmatched envelope ~6.7–15.8 K,POSTHOC_DIAGNOSTIC_ONLY,False

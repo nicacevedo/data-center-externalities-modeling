@@ -1,0 +1,30 @@
+{
+  "RECIRCULATION_TOPOLOGY": "PRODUCT_STORAGE_RETURN_CONFIRMED",
+  "RO_RECOVERY_SOURCE_STATE": "DISCREPANT_{0.67,0.75}",
+  "r_sources": {
+    "0.67": "ITherm_2012_input_well_water",
+    "0.75": "OCP_2013_RO_product_fraction"
+  },
+  "r_values_evaluated": [
+    0.67,
+    0.75
+  ],
+  "remaining_unknowns": [
+    "WUE meter location",
+    "which r applies to Q2-2012 operations",
+    "as-operated return air",
+    "as-operated DeltaT",
+    "hourly IT load shape"
+  ],
+  "spray": {
+    "E": "0.85 * S",
+    "R": "0.15 * S"
+  },
+  "steady_state": {
+    "F = E / r": true,
+    "P + R = S": true,
+    "P = E": true,
+    "not_1.392_topology": true,
+    "not_E_over_0.85": true
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "findings": {
+    "Figure_8": "process diagram: well/city -> outdoor storage -> carbon/softener -> RO -> RO storage -> ECH nozzles; recapture from mist eliminator -> polishing skid UV/filters -> RO storage",
+    "RO_measurements": "one approximate recovery statement (67% from input well water); no tabulated flows",
+    "WUE_calculations": "0.31 L/kWh estimate from operational data thus far; more accurate after a full year; no worksheet",
+    "raw_or_intermediate_water_flow_data": "NOT_FOUND",
+    "water_meter_descriptions": "none"
+  },
+  "inspected": [
+    "https://frachtenberg.org/eitan/pubs/papers/frachtenberg12:thermal.pdf",
+    "https://frachtenberg.org/eitan/pubs/"
+  ],
+  "not_inspected": "unrelated Frachtenberg papers and non-water ITherm sections beyond locating Fig.8/Sec.V",
+  "scope": "water-cycle source material, Figure 8, RO measurements, water meter descriptions, WUE calculations, raw/intermediate water-flow data",
+  "separate_measurement_archive": false
+}

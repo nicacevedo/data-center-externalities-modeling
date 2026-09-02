@@ -1,0 +1,20 @@
+Source: https://www.opencompute.org/blog/water-efficiency-at-facebooks-prineville-data-center
+Title: Water Efficiency at Facebook's Prineville Data Center
+Posted: 2013-08-07 by leed (Facebook / Open Compute)
+Acquired: 2026-09-02 for PRN1 Q2-2012 public validation (water-cycle / WUE / recapture only).
+
+KEY EXTRACTS (verbatim from live page):
+
+"we're releasing our first water usage effectiveness (WUE) measurements and information on how we've achieved what we think is a strong level of efficiency in water use for cooling in the first building at our Prineville, Ore., data center (which we'll call Prineville 1 here)."
+
+"After a year of operation, which required our retrofitting the building management system and adding water metering, we've found Prineville 1's Q2 2012 WUE to be 0.22 L/kWh."
+
+"WUE measures water used for cooling a data center only; it doesn't measure water used for plumbing or offices"
+
+"The WUE for the second building at our Prineville data center should be available next year, when that building is online."
+
+"Our measurements indicate that 75% of the water brought into the data center is used for cooling (3 out of 4 parts of RO water are used for product), while the remaining 25% is blown down."
+
+"Approximately 85% of the misted water evaporates into the supply air stream. The remaining 15% is recaptured in a mist eliminator that is downstream of the misting nozzles. The recaptured RO water is put through a micron filter and UV lamp and then brought back to the RO water storage tanks"
+
+"The OCP mechanical system has no chillers or cooling towers."

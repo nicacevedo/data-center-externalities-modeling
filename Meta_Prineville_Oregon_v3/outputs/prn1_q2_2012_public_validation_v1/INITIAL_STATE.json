@@ -1,0 +1,39 @@
+{
+  "HEAD": "1ac460f35ef55f787fe53fcf9e45c5a2d1e7914d",
+  "branch": "main",
+  "canonical_simulate_remains_production_default": true,
+  "classification": "PUBLIC_PREVIOUSLY_KNOWN_EXTERNAL_CROSS_LAYER_CONSISTENCY_TEST",
+  "git_status_porcelain": "M Data-center-PUE-prediction-tool\n?? Meta_Prineville_Oregon_v3/outputs/prn1_q2_2012_public_validation_v1/\n?? Meta_Prineville_Oregon_v3/scripts/run_prn1_q2_2012_public_validation_v1.py\n?? Meta_Prineville_Oregon_v3/tests/test_prn1_q2_2012_public_validation_v1.py",
+  "hashes": {
+    "cpu_status": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9",
+    "esif_hw": "4e01139dd9365f62824ac00ff944468839e7873e47a5cea3df4714854af1b02c",
+    "graybox": "8275ca5bfc23042e3af19b72f2adb260304ac95d692d0b3ecbcb526b020f0609",
+    "h100": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076",
+    "proxy_freeze": "1d88ba5c3429d0978e64e9caea9b7b9d2cfe5287bf3fb3c2afbb5b81b0a699e2",
+    "registry": "1f87a1846aa8254c758ab11e3bd9b6f639e6c64bc551c36bcf8201bd65e78604",
+    "structural_v1": "f9649c489196cdc3e617f5b28574334aaaace5a94e7ade5ce461f6da22809a6a",
+    "v1_freeze": "decd095f59cc2249eee66d5b94ad30d30a53555eadbec3358bbb9aa80caaa81d"
+  },
+  "no_parameter_fitted": true,
+  "not": [
+    "model_fitting",
+    "campus_reconstruction",
+    "pristine_holdout",
+    "as_operated_BMS_validation"
+  ],
+  "pass": "prn1_q2_2012_public_validation_v1",
+  "protected_paths": [
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/data/canonical/meta_prineville_annual.csv",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_annual_compare.csv",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/conditional_water_model.csv",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/water_holdout_baseline_compare.csv",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/city_prineville/frozen_annual_water_validation_v1/water_holdout_baseline_compare.csv",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/pipeline_report/result_claims.csv",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/outputs/weather_ks39/canonical_conditional_annual_compare.csv"
+  ],
+  "public_proxy_v1_master_hash": "137c79fdc151503ab158663f0c5e5e10a98e6de5f03942b49f02cfade808b908",
+  "public_proxy_v1_not_overwritten": true,
+  "requested_baseline": "1ac460f35ef55f787fe53fcf9e45c5a2d1e7914d",
+  "structural_reference_v1_role": "PHYSICS_ENGINE_ONLY",
+  "utc": "2026-09-02T19:31:15.630877+00:00"
+}

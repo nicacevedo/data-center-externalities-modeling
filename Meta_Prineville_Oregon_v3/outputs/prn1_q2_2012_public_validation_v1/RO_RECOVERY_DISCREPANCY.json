@@ -1,0 +1,28 @@
+{
+  "RO_RECOVERY_SOURCE_STATE": "DISCREPANT_{0.67,0.75}",
+  "candidates": [
+    {
+      "date": "conference_2012-05;_text_from_2011_operations_before_full_year",
+      "denominator": "input_well_water_to_RO",
+      "r": 0.67,
+      "source": "ITherm_2012_Frachtenberg_et_al",
+      "wording": "RO process produces approximately 67% purified water from the input well water"
+    },
+    {
+      "date": "published_2013-08-07_reporting_Q2_2012_after_BMS_and_meter_retrofit",
+      "denominator": "water_brought_into_the_data_center_AND_stated_as_3_of_4_parts_of_RO_water_are_product",
+      "r": 0.75,
+      "source": "OCP_blog_2013-08-07",
+      "wording": "75% of the water brought into the data center is used for cooling (3 out of 4 parts of RO water are used for product); remaining 25% blown down"
+    }
+  ],
+  "classification": {
+    "date": "UNRESOLVED_CONTRIBUTOR \u2014 ITherm is pre-full-year 2011 ops; OCP is Q2-2012 after metering retrofit",
+    "denominator": "POSSIBLE_CONTRIBUTOR \u2014 ITherm names well-water RO feed; OCP names water brought into the DC and RO product/reject split",
+    "operational_changes": "POSSIBLE_CONTRIBUTOR \u2014 RO recovery can change with feed TDS (well vs city blend) and membrane operation; not independently measured here",
+    "rounding": "POSSIBLE_MINOR \u2014 67% is already approximate; 3/4 is a round fraction; gap is larger than typical rounding"
+  },
+  "not_a_probability_distribution": true,
+  "not_replaced_by_hard_75pct": true,
+  "resolution": "UNRESOLVED. Evaluate r=0.67 and r=0.75 separately. Do not interpolate."
+}

@@ -1,0 +1,31 @@
+{
+  "dewpoint_preference": "t_dew_C present; rh_pct already derived consistently in prepare_weather.py",
+  "dst_in_window": false,
+  "dst_note": "2012 US spring-forward was 2012-03-11; Q2 has no DST transition. 91*24=2184 local hours.",
+  "filled_hours": [],
+  "gap_fill_station": null,
+  "gap_fraction": 0.005952380952380952,
+  "gap_treatment": "LEAVE_MISSING_DO_NOT_FILL; exclude from quarterly intensity; no KBDN/KS39 fill (13 hours, 0.6%)",
+  "n_duplicate_utc": 0,
+  "n_expected_hours": 2184,
+  "n_file_hours": 2184,
+  "n_missing_from_spine": 0,
+  "n_nonfinite_required_drivers": 13,
+  "parquet_sha256": "87c0beaf1f8223ebb9f4d02ff13b9efd9d2286aaddfec0a3cce9af4c4279d925",
+  "period_local": "2012-04-01 00:00 through 2012-06-30 23:00",
+  "pressure_methods": {
+    "krdm_slp_derived": 2159,
+    "krdm_standard_atmosphere_fallback": 25
+  },
+  "pressure_treatment": "use KRDM station pressure_Pa (slp-derived; 25 hours standard-atmosphere fallback already in processed file)",
+  "source_file": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Prineville_Oregon_v3/data/processed/weather_krdm_hourly.csv",
+  "source_file_sha256": "c4154fd9a1a0e8486e8f292f05a8ef95991751d117ffcd4004d6d0161027d775",
+  "station": "KRDM / 72692024230 / Redmond OR",
+  "synthetic_five_point_grid_not_used": true,
+  "tdb_C_min_max_usable": [
+    -10.0,
+    30.0
+  ],
+  "timezone": "America/Los_Angeles",
+  "why_krdm": "ITherm: 50-year weather at Redmond, closest station to Prineville; Facebook thermal-design source."
+}

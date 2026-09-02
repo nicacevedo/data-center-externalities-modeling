@@ -1,0 +1,6 @@
+{
+  "ITherm_WUE_0.31": "EARLY_OPERATOR_ESTIMATE_CONTEXT",
+  "not_independent_validation": true,
+  "role": "measurement_evolution_meter_retrofit_context",
+  "sequence": "2011 design 0.31 (Park) \u2192 ITherm estimate 0.31 before full year \u2192 OCP metered Q2-2012 0.22 after BMS/meter retrofit"
+}

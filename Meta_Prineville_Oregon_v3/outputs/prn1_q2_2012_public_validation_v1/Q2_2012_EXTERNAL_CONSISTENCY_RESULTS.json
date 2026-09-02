@@ -1,0 +1,13 @@
+{
+  "n_primary_boundary_cases": 3,
+  "no_retune": true,
+  "no_winner_selected": true,
+  "observed": 0.22,
+  "overall_unique_boundary_claim": "BOUNDARY_UNRESOLVED_PREVENTS_DECISION",
+  "prebenchmark_output_freeze_hash": "2a777321fbf500ea1577ae4327b4cf6cc3519e7f61df0510f14993a141111b06",
+  "primary_air_stream_WUE": 0.37328590130595896,
+  "statuses_present": [
+    "INCONSISTENT",
+    "PARTIALLY_CONSISTENT"
+  ]
+}
