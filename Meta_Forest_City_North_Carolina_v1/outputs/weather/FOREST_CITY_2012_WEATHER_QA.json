@@ -1,0 +1,38 @@
+{
+  "call_sign": "KFQD",
+  "dst_local_hours": 8784,
+  "duplicates_in_hourly_index": 0,
+  "elev_m": 328.6,
+  "first_valid_utc": "2012-06-21 17:00:00+00:00",
+  "gap_before_first_obs_hours": 4145,
+  "impossible_T_RH_dewpoint_nullified": true,
+  "kfqd_2012_starts": "2012-06-21T17:55:00Z in ISD/global-hourly and ISD-lite. Jan 1\u2013Jun 21 17:00 UTC are MISSING. Not filled.",
+  "large_gap_not_filled": true,
+  "last_valid_utc": "2012-12-31 23:00:00+00:00",
+  "lat": 35.428,
+  "lon": -81.935,
+  "missing_fraction_usable": 0.5248178506375227,
+  "n_calendar_hours": 8784,
+  "n_hours_with_any_observation": 4174,
+  "n_usable_hours": 4174,
+  "name": "RUTHERFORD CO MARCHMAN FIELD AIRPORT",
+  "ocp_note": "OCP 2013: Rutherfordton weather approximately six miles NW of Forest City used for design analysis.",
+  "parquet_sha256": "f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9",
+  "pressure": "station pressure from SLP or altimeter via hypsometric reduction; missing SLP common at AWOS",
+  "raw_files": [
+    "72314453890_2011.csv",
+    "72314453890_2012.csv"
+  ],
+  "raw_hashes": {
+    "72314453890_2011.csv": "6146170ffe1979ff3645ea1decff5cd50a4709c43bcb8520c2f5c395477b75c9",
+    "72314453890_2012.csv": "e4cbfbbfc133cccc1c595b10859546880d169013aec80939bf3728d1bf62ad7f"
+  },
+  "secondary_stations_downloaded_not_imputed": [
+    "KEHO 72027763843 Shelby",
+    "KGSP 72312003870"
+  ],
+  "station_id": "72314453890",
+  "timezone": "America/New_York",
+  "usable_hours_2012_04_01_to_09_30": 1973,
+  "usable_hours_JJA": 1253
+}

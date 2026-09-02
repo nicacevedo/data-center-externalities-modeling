@@ -1,0 +1,9 @@
+hypothesis,evidence,alignment,note
+facility_additions,FRC3 ~2014 and FRC4 cold storage 2014; later unidentified halls,NOT_ALIGNED_WITH_2023_2024_DROP,electricity stays large while water falls later
+cold_storage,FRC4 2014 OpenVault mostly powered-down disks,PARTIAL_CHRONOLOGY_ONLY,too early for 2024 16 ML step
+mechanical_retrofits,McCammon: water-infused membrane instead of misters,PUBLICLY_UNRESOLVED_TIMING,could reduce evaporated water; year unknown
+water_treatment_changes,municipal WTP 8 MGD unchanged in LWSP,NOT_A_META_CAUSE,town capacity is not Meta withdrawal
+reporting_method_changes,EDI unit ML vs m3; 2024 16 ML vs 2023 55 ML,POSSIBLE_CONTRIBUTOR_UNVERIFIED,no method note attributing the 2024 drop
+weather,not used to fit; 2024 weather not reconstructed here,UNTESTED,
+operational_efficiency,qualitative operator claims,PUBLICLY_UNRESOLVED,
+descriptive_largest_yoy_drop,2024 -39000.0 m3,DESCRIPTIVE_NOT_CAUSAL,largest decline is 2023->2024

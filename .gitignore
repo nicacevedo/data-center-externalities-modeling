@@ -24,6 +24,19 @@ Meta_Prineville_Oregon_v3/outputs/hourly_conditional_reconstruction.csv
 # Discovery MADIS nationwide hourly files (do not commit)
 Meta_Prineville_Oregon_v3/madis_test/raw/
 
+# Forest City: NOAA ISD/LCD, station catalogs, sustainability PDFs, Wayback JS
+# (also covered by the unanchored data/ rule; listed explicitly so they stay
+# ignored if that rule is ever narrowed). Rebuild via scripts/01_acquire_sources.py
+# and scripts/02_build_weather.py.
+Meta_Forest_City_North_Carolina_v1/data/raw/weather/
+Meta_Forest_City_North_Carolina_v1/data/raw/sustainability/
+Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/wayback/
+Meta_Forest_City_North_Carolina_v1/data/processed/*.parquet
+Meta_Forest_City_North_Carolina_v1/outputs/control_validation/SUMMER_2012_DX_HOURS.csv
+Meta_Forest_City_North_Carolina_v1/outputs/control_validation/EVENT_*_HOURS.csv
+Meta_Forest_City_North_Carolina_v1/.pytest_cache/
+Meta_Forest_City_North_Carolina_v1/pytest-cache-files-*/
+
 # Slurm job logs
 Meta_Prineville_Oregon_v3/outputs/slurm_logs/
 

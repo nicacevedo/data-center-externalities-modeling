@@ -1,0 +1,44 @@
+{
+  "contract_id": "FOREST_CITY_AIRFLOW_BOUNDARY_CONTRACT_V1",
+  "site": "FOREST_CITY_NC",
+  "hard_rule": "Never treat all DeltaT values as interchangeable.",
+  "boundaries": {
+    "IT_EQUIPMENT_DELTA_T": {
+      "definition": "server inlet / cold aisle -> server exhaust / hot aisle rise",
+      "design_value_F": 35.0,
+      "design_value_K": 19.444444444444443,
+      "status": "IDENTIFIED",
+      "evidence_class": "DESIGN_SPEC",
+      "source": "MAGUIRE_2011_OCP_REFLECTIONS: raised a 25F DeltaT to 35F comparing first-phase Prineville to planned Forest City. DCK 2011 interprets this as cold-aisle to hot-aisle (85F inlet implying ~120F hot aisle).",
+      "design_vs_observed": "DESIGN_SPEC_PLANNED_2011",
+      "as_operated": "UNIDENTIFIED",
+      "confidence": "HIGH_that_35F_is_IT_equipment_design_rise; LOW_as_facility_effective"
+    },
+    "AHU_DELTA_T": {
+      "definition": "AHU supply -> AHU return",
+      "status": "UNIDENTIFIED",
+      "note": "No Forest City source equates AHU SAT-to-RAT with the 35F server rise. Fan heat, bypass, and recirculation unidentified.",
+      "confidence": "n/a"
+    },
+    "EFFECTIVE_HEAT_BALANCE_DELTA_T": {
+      "definition": "DeltaT used in m_dot = Q / (cp DeltaT) at the facility air-stream boundary",
+      "status": "UNIDENTIFIED",
+      "not_automatically": "IT_EQUIPMENT_DELTA_T_DESIGN",
+      "prineville_12K_prior": "GENERIC_PRIOR_SCENARIO_FOR_PRN1_ONLY; must not be copied here and 19.4K must not be back-applied to Prineville",
+      "confidence": "n/a"
+    }
+  },
+  "mapping_search": {
+    "question": "Does any public source equate 35F IT rise to facility m_dot = Q/(cp dT)?",
+    "result": "NO_PUBLIC_EQUATION_FOUND",
+    "hardware_generation_note": "OCP v1 chassis/triplet CFM tables are Prineville-observed and server-not-facility. Forest City 2012 used OCP hardware but 35F design rise and 45% less AHU hardware are site-specific DESIGN facts, not a matched operating CFM/kW point."
+  },
+  "final_state": {
+    "IT_DELTA_T_DESIGN": "IDENTIFIED",
+    "FACILITY_EFFECTIVE_DELTA_T": "UNIDENTIFIED"
+  },
+  "air_stream_water": {
+    "permitted": "only as SCENARIO_ONLY if IT_EQUIPMENT_DELTA_T_DESIGN is used as if it were effective",
+    "primary_status": "UNIDENTIFIED_WITHOUT_EFFECTIVE_DELTA_T_OR_MEASURED_AIRFLOW"
+  }
+}

@@ -1,0 +1,8 @@
+metric,value
+PREDICTED_DX_REQUIRED_HOURS_eps1,0
+PREDICTED_DX_REQUIRED_HOURS_eps085,0
+weather_missing_hours,955
+evaporative_hours_eps1,133
+mixing_hours_eps1,443
+oa_free_hours_eps1,677
+interpretation,CONSISTENT_ON_OBSERVED_KFQD_HOURS_WITH_DOCUMENTED_EARLY_JUNE_GAP

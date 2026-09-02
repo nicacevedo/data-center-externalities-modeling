@@ -1,0 +1,130 @@
+{
+  "contract_id": "FOREST_CITY_REFERENCE_CONTROL_CONTRACT_V1",
+  "site": "FOREST_CITY_NC",
+  "not_copied_from": "OCP_PRN1_A_H",
+  "as_operated_status": "UNIDENTIFIED_EXCEPT_NAMED_2012_EVENTS",
+  "frozen": true,
+  "thresholds": {
+    "T_INLET_MAX_F": {
+      "value": 85.0,
+      "units": "degF",
+      "si_C": 29.444444444444443,
+      "source": "MAGUIRE_2011_OCP_REFLECTIONS; OCP_2013_HOT_HUMID",
+      "evidence_class": "DESIGN_SPEC",
+      "as_operated": "OPERATOR_OBSERVED_SUMMER_2012_ENVELOPE",
+      "design_vs_observed": "DESIGN_SPEC and OPERATOR_OBSERVED as upper operating limit",
+      "confidence": "HIGH"
+    },
+    "RH_MAX": {
+      "value": 0.90,
+      "units": "1",
+      "source": "MAGUIRE_2011_OCP_REFLECTIONS; OCP_2013_HOT_HUMID (90% RH cap; mixing to stay within)",
+      "evidence_class": "DESIGN_SPEC",
+      "as_operated": "OPERATOR_OBSERVED_SUMMER_2012_ENVELOPE",
+      "design_vs_observed": "DESIGN_SPEC and OPERATOR_OBSERVED",
+      "confidence": "HIGH"
+    },
+    "T_INLET_MIN_F": {
+      "value": null,
+      "status": "UNIDENTIFIED",
+      "note": "Maguire raises the UPPER inlet from 80F to 85F. Forest City sources do not independently restate a 65F or 54F SAT floor. Not filled from Prineville.",
+      "confidence": "n/a"
+    },
+    "T_DP_MIN_F": {
+      "value": null,
+      "status": "UNIDENTIFIED",
+      "note": "No Forest City dewpoint minimum is documented. Do not copy 41.9F from OCP Appendix A.",
+      "confidence": "n/a"
+    }
+  },
+  "actuators": {
+    "OA_RA_MIXING": {
+      "available": true,
+      "source": "OCP_2013_HOT_HUMID; ENR_2013; HSU_MULAY case-study diagram",
+      "use": "high-RH: mix hot return air to reduce supply RH within 90% cap"
+    },
+    "DIRECT_EVAPORATIVE_WATER_ADDITION": {
+      "available": true,
+      "source": "OCP_2013_HOT_HUMID (misting); ENR_2013 (Munters); ITNEWS later membrane",
+      "note": "2012 summer operator language is misting. Later membrane is NOT a 2012 controller parameter."
+    },
+    "DX_BACKUP": {
+      "available": true,
+      "source": "OCP_2013_HOT_HUMID; HSU_MULAY Forest City DX coil",
+      "as_operated_summer_2012": "OPERATOR_OBSERVED_NOT_USED",
+      "design_role": "backup for simultaneous extreme DB and WB / OA dehumidification"
+    },
+    "HEATER": {"available": "UNIDENTIFIED", "not_invented": true},
+    "INDIRECT_EVAPORATIVE_COOLER": {"available": false, "note": "not documented at 2012 Forest City"},
+    "COOLING_TOWER": {"available": "UNIDENTIFIED", "not_invented": true}
+  },
+  "regions": [
+    {
+      "region": "OA_IN_ENVELOPE",
+      "mode": "OA_FREE_COOLING",
+      "source": "MAGUIRE_2011_OCP_REFLECTIONS envelope; implied by 85F/90%RH caps",
+      "outdoor_condition": "Tdb <= 85F AND RH <= 90%",
+      "temperature_constraint": "T_supply <= 85F",
+      "RH_constraint": "RH_supply <= 90%",
+      "dewpoint": "UNIDENTIFIED_NOT_USED",
+      "OA_fraction_mixing": "100% OA",
+      "evaporative_state": "OFF",
+      "DX_state": "OFF",
+      "design_vs_observed": "DESIGN_SPEC",
+      "confidence": "MEDIUM"
+    },
+    {
+      "region": "HIGH_RH_MODERATE_T",
+      "mode": "HIGH_RH_RETURN_AIR_MIXING",
+      "source": "OCP_2013_HOT_HUMID 2012-06-25",
+      "outdoor_condition": "example OBSERVED 2012-06-25: DB ~68F, RH ~97%",
+      "temperature_constraint": "coincident DB already acceptable; T_supply <= 85F",
+      "RH_constraint": "mix hot RA to bring supply RH within 90% cap",
+      "dewpoint": "NOT_DOCUMENTED_AS_SETPOINT",
+      "OA_fraction_mixing": "mix OA with hot return air; OA fraction solved to RH cap, not copied from Prineville 65% RH mix",
+      "evaporative_state": "OFF (cannot dry by adding water)",
+      "DX_state": "NOT required on 2012-06-25 (OPERATOR_OBSERVED)",
+      "design_vs_observed": "OPERATOR_OBSERVED_EVENT",
+      "confidence": "HIGH_for_event_qualitative"
+    },
+    {
+      "region": "HOT_DRY_EVAPORATIVE",
+      "mode": "EVAPORATIVE_COOLING",
+      "source": "OCP_2013_HOT_HUMID 2012-07-01",
+      "outdoor_condition": "example OBSERVED 2012-07-01: DB high ~102F, coincident RH ~26%",
+      "temperature_constraint": "T_supply <= 85F via evaporative/free cooling",
+      "RH_constraint": "RH_supply <= 90%",
+      "dewpoint": "NOT_DOCUMENTED_AS_SETPOINT",
+      "OA_fraction_mixing": "100% OA (not documented as mixed on this day)",
+      "evaporative_state": "ON (misting system provided needed cooling)",
+      "DX_state": "OFF (OPERATOR_OBSERVED)",
+      "design_vs_observed": "OPERATOR_OBSERVED_EVENT",
+      "confidence": "HIGH_for_event_qualitative"
+    },
+    {
+      "region": "EXTREME_HOT_HUMID",
+      "mode": "DX_REQUIRED",
+      "source": "OCP_2013_HOT_HUMID (simultaneous DB and WB beyond limits); HSU_MULAY DX sized to dehumidify OA",
+      "outdoor_condition": "simultaneous high DB and high WB beyond evaporative/mix envelope",
+      "temperature_constraint": "85F may be unreachable without DX",
+      "RH_constraint": "90%",
+      "dewpoint": "UNIDENTIFIED",
+      "OA_fraction_mixing": "UNIDENTIFIED_UNDER_DX",
+      "evaporative_state": "may still run; insufficient alone",
+      "DX_state": "DESIGN_SPEC backup; OPERATOR_OBSERVED unused summer 2012",
+      "design_vs_observed": "DESIGN_SPEC_BACKUP",
+      "confidence": "MEDIUM"
+    }
+  ],
+  "explicitly_not_inherited_from_prn1": [
+    "RH_MAX=0.65",
+    "T_SA_MAX=80F",
+    "T_SA_MIX=65F",
+    "T_SA_FLOOR=54F",
+    "T_DP_MIN=41.9F",
+    "T_DB_A_B_SPLIT=52F",
+    "T_WB_D_E=65.76F",
+    "T_WB_F=70.3F",
+    "regions A-H"
+  ]
+}

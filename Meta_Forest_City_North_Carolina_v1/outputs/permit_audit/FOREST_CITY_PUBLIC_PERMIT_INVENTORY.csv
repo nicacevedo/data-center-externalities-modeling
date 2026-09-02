@@ -1,0 +1,2 @@
+permit_number,address_searched,portal,public_result,mechanical,plumbing,electrical,building,do_not_treat_as_measured_load,source
+UNIDENTIFIED,Facebook; 404 Social Circle; Meta; Social Circle,https://twn-forestcity-nc.smartgovcommunity.com/Public/Home,"Portal loads; ApplicationSearch requires login/account. No permit numbers, CFM, DX, or water-service documents were returned to an unauthenticated request.",NOT_FOUND_PUBLIC,NOT_FOUND_PUBLIC,NOT_FOUND_PUBLIC,NOT_FOUND_PUBLIC,True,search_facebook.html

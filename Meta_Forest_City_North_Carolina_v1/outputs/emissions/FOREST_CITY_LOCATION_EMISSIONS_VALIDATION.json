@@ -1,0 +1,78 @@
+{
+  "comparison": "Cannot validate vs eGRID without downloading year-matched SRVC factors. Implied 2024 EF = 144104/535555 \u2248 0.269 t/MWh. Not an eGRID value.",
+  "do_not_refit_emission_factors": true,
+  "egrid_files_this_pass": "NOT_DOWNLOADED_FULL_eGRID_XLSX",
+  "grid_boundary_location_based": "eGRID SRVC (SERC Virginia/Carolina) is the candidate subregion; plant-level DUK mix UNIDENTIFIED without a serving-plant study",
+  "historical_utility": "Duke Energy Carolinas (DUK BA); Meta factsheet: worked with Duke Energy for 100% clean/renewable matching (market-based, not location-based)",
+  "implied_site_average_t_per_MWh": [
+    {
+      "implied_kg_per_kWh": 0.33949579831932775,
+      "year": 2020
+    },
+    {
+      "implied_kg_per_kWh": 0.28411512941557254,
+      "year": 2021
+    },
+    {
+      "implied_kg_per_kWh": 0.2917168913077888,
+      "year": 2022
+    },
+    {
+      "implied_kg_per_kWh": 0.2840841859474469,
+      "year": 2023
+    },
+    {
+      "implied_kg_per_kWh": 0.26907413804371166,
+      "year": 2024
+    }
+  ],
+  "meta_location_based_scope2": [
+    {
+      "methodology": "location-based Scope 2",
+      "revision": "rounded",
+      "scope": "location-based Scope 2 site row",
+      "source_publication": "Meta_2025_EDI",
+      "unit": "tCO2e",
+      "value": 202000,
+      "year": 2020
+    },
+    {
+      "methodology": "location-based Scope 2",
+      "revision": "as_published",
+      "scope": "location-based Scope 2 site row",
+      "source_publication": "Meta_2025_EDI",
+      "unit": "tCO2e",
+      "value": 165026,
+      "year": 2021
+    },
+    {
+      "methodology": "location-based Scope 2",
+      "revision": "as_published",
+      "scope": "location-based Scope 2 site row",
+      "source_publication": "Meta_2025_EDI",
+      "unit": "tCO2e",
+      "value": 143754,
+      "year": 2022
+    },
+    {
+      "methodology": "location-based Scope 2",
+      "revision": "as_published",
+      "scope": "location-based Scope 2 site row",
+      "source_publication": "Meta_2025_EDI",
+      "unit": "tCO2e",
+      "value": 144050,
+      "year": 2023
+    },
+    {
+      "methodology": "location-based Scope 2",
+      "revision": "as_published",
+      "scope": "location-based Scope 2 site row",
+      "source_publication": "Meta_2025_EDI",
+      "unit": "tCO2e",
+      "value": 144104,
+      "year": 2024
+    }
+  ],
+  "reconstructed": "NOT_RECONSTRUCTED_TIME_RESOLVED",
+  "status": "META_SERIES_CANONICAL; GRID_RECONSTRUCTION_INSUFFICIENT_INPUTS"
+}

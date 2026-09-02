@@ -1,0 +1,23 @@
+{
+  "INSUFFICIENT_BOUNDARY_INFORMATION": true,
+  "MODEL_CALIBRATED": "NO",
+  "forest_city_more_mixing_and_evap_jja": true,
+  "local_controls": [
+    "85F/90%RH vs PRN1 80F/65%RH",
+    "DX backup present at FC not at early PRN1",
+    "no sourced FC dewpoint-min humidification",
+    "IT 35F design rise vs PRN1 12K generic effective prior (different boundaries)"
+  ],
+  "mode_shift_expected_direction": true,
+  "prineville_humidification_dominated_q2": true,
+  "season_mismatch": "PRN1 frozen comparison is Q2; FC is JJA usable KFQD hours (starts 2012-06-21)",
+  "shared_physics": [
+    "psychrometrics",
+    "enthalpy-conserving mixing",
+    "direct evaporative mass/energy balance",
+    "saturation constraints",
+    "water = m_da * dw (when airflow identified)"
+  ],
+  "status": "TRANSFERABLE_PHYSICS_SUPPORTED",
+  "water_implications": "AIR_STREAM_EVAPORATED_WATER intensity remains SCENARIO_ONLY; quantitative water transfer not claimed"
+}

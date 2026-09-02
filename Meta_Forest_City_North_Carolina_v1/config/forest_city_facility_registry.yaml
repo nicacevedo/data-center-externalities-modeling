@@ -1,0 +1,107 @@
+site: FOREST_CITY_NC
+campus_address_public:
+  - "404 Social Circle, Forest City, NC 28043"
+  - "U.S. 74 / former textile-mill site (press)"
+campus_acres_press: {value: 160, status: PRESS_TOUR_2014, source_ids: [CHARLOTTE_OBSERVER_COLD_STORAGE]}
+ontology_note: >
+  Do not assume 2012 Building-1 architecture for later campus years.
+  Do not invent IT/electrical MW. Square feet are construction/press figures, not measured load.
+
+buildings:
+  - building_id: FRC1
+    address: "404 Social Circle, Forest City, NC 28043 (campus; building-specific parcel UNIDENTIFIED)"
+    phase: original_campus
+    function: production_data_halls
+    construction_start: "2010-11"
+    confirmed_operational: "2012-04-19"
+    possible_operational_interval: "2012-04-19 / present"
+    operational_status: CONFIRMED_OPERATING
+    square_feet:
+      value_low: 350000
+      value_high: 370000
+      note: "DPR 370000; ENR 354000; AIwire/Observer ~350000. DISCREPANCY PRESERVED."
+    data_suite_count: 4
+    penthouse_sqft_per_suite: 25000
+    IT_electrical_capacity: UNIDENTIFIED
+    cooling_architecture: DIRECT_OUTSIDE_AIR_EVAPORATIVE_with_DX_BACKUP
+    water_system: municipal_UV_then_direct_evap_misting_2012
+    cold_storage_flag: false
+    source_ids: [META_FC_OPENING_2012_04_19, DPR_FOREST_CITY_PROJECT, ENR_2013_GREEN_LIKES, OCP_2013_HOT_HUMID]
+    confidence: HIGH
+
+  - building_id: FRC2_PLANNED_2012
+    address: UNIDENTIFIED_ON_CAMPUS
+    phase: original_two_building_plan
+    function: production_data_halls
+    construction_start: UNIDENTIFIED
+    confirmed_operational: UNIDENTIFIED
+    possible_operational_interval: "announced expected later in 2012; 2014 tour reported empty pad labeled Building 2"
+    operational_status: POSSIBLY_OPERATING
+    square_feet: {value: 370000, status: DESIGN_PLAN_IF_SAME_AS_ORIGINAL_PAIR, note: "Original announcement: two buildings. 2014 tour: Building 2 was a vacant pad; second large hall was called Building 3."}
+    data_suite_count: 4
+    IT_electrical_capacity: UNIDENTIFIED
+    cooling_architecture: UNIDENTIFIED_IF_BUILT_LATER
+    water_system: UNIDENTIFIED
+    cold_storage_flag: false
+    source_ids: [META_FC_OPENING_2012_04_19, AIWIRE_2014_COLD_STORAGE]
+    confidence: MEDIUM_for_2012_plan; LOW_for_identity_of_later_second_large_hall
+
+  - building_id: FRC3_SECOND_LARGE_HALL
+    address: UNIDENTIFIED_ON_CAMPUS
+    phase: post_2012_expansion
+    function: production_data_halls
+    construction_start: "immediately after FRC1 opening (Observer 2014)"
+    confirmed_operational: "CONFIRMED_OPERATING_BY_2014_TOUR"
+    possible_operational_interval: "2012-late to 2014 / present"
+    operational_status: CONFIRMED_OPERATING
+    square_feet: {value: 350000, status: PRESS_TOUR, source: AIWIRE_2014_COLD_STORAGE}
+    data_suite_count: 4
+    IT_electrical_capacity: UNIDENTIFIED
+    cooling_architecture: DIRECT_OUTSIDE_AIR_EVAPORATIVE_LIKELY_SAME_FAMILY
+    water_system: UNIDENTIFIED
+    cold_storage_flag: false
+    source_ids: [AIWIRE_2014_COLD_STORAGE, CHARLOTTE_OBSERVER_COLD_STORAGE]
+    confidence: MEDIUM
+    note: "2014 tour called this Building 3; original 2012 'Building 2 expected later 2012' may or may not be this hall. Do not silently merge identities."
+
+  - building_id: FRC4_COLD_STORAGE
+    address: UNIDENTIFIED_ON_CAMPUS
+    phase: cold_storage
+    function: cold_storage_archive
+    construction_start: UNIDENTIFIED
+    confirmed_operational: "2014 (Data Hall A complete; B and C expected by June 2014)"
+    possible_operational_interval: "2014 / present"
+    operational_status: CONFIRMED_OPERATING
+    square_feet: 90000
+    data_suite_count: 3
+    hall_sqft: 25000
+    AHU_count_press: 14
+    IT_electrical_capacity: UNIDENTIFIED
+    cooling_architecture: MINIATURIZED_OUTSIDE_AIR_COOLING
+    water_system: UNIDENTIFIED
+    cold_storage_flag: true
+    source_ids: [AIWIRE_2014_COLD_STORAGE, ENR_2014_FRC4, CHARLOTTE_OBSERVER_COLD_STORAGE]
+    confidence: HIGH_as_cold_storage_existence; MEDIUM_for_dates
+
+  - building_id: LATER_CAMPUS_UNIDENTIFIED
+    address: UNIDENTIFIED
+    phase: post_2014
+    function: UNIDENTIFIED
+    construction_start: UNIDENTIFIED
+    confirmed_operational: UNIDENTIFIED
+    possible_operational_interval: "press/Baxtel claim additional buildings including a 2017 ~480000-sf hall; NOT independently confirmed in primary Meta/DPR sources in this pass"
+    operational_status: POSSIBLY_OPERATING
+    square_feet: UNIDENTIFIED
+    data_suite_count: UNIDENTIFIED
+    IT_electrical_capacity: UNIDENTIFIED
+    cooling_architecture: UNIDENTIFIED
+    water_system: UNIDENTIFIED
+    cold_storage_flag: UNIDENTIFIED
+    source_ids: []
+    confidence: LOW
+    note: "Secondary aggregators claim a third large hall ~2017. Not copied as a named building without primary evidence."
+
+water_boundary:
+  2012_cooling: municipal_then_UV_then_direct_evap
+  later_membrane_vs_misters: "ITNEWS/McCammon; timing vs annual water decline UNIDENTIFIED"
+  do_not_call_annual_withdrawal_WUE: true

@@ -1,0 +1,14 @@
+{
+  "FACILITY_EFFECTIVE_DELTA_T": "UNIDENTIFIED",
+  "IT_DELTA_T_DESIGN": "IDENTIFIED_DESIGN_SPEC",
+  "MODEL_CALIBRATED": "NO",
+  "dashboard": "SCREENSHOT_ONLY",
+  "events": {
+    "A_2012_07_01": "PASS",
+    "B_2012_06_25": "PASS"
+  },
+  "model_version": "forest_city_structural_reference_v1",
+  "summer_dx_hours_eps1": 0,
+  "transfer": "TRANSFERABLE_PHYSICS_SUPPORTED",
+  "utc": "2026-09-02T20:53:53.266029+00:00"
+}

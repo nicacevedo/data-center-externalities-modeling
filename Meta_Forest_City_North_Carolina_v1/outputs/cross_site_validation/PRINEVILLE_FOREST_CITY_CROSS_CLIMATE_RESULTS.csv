@@ -1,0 +1,3 @@
+site,period,source,humidification_or_lowRH_water_mode_frac,evaporative_cooling_frac,high_RH_mixing_frac,dx_frac,note,oa_free_frac
+PRINEVILLE_PRN1,2012-Q2 KRDM,frozen PREBENCHMARK_MODE_BREAKDOWN,0.8295716259788115,0.0027637033625057,0.6167664670658681,0.0,PRN1 qualitative: humidification dominated; no DX actuator,
+FOREST_CITY,2012-JJA KFQD usable,this pass eps=1,0.0,0.10614525139664804,0.35355147645650437,0,Forest City controller has no sourced dewpoint-min humidification mode,0.5403032721468476

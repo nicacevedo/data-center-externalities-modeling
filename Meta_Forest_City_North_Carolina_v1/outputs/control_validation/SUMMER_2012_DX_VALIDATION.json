@@ -1,0 +1,48 @@
+{
+  "calendar_hours": 2208,
+  "controller_not_modified": true,
+  "interpretation": "CONSISTENT_ON_OBSERVED_KFQD_HOURS_WITH_DOCUMENTED_EARLY_JUNE_GAP",
+  "interpretation_rule": "0 or near-zero DX-required hours with source-compatible modes = strong consistency. Material DX hours = inconsistency. No threshold fitting.",
+  "missing_note": "KFQD ISD has no records before 2012-06-21; June 1-20 are WEATHER_MISSING not imputed.",
+  "operator_observed": "DX coils were not used during summer 2012 despite extreme weather (OCP_2013_HOT_HUMID)",
+  "period": "2012-06-01/2012-08-31 America/New_York via UTC hours",
+  "primary": {
+    "PREDICTED_DX_REQUIRED_HOURS": 0,
+    "high_RH_mixing_hours": 443,
+    "hot_dry_evaporative_hours": 133,
+    "mode_counts": {
+      "EVAPORATIVE_COOLING": 133,
+      "OA_FREE_COOLING": 677,
+      "RETURN_AIR_MIXING": 443
+    },
+    "mode_fractions": {
+      "EVAPORATIVE_COOLING": 0.10614525139664804,
+      "OA_FREE_COOLING": 0.5403032721468476,
+      "RETURN_AIR_MIXING": 0.35355147645650437
+    },
+    "n_classified_hours": 1253,
+    "oa_free_hours": 677,
+    "tag": "eps_1.0_IDEAL_UPPER_BOUND",
+    "unresolved_hours": 0
+  },
+  "sensitivity_generic_prior": {
+    "PREDICTED_DX_REQUIRED_HOURS": 0,
+    "high_RH_mixing_hours": 443,
+    "hot_dry_evaporative_hours": 133,
+    "mode_counts": {
+      "EVAPORATIVE_COOLING": 133,
+      "OA_FREE_COOLING": 677,
+      "RETURN_AIR_MIXING": 443
+    },
+    "mode_fractions": {
+      "EVAPORATIVE_COOLING": 0.10614525139664804,
+      "OA_FREE_COOLING": 0.5403032721468476,
+      "RETURN_AIR_MIXING": 0.35355147645650437
+    },
+    "n_classified_hours": 1253,
+    "oa_free_hours": 677,
+    "tag": "eps_0.85_GENERIC_PRIOR",
+    "unresolved_hours": 0
+  },
+  "weather_missing_hours": 955
+}

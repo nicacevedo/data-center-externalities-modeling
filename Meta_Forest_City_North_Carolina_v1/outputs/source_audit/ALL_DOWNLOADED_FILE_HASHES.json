@@ -1,0 +1,212 @@
+[
+  {
+    "bytes": 204131,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/aiwire_2014_cold_storage.html",
+    "sha256": "e2dafef5106ee96e153d5f12bfbc6eb99b04f72af6db39fd6346171cc04557c6"
+  },
+  {
+    "bytes": 461850,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/dck_2011_85_cold_aisle.html",
+    "sha256": "aa935b9a39ee1bb9ddfa4a655b8470ad6e7c066a3813422566e48688d94c674b"
+  },
+  {
+    "bytes": 455935,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/dck_2013_servers_hotter.html",
+    "sha256": "427685bcb5a61fd061b18722368caa436d17f586e3cc74a0b62122050de921e4"
+  },
+  {
+    "bytes": 174374,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/dpr_building_community.html",
+    "sha256": "9f726df3963cfc2510614a637e173d5e1ff64b2a207b7c536e9efa811ffb1a17"
+  },
+  {
+    "bytes": 230452,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/dpr_forest_city_project.html",
+    "sha256": "66fd68105d955e5a1f1854f39c41a79421806bbf75748bf6afb9804a5a28c973"
+  },
+  {
+    "bytes": 86912,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/enr_2013_green_likes.html",
+    "sha256": "86deaa84976ef107871e0e3856cca9b5c0cab114b69b79eb3197444c43bf073e"
+  },
+  {
+    "bytes": 75424,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/enr_2014_frc4.html",
+    "sha256": "8dcc5a4bf845e88aa04face312540d035a38b764d7e06e64615c5658023b9443"
+  },
+  {
+    "bytes": 113789,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/itnews_mccammon_forest_city.html",
+    "sha256": "fc2b00a4f094ba705e86f808597ff410d61ae6e7f3ced068743bcd097c040758"
+  },
+  {
+    "bytes": 91769,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/maguire_2011_ocp_reflections.html",
+    "sha256": "7dd7b7329f36eda59bd148d64f3b85fc0989f1fbc9c52d978aa618792f36589f"
+  },
+  {
+    "bytes": 1657953,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/meta_fc_factsheet.pdf",
+    "sha256": "3d151bc68e3d29fecd086d4c5384e706009787a11addca7d4679461aaa5cb81c"
+  },
+  {
+    "bytes": 105654,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/meta_fc_opening_2012.html",
+    "sha256": "c2963c157d991ca0296840353ff79248c4475079f26d2b8199e180b3c9e3c152"
+  },
+  {
+    "bytes": 317011,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/meta_fc_opening_newsroom_2012.html",
+    "sha256": "c8ae30543e63bf49431924b3f028d4a8ecde664ac3aa93ae5331c1b3cdb9675f"
+  },
+  {
+    "bytes": 1657953,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/meta_forest_city_factsheet_2025.pdf",
+    "sha256": "3d151bc68e3d29fecd086d4c5384e706009787a11addca7d4679461aaa5cb81c"
+  },
+  {
+    "bytes": 172119,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/ocp_2012_pue_wue_report.html",
+    "sha256": "ebe01c2f9cccf4e53c6af113f277c86391eeff62be7ff32a2034f94e4cd89918"
+  },
+  {
+    "bytes": 175132,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/ocp_2013_hot_humid_climate.html",
+    "sha256": "9c22d15bf5afe8a36031acef0d0f78707c49ea294f9944ca2eba7aa20756fb93"
+  },
+  {
+    "bytes": 22176,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/permit_application_home.html",
+    "sha256": "b47ab57a08b1146f656f39bb35c2d0e0679af66f4688ee9fc45f577f8914fe8f"
+  },
+  {
+    "bytes": 106370,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sources/town_forest_city_water_treatment.html",
+    "sha256": "e1c6349dab425252e857925ae447baeda12bbbe4f843fded6bdca8de73e3e9ec"
+  },
+  {
+    "bytes": 630218,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sustainability/Meta_2023-Environmental-Data-Index.pdf",
+    "sha256": "094a3ba84f7be44e09996bf8a5dbbc3bca3d02980d6664fdf7a96698a46bcb26"
+  },
+  {
+    "bytes": 23961387,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sustainability/Meta_2024-Sustainability-Report.pdf",
+    "sha256": "baa83f6db0a2abab34c68a693d65f84284330ec1dc1d1b4fa8c37a44e3b27c95"
+  },
+  {
+    "bytes": 2266742,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/sustainability/Meta_2025-Environmental-Data-Index.pdf",
+    "sha256": "d7527cd23308869105b404b486117603bb3f5ee10e30499367f8698110afb66d"
+  },
+  {
+    "bytes": 31870,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2010.html",
+    "sha256": "0066412cb01b384ca86388d44152e49b1569bea857e2fcda590aa37fe2eb7896"
+  },
+  {
+    "bytes": 31860,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2011.html",
+    "sha256": "1794b56b86aa1e86a9cc5929fca83f028d61fd667ca672790d401b51aea3100b"
+  },
+  {
+    "bytes": 33813,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2012.html",
+    "sha256": "687399a772018f184596102d60d4ed7fd84e933f73f5e4b107cfd05c775f57cf"
+  },
+  {
+    "bytes": 33603,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2013.html",
+    "sha256": "1675b7fdbc10550282da898526cb3a4f316434e6ce9feae0db70678206d0a911"
+  },
+  {
+    "bytes": 33228,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2014.html",
+    "sha256": "915e1186fd9b07910b369565ed9a8f22e8bd73b2ef63c4f270f550170ec18377"
+  },
+  {
+    "bytes": 32495,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2015.html",
+    "sha256": "0322ebd0ed8400454516d008fcef0aa484a0c7ac69157bfe81bdb0840721f088"
+  },
+  {
+    "bytes": 32485,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2016.html",
+    "sha256": "206318842f794d5b679bbfdfa86c60ed9e7905d3780e5b260b85a367e16791ae"
+  },
+  {
+    "bytes": 32651,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2017.html",
+    "sha256": "560ab718cedb6a7c733ef0dd59c560b833daceec2bd0dad364d7ed1d8e1be11a"
+  },
+  {
+    "bytes": 32493,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2018.html",
+    "sha256": "8b695dff8c897275d7c1926a4c4722b5ba54b20fe58b7d77399fb5060fd296a1"
+  },
+  {
+    "bytes": 32489,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2019.html",
+    "sha256": "127c4b8f7da8027f07c76934192b2e8b20d01ca5ab01dbf17d1862637105e3cd"
+  },
+  {
+    "bytes": 32734,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2020.html",
+    "sha256": "c4723f90ab13d1fa600fccfd4562e7af784135d0a257a3368905a616d5002a11"
+  },
+  {
+    "bytes": 32516,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2021.html",
+    "sha256": "b1e343153ddd30701e5212c998c29c777a8ce2724ca1ea90c5d4491a540234fa"
+  },
+  {
+    "bytes": 32522,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2022.html",
+    "sha256": "e11b662be5f6a62bae4ee2529dd8461e0a0788f61570eb4385dcfd1ccdec8c6f"
+  },
+  {
+    "bytes": 32492,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2023.html",
+    "sha256": "c1ee6473724288749d4111a9c1ae4076e4ece5d4b09aa79800bed345d5a64be5"
+  },
+  {
+    "bytes": 32484,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/lwsp/lwsp_01-81-010_2024.html",
+    "sha256": "e9b8c527cc09993bb1cecfd80d0a10351e40f8694d23c200e35dbaa8fa710234"
+  },
+  {
+    "bytes": 312262,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/github_facebookarchive.html",
+    "sha256": "9bd45ee25b8543cf6670770f9f813a9d4b07ade987f703ef4a7f594a3449ba9e"
+  },
+  {
+    "bytes": 8320,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/wayback_cdx_fb_page.json",
+    "sha256": "7cc364574e5509ae5fda0e50918ec4bed5c90ae706df7e47692e82a08589a357"
+  },
+  {
+    "bytes": 16649,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/wayback_cdx_fbpuewue.json",
+    "sha256": "42990e72b5ba85524fa6fe915e0006386c617db6136a3f43a8adcf70eb5c2187"
+  },
+  {
+    "bytes": 3,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/wayback_cdx_forestcity.json",
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  {
+    "bytes": 2914601,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/weather/isd-history.csv",
+    "sha256": "1994747ab4af1b97e63adb434b4d0d022f2daee76f0c144ea9ab46be2d906604"
+  },
+  {
+    "bytes": 2967101,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/weather/isd-history.txt",
+    "sha256": "3998ba15c66ddcc81b3d9c38cb8ab89136ade955c0d241a26d274fc9c3e7fa7f"
+  },
+  {
+    "bytes": 18420,
+    "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/permits/town_permit_portal_home.html",
+    "sha256": "5c1c5eb916c64c6a0d28ffa563ac1ca5574915e316e7b7b625437e624107b372"
+  }
+]

@@ -1,0 +1,8 @@
+dataset,category,value,why
+"BMS SAT/RAT/MAT T/RH, OA damper, DX enable, ECH command",air-side physics,VERY_HIGH,as-operated controller vs design envelope; event/DX tests are qualitative only
+TAB CFM / air-balance / sequence of operations,air-side physics,VERY_HIGH,only path to FACILITY_EFFECTIVE_DELTA_T
+cooling-water meter / WUE numerator P&ID tag,water boundary,VERY_HIGH,cannot quantitatively predict site water from air-stream dw yet
+customer water meter history (if releasable),water boundary,HIGH,Meta share of industrial class is accounting only
+customer interval electricity / building-service map,campus load,HIGH,annual EDI is campus-total; 2012 Building-1 load UNIDENTIFIED
+eGRID SRVC / DUK EIA-930 time series,emissions,MEDIUM,Meta location-based already published; reconstruction is secondary
+Second Broad instream / source externality hydrology,source externality,LOW_until_withdrawal_boundary_identified,do not fit groundwater/surface-water impact models yet

@@ -1,0 +1,11 @@
+year,value,unit,source_publication,methodology,scope,revision,note,withdrawal_m3,site_withdrawal_intensity_L_per_kWh_facility,not_WUE,intensity_name
+2015,310000,MWh,Facebook_2019_Sustainability_Data_Disclosure,facility electricity,FOREST_CITY_SITE_AS_REPORTED,rounded,later years are not 2012 Building-1 only,,,True,SITE_WITHDRAWAL_INTENSITY
+2016,339000,MWh,Facebook_2019_and_2020_Sustainability_Data,facility electricity,FOREST_CITY_SITE_AS_REPORTED,rounded,later years are not 2012 Building-1 only,,,True,SITE_WITHDRAWAL_INTENSITY
+2017,433000,MWh,Meta_2023_EDI,facility electricity,FOREST_CITY_SITE_AS_REPORTED,rounded,later years are not 2012 Building-1 only,129000.0,0.2979214780600462,True,SITE_WITHDRAWAL_INTENSITY
+2018,547000,MWh,Meta_2023_EDI,facility electricity,FOREST_CITY_SITE_AS_REPORTED,rounded,later years are not 2012 Building-1 only,99000.0,0.1809872029250457,True,SITE_WITHDRAWAL_INTENSITY
+2019,614000,MWh,Meta_2023_EDI,facility electricity,FOREST_CITY_SITE_AS_REPORTED,rounded,later years are not 2012 Building-1 only,85000.0,0.13843648208469056,True,SITE_WITHDRAWAL_INTENSITY
+2020,595000,MWh,Meta_2025_EDI,facility electricity,FOREST_CITY_SITE_AS_REPORTED,rounded_in_2025_index,later years are not 2012 Building-1 only,68000.0,0.11428571428571428,True,SITE_WITHDRAWAL_INTENSITY
+2021,580842,MWh,Meta_2025_EDI,facility electricity,FOREST_CITY_SITE_AS_REPORTED,as_published,later years are not 2012 Building-1 only,64053.0,0.11027611639654157,True,SITE_WITHDRAWAL_INTENSITY
+2022,492786,MWh,Meta_2025_EDI,facility electricity,FOREST_CITY_SITE_AS_REPORTED,as_published,later years are not 2012 Building-1 only,62853.0,0.12754623710900878,True,SITE_WITHDRAWAL_INTENSITY
+2023,507068,MWh,Meta_2025_EDI,facility electricity,FOREST_CITY_SITE_AS_REPORTED,as_published,later years are not 2012 Building-1 only,55000.0,0.10846671452349586,True,SITE_WITHDRAWAL_INTENSITY
+2024,535555,MWh,Meta_2025_EDI,facility electricity,FOREST_CITY_SITE_AS_REPORTED,as_published,later years are not 2012 Building-1 only,16000.0,0.02987554966343326,True,SITE_WITHDRAWAL_INTENSITY

@@ -1,0 +1,32 @@
+{
+  "archived_html": [
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/wayback/forest-city_20130420074621.html",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/wayback/forest-city_20130502145111.html",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/wayback/forest-city_20160322115254.html",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/wayback/forest-city_20200807092103.html",
+    "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/raw/dashboard/wayback/forest-city_20210124121528.html"
+  ],
+  "archived_html_bytes": {
+    "forest-city_20130420074621.html": 15975,
+    "forest-city_20130502145111.html": 15975,
+    "forest-city_20160322115254.html": 17396,
+    "forest-city_20200807092103.html": 17932,
+    "forest-city_20210124121528.html": 17932
+  },
+  "fields_described": [
+    "PUE",
+    "WUE L/kWh",
+    "Humidity %",
+    "Temperature"
+  ],
+  "github_backend": "https://github.com/facebookarchive/puewue-backend",
+  "github_frontend": "https://github.com/facebookarchive/puewue-frontend",
+  "js_present": true,
+  "json_api_in_wayback": false,
+  "live_url_dead": true,
+  "measurement_boundary": "WUE labeled L/kWh on dashboard HTML; ISO/IEC 30134-9 IT-energy denominator NOT verified from recovered files. Do not use quantitatively.",
+  "no_model_comparison": true,
+  "period": "public dashboards launched ~2012-08; Forest City page archived 2013-04 through 2021; numeric payloads not in CDX",
+  "status": "SCREENSHOT_ONLY",
+  "usefulness": "confirms dashboard existed with PUE/WUE/T/RH and 24h + 1-year views; NO raw time series recovered"
+}

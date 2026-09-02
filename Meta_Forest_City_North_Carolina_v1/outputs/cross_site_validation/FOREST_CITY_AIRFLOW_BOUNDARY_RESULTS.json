@@ -1,0 +1,22 @@
+{
+  "FACILITY_EFFECTIVE_DELTA_T": "UNIDENTIFIED",
+  "IT_DELTA_T_DESIGN": "IDENTIFIED_DESIGN_SPEC",
+  "IT_EQUIPMENT_DELTA_T_DESIGN_F": 35.0,
+  "IT_EQUIPMENT_DELTA_T_DESIGN_K": 19.444444444444443,
+  "Q1_35F_credible_IT_design_rise": "YES",
+  "Q1_confidence": "HIGH",
+  "Q2_translatable_to_effective_facility_airflow": "NO_NOT_WITHOUT_BOUNDARY_ASSUMPTIONS",
+  "Q3_boundary_assumptions_required": [
+    "sensible-only IT heat to air",
+    "AHU DeltaT = IT DeltaT",
+    "no recirculation/bypass",
+    "m_dot from Q/(cp dT) at facility not server fans"
+  ],
+  "Q4_universal_12K_inappropriate": "YES_AS_UNIVERSAL_CONSTANT; Forest City 35F DESIGN is a different boundary and climate/control. Do NOT conclude Prineville should use 19.4K.",
+  "hardware_45pct_less": "DESIGN_SPEC Maguire; not a measured CFM and not equal to 25F/35F=0.714",
+  "implied_m_dot_per_W_12K_prior": 8.28363154406892e-05,
+  "implied_m_dot_per_W_IT_design": 5.112184038625391e-05,
+  "m_dot_ratio_IT35_vs_12K": 0.6171428571428572,
+  "never_state": "Forest City 19.4 K proves Prineville should use 19.4 K",
+  "ocp_v1_cfm_tables": "Prineville-observed server CFM; not Forest City facility BMS; hardware generation compatible only as OCP family, NOT as matched operating point"
+}

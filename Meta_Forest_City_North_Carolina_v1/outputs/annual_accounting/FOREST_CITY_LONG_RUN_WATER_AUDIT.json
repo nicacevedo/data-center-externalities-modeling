@@ -1,0 +1,9 @@
+{
+  "2024_electricity_MWh": 535555,
+  "2024_withdrawal_ML": 16,
+  "causal_claim": false,
+  "largest_yoy_drop_m3": -39000.0,
+  "largest_yoy_drop_year": 2024,
+  "not_used_to_fit_2012_controller": true,
+  "status": "PUBLICLY_UNRESOLVED"
+}

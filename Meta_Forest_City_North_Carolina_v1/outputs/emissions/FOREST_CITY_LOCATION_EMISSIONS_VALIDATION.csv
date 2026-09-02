@@ -1,0 +1,6 @@
+year,value,unit,source_publication,methodology,scope,revision,mwh,implied_kg_per_kWh,not_egrid
+2020,202000,tCO2e,Meta_2025_EDI,location-based Scope 2,location-based Scope 2 site row,rounded,595000,0.33949579831932775,True
+2021,165026,tCO2e,Meta_2025_EDI,location-based Scope 2,location-based Scope 2 site row,as_published,580842,0.28411512941557254,True
+2022,143754,tCO2e,Meta_2025_EDI,location-based Scope 2,location-based Scope 2 site row,as_published,492786,0.2917168913077888,True
+2023,144050,tCO2e,Meta_2025_EDI,location-based Scope 2,location-based Scope 2 site row,as_published,507068,0.2840841859474469,True
+2024,144104,tCO2e,Meta_2025_EDI,location-based Scope 2,location-based Scope 2 site row,as_published,535555,0.26907413804371166,True
