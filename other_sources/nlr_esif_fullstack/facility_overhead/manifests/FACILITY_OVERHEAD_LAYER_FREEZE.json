@@ -2,5 +2,60 @@
   "cpu_frozen": true,
   "h100_frozen": true,
   "prineville_coefficient_transfer": "NOT_ALLOWED",
-  "disposition": "PARTIAL"
+  "disposition": "PARTIAL",
+  "FACILITY_OVERHEAD_FINAL_DISPOSITION": "PARTIAL",
+  "READY_FOR_HEAT_REJECTION_WATER_WUE": "PASS_WITH_BOUNDARY_RESTRICTIONS",
+  "numerical_refit": false,
+  "TEST_driven_model_change": false,
+  "original_hashes_at_closure_start": {
+    "model_protocol": "8f3f3beb8dbd07f9642d5bee413e3b0741b2e5be9bae666f53acdc8402276a5e",
+    "temporal_split": "0bb4e8dea39601ab1fbd0bcdff169ac39862e2a359b7d38a5d92c4cfe61d83cc",
+    "selected_models": "fc15039e713578316877f5df9e1009e2a719128bd2458cde74a822ff1aa877dd",
+    "cv_metrics": "a31f072beae91c89c8157098cfb78cecdef9f0e0510519def5edcb85521c6360",
+    "TEST_metrics_json": "6ad9696540d85e2ac9a6ac9d9ab4946d0da1f19207da86341ede281c2b2070f6",
+    "TEST_metrics_csv": "5cba31b443c32941e930dcc8b3a7214e30168b617ff862f0561188d00ac531b7",
+    "PUE_metrics_json": "e09b71715298b1968575fd87ba3abc5c29d13b6185ac592f581ad1bee435d064",
+    "uncertainty": "7f1875d7f27c3e40bc2e81e399431e7c028e181a0dfcde0ffe27904e2668e2bc",
+    "original_runner": "c901ca34bb5ec23923adb84c7a324ca64c2c38674eb41b5776210167f9cd7c0a"
+  },
+  "original_hashes_verified_unchanged_except_runner": true,
+  "runner_hash_after_generating_code_corrections": "dc92cb2386f4fd6f3d962274b044e03aff465ec63b8b840f4f28feff16edc80c",
+  "runner_changes": [
+    "main() refuses to refit when post-test freeze exists",
+    "thermosyphon IN_SAMPLE chronology",
+    "protocol_deviation no longer asserted for unused optional lagged-input fallback"
+  ],
+  "posttest_closure_audit_hashes": {
+    "HVAC_REGIME_AUDIT_PROTOCOL.json": {
+      "bytes": 2415,
+      "sha256": "e7b438a5e11c1a46a56a2fd8665ec4f14bc9af7e11cfe84b61d09a581dda135e"
+    },
+    "THERMOSYPHON_COMMISSIONING_AUDIT.json": {
+      "bytes": 15250,
+      "sha256": "d7af92a3e54ce401013d49bcd54cbdcc7fd6ddb34327041d1cc5a222e5db6969"
+    },
+    "HVAC_2024_REGIME_ATTRIBUTION.json": {
+      "bytes": 6921,
+      "sha256": "d952f37e6e9a86e237223b1f5c61e0d00cac45122b352a8bad43b4650bcbe10f"
+    },
+    "FINAL_ESIF_FACILITY_OVERHEAD_STATUS.json": {
+      "bytes": 3534,
+      "sha256": "ae7c50a0a5ab4c6ecd52f0fe55607ca423295458755226515ee5c46e2c3542d2"
+    },
+    "POSTTEST_VALIDATION_LESSONS.json": {
+      "bytes": 659,
+      "sha256": "d947be12ba2cc27a479e3c8d152e82e0a8ea38f88d1481a5fcf8415b763ec376"
+    },
+    "CLOSED_POSTTEST_HYPOTHESES.json": {
+      "bytes": 464,
+      "sha256": "f94a038a59ef941e4f311dfa805c0ff64314105293ef8be88aec8df0c8346521"
+    }
+  },
+  "thermosyphon_chronology": {
+    "in_sample": true,
+    "commissioning_transition": "2016-08",
+    "first_full_year": "2016-09-01 through 2017-08-31"
+  },
+  "HVAC_regime_disposition": "PHYSICAL_OR_OPERATIONAL_INFRASTRUCTURE_CHANGE_SUPPORTED_EXACT_CAUSE_UNRESOLVED",
+  "layer_permanently_frozen_after_this_closure": true
 }

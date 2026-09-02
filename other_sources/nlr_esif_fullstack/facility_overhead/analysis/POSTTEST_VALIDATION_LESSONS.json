@@ -1,0 +1,10 @@
+{
+  "original_46_fold_expanding_CV": "UNCHANGED",
+  "do_not_apply_retroactively": true,
+  "what_happened": "Equal-weight mean of 46 expanding 60-day DEV folds is dominated by the long 2016\u20132023 HVAC regime (~8\u201310 kW). A persistent 2024 HVAC level shift occupies only late DEV folds, so mean CV selected F0 with CV daily-energy WAPE 0.147 while full-DEV F0 daily-energy WAPE was already 0.986. TEST then failed.",
+  "future_facility_time_series_experiments_should_predeclare_both": [
+    "mean rolling-origin CV performance",
+    "latest-regime / final-pretest-epoch stability"
+  ],
+  "this_experiment": "selection rule was not changed after TEST"
+}

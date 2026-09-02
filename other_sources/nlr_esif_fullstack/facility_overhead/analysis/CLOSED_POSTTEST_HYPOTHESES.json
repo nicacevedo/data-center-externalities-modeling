@@ -1,0 +1,9 @@
+{
+  "epoch_aware_HVAC_model": "NOT_FITTED",
+  "lagged_input_cooling_model": "NOT_FITTED",
+  "lagged_target_model": "FORBIDDEN_AND_NOT_USED",
+  "F5_plus": "NOT_FITTED",
+  "post_TEST_feature_selection": "NOT_PERFORMED",
+  "COOLING_DYNAMICS_UNRESOLVED": true,
+  "reason": "These hypotheses became salient after TEST. There is no clean new independent holdout. The untouched negative TEST is more valuable than a repaired model evaluated on already-inspected data."
+}

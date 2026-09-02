@@ -178,3 +178,114 @@ def test_descriptive_pump_reclass_not_canonical():
     md = (DOCS / "ESIF_FACILITY_BOUNDARY.md").read_text()
     assert "2.67" in md
     assert "not" in md.lower() and "substitutes" in md.lower() or "do not replace" in md.lower() or "not canonical" in md.lower()
+
+
+def _closure_init():
+    return json.loads((MANIFESTS / "FACILITY_OVERHEAD_POSTTEST_CLOSURE_INITIAL_STATE.json").read_text())
+
+
+def test_original_numerical_artifacts_unchanged():
+    init = _closure_init()
+    for rel, meta in init["frozen_numerical_artifacts"].items():
+        if rel.endswith("run_esif_facility_overhead.py"):
+            continue  # generating-code corrections allowed; numerical files are not
+        assert _sha(FO / rel) == meta["sha256"]
+    sel = json.loads((ANALYSIS / "COMPONENT_SELECTED_MODELS.json").read_text())
+    assert sel["cooling_kw"]["selected_spec"] == "F4"
+    assert sel["hvac_kw"]["selected_spec"] == "F0"
+    assert sel["pump_kw"]["selected_spec"] == "F4"
+    assert sel["plug_and_light_kw"]["selected_spec"] == "F2_PHYS"
+    assert sel["hvac_kw"]["coef"] == [19.48945560740139]
+
+
+def test_cpu_h100_raw_hashes_match_closure_freeze():
+    init = _closure_init()
+    assert _sha(CPU_STATUS) == init["cpu"]["FINAL_KESTREL_CPU_STATUS.json"]
+    assert _sha(CPU_FREEZE) == init["cpu"]["FINAL_MODEL_FREEZE.json"]
+    assert _sha(H100_FREEZE) == init["h100"]["H100_COMPUTE_FINAL_FREEZE.json"]
+    assert _sha(POWER_PARQUET) == init["raw_esif"]["power_parquet"]
+    assert _sha(WEATHER_PARQUET) == init["raw_esif"]["weather_parquet"]
+
+
+def test_thermosyphon_in_sample_august_2016_transition():
+    ep = json.loads((ANALYSIS / "EPOCH_STABILITY.json").read_text())
+    assert ep["epochs"]["thermosyphon_commissioning"] == "IN_SAMPLE"
+    assert "NOT_IN_SAMPLE" not in ep["epochs"]["thermosyphon_commissioning"]
+    tsc = json.loads((ANALYSIS / "THERMOSYPHON_COMMISSIONING_AUDIT.json").read_text())
+    assert tsc["thermosyphon_in_sample"] is True
+    assert tsc["NOT_IN_SAMPLE"] is False
+    assert tsc["commissioning_transition"]["start"] == "2016-08-01"
+    assert tsc["commissioning_transition"]["month_treated_as"] == "transitional"
+    assert tsc["first_full_tsc_year"]["start"] == "2016-09-01"
+    assert tsc["first_full_tsc_year"]["end_inclusive"] == "2017-08-31"
+    months = pd.read_csv(ANALYSIS / "THERMOSYPHON_COMMISSIONING_AUDIT.csv")
+    assert (months.loc[months.month == "2016-08", "regime"] == "commissioning_transition").all()
+    assert (months.loc[months.month == "2016-09", "regime"] == "first_full_tsc_year").all()
+    runner = (FO / "scripts" / "run_esif_facility_overhead.py").read_text()
+    assert "NOT_IN_SAMPLE (ESIF thermosyphon predates 2015 start)" not in runner
+
+
+def test_residual_protocol_deviation_not_falsely_asserted():
+    resid = json.loads((ANALYSIS / "RESIDUAL_DIAGNOSTICS.json").read_text())
+    assert resid["protocol_deviation"] is False
+    assert resid["lagged_input_extension_tested"] is False
+    assert resid["target_lag_used"] is False
+    assert resid["fallback_trigger_condition_met"] is True
+    assert resid["dev_cooling_acf"]["lag_1h"] == pytest.approx(0.8288581320055117)
+    assert resid["dev_cooling_acf"]["lag_24h"] == pytest.approx(0.5458957558201557)
+
+
+def test_posthoc_hvac_audit_cannot_modify_model_artifacts():
+    proto = json.loads((MANIFESTS / "HVAC_REGIME_AUDIT_PROTOCOL.json").read_text())
+    assert proto["status"] == "POST_HOC_INTERPRETATION_ONLY"
+    assert proto["numerical_experiment_frozen"] is True
+    hvac = json.loads((ANALYSIS / "HVAC_2024_REGIME_ATTRIBUTION.json").read_text())
+    assert hvac["used_for_model_fitting"] is False
+    assert hvac["used_to_revise_TEST"] is False
+    closed = json.loads((ANALYSIS / "CLOSED_POSTTEST_HYPOTHESES.json").read_text())
+    assert closed["epoch_aware_HVAC_model"] == "NOT_FITTED"
+    assert closed["lagged_target_model"] == "FORBIDDEN_AND_NOT_USED"
+    assert closed["post_TEST_feature_selection"] == "NOT_PERFORMED"
+
+
+def test_tracked_canonical_status_taxonomy():
+    st = json.loads((ANALYSIS / "FINAL_ESIF_FACILITY_OVERHEAD_STATUS.json").read_text())
+    rst = json.loads((RESULTS / "FINAL_ESIF_FACILITY_OVERHEAD_STATUS.json").read_text())
+    assert st["HOURLY_STRUCTURE"] != "PASS"
+    assert st["HOURLY_STRUCTURE"] == "PARTIAL"
+    assert st["PUE_ACCOUNTING_CLOSURE"] == "PASS"
+    assert st["HVAC_STATIONARY_IT_WEATHER_MODEL"] == "FAIL"
+    assert st["HVAC_REGIME_SHIFT"] == "PASS"
+    assert st["PUMP_POWER_MODEL"] == "PARTIAL"
+    assert st["PUMP_HOURLY_DYNAMICS"] == "FAIL"
+    assert st["STATIONARY_IT_WEATHER_TOTAL_AUX_HYPOTHESIS"] == "FAIL"
+    assert st["FACILITY_ARCHITECTURE_OPERATIONAL_STATE_DEPENDENCE"] == "STRONGLY_INDICATED"
+    assert st["HEAT_REUSE_RESIDUAL_EFFECT"] == "LOW_FOR_TESTED_DIAGNOSTIC"
+    assert st["PRINEVILLE_COEFFICIENT_TRANSFER"] == "NOT_ALLOWED"
+    assert st["FACILITY_OVERHEAD_FINAL_DISPOSITION"] == "PARTIAL"
+    assert st["READY_FOR_HEAT_REJECTION_WATER_WUE"] == "PASS_WITH_BOUNDARY_RESTRICTIONS"
+    assert st["water_WUE_modeling_executed"] is False
+    assert st["prineville_modified"] is False
+    assert st["TEST_driven_model_change"] is False
+    assert rst["HOURLY_STRUCTURE"] == "PARTIAL"
+
+
+def test_original_runner_refuses_refit_after_freeze():
+    import run_esif_facility_overhead as runner
+
+    with pytest.raises(SystemExit, match="frozen after post-test closure"):
+        runner.main()
+
+
+def test_no_prineville_or_water_model_execution():
+    closure = (FO / "scripts" / "run_facility_overhead_posttest_closure.py").read_text()
+    assert "Meta_Prineville" not in closure
+    assert "lstsq" not in closure
+    assert "def fit_spec" not in closure
+    handoff = (DOCS / "HEAT_REJECTION_WATER_HANDOFF.md").read_text()
+    assert "hvac_kw" in handoff
+    assert "thermal heat rejected" in handoff.lower()
+    assert "cooling_kw" in handoff
+    for p in FO.rglob("*"):
+        assert "prineville" not in p.name.lower()
+        assert "wue_model" not in p.name.lower()

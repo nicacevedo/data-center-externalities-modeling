@@ -1,0 +1,82 @@
+{
+  "purpose": "Freeze original ESIF facility-overhead numerical results before post-test scientific closure. No refit.",
+  "public_baseline_commit_requested": "c1447b2c5670804a8b79cfd63c85e3b602ed20ee",
+  "git": {
+    "branch": "main",
+    "HEAD": "c1447b2c5670804a8b79cfd63c85e3b602ed20ee",
+    "status": "m Data-center-PUE-prediction-tool"
+  },
+  "cpu": {
+    "FINAL_KESTREL_CPU_STATUS.json": "1f57b210a63d375ce8eff7d5043756ffe6efe04e8a408bf9429bfd10096528d9",
+    "FINAL_MODEL_FREEZE.json": "dcbd066b26b8e7d2800e40a23a1cb8250502bfe59563fe06318cb1be1cc4fd27",
+    "read_only": true,
+    "refit": false
+  },
+  "h100": {
+    "H100_COMPUTE_FINAL_FREEZE.json": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076",
+    "read_only": true,
+    "refit": false
+  },
+  "raw_esif": {
+    "power_parquet": "19cd12405dde9144b1a360e8c8418666c399a3d0d15a7f846880d71ab22f9dd4",
+    "weather_parquet": "97b424993fa77a15117fb2c4659a2c327fc83280f943fab47d9036260289a6a0",
+    "readme": "f69d32f1af598c48a899d54d48b26def2ca78a0c11d848516169570ecae4c029",
+    "power_bytes": 109685321,
+    "weather_bytes": 58865468
+  },
+  "frozen_numerical_artifacts": {
+    "manifests/FACILITY_MODEL_PROTOCOL_FREEZE.json": {
+      "bytes": 1088,
+      "sha256": "8f3f3beb8dbd07f9642d5bee413e3b0741b2e5be9bae666f53acdc8402276a5e"
+    },
+    "manifests/FACILITY_TEMPORAL_SPLIT_FREEZE.json": {
+      "bytes": 711,
+      "sha256": "0bb4e8dea39601ab1fbd0bcdff169ac39862e2a359b7d38a5d92c4cfe61d83cc"
+    },
+    "analysis/COMPONENT_SELECTED_MODELS.json": {
+      "bytes": 11500,
+      "sha256": "fc15039e713578316877f5df9e1009e2a719128bd2458cde74a822ff1aa877dd"
+    },
+    "analysis/COMPONENT_CV_METRICS.csv": {
+      "bytes": 2439,
+      "sha256": "a31f072beae91c89c8157098cfb78cecdef9f0e0510519def5edcb85521c6360"
+    },
+    "analysis/FINAL_TEST_METRICS.csv": {
+      "bytes": 1289,
+      "sha256": "5cba31b443c32941e930dcc8b3a7214e30168b617ff862f0561188d00ac531b7"
+    },
+    "analysis/FINAL_TEST_METRICS.json": {
+      "bytes": 18109,
+      "sha256": "6ad9696540d85e2ac9a6ac9d9ab4946d0da1f19207da86341ede281c2b2070f6"
+    },
+    "analysis/PUE_PREDICTION_METRICS.csv": {
+      "bytes": 423,
+      "sha256": "0b2282aa2ebc25c9b774289eaa41ab21a426da69788af31be3a8a373a5279990"
+    },
+    "analysis/PUE_PREDICTION_METRICS.json": {
+      "bytes": 498,
+      "sha256": "e09b71715298b1968575fd87ba3abc5c29d13b6185ac592f581ad1bee435d064"
+    },
+    "analysis/FACILITY_OVERHEAD_UNCERTAINTY.json": {
+      "bytes": 618,
+      "sha256": "7f1875d7f27c3e40bc2e81e399431e7c028e181a0dfcde0ffe27904e2668e2bc"
+    },
+    "scripts/run_esif_facility_overhead.py": {
+      "bytes": 59240,
+      "sha256": "c901ca34bb5ec23923adb84c7a324ca64c2c38674eb41b5776210167f9cd7c0a"
+    }
+  },
+  "constraints": {
+    "no_refit_F0_F4": true,
+    "no_change_selected_specs": true,
+    "no_alter_temporal_splits": true,
+    "no_TEST_selection": true,
+    "no_epoch_HVAC_model": true,
+    "no_lagged_cooling_model": true,
+    "no_lagged_targets": true,
+    "no_water_WUE_modeling": true,
+    "no_prineville": true,
+    "no_meta": true,
+    "no_cpu_h100_reopen": true
+  }
+}

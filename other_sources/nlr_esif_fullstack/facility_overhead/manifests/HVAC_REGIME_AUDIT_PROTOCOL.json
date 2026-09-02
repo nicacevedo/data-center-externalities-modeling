@@ -1,0 +1,50 @@
+{
+  "name": "HVAC_2024_REGIME_ATTRIBUTION_AUDIT",
+  "status": "POST_HOC_INTERPRETATION_ONLY",
+  "created_after_TEST": true,
+  "numerical_experiment_frozen": true,
+  "explicit_prohibitions": [
+    "no model selection",
+    "no coefficient fitting for production use",
+    "no revision of TEST metrics",
+    "no revision of DEV/CV selected specs",
+    "no causal attribution from temporal coincidence alone",
+    "no epoch HVAC production model",
+    "no TEST-driven feature or threshold choice"
+  ],
+  "primary_questions": [
+    "When does the persistent 2024 HVAC level shift begin?",
+    "Is the HVAC increase offset by another component, suggesting category reclassification?",
+    "Does total auxiliary power rise with HVAC?",
+    "Does source PUE rise consistently with the extra auxiliary power?",
+    "Is there evidence of meter reset/schema/quantization/source-definition change?",
+    "Which publicly documented infrastructure events are temporally compatible?",
+    "What broad explanation class is defensible?"
+  ],
+  "transition_localization": {
+    "method": "descriptive before/after window means on daily HVAC",
+    "primary_window_days": 28,
+    "sensitivity_windows_days": [14, 56],
+    "use_for_model_fitting": false,
+    "candidate_scan_range": "2023-10-01 through 2024-07-31, requiring adequate coverage on both sides"
+  },
+  "allowed_dispositions": [
+    "PHYSICAL_OR_OPERATIONAL_INFRASTRUCTURE_CHANGE_SUPPORTED_EXACT_CAUSE_UNRESOLVED",
+    "METER_CATEGORY_RECLASSIFICATION_SUPPORTED",
+    "METER_BOUNDARY_CHANGE_POSSIBLE",
+    "MULTIPLE_EXPLANATIONS_REMAIN",
+    "CAUSE_UNRESOLVED"
+  ],
+  "forbidden_narrow_claims_without_primary_docs": [
+    "GPU-caused HVAC",
+    "Eagle-caused HVAC",
+    "new-fan-wall HVAC"
+  ],
+  "confidence_hierarchy": {
+    "HVAC_level_shift_exists": "HIGH if data show a large persistent step",
+    "stationary_IT_weather_fails_across_shift": "HIGH (already established by untouched TEST)",
+    "genuine_broader_facility_operational_or_infrastructure_regime_change": "MEDIUM/HIGH only if compatible with public evidence AND total-aux/PUE rise",
+    "exact_device_or_event_causing_electrical_step": "LOW unless documented"
+  },
+  "fan_wall_counterpoint": "Original ESIF design already included fan-wall air-handling units. Do not infer 2024 HVAC jump = new fan walls unless a primary document says new/additional fan-wall equipment or metering was commissioned then."
+}

@@ -940,17 +940,17 @@ def residuals_heat_epochs(h: pd.DataFrame, te: pd.DataFrame, test_start, selecte
         return float(np.corrcoef(a, b)[0, 1])
     acf = {f"lag_{lag}h": acf_lag(r, lag) for lag in (1, 6, 24)}
     fail = selected["cooling_kw"]["dev_metrics"]["daily_energy_WAPE"] > 0.25
-    protocol_deviation = False
-    if fail and acf.get("lag_24h") and abs(acf["lag_24h"]) > 0.5:
-        protocol_deviation = True  # documented only; still no lagged target; we do NOT add history in this pass unless fail
-    # We do not add lagged-input models unless fail; if fail, still skip TEST-driven decisions.
+    # Lagged-INPUT diagnostic is OPTIONAL if current-input models fail. Not exercising it is not a protocol deviation.
+    # Lagged TARGETS remain forbidden. This generating path must not be used to overwrite frozen post-test artifacts.
     jdump(
         ANALYSIS / "RESIDUAL_DIAGNOSTICS.json",
         {
             "dev_cooling_acf": acf,
             "current_input_models_fail_predeclared_WAPE_gt_0.25": fail,
+            "fallback_trigger_condition_met": bool(fail),
             "lagged_input_extension_tested": False,
-            "protocol_deviation": protocol_deviation,
+            "protocol_deviation": False,
+            "target_lag_used": False,
             "reason_no_lagged_target": "lagged TARGET values forbidden; lagged inputs only if DEV consistently fails",
         },
     )
@@ -998,7 +998,10 @@ def residuals_heat_epochs(h: pd.DataFrame, te: pd.DataFrame, test_start, selecte
                 "post_eagle_pre_gpu_ga": f"{EAGLE_DECOMMISSION} ≤ hour < {GPU_GA}",
                 "post_gpu_ga": f"hour ≥ {GPU_GA}",
                 "esif_full_outage_excluded_from_valid_hours": [OUTAGE_FULL_START, OUTAGE_FULL_END],
-                "thermosyphon_commissioning": "NOT_IN_SAMPLE (ESIF thermosyphon predates 2015 start)",
+                "thermosyphon_commissioning": "IN_SAMPLE",
+                "thermosyphon_pre_tsc_available": "2016-06-12 through 2016-07-31",
+                "thermosyphon_commissioning_transition": "2016-08",
+                "thermosyphon_first_full_year": "2016-09-01 through 2017-08-31",
             },
             "TEST_by_epoch": ep_rows,
             "gpu_integration_outage": [GPU_INT_OUTAGE_START, GPU_INT_OUTAGE_END],
@@ -1238,6 +1241,13 @@ def final_status(pue_cl, clock, selected, heat, test_json, init) -> dict:
 
 def main():
     os.environ.setdefault("PYTHONNOUSERSITE", "1")
+    closure_guard = MANIFESTS / "FACILITY_OVERHEAD_POSTTEST_CLOSURE_INITIAL_STATE.json"
+    if closure_guard.exists():
+        raise SystemExit(
+            "REFUSED: ESIF facility-overhead numerical results are frozen after post-test closure. "
+            "Do not refit F0–F4 or rewrite TEST metrics. "
+            "Descriptive audits: scripts/run_facility_overhead_posttest_closure.py"
+        )
     print("initial state…", flush=True)
     init = write_initial_state()
     print("provenance…", flush=True)

@@ -50,6 +50,13 @@ OUTAGE_FULL_END = "2025-07-01"  # exclusive; documented through 2025-06-30
 GPU_INT_OUTAGE_START = "2024-01-29"
 GPU_INT_OUTAGE_END = "2024-02-10"
 
+# Thermosyphon hybrid cooler: Sickinger et al. NREL/TP-2C00-72196. Month-level transition; do not fit a day.
+TSC_PRE_AVAILABLE_START = "2016-06-12"
+TSC_PRE_AVAILABLE_END_INCLUSIVE = "2016-07-31"
+TSC_COMMISSIONING_TRANSITION_MONTH = "2016-08"
+TSC_FIRST_FULL_YEAR_START = "2016-09-01"
+TSC_FIRST_FULL_YEAR_END_INCLUSIVE = "2017-08-31"
+
 SIMPLEST_ORDER = ("F0", "F1", "F2_PHYS", "F2_RAW", "F3", "F4")
 TARGETS = ("cooling_kw", "hvac_kw", "pump_kw", "plug_and_light_kw")
 PARSIMONY_REL_WAPE = 0.01

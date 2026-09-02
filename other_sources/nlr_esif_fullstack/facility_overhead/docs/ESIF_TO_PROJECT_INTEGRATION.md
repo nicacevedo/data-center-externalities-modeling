@@ -1,32 +1,54 @@
 # ESIF facility overhead → project integration (structural only)
 
 ESIF coefficients **do not transfer** to Prineville or to a generic hyperscale hall.
-ESIF is warm-water liquid + heat reuse + evaporative towers + thermosyphon. Prineville gray-box is a different architecture.
+
+ESIF architecture: warm-water liquid cooling, chiller-less HPC hall, waste-heat reuse, evaporative towers, thermosyphon hybrid dry rejection. Prineville gray-box is a different architecture.
 
 `PRINEVILLE_COEFFICIENT_TRANSFER = NOT_ALLOWED`.
 
+## Transferable high-level structure
+
+Held-out evidence supports:
+
+`P_overhead,t = f(P_IT,t, weather_t, A_t, S_t)`
+
+where:
+
+- `A_t` = facility architecture / configuration state (plant lineup, capacity, metering boundary);
+- `S_t` = operational / control state.
+
+A missing architecture/configuration/control state is **strongly indicated**. An epoch intercept is **one plausible future representation** of that missing state. It is **not** a validated production model: no epoch HVAC model was fitted, and TEST was not used to select one.
+
+## What each component actually showed
+
 Selected specs were frozen on DEV/CV. TEST was not used to change them.
 
-| Component | Selected | IT first-order? | Weather first-order? | Nonlinear / interaction? | Base load? | OOT TEST |
+| Component | Selected (DEV/CV) | IT | Weather | Nonlinear / interaction | What TEST supports | What TEST does not support |
 | --- | --- | --- | --- | --- | --- | --- |
-| cooling | F4 | weak/mixed (F1 worse than F0 on CV) | yes (Twb/Tdb in F4) | yes, F4 selected | yes ~12 kW at mean climate | PARTIAL (WAPE 0.66) |
-| HVAC | F0 | no on DEV CV (F1 did not beat F0) | no on DEV CV | no | yes, but **nonstationary** | **FAIL** (2024 level shift ~9→130 kW) |
-| pumps | F4 | yes | yes | F4 marginally over F2_PHYS | yes | PASS (WAPE 0.17) |
-| plug/light | F2_PHYS | negligible | weak | no (F3/F4 not needed) | yes ~3.5 kW | PARTIAL |
+| cooling | F4 | weak/mixed (F1 worse than F0 on CV) | descriptively relevant (Twb/Tdb) | F4 selected on DEV | weather/control dependence and non-monotonicity are plausible | stationary F4 is **not** a strongly validated transferable cooling law (hourly WAPE 0.66) |
+| HVAC | F0 | not first-order on historical CV | not first-order on historical CV | not selected | existence of a large 2024 regime shift | any stationary IT+weather HVAC map |
+| pumps | F4 | useful for **aggregate energy** | useful for aggregate energy | F4 marginally over F2_PHYS | daily-energy WAPE 0.17 | hourly dynamics (TEST R² = −0.74) |
+| plug/light | F2_PHYS | negligible | weak | F3/F4 unnecessary | partial | a physical plug law |
 
-Heat-reuse residual effect: `LOW` relative to the HVAC miss. Not added as a predictor.
+Heat-reuse diagnostic: `energy_reuse` on TEST does **not** explain much of the HVAC-dominated residual (`LOW_FOR_TESTED_DIAGNOSTIC`). That does **not** mean heat reuse is generally unimportant as a **thermal** allocation. It was not added as an electrical predictor.
 
-Hourly cooling residuals are strongly autocorrelated (ACF 1 h ≈ 0.83). Lagged **targets** were not used. A lagged-input extension was not added: the dominant OOT failure is an HVAC **level shift**, not cooling lag. That is a protocol deviation only in the sense that cooling DEV daily WAPE exceeded a 0.25 predeclared “clear fail” flag; it was not used to touch TEST.
+Hourly cooling residuals are autocorrelated (ACF 1 h = 0.8288581320055117). Lagged **targets** were not used. Optional lagged-**input** fallback was **not** exercised (`protocol_deviation = false`). `COOLING_DYNAMICS_UNRESOLVED = true`.
 
 ## Comparison (conceptual)
 
-- **Generic facility/cooling split** (IT + cooling + other overhead): ESIF **supports the accounting decomposition** (`PUE` closes from the four published components). Electrically, **cooling is small** (fans/trace heat/filter pump, ~8–20 kW), not a chiller plant. **HVAC and pumps dominate auxiliary electricity** after 2023–24.
-- **Lei/Masanet**: climate×technology annual PUE. ESIF shows that a single climate-driven PUE can hide a **step change in HVAC electricity** that is not a smooth weather function. Do not insert ESIF β into Lei `k`.
-- **Prineville gray-box**: air-side evaporative / fan-and-other fractions of IT. ESIF suggests reviewing, as **structure not numbers**: (1) a large HVAC/fan-wall intercept that can **jump with operational epochs**; (2) pump power that **does** track IT and wet-bulb; (3) outdoor heat-rejection electricity that is **small and weather-nonmonotonic** (heaters vs fans) on a liquid/thermosyphon plant.
+- **Generic facility/cooling split** (IT + cooling + other overhead): ESIF **validates the published accounting identity**. Electrically, ESIF `cooling_kw` is a **small** outdoor-fan/heater/filter-pump term, not a chiller.
+- **Lei/Masanet**: climate×technology annual PUE can hide a **step change in HVAC electricity** that is not a smooth weather function. Do not insert ESIF β into Lei `k`.
+- **Prineville gray-box** (structure to **review**, not numbers to copy):
+  1. fan/HVAC electricity can have a large intercept that is **regime-dependent** (`A_t`, `S_t`), not a universal constant;
+  2. pump **aggregate energy** can track IT and wet-bulb, but a selected polynomial **did not** reproduce held-out hourly dynamics;
+  3. outdoor heat-rejection **electricity** on this liquid/thermosyphon plant is small and weather-nonmonotonic — and is **not** rejected heat.
 
-## Must not transfer
+## Must not be inferred from ESIF
 
 - Any ESIF coefficient, intercept, or PUE level (~1.03–1.08)
 - The 2.67 kW filter-pump constant as a universal pump correction
 - Chiller-less / thermosyphon operating points as Prineville parameters
-- The 2024 HVAC kW level as a universal “GPU-era HVAC” coefficient
+- 2024 HVAC kW as “GPU-era HVAC”
+- `HVAC_base(epoch)` as a validated model
+- “Pump power tracks IT and wet bulb” as an hourly dynamical law
+- `cooling_kw` or `hvac_kw` as heat rejection

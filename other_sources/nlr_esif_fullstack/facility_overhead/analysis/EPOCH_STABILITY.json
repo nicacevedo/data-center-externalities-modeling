@@ -8,7 +8,7 @@
       "2025-06-26",
       "2025-07-01"
     ],
-    "thermosyphon_commissioning": "NOT_IN_SAMPLE (ESIF thermosyphon predates 2015 start)"
+    "thermosyphon_commissioning": "IN_SAMPLE"
   },
   "TEST_by_epoch": [
     {
@@ -39,5 +39,14 @@
     "DEV": 19.49,
     "TEST": 134.1
   },
-  "note": "TEST window is entirely post_gpu_ga, so TEST cannot compare Eagle vs post-Eagle. HVAC electrical load increased by an order of magnitude in 2024 (Kestrel GPU-GA / post-Eagle era). This is a documented-timing operational shift, not a residual-mined breakpoint. Models were not refit after TEST."
+  "note": "TEST window is entirely post_gpu_ga, so TEST cannot compare Eagle vs post-Eagle. A large persistent HVAC electrical level shift occurs around 2024-03-28/29 (see HVAC_2024_REGIME_ATTRIBUTION). That date is a post-hoc descriptive localization, not a residual-mined production breakpoint and was not used to refit models. Do not attribute the HVAC step to GPU heat, Eagle decommission, or new fan walls from coincidence. Thermosyphon commissioning is IN SAMPLE (August 2016).",
+  "thermosyphon": {
+    "in_sample": true,
+    "pre_tsc_available": "2016-06-12 through 2016-07-31",
+    "commissioning_transition": "2016-08 (month-level; Sickinger Fig. 3 caption operational date 2016-08-16 is recorded but not used as a fitted breakpoint)",
+    "first_full_tsc_year": "2016-09-01 through 2017-08-31",
+    "prior_false_statement": "NOT_IN_SAMPLE (ESIF thermosyphon predates 2015 start) \u2014 CORRECTED",
+    "common_valid_power_weather_begins": "2016-06-12",
+    "audit": "analysis/THERMOSYPHON_COMMISSIONING_AUDIT.json"
+  }
 }

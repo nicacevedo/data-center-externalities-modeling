@@ -5,7 +5,13 @@
     "lag_24h": 0.5458957558201557
   },
   "current_input_models_fail_predeclared_WAPE_gt_0.25": true,
+  "fallback_trigger_condition_met": true,
   "lagged_input_extension_tested": false,
-  "protocol_deviation": true,
-  "reason_no_lagged_target": "lagged TARGET values forbidden; lagged inputs only if DEV consistently fails"
+  "protocol_deviation": false,
+  "target_lag_used": false,
+  "optional_fallback_deliberately_not_exercised": true,
+  "TEST_untouched": true,
+  "explanation": "The frozen protocol made a lagged-INPUT diagnostic optional if current-input models clearly failed and a consistent lag signature appeared on DEV. That trigger was met (cooling DEV daily-energy WAPE > 0.25 and ACF at 24 h > 0.5). The optional fallback was deliberately not exercised because the dominant out-of-time failure is an HVAC level shift, not cooling lag, and there is no clean new independent holdout. No lagged TARGET was used. No TEST-driven model change occurred. This is therefore not a protocol deviation.",
+  "COOLING_DYNAMICS_UNRESOLVED": true,
+  "reason_no_lagged_target": "lagged TARGET values forbidden; lagged inputs only if DEV consistently fails; optional and not used"
 }

@@ -1,0 +1,173 @@
+{
+  "post_hoc_only": true,
+  "used_for_model_fitting": false,
+  "used_to_revise_TEST": false,
+  "primary_28day_transition_candidate": {
+    "candidate": "2024-03-29",
+    "window_days": 28,
+    "n_before": 28,
+    "n_after": 25,
+    "hvac_before": 15.454085817007462,
+    "hvac_after": 184.00705412771458,
+    "hvac_delta": 168.55296831070712,
+    "cooling_delta": 1.2636069754956205,
+    "pump_delta": -19.27651947933145,
+    "plug_delta": -0.4249770019811101,
+    "aux_delta": 150.11507880489017,
+    "it_delta": -862.4727687021668,
+    "pue_delta": 0.10589712092511006,
+    "hvac_persist": 190.92178763285847,
+    "persistent": true
+  },
+  "sensitivity_14_56": {
+    "14": {
+      "candidate": "2024-03-31",
+      "window_days": 14,
+      "n_before": 14,
+      "n_after": 13,
+      "hvac_before": 45.94573594294376,
+      "hvac_after": 193.8593770170523,
+      "hvac_delta": 147.91364107410854,
+      "cooling_delta": 0.6594126290515945,
+      "pump_delta": -11.8833668435195,
+      "plug_delta": -0.9440403991412576,
+      "aux_delta": 135.7456464604994,
+      "it_delta": -955.4128686747194,
+      "pue_delta": 0.11725818616488781,
+      "hvac_persist": 173.3966240425996,
+      "persistent": true
+    },
+    "56": {
+      "candidate": "2024-03-28",
+      "window_days": 56,
+      "n_before": 56,
+      "n_after": 53,
+      "hvac_before": 14.34268418111807,
+      "hvac_after": 186.1010639462545,
+      "hvac_delta": 171.75837976513643,
+      "cooling_delta": 2.5780976641947735,
+      "pump_delta": -18.547818518360405,
+      "plug_delta": -0.9675350737646027,
+      "aux_delta": 154.82112383720613,
+      "it_delta": -88.11022807261543,
+      "pue_delta": 0.07127496777792053,
+      "hvac_persist": 178.09039856781777,
+      "persistent": true
+    }
+  },
+  "yearly_hvac_mean_kw": {
+    "2016": 8.480824379885558,
+    "2017": 8.06209147033795,
+    "2018": 9.902524986412017,
+    "2019": 9.657587510783838,
+    "2020": 8.939551830455049,
+    "2021": 9.094869099903805,
+    "2022": 9.275443335415716,
+    "2023": 10.2701567701399,
+    "2024": 139.01153338126343,
+    "2025": 110.33385335714773
+  },
+  "calendar_2023_vs_2024": {
+    "hvac_2023": 10.2701567701399,
+    "hvac_2024": 139.01153338126346,
+    "aux_2023": 71.42020991126428,
+    "aux_2024": 192.74200014305583,
+    "pue_2023": 1.039521701743294,
+    "pue_2024": 1.0830086075564298,
+    "it_2023": 2104.017914344462,
+    "it_2024": 2729.023814738093
+  },
+  "A_component_reallocation_test": {
+    "hvac_delta_28d": 168.55296831070712,
+    "cooling_delta_28d": 1.2636069754956205,
+    "pump_delta_28d": -19.27651947933145,
+    "plug_delta_28d": -0.4249770019811101,
+    "other_components_delta_sum": -18.43788950581694,
+    "aux_delta_28d": 150.11507880489017,
+    "reclassification_plausible": false,
+    "interpretation": "If HVAC rose while others fell by a comparable amount and AUX stayed stable, category reclassification would be plausible."
+  },
+  "B_total_boundary_test": {
+    "aux_rises_with_hvac": true,
+    "pue_rises": true,
+    "pue_delta_28d": 0.10589712092511006,
+    "pure_within_category_reclassification_disfavored": true
+  },
+  "C_meter_artifact_check": {
+    "window": [
+      "2024-03-08 00:00:00",
+      "2024-04-19 00:00:00"
+    ],
+    "n_native_rows": 53779,
+    "n_finite_hvac": 53779,
+    "n_negative_hvac": 0,
+    "n_zero_hvac": 0,
+    "n_unique_hvac_1e6": 29643,
+    "median_positive_unique_step_rounded_1e3": 0.0010000000000047748,
+    "native_dt_s_median": 59.961,
+    "n_gaps_gt_180s": 29,
+    "longest_gap_s": 325139.463,
+    "abs_consecutive_hvac_diff_p50": 0.07199999999999918,
+    "abs_consecutive_hvac_diff_p99": 1.8350364892751145,
+    "seven_day_pre_mean_hvac": 17.053640131846567,
+    "seven_day_post_mean_hvac": 203.81803435642462,
+    "seven_day_ratio_post_over_pre": 11.951585279192544,
+    "seven_day_offset_post_minus_pre": 186.76439422457804,
+    "exact_integer_multiplicative_scaling_2_or_10": false,
+    "seven_day_pre_post_other": {
+      "cooling_pre": 4.280862725356419,
+      "cooling_post": 5.224888308782229,
+      "pump_pre": 36.54809745379238,
+      "pump_post": 28.188730298183586,
+      "plug_pre": 4.2404112915186545,
+      "plug_post": 3.145881031748265,
+      "it_pre": 3642.2642181806186,
+      "it_post": 3642.1392206261985
+    },
+    "abrupt_baseline_insertion_signature": "large persistent mean offset without matching drop in another listed component; native series remains continuously sampled",
+    "longest_gap_note": "Longest native gap in the \u00b121-day window is 325139 s (~3.8 days), coinciding with mid-April coverage holes AFTER the HVAC step, not as the step itself."
+  },
+  "D_source_definition_history": {
+    "current_readme_hvac": "fan walls, fan coils that support the data center electrical rooms, and the make-up air unit",
+    "nlr_pue_page_hvac": "same wording as README (retrieved 2026-09-02)",
+    "osti_3015212_hvac": "same wording",
+    "catalog_power_resource_version": 3,
+    "public_changelog_showing_2024_hvac_redefinition": false,
+    "cannot_rule_out_unpublished_meter_boundary_change": true
+  },
+  "E_event_compatibility": {
+    "do_not_infer_causality_from_proximity": true,
+    "temporally_compatible_documented_events": [
+      "2024 electrical/mechanical 5\u21927.5 MW capacity work (NLR 2024-06-11)",
+      "Jan 29\u2013Feb 9 2024 Kestrel Phase-II GPU integration outage",
+      "Feb 2024 GPU node arrival",
+      "June 15 2024 Eagle decommission"
+    ],
+    "not_supported_as_narrow_causes": [
+      "GPU-caused HVAC",
+      "Eagle-caused HVAC",
+      "new-fan-wall HVAC"
+    ],
+    "fan_wall_counterpoint": "Original ESIF design already included fan-wall AHUs (NREL fact sheet OSTI 1050124)."
+  },
+  "HVAC_REGIME_CAUSE": "PHYSICAL_OR_OPERATIONAL_INFRASTRUCTURE_CHANGE_SUPPORTED_EXACT_CAUSE_UNRESOLVED",
+  "confidence": {
+    "HVAC_level_shift_exists": "HIGH",
+    "stationary_IT_weather_fails_across_shift": "HIGH",
+    "broader_facility_operational_or_infrastructure_regime_change_compatible": "MEDIUM_HIGH",
+    "exact_device_or_event": "LOW"
+  },
+  "closed_production_models": {
+    "epoch_aware_HVAC_model": "NOT_FITTED",
+    "reason": "hypothesis became salient after TEST; no clean new independent holdout"
+  },
+  "day_level_descriptive_localization": {
+    "HVAC_still_historical_through": "2024-03-27 (~12 kW while IT ~3.6 MW)",
+    "partial_transition_day": "2024-03-28 (8 valid hours, HVAC mean 107 kW)",
+    "first_full_high_HVAC_day": "2024-03-29 (24 h, HVAC mean 203 kW, IT 3638 kW)",
+    "IT_across_step": "IT remains ~3.6 MW on 2024-03-27 through 2024-03-31; the HVAC step is not an IT-load response",
+    "later_April_IT_dips_do_not_restore_low_HVAC": "2024-04-07/08 and 2024-04-13\u201315 coverage holes / low IT; HVAC remains elevated after the late-March step",
+    "Eagle_decommission_2024-06-15": "HVAC remains ~165\u2013200 kW in subsequent weeks; Eagle removal is not the HVAC step",
+    "not_used_as_model_breakpoint": true
+  }
+}
