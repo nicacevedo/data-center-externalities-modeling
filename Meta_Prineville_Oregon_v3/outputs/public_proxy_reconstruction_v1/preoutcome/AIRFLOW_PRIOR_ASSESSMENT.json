@@ -1,0 +1,15 @@
+{
+  "altitude_spec_m": 1000,
+  "boundary_class": "ENGINEERING_CONSISTENCY_BOUND",
+  "confidence_cfm_values": "HIGH",
+  "confidence_deltaT_bound": "HIGH_that_public_evidence_cannot_numerically_bound_deltaT",
+  "confidence_facility_airflow": "HIGH_that_this_is_NOT_facility_BMS",
+  "deltaT_12K_status": "PUBLIC_EVIDENCE_INSUFFICIENT_TO_NUMERICALLY_BOUND_DELTAT",
+  "fan_rpm": "1120_to_7600_with_10pct_tolerance",
+  "illustrative_unmatched_note": "If 60 CFM/server is paired with 450 W nameplate, implied \u0394T \u2248 15.8 K; with CPU-TDP-only 190 W \u2248 6.7 K. 12 K lies between those unmatched numbers but that does not numerically bound \u0394T.",
+  "matched_CFM_per_kW_exists": false,
+  "not_label": "AS_OPERATED_FACILITY_AIRFLOW",
+  "prineville_applicability_wording": "The triplet figures are based on our observations at our facility in Prineville, OR.",
+  "reason_unmatched": "Airflow table is idle-to-100% CFM vs pressure drop. Intel spec gives CPU TDP 60\u201395 W, not server operating power. 450 W is PSU nameplate. Combining them is unmatched capacity.",
+  "twelve_K_remains": "GENERIC_PRIOR_SCENARIO"
+}

@@ -1,0 +1,12 @@
+edge,before,after,note
+workload->IT,UNIDENTIFIED,UNIDENTIFIED,no public workload telemetry
+IT->airflow,SCENARIO_BOUNDED_12K,ENGINEERING_BOUNDED_rack_CFM_plus_SCENARIO_BOUNDED_12K_facility_deltaT,OCP rack CFM is ENGINEERING_CONSISTENCY_BOUND not facility BMS; ΔT still not numerically bounded
+airflow/weather/control->air_state,STRUCTURALLY_IDENTIFIED_early_PRN1,STRUCTURALLY_IDENTIFIED_early_PRN1;_PRN2_PRN3_SCENARIO_BOUNDED_contractor_media,frozen v1 physics
+air_state->AIR_STREAM_EVAPORATED_WATER,STRUCTURALLY_IDENTIFIED,STRUCTURALLY_IDENTIFIED,canonical v1 tag unchanged
+air_vapor->ECH_makeup,UNIDENTIFIED,SCENARIO_BOUNDED_early_PRN1_mist_RO_1.333_to_1.392;_else_UNIDENTIFIED,not vapor/0.85
+ECH_makeup->conditioning_input,UNIDENTIFIED,UNIDENTIFIED,RO reject and media/tower still separate
+building_conditioning->campus_conditioning,UNIDENTIFIED_lambda,UNIDENTIFIED_lambda;_HARD_simplex_only;_no_equal_weights,2011 λ_PRN1=1 identified
+campus_conditioning->withdrawal,UNIDENTIFIED,UNIDENTIFIED,campus envelope not identifiable
+withdrawal->municipal_vs_direct_POD,UNIDENTIFIED,ENGINEERING_BOUNDED_existence_of_three_Vitesse_POD_reports_vs_city_production;_split_UNIDENTIFIED,reported pumping ≠ permitted max
+source_pumping->groundwater,UNIDENTIFIED,UNIDENTIFIED_no_fit,this pass does not fit GW
+PRN1_CHW_condenser,UNIDENTIFIED,UNIDENTIFIED,public search exhausted

@@ -1,0 +1,6 @@
+case,cfm_per_server,kw_assumed,kw_boundary,CFM_per_kW,DeltaT_implied_K,matched_operating_point,classification,not_as_operated_facility_airflow,notes
+expected_60cfm_per_server,60.0,0.45,PSU_NAMEPLATE,133.33333333333334,15.797,False,ENGINEERING_CONSISTENCY_BOUND,True,CFM and kW are not simultaneous measured operating points.
+intel_max_103cfm,103.0,0.45,PSU_NAMEPLATE,228.88888888888889,9.202,False,ENGINEERING_CONSISTENCY_BOUND,True,CFM and kW are not simultaneous measured operating points.
+intel_idle_12cfm,12.0,0.45,PSU_NAMEPLATE_WITH_IDLE_CFM_UNMATCHED,26.666666666666664,78.984,False,ENGINEERING_CONSISTENCY_BOUND,True,CFM and kW are not simultaneous measured operating points.
+expected_60cfm_cpu_tdp_only_2x95W,60.0,0.19,CPU_TDP_ONLY_INCOMPLETE,315.7894736842105,6.67,False,ENGINEERING_CONSISTENCY_BOUND,True,CFM and kW are not simultaneous measured operating points.
+expected_60cfm_cpu_tdp_2x60W,60.0,0.12,CPU_TDP_ONLY_INCOMPLETE,500.0,4.212,False,ENGINEERING_CONSISTENCY_BOUND,True,CFM and kW are not simultaneous measured operating points.

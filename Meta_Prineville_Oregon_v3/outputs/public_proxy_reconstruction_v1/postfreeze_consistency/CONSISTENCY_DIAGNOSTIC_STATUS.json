@@ -1,0 +1,10 @@
+{
+  "WATER_OUTCOME_ACCESSED": true,
+  "campus_envelope_not_identifiable": true,
+  "consistency_test": "NOT_APPLICABLE_NO_PREDECLARED_CAMPUS_VOLUME_ENVELOPE",
+  "master_hash": "137c79fdc151503ab158663f0c5e5e10a98e6de5f03942b49f02cfade808b908",
+  "no_parameter_fitted": true,
+  "no_scenario_selected_using_observations": true,
+  "not_independent_validation": true,
+  "stage_A_freeze_unchanged": true
+}

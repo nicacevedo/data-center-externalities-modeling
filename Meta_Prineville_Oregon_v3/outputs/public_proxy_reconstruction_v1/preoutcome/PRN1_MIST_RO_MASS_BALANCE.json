@@ -1,0 +1,48 @@
+{
+  "assumption": "steady_state_declared_for_symbolic_closure_only",
+  "identified": [
+    "AIR_STREAM_EVAPORATED_WATER = W_air_vapor structurally in v1",
+    "RO 75/25 and spray 85/15 are source-derived for early PRN1 mist system"
+  ],
+  "not_permitted": {
+    "0.85_is_evap_thermal_effectiveness": false,
+    "0.85_is_external_makeup_efficiency": false,
+    "W_external_makeup_equals_W_air_vapor_over_0.85": false
+  },
+  "source_ratios": {
+    "RO_product_over_feed": 0.75,
+    "RO_reject_over_feed": 0.25,
+    "mist_eliminator_recapture_fraction": 0.15,
+    "spray_evaporated_fraction": 0.85
+  },
+  "topology_A_recapture_to_product_tanks": {
+    "W_RO_feed": "W_air_vapor / 0.75",
+    "W_RO_product": "W_air_vapor",
+    "W_RO_reject": "0.25/0.75 * W_air_vapor",
+    "W_external_makeup": "W_RO_feed = W_air_vapor / 0.75  (~1.333 * vapor)",
+    "status": "PLAUSIBLE_NOT_CONFIRMED_PIPING"
+  },
+  "topology_B_recapture_to_RO_feed": {
+    "W_RO_feed": "W_spray / 0.75",
+    "W_RO_product": "W_spray",
+    "W_external_makeup": "W_RO_feed - W_recaptured = W_spray*(1/0.75 - 0.15) ~ 1.392 * W_air_vapor",
+    "W_recaptured": "0.15/0.85 * W_air_vapor",
+    "W_spray": "W_air_vapor / 0.85",
+    "status": "PLAUSIBLE_NOT_CONFIRMED_PIPING"
+  },
+  "unidentified": [
+    "which recapture topology",
+    "W_external_makeup exact map",
+    "whether later media systems retain RO reject",
+    "ECH makeup vs conditioning input vs withdrawal"
+  ],
+  "variables": [
+    "W_raw_or_RO_feed",
+    "W_RO_product",
+    "W_RO_reject",
+    "W_spray_circulation",
+    "W_air_vapor",
+    "W_recaptured",
+    "W_external_makeup"
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "TIER_B_SCENARIO_INCLUDING_PRN1_CONTEXT_40MW": {
+    "PRN1": 0.35714285714285715,
+    "PRN2": 0.35714285714285715,
+    "PRN3": 0.2857142857142857,
+    "notes": "PRN1 40 MW is contractor context from a later improvement page. Conversion uncertainty explicit. PRN4 not included (different capacity_type).",
+    "status": "SCENARIO_BOUNDED_NOT_IDENTIFIED"
+  },
+  "TIER_B_SCENARIO_SOUTHLAND_FACILITY_MW_PRN2_PRN3_ONLY": {
+    "PRN2": 0.5555555555555556,
+    "PRN3": 0.4444444444444444,
+    "notes": "Relative shares IF campus were only PRN2+PRN3 and load \u221d facility_MW. It is not.",
+    "others": "UNIDENTIFIED",
+    "status": "SCENARIO_BOUNDED_NOT_IDENTIFIED"
+  },
+  "identified_years": {
+    "2011": {
+      "PRN1": 1.0
+    }
+  },
+  "scenario_bounded_years": {},
+  "unidentified_years": {
+    "2012": {
+      "active": [
+        "PRN1"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2013": {
+      "active": [
+        "PRN1",
+        "PRN2"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2014": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2015": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2016": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2017": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2018": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4",
+        "PRN5",
+        "PRN6"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2019": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4",
+        "PRN5",
+        "PRN6"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2020": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4",
+        "PRN5",
+        "PRN6",
+        "CCO1",
+        "CCO2"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2021": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4",
+        "PRN5",
+        "PRN6",
+        "CCO1",
+        "CCO2"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2022": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4",
+        "PRN5",
+        "PRN6",
+        "CCO1",
+        "CCO2"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2023": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4",
+        "PRN5",
+        "PRN6",
+        "CCO1",
+        "CCO2"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    },
+    "2024": {
+      "active": [
+        "PRN1",
+        "PRN2",
+        "PRN3",
+        "PRN4",
+        "PRN5",
+        "PRN6",
+        "CCO1",
+        "CCO2",
+        "CCO3",
+        "CCO5",
+        "CCO6"
+      ],
+      "equal_weights_forbidden": true,
+      "status": "HARD_SET_IS_THE_SIMPLEX_ON_ACTIVE_BUILDINGS"
+    }
+  }
+}

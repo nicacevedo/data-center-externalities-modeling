@@ -1,0 +1,25 @@
+{
+  "PRN2_PRN3": "contractor_supported_media_is_explicit_scenario_not_silent_PRN1_copy;_AIR_STREAM_similar_adiabatic_class_but_campus_still_unbounded",
+  "campus_total_meaningfully_bounded": false,
+  "canonical_simulate_not_used_as_envelope_engine": true,
+  "no_monte_carlo": true,
+  "object": "PUBLIC_EVIDENCE_FEASIBLE_ENVELOPE",
+  "physics_engine": "simulate_structural_reference_v1",
+  "return_air": "DESIGN_REFERENCE_SCENARIO",
+  "what_is_bounded": {
+    "PRN1_early_AIR_STREAM_intensity_at_12K_scenario_L_per_kWh_IT": {
+      "max": 0.7201359340301697,
+      "min": 0.0,
+      "not": "annual_integral",
+      "weather_grid": "five_synthetic_OCP_climate_consistent_points"
+    }
+  },
+  "why_unbounded": [
+    "lambda_b unknown after 2011 and equal weights forbidden",
+    "PRN5/PRN6/CCO architecture unidentified",
+    "PRN1 CHW condenser unidentified so later PRN1 CHW water unidentified",
+    "PRN3 network-core cooling towers unquantified",
+    "P_IT campus is not the same boundary as reported facility electricity",
+    "water-system map from AIR_STREAM to withdrawal unidentified except symbolic early-PRN1 set"
+  ]
+}

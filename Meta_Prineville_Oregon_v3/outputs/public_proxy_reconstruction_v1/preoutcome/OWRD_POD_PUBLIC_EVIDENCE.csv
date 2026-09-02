@@ -1,0 +1,6 @@
+source_id,entity,owrd_report_id,classification,not,boundary,notes
+VITESSE_64500,VITESSE LLC C/O FACEBOOK INC,64500,ACTUAL_REPORTED_PUMPING,PERMITTED_MAXIMUM,direct_groundwater_POD_report,Do not substitute for Meta annual withdrawal. Do not fit groundwater response.
+VITESSE_64845,VITESSE LLC C/O FACEBOOK INC,64845,ACTUAL_REPORTED_PUMPING,PERMITTED_MAXIMUM,direct_groundwater_POD_report,Reporting interval 2010-10 to 2024-09 in identifiability table.
+VITESSE_64846,VITESSE LLC C/O FACEBOOK INC,64846,ACTUAL_REPORTED_PUMPING,PERMITTED_MAXIMUM,direct_groundwater_POD_report,VALIDATION_ONLY in groundwater identifiability; not used to fit.
+CITY_WELLS_ACCEPTED,City of Prineville municipal production,see_owrd_mapping_audit,ACTUAL_REPORTED_PUMPING,PERMITTED_MAXIMUM,municipal_production_not_Meta_meter,Airport combined POD counted once. Permitted rates are not used as pumping.
+SOURCE_SPLIT,Meta_campus_withdrawal vs city vs direct POD,,UNIDENTIFIED,do_not_equate_boundaries,three_distinct_accounting_objects,Public evidence does not identify the municipal/direct-POD split of campus withdrawal.

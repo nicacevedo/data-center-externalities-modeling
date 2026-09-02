@@ -1,0 +1,35 @@
+{
+  "benchmark_1": {
+    "align_before_compare": "Do not compare AIR_STREAM_EVAPORATED_WATER directly to 0.22 unless makeup map applied (1.333\u20131.392 times vapor for early mist/RO topologies).",
+    "benchmark": "OCP_PRN1_Q2_2012_WUE",
+    "building": "Prineville 1",
+    "classification": "PUBLIC_OPERATOR_COOLING_WATER_BENCHMARK",
+    "confidence": "HIGH",
+    "definition": "WUE measures water used for cooling a data center only; not plumbing/offices; quarterly Q2 2012 after BMS/water metering retrofit; Green Grid WUE is annualized but they report quarterly toward TTM",
+    "source": "OCP_WATER_PRN1",
+    "value_L_per_kWh": 0.22
+  },
+  "benchmark_2": {
+    "benchmark": "2014_PUE_1.08_WUE_0.27",
+    "confidence": "MEDIUM_that_dashboard_displayed_near_those_TTM_numbers;_LOW_as_PRN1-only",
+    "highest_authority_available": "Secondary citations of the public Facebook Prineville PUE/WUE dashboard (Hauser 2015 one-sheet quoting facebook.com/PrinevilleDataCenter; Microsoft FAST16 citing FACEBOOK Prineville Data Center PUE/WUE 2014).",
+    "original_dashboard_2014_numeric_capture": "NOT_RECOVERED_IN_THIS_PASS",
+    "promotion": "NOT_PROMOTED",
+    "reason": "No TIER1 operator PDF/blog stating 0.27 with a defined boundary comparable to the Q2-2012 0.22 note. Dashboard TTM campus-vs-building boundary unknown.",
+    "status": "SUPPORTED_TIER2_SECONDARY_NOT_PROMOTED_TO_TIER1",
+    "value_PUE": 1.08,
+    "value_WUE_L_per_kWh": 0.27
+  },
+  "benchmark_3": {
+    "benchmark": "archival_dashboard_raw_series",
+    "prior_pass_TTM_display_only": {
+      "PUE_TTM": 1.09,
+      "WUE_TTM_L_per_kWh": 0.52,
+      "as_of": "end of March 2013",
+      "not": "raw_24h_or_past_year_numeric_series",
+      "source": "Wayback HTML of fbpuewue.com/prineville"
+    },
+    "status": "ARCHIVAL_DASHBOARD_DATA_NOT_RECOVERED",
+    "this_pass": "no_new_raw_JSON_timeseries"
+  }
+}

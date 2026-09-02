@@ -1,0 +1,11 @@
+building_id,capacity_type,value_MW,source_id,meaning,classification,confidence,notes
+PRN1,FACILITY_MW_CONTRACTOR_CONTEXT,40,SOUTHLAND_PRN1,Southland: after populating their first 40 MW facility in Prineville,SERVICE_OR_DESIGN_FACILITY_NOT_ACTUAL_LOAD,MEDIUM,Not IT_design_MW. Not generator MW.
+PRN2,FACILITY_MW_CONTRACTOR_STATED,40,SOUTHLAND_PRN2,"The 357,000 square foot, 40 MW facility",DESIGN_OR_FACILITY_CAPACITY_NOT_ACTUAL_LOAD,MEDIUM_HIGH,Comparable to other Southland facility_MW rows only.
+PRN3,FACILITY_MW_CONTRACTOR_STATED,32,SOUTHLAND_PRN3,the 32 MW facility,DESIGN_OR_FACILITY_CAPACITY_NOT_ACTUAL_LOAD,MEDIUM_HIGH,Comparable to Southland PRN2 40 MW facility statements.
+PRN4,DATA_HALL_MW_CONTRACTOR_PHASED,4,SOUTHLAND_PRN4,phase one 2 MW data hall; phase two 2 MW data halls,DESIGN_HALL_MW_NOT_ACTUAL_LOAD,MEDIUM,NOT the same capacity_type as PRN2/PRN3 40/32 facility MW. Do not mix without conversion uncertainty.
+CCO_CAMPUS,INTERCONNECTION_CAPACITY_MW,220,OPUC_UM1989_VITESSE_2018,CCO MESA interconnect up to 220 MW of capacity,SERVICE_CAPACITY,VERY_HIGH_as_interconnect,"NOT realized demand, IT capacity, or annual average load."
+CCO_CAMPUS,PACIFIC_POWER_SERVICE_MIN_MW,40,OPUC_UM1989_VITESSE_2018,At least 40 MW of CCO interconnection would be served by Pacific Power,CONTRACTED_OR_SERVICE_SPLIT_NOT_ACTUAL_LOAD,VERY_HIGH_as_filing_statement,NOT proof of 40 MW realized consumption.
+CCO_CAMPUS,SUBJECT_NEW_LARGE_LOAD_MW,180,OPUC_UM1989_VITESSE_2018,Remaining 180 MW was the Subject New Large Load in the direct-access application,ELIGIBLE_OR_REQUESTED_LOAD,VERY_HIGH_as_filing_statement,MUST NOT become measured Prineville IT load.
+PRN_CAMPUS,SCHEDULE_272_RESOURCE_CAPACITY_MW,437,OPUC_UM1989_VITESSE_2018,RECs representing 437 MW of new solar supporting six PRN buildings,RENEWABLE_ACCOUNTING_NOT_LOAD,VERY_HIGH_as_filing,NOT physical campus demand.
+PRN_OR_CCO_UNSPECIFIED,CONTRACTOR_MW_PER_BUILDING,60,CRITICALARC_PRN_CCO,60 MW per building data center campus,SERVICE_OR_DESIGN_CAPACITY_NOT_ACTUAL_LOAD,MEDIUM_as_contractor_page;_LOW_building_mapping,Do not mix with Southland 32–40 MW. Do not assign to a specific PRN/CCO id.
+CAMPUS_AGGREGATOR_DO_NOT_USE,THIRD_PARTY_REPORTED_POWER_CAPACITY,540,DataCentersExposed_web_search_not_acquired,aggregator reported power capacity,UNKNOWN_BOUNDARY_NOT_USED,REJECTED,Not official. Not used in feasible sets.

@@ -1,0 +1,56 @@
+{
+  "ARCHITECTURE_REGISTRY_COVERAGE_GAP": true,
+  "epochs": [
+    {
+      "id": "E1",
+      "what": "PRN1 OCP OA+ECH operational-by",
+      "when": "2011-04-14"
+    },
+    {
+      "id": "E2a",
+      "what": "additional PRN buildings; OPUC four buildings early 2014",
+      "when": "2013-2014"
+    },
+    {
+      "id": "E2b",
+      "what": "Southland PRN4 completion stated",
+      "when": "2016"
+    },
+    {
+      "id": "E2c",
+      "what": "PRN5/PRN6 named; six PRN buildings",
+      "when": "2018"
+    },
+    {
+      "id": "E3",
+      "what": "CCO1/CCO2 construction to closeout",
+      "when": "2018-2022"
+    },
+    {
+      "id": "E3plus",
+      "what": "DEQ labels CCO3,CCO5,CCO6",
+      "when": "by_2024"
+    },
+    {
+      "id": "E4",
+      "what": "PRN1 CHW/CRAH/roof chiller",
+      "when": "2023-09 to 2024-02"
+    }
+  ],
+  "registry_buildings": [
+    "PRN1",
+    "PRN2",
+    "PRN3",
+    "PRN4",
+    "PRN5",
+    "PRN6",
+    "CCO1",
+    "CCO2"
+  ],
+  "registry_not_rewritten": true,
+  "supplementary_public_buildings_not_in_frozen_registry": [
+    "CCO3",
+    "CCO5",
+    "CCO6"
+  ]
+}

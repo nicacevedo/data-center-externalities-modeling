@@ -1,0 +1,11 @@
+constraint_id,statement,type
+H1,"lambda_b,t >= 0",HARD
+H2,"sum_b lambda_b,t = 1 when the active set is complete",HARD
+H3,"lambda_b,t = 0 before earliest possible commissioning",HARD
+H4,no equal building weights by default,HARD
+H5,do not mix unmatched capacity types,HARD
+H6,OPUC contracted/eligible/design/service MW is not actual IT load,HARD
+H7,generator MW is not IT MW,HARD
+TIER_A,no comparable IT/critical-electrical MW across buildings,EMPTY
+TIER_B,Southland facility_MW PRN2=40 and PRN3=32 are comparable to each other; PRN1 40 MW is contractor context; PRN4 2+2 MW is a different capacity_type,PROXY_NOT_IDENTIFIED
+TIER_C,hall-count/floor-area incomplete (PRN2 4 halls 357k; PRN3 ~494k; PRN4 40k; others UNKNOWN). Area-proportional shares are scenario-only among buildings with area.,PROXY_INCOMPLETE
