@@ -4,7 +4,7 @@ Do not merge 2012 FRC1 engineering evidence with 2023–2024 campus totals.
 FRC1_ADDRESS = INTERVAL/SET_UNRESOLVED (284 / 404 / 408 Social Circle remain a set).
 Dashboard evidence remains screenshot-only unless a structured source is independently recovered.
 
-n_rows = 30
+n_rows = 29
 
 ## Counts by bucket
 
@@ -13,7 +13,7 @@ n_rows = 30
 | A_original_design_era_FRC1 | 11 |
 | B_controller_design | 2 |
 | C_weather | 4 |
-| D_later_campus_annual | 5 |
+| D_later_campus_annual | 4 |
 | E_dashboard_screenshot | 3 |
 | F_address_parcel | 1 |
 | G_permit_utility | 4 |
@@ -42,12 +42,11 @@ n_rows = 30
 | NC_LWSP_FC_2023 | G_permit_utility | 2023 | REPORTED_MUNICIPAL | municipal LWSP | Industrial demand is municipal class, not proven Meta-only. |
 | TOWN_FC_PERMIT_PORTAL | G_permit_utility | public portal | PORTAL | public records index | Detailed drawings may require login or in-person request. Do not invent permit numbers. |
 | FBPUEWUE_DASHBOARD_LIVE | E_dashboard_screenshot | historical public | OBSERVED_IF_RECOVERED | UNIDENTIFIED_UNTIL_RECOVERY | Live site likely dead; Wayback attempted separately. |
-| KFQD_2012_hourly | C_weather | 2012 | OBSERVED | climate_replay | as_operated_RAT |
+| KFQD_2012_raw_isd | C_weather | 2012 | OBSERVED | climate_replay | as_operated_RAT |
 | KEHO_2012_raw_isd | C_weather | 2012 | OBSERVED | climate_replay | as_operated_RAT |
 | KGSP_2012_raw_isd | C_weather | 2012 | OBSERVED | climate_replay | as_operated_RAT |
-| KRDM_hourly | C_weather | 2011-2024 | OBSERVED | climate_replay | as_operated_RAT |
-| FC_annual_electricity | D_later_campus_annual | 2015-2024 | OBSERVED | campus_accounting | 2012 FRC1 cooling WUE |
-| FC_annual_water | D_later_campus_annual | 2017-2024 | OBSERVED | campus_accounting | 2012 FRC1 cooling WUE |
+| KRDM_2012_raw_isd | C_weather | 2012 | OBSERVED | climate_replay | as_operated_RAT |
+| FC_annual_source_rows | D_later_campus_annual | 2015-2024 | OBSERVED | campus_accounting | 2012 FRC1 cooling WUE |
 | PRN_annual_audit | D_later_campus_annual | 2011-2024 | OBSERVED | campus_accounting | 2012 FRC1 cooling WUE |
 | dashboard_recovery_status | E_dashboard_screenshot | 2012-2014 | SCREENSHOT_ONLY | identity_set | as_operated_RAT |
 | v1_facility_registry | F_address_parcel | 2012-2025 | UNIDENTIFIED | identity_set | as_operated_RAT |

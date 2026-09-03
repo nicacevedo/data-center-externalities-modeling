@@ -1,0 +1,70 @@
+{
+  "DETAILED_REGIME_SHARE_STATION_ROBUSTNESS": "PARTIAL",
+  "SUMMER_DX_STATION_ROBUSTNESS": "STRONG_SUPPORT",
+  "evidence_class": "MODEL_REPLAY",
+  "missing_hours_preserved": true,
+  "ranges": [
+    {
+      "denominator": "observed usable JJA hours at each station",
+      "evidence_class": "MODEL_REPLAY",
+      "max_share_pp": 0.0,
+      "min_share_pp": 0.0,
+      "range_type": "cross-station sensitivity range; not a confidence interval",
+      "regime": "HUMIDIFICATION",
+      "true_full_period_share": "UNIDENTIFIED"
+    },
+    {
+      "denominator": "observed usable JJA hours at each station",
+      "evidence_class": "MODEL_REPLAY",
+      "max_share_pp": 65.03131524008352,
+      "min_share_pp": 54.03032721468476,
+      "range_type": "cross-station sensitivity range; not a confidence interval",
+      "regime": "OA_FREE",
+      "true_full_period_share": "UNIDENTIFIED"
+    },
+    {
+      "denominator": "observed usable JJA hours at each station",
+      "evidence_class": "MODEL_REPLAY",
+      "max_share_pp": 35.35514764565043,
+      "min_share_pp": 19.429347826086957,
+      "range_type": "cross-station sensitivity range; not a confidence interval",
+      "regime": "HIGH_RH_MIXING",
+      "true_full_period_share": "UNIDENTIFIED"
+    },
+    {
+      "denominator": "observed usable JJA hours at each station",
+      "evidence_class": "MODEL_REPLAY",
+      "max_share_pp": 16.440217391304348,
+      "min_share_pp": 9.08141962421712,
+      "range_type": "cross-station sensitivity range; not a confidence interval",
+      "regime": "EVAP_COOLING",
+      "true_full_period_share": "UNIDENTIFIED"
+    },
+    {
+      "denominator": "observed usable JJA hours at each station",
+      "evidence_class": "MODEL_REPLAY",
+      "max_share_pp": 0.0,
+      "min_share_pp": 0.0,
+      "range_type": "cross-station sensitivity range; not a confidence interval",
+      "regime": "MECHANICAL_COOLING",
+      "true_full_period_share": "UNIDENTIFIED"
+    },
+    {
+      "denominator": "observed usable JJA hours at each station",
+      "evidence_class": "MODEL_REPLAY",
+      "max_share_pp": 0.0,
+      "min_share_pp": 0.0,
+      "range_type": "cross-station sensitivity range; not a confidence interval",
+      "regime": "UNRESOLVED",
+      "true_full_period_share": "UNIDENTIFIED"
+    }
+  ],
+  "ranges_are_not_confidence_intervals": true,
+  "shares_condition_on_observed_usable_hours": true,
+  "stations": [
+    "KFQD",
+    "KEHO",
+    "KGSP"
+  ],
+  "true_full_period_regime_shares": "UNIDENTIFIED"
+}

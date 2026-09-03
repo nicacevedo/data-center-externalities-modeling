@@ -1,0 +1,526 @@
+{
+  "files": [
+    {
+      "bytes": 37,
+      "relative_path": ".pytest_cache/.gitignore",
+      "sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd"
+    },
+    {
+      "bytes": 191,
+      "relative_path": ".pytest_cache/CACHEDIR.TAG",
+      "sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4"
+    },
+    {
+      "bytes": 302,
+      "relative_path": ".pytest_cache/README.md",
+      "sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad"
+    },
+    {
+      "bytes": 2143,
+      "relative_path": ".pytest_cache/v/cache/nodeids",
+      "sha256": "9852139d24ddb521e2d5744bfb5ccb9577aca18d0db67313ff475c89bf291ab4"
+    },
+    {
+      "bytes": 1888,
+      "relative_path": "README.md",
+      "sha256": "d40ed8012a26daf0630aa91f35890bef323d2a56aa814fa5e4143d8d2066a984"
+    },
+    {
+      "bytes": 2317,
+      "relative_path": "config/claims_contract.yaml",
+      "sha256": "315ce1b375d1c928f44bede8f05e09b5c3612143c00777cf557d8bfc2027a4ac"
+    },
+    {
+      "bytes": 6800,
+      "relative_path": "outputs/FINAL_CLAIMS_LEDGER.json",
+      "sha256": "cae6c2172ff3819f3ccfad3fba938f7966ae2de7cf5e962070766cfb6178993c"
+    },
+    {
+      "bytes": 3344,
+      "relative_path": "outputs/FINAL_CLAIMS_LEDGER.md",
+      "sha256": "ecc34521cb7f65cacc87ed20ce22402f2f7a866b3b2d5f448d5353390a301699"
+    },
+    {
+      "bytes": 1165,
+      "relative_path": "outputs/FOREST_CITY_V3_FREEZE.json",
+      "sha256": "d168ca0de490d6279aa7b26c9cf9ba830282436ecf0c3dfc4bf16f478c7da7e6"
+    },
+    {
+      "bytes": 3082,
+      "relative_path": "outputs/FOREST_CITY_V3_REPORT.md",
+      "sha256": "5b87a23a796964e9233d92da8b05b35e384b25496b921cd309fa7c51ea12d5bc"
+    },
+    {
+      "bytes": 1628,
+      "relative_path": "outputs/acquisition/DATA_VALUE_MATRIX.csv",
+      "sha256": "4139f9c906f6e9caf7e279eea555e1e92b8d53bcfaf0f899a161eb904e35b793"
+    },
+    {
+      "bytes": 2182,
+      "relative_path": "outputs/acquisition/DATA_VALUE_MATRIX.md",
+      "sha256": "21e1e3337d43b11ebb2c2642203a65686dee43986ebbb8505a4a13905f830cb9"
+    },
+    {
+      "bytes": 2185,
+      "relative_path": "outputs/acquisition/FOREST_CITY_MANUAL_DATA_REQUEST_PACKAGE.md",
+      "sha256": "2eec79c7d69ff1595abe426b6ad082121d1b5005087698e391aceadc262a3cb7"
+    },
+    {
+      "bytes": 660,
+      "relative_path": "outputs/annual/CAMPUS_ANNUAL_COMPARISON.csv",
+      "sha256": "6fd1f7441b2cd4bf0b4d23f0d362a59d07a39683ad287c30b0584c554635dd88"
+    },
+    {
+      "bytes": 591,
+      "relative_path": "outputs/annual/CAMPUS_ANNUAL_COMPARISON.json",
+      "sha256": "dc66807bb754c694f5b7a4b68d982ffbe7fe9308ef35c54670e1ced76cbf6139"
+    },
+    {
+      "bytes": 1161,
+      "relative_path": "outputs/annual/CAMPUS_ANNUAL_COMPARISON.md",
+      "sha256": "4a0fb9ca0eec045c4784be0a6887a860e3be3106077d58290e61c3c2bd7650be"
+    },
+    {
+      "bytes": 269,
+      "relative_path": "outputs/cross_site/COMMON_PERIOD_CLIMATE.csv",
+      "sha256": "e46b3d8d8fc1438862d91cf443bdf07159ea7d0f08d7245a48c1e784d9de51dd"
+    },
+    {
+      "bytes": 814,
+      "relative_path": "outputs/cross_site/NATIVE_SAME_PERIOD_REGIMES.csv",
+      "sha256": "6e75fbe434356423ade55c55bdb78dfdb18122d0fb39e626305fae904dbe8b72"
+    },
+    {
+      "bytes": 1998,
+      "relative_path": "outputs/cross_site/REGIME_TRANSITIONS.csv",
+      "sha256": "3d572124cd5efd5467b449c02ab0caf3dc08d089bc01f5c1450990145f3656de"
+    },
+    {
+      "bytes": 158,
+      "relative_path": "outputs/cross_site/REGIME_TRANSITION_RATES.csv",
+      "sha256": "155074d25465078ea07235ab8b2832b4e36acdbaecc25e8fa661ccecd26be9be"
+    },
+    {
+      "bytes": 1238,
+      "relative_path": "outputs/cross_site/WEATHER_CONTROLLER_2x2.csv",
+      "sha256": "582bb10975c2f3a7ee1004a29c8f71b429e69c8e985088664222c8aec3fc3764"
+    },
+    {
+      "bytes": 3574,
+      "relative_path": "outputs/cross_site/WEATHER_CONTROLLER_2x2.json",
+      "sha256": "e33add84960eba6f3858e0b9dc9115a1ad8b258f3fd0c62a26f5d51174ea206d"
+    },
+    {
+      "bytes": 899,
+      "relative_path": "outputs/cross_site/WEATHER_CONTROLLER_2x2.md",
+      "sha256": "e86ed6dff466dd8d0ccfc253332a55851aa1964fd58efff2a9991fa2e096395d"
+    },
+    {
+      "bytes": 1397,
+      "relative_path": "outputs/cross_site/WEATHER_CONTROLLER_2x2_CONTRASTS.csv",
+      "sha256": "a08afa519341cfa813cb21e031e55f3a6fe4575d65162bd3a008be9ba90cdd7e"
+    },
+    {
+      "bytes": 3965,
+      "relative_path": "outputs/cross_site/WEATHER_CONTROLLER_2x2_CONTRASTS.json",
+      "sha256": "cacfb8ea9a92c1614eb27547e7986e05518eccd91903553ff1cc777f665cbb0a"
+    },
+    {
+      "bytes": 1989,
+      "relative_path": "outputs/cross_site/WEATHER_CONTROLLER_2x2_CONTRASTS.md",
+      "sha256": "fdbd16fc33753f171ac7ea1ff9c64c5e471cb48497fcbafd397e9a87bc72d8c1"
+    },
+    {
+      "bytes": 4340,
+      "relative_path": "outputs/esif/ESIF_TRANSFER.json",
+      "sha256": "805cfb12dcf901c5603ffbce200c4a336e665639bab65e5257ce5ba8580a263e"
+    },
+    {
+      "bytes": 252509,
+      "relative_path": "outputs/esif/ESIF_TRANSFER_KEHO.csv",
+      "sha256": "1fab0405b583f2491be4fa98ff9546da8ff6f42aaa5e77db53f1787887670f2f"
+    },
+    {
+      "bytes": 289538,
+      "relative_path": "outputs/esif/ESIF_TRANSFER_KFQD.csv",
+      "sha256": "4fabf0e13d1fabdf19e5b0ae7b16af1b9675508a34d988b2faa9d78bac7844a9"
+    },
+    {
+      "bytes": 284487,
+      "relative_path": "outputs/esif/ESIF_TRANSFER_KGSP.csv",
+      "sha256": "dbd4992d7a4bf57a54dbbfc59b7cda5997f6be9b222cc751158c3105488c91fd"
+    },
+    {
+      "bytes": 283104,
+      "relative_path": "outputs/esif/ESIF_TRANSFER_KRDM.csv",
+      "sha256": "d73c4d85324bb8fe0519606c9c1224200c9f844cc503c2a2704e31975c47f649"
+    },
+    {
+      "bytes": 2234,
+      "relative_path": "outputs/esif/ESIF_TRANSFER_SUMMARY.csv",
+      "sha256": "ca2a9a2034ecd457504c9effa72522d6c301bacd05b239b4a9a96b962fafd9f1"
+    },
+    {
+      "bytes": 15269,
+      "relative_path": "outputs/evidence/FOREST_CITY_EVIDENCE_SCOPE_CROSSWALK.csv",
+      "sha256": "7151acadbf0605cf922ac8275a3bc8a7858dc17ac45fd369fc06cea05664a558"
+    },
+    {
+      "bytes": 5828,
+      "relative_path": "outputs/evidence/FOREST_CITY_EVIDENCE_SCOPE_CROSSWALK.md",
+      "sha256": "b91c15726ee0e3268666ee5b2d7744cb4eebc863384386281a851aec5c814582"
+    },
+    {
+      "bytes": 19704,
+      "relative_path": "outputs/evidence/FOREST_CITY_EVIDENCE_SCOPE_CROSSWALK.parquet",
+      "sha256": "dabff325e1e8b302026c9586ee4bb68a9853bf96fae5854c3f014bb380da23e2"
+    },
+    {
+      "bytes": 1108,
+      "relative_path": "outputs/figures/FIGURE_CAPTIONS.md",
+      "sha256": "fa0f235f3e4f8cb2d5987dce0b06349d60a727e67d1290edc021f345897acf19"
+    },
+    {
+      "bytes": 92034,
+      "relative_path": "outputs/figures/fig01_same_period_climate_regime.png",
+      "sha256": "ce7cc774e054bfc7ef9ba5f60c9af066b8b8880d23cbd5e5355f0c1dec4607c6"
+    },
+    {
+      "bytes": 116829,
+      "relative_path": "outputs/figures/fig02_weather_controller_2x2.png",
+      "sha256": "6985aa4dfeac9ade27e0dede4489dfc20e4d4b2c2608d7a2c76e48f1c74c3de0"
+    },
+    {
+      "bytes": 120938,
+      "relative_path": "outputs/figures/fig03_masanet_transfer.png",
+      "sha256": "67cf1610f86e67201738d91301d0aa950cb853d4b890c9c17629c30bce597cb0"
+    },
+    {
+      "bytes": 83324,
+      "relative_path": "outputs/figures/fig04_esif_overhead_transfer.png",
+      "sha256": "7f0a0e28ff12a0a30d76a8b14e7cf5ceb2583dd3d82f34c7322620350c38724e"
+    },
+    {
+      "bytes": 119643,
+      "relative_path": "outputs/figures/fig05_identification.png",
+      "sha256": "52cfa0dc963bae43db20aa57f5be6c7cf6dc3b49fc5122c487746f29c92a6e41"
+    },
+    {
+      "bytes": 127100,
+      "relative_path": "outputs/figures/fig06_data_value_matrix.png",
+      "sha256": "1f05847a0d8eb43e89d1c08e302a1c1f09f142f22cf163a808d6c63541c0bb48"
+    },
+    {
+      "bytes": 1439,
+      "relative_path": "outputs/identification/IDENTIFICATION_LEDGER.csv",
+      "sha256": "b0145bc3823f3e988308947e5c0ad844d7130268b7d371e0571c990a93c3ecdc"
+    },
+    {
+      "bytes": 1854,
+      "relative_path": "outputs/identification/IDENTIFICATION_LEDGER.md",
+      "sha256": "d100458ae6f8233d8bc776ce57cfa24c8433a1a28734a93ba1e2a40c0ed92dcc"
+    },
+    {
+      "bytes": 5414137,
+      "relative_path": "outputs/intermediates/raw_KRDM_2012/72692024230_2012.csv",
+      "sha256": "29853f7afa500a5dc8a946cfdc88df9e9f93a459af41c22a27fa91aefafa6fa2"
+    },
+    {
+      "bytes": 2326248,
+      "relative_path": "outputs/intermediates/weather_KRDM_2012.csv",
+      "sha256": "940fb6041a723aab7c8609968902ef91ec68d8b88490005f8c2690a90950f198"
+    },
+    {
+      "bytes": 2347,
+      "relative_path": "outputs/masanet/MASANET_CLIMATE_BINS.csv",
+      "sha256": "42656df592f353f815ac9f4e1469af79c046f59aec60288b61985e3581036042"
+    },
+    {
+      "bytes": 180480,
+      "relative_path": "outputs/masanet/MASANET_HOURLY_KEHO.csv",
+      "sha256": "5a11804af48a6e8f7276bd7f0fc2b7f92ef5ad6596d2cd37837cefea81796b4a"
+    },
+    {
+      "bytes": 209257,
+      "relative_path": "outputs/masanet/MASANET_HOURLY_KFQD.csv",
+      "sha256": "a24f3009a826e9f5a67603e6d7fdd033d558b60069f6ed6bcd27baff86a2e81d"
+    },
+    {
+      "bytes": 202354,
+      "relative_path": "outputs/masanet/MASANET_HOURLY_KGSP.csv",
+      "sha256": "a8c159401cd968dff940fd9c8473f99e1b967911d97e3c0187dc9f5b4f5795a0"
+    },
+    {
+      "bytes": 191962,
+      "relative_path": "outputs/masanet/MASANET_HOURLY_KRDM.csv",
+      "sha256": "c30082764ed49a16e962b30ab8b632cc8db46c510f83cc4c2b967a16f00599ec"
+    },
+    {
+      "bytes": 617,
+      "relative_path": "outputs/masanet/MASANET_MONTHLY.csv",
+      "sha256": "fb3facc276b76ee405458a545ef09ff305dd3a1c499ccb06d9b2069734c7263a"
+    },
+    {
+      "bytes": 4307,
+      "relative_path": "outputs/masanet/MASANET_TRANSFER.json",
+      "sha256": "3ab4a0a772563cc9dc1a10d5dc524dfb46819b819e64ab546d6a3417c92971f5"
+    },
+    {
+      "bytes": 53630,
+      "relative_path": "outputs/masanet/_instrumented/simulation_funs_DC_instrumented.py",
+      "sha256": "38bdb25645533997a55277ffd7bf44ff4fd27f2aa5714b62f1b046caa3d1118c"
+    },
+    {
+      "bytes": 53630,
+      "relative_path": "outputs/masanet/_instrumented/simulation_funs_DC_instrumented_KEHO.py",
+      "sha256": "38bdb25645533997a55277ffd7bf44ff4fd27f2aa5714b62f1b046caa3d1118c"
+    },
+    {
+      "bytes": 53630,
+      "relative_path": "outputs/masanet/_instrumented/simulation_funs_DC_instrumented_KFQD.py",
+      "sha256": "38bdb25645533997a55277ffd7bf44ff4fd27f2aa5714b62f1b046caa3d1118c"
+    },
+    {
+      "bytes": 53630,
+      "relative_path": "outputs/masanet/_instrumented/simulation_funs_DC_instrumented_KGSP.py",
+      "sha256": "38bdb25645533997a55277ffd7bf44ff4fd27f2aa5714b62f1b046caa3d1118c"
+    },
+    {
+      "bytes": 53630,
+      "relative_path": "outputs/masanet/_instrumented/simulation_funs_DC_instrumented_KRDM.py",
+      "sha256": "38bdb25645533997a55277ffd7bf44ff4fd27f2aa5714b62f1b046caa3d1118c"
+    },
+    {
+      "bytes": 2473,
+      "relative_path": "outputs/masanet/masanet_subprocess.log",
+      "sha256": "2a977cbb9e77788160fb8dfc029e00b97f7b69cbf34d4a6e34fc62c1c110757d"
+    },
+    {
+      "bytes": 195108,
+      "relative_path": "outputs/masanet/weather_KEHO_target.csv",
+      "sha256": "e407f1cda6abca62af052904320d9d36896dcf8d0218fbd52ca76f566662ead1"
+    },
+    {
+      "bytes": 112745,
+      "relative_path": "outputs/masanet/weather_KFQD_common.csv",
+      "sha256": "f649a70d8faabc95b3158da94661f919a2378a0b909e6c160a5e35a214bca178"
+    },
+    {
+      "bytes": 205376,
+      "relative_path": "outputs/masanet/weather_KFQD_target.csv",
+      "sha256": "88310bee8a23c18a86c289880de0c266f1a614d80aee12061cef227b6234ea28"
+    },
+    {
+      "bytes": 201597,
+      "relative_path": "outputs/masanet/weather_KGSP_target.csv",
+      "sha256": "c530a21d38289ab4e8d064ea823887484736eabac1d0ebed330d6422809f1e69"
+    },
+    {
+      "bytes": 106798,
+      "relative_path": "outputs/masanet/weather_KRDM_common.csv",
+      "sha256": "c97ed46345d208ee642c536db51b5ef640da54bff84954e7d4e5d025c6cf1f6d"
+    },
+    {
+      "bytes": 199791,
+      "relative_path": "outputs/masanet/weather_KRDM_target.csv",
+      "sha256": "a9572d8f97fd2284e75b449f0ff66058a207e86e09a5daa64292d8ae4f436be7"
+    },
+    {
+      "bytes": 4243,
+      "relative_path": "outputs/preflight/FINAL_HASH_CHECK.json",
+      "sha256": "2fb26c240359ff250484a1a83c029261dbe6272e00c6f0b1b8ab8edcddec5eaa"
+    },
+    {
+      "bytes": 11571,
+      "relative_path": "outputs/preflight/INITIAL_STATE.json",
+      "sha256": "a3159f287d924cd34ea560a9b08707842bfad559c87db58b563a2290e5763d4f"
+    },
+    {
+      "bytes": 18229,
+      "relative_path": "outputs/provenance/V3_DEPENDENCY_MANIFEST.csv",
+      "sha256": "423fa8134e735fb03bc86398c31b6e05c5b137db4a9fe6fd85ee5c73b33bc3f3"
+    },
+    {
+      "bytes": 37278,
+      "relative_path": "outputs/provenance/V3_DEPENDENCY_MANIFEST.json",
+      "sha256": "b70aca86aaffb2299d0703f2ca2bb999d9e5a447b51ca2ea10717361ef06a895"
+    },
+    {
+      "bytes": 1824,
+      "relative_path": "outputs/refinement_baseline/CURRENT_V3_CLAIMS_BEFORE.md",
+      "sha256": "aa5272bf93beb7f62cb4391780403fc0baec97fd2c4f58a853ba2fb78cb52e2c"
+    },
+    {
+      "bytes": 6205,
+      "relative_path": "outputs/refinement_baseline/CURRENT_V3_OUTPUT_HASHES.csv",
+      "sha256": "8a04f00a184dd08b27c91e5a007af0a4e4f3b1cd1e99c1b06b010700778ae339"
+    },
+    {
+      "bytes": 3718,
+      "relative_path": "outputs/refinement_baseline/CURRENT_V3_REPORT_BEFORE.md",
+      "sha256": "54bfdf6c40f9eea5782ecfc36ee156ff29e2b2e01622ff87451e28efa8432778"
+    },
+    {
+      "bytes": 16361,
+      "relative_path": "outputs/refinement_baseline/CURRENT_V3_TREE_MANIFEST.json",
+      "sha256": "b3b68c5548a9bd93c889e383a7b0f89c0c19db5b521d4c7f1ac91ee75c12c8a2"
+    },
+    {
+      "bytes": 856,
+      "relative_path": "outputs/regimes/COMMON_TAXONOMY_NATIVE_MAPPING.csv",
+      "sha256": "f9f21c193b98fda114d9a25b0378c18b839edcab097eb2c5ace586e556cd0e58"
+    },
+    {
+      "bytes": 651,
+      "relative_path": "outputs/regimes/JJA_STATION_REGIME_SHARES.csv",
+      "sha256": "0e1b764c3f6912981136f26d53072991d35fee7cdeb31b317db53e1d27e4432d"
+    },
+    {
+      "bytes": 1186530,
+      "relative_path": "outputs/regimes/KFQD_JJA_HOURS.csv",
+      "sha256": "ba8ba8eb30521e76107f09522b5c239de6b56fb7600bc1ce867f839751857a16"
+    },
+    {
+      "bytes": 2501,
+      "relative_path": "outputs/regimes/STATION_ROBUSTNESS.json",
+      "sha256": "3ce2921b025ae096309dc83f2277f4effe50cbc46a394fcc703067e472af4a52"
+    },
+    {
+      "bytes": 1530,
+      "relative_path": "outputs/regimes/STATION_ROBUSTNESS.md",
+      "sha256": "4b5dbad8fcbca70163ff3ee4f085354a383446acbd416d8aa6776fe9e7ded017"
+    },
+    {
+      "bytes": 1070,
+      "relative_path": "outputs/regimes/STATION_ROBUSTNESS_RANGES.csv",
+      "sha256": "0cc6840d5f5dc76d59bdacbccf322dba57b8d94643fb1f53dddb751d1e207bb1"
+    },
+    {
+      "bytes": 612,
+      "relative_path": "outputs/regimes/V2_REPRODUCTION.json",
+      "sha256": "c297b022e9cdcf66730f86f3e67acc6caf907330f04b263c815e1603cfd59f3d"
+    },
+    {
+      "bytes": 10315,
+      "relative_path": "outputs/reproducibility/CLEANROOM_FINAL_STATUS.json",
+      "sha256": "7455fc811ed88c36ec4e5eedd5ea9201cde2fe836c3cca563072d37f035cd4c4"
+    },
+    {
+      "bytes": 7320,
+      "relative_path": "outputs/reproducibility/CLEANROOM_OUTPUT_HASHES.csv",
+      "sha256": "517eb89e4b7b71343990ad25e92c87d6e7de6f7f26a5861ee3cd8a9c8dd98d97"
+    },
+    {
+      "bytes": 839,
+      "relative_path": "outputs/reproducibility/CLEAN_V2_REPRODUCIBILITY.json",
+      "sha256": "57c109b5f40333831133a1dd8b3b59eacdf655ca600eba367ddad5e6b886c35c"
+    },
+    {
+      "bytes": 330,
+      "relative_path": "outputs/slurm/RUN_MANIFEST.json",
+      "sha256": "37b0a5a58654db0aecb005cdd4e3d1bb62c3d6674b12d66e0bc53be1fe97c71d"
+    },
+    {
+      "bytes": 474,
+      "relative_path": "outputs/weather/STATION_OVERLAP.csv",
+      "sha256": "6dba3d2ecc078a527fd376427e4d12a445d701d363eca0e526a46e7b51cef7cc"
+    },
+    {
+      "bytes": 1431,
+      "relative_path": "outputs/weather/STATION_SELECTION.json",
+      "sha256": "9b01354ab19c2645216905b9c51340bd512abe6e9e28d57d269884c68c6f2358"
+    },
+    {
+      "bytes": 639,
+      "relative_path": "outputs/weather/WEATHER_COVERAGE.csv",
+      "sha256": "18a0fffdfc0d3e92d49f6ddf0da5556e880ad0870a7ae2c381df554ca887a6f5"
+    },
+    {
+      "bytes": 957,
+      "relative_path": "outputs/weather/WEATHER_COVERAGE.md",
+      "sha256": "e55f2be836f593ecd2a06d7e17f08ee82c11ab34687fb5009bad6a51574372dd"
+    },
+    {
+      "bytes": 190,
+      "relative_path": "outputs/weather/WEATHER_MISSINGNESS.csv",
+      "sha256": "7f42f4f5be8c27b74494e7641e93f2ca36e88acc806aea7d5bb2f4370ce40707"
+    },
+    {
+      "bytes": 5944,
+      "relative_path": "scripts/finalize_freeze.py",
+      "sha256": "d27b2980ab03d2cea379d8b5c087693c1df67179041820bd6fdbd066d1bda6c8"
+    },
+    {
+      "bytes": 15872,
+      "relative_path": "scripts/run_cleanroom_replay.py",
+      "sha256": "bcc469d7fce1d60ee23c0563c0ff36f8abca28a961ffd0c8c738345bfbc4fbbf"
+    },
+    {
+      "bytes": 9459,
+      "relative_path": "scripts/run_masanet_transfer.py",
+      "sha256": "163128ef35ce7a8ee6ecad618e2e61e42990494f295b86ef5dac4e4ddd314bc2"
+    },
+    {
+      "bytes": 69922,
+      "relative_path": "scripts/run_v3_pipeline.py",
+      "sha256": "06078903016f1df117a4591da3f405446b9f570901c991c8023abe4a7f6d63b6"
+    },
+    {
+      "bytes": 3088,
+      "relative_path": "scripts/snapshot_refinement_baseline.py",
+      "sha256": "809a6f7e9c69d149d9dc9b73cf6bc1fe59a2e3b397c42d1a2a46e7c6d1b813fd"
+    },
+    {
+      "bytes": 897,
+      "relative_path": "slurm/run_masanet_sloan.sh",
+      "sha256": "3e149fd6d7a1d92c7e353c2a0f8ad84c435f9ef0f88b63bdb92dff745f8592fb"
+    },
+    {
+      "bytes": 0,
+      "relative_path": "src/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1244,
+      "relative_path": "src/esif_frozen.py",
+      "sha256": "3bdffb5d11c620320ce7fc1c8967e37c179b4fda63a3bc5143909e47c30270fa"
+    },
+    {
+      "bytes": 1478,
+      "relative_path": "src/fc3_paths.py",
+      "sha256": "61e5c34980bf0b73275807a0080fca51133541fadc32b4fc99317692f05cc209"
+    },
+    {
+      "bytes": 469,
+      "relative_path": "src/hashes.py",
+      "sha256": "2675546b55fca313b19aa7b569224d0ce1e3039dccba713eaf50a2853387939c"
+    },
+    {
+      "bytes": 15468,
+      "relative_path": "src/provenance.py",
+      "sha256": "662db36d7e671bdacd0f94c85270a902fd6d614d490f848673040c98b4b5ad93"
+    },
+    {
+      "bytes": 3086,
+      "relative_path": "src/taxonomy.py",
+      "sha256": "007585f8af36a17965efb039f52707ca504e3a411ff395996493d67c62976022"
+    },
+    {
+      "bytes": 6940,
+      "relative_path": "src/weather_hourly.py",
+      "sha256": "fe3a2e7abaf89fe00178f19731797631482d4cfc45bd2024953712627b84f9f7"
+    },
+    {
+      "bytes": 0,
+      "relative_path": "tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 15510,
+      "relative_path": "tests/test_v3_guards.py",
+      "sha256": "d2f8084ee9b6e1c8893cb2e40d024d264a0cac6d1bb5dd870ab25855fba86919"
+    }
+  ],
+  "n_files": 104,
+  "scope": "all Forest City v3 files except this CSV/JSON manifest pair and __pycache__"
+}

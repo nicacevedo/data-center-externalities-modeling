@@ -1,4 +1,6 @@
 {
+  "NOT_CAUSAL_IDENTIFICATION": true,
+  "NOT_WATER_USE": true,
   "evidence_class": "MODEL_REPLAY",
   "n_intersection": 1251,
   "not_causal": true,
@@ -7,6 +9,7 @@
     {
       "DX_required_hours": 0,
       "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
       "P(EVAP_COOLING)": 0.22621902478017586,
       "P(HIGH_RH_MIXING)": 0.20623501199040767,
       "P(HUMIDIFICATION)": 0.43005595523581136,
@@ -31,6 +34,7 @@
     {
       "DX_required_hours": 0,
       "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
       "P(EVAP_COOLING)": 0.13269384492406075,
       "P(HIGH_RH_MIXING)": 0.03117505995203837,
       "P(HUMIDIFICATION)": 0.0,
@@ -55,6 +59,7 @@
     {
       "DX_required_hours": 0,
       "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
       "P(EVAP_COOLING)": 0.23501199040767387,
       "P(HIGH_RH_MIXING)": 0.7450039968025579,
       "P(HUMIDIFICATION)": 0.0,
@@ -79,6 +84,7 @@
     {
       "DX_required_hours": 0,
       "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
       "P(EVAP_COOLING)": 0.10631494804156674,
       "P(HIGH_RH_MIXING)": 0.35411670663469225,
       "P(HUMIDIFICATION)": 0.0,

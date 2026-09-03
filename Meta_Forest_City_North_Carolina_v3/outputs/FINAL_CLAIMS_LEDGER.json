@@ -1,17 +1,198 @@
 {
   "ACQUISITION_READINESS": "PASS",
-  "CAMPUS_FACILITY_SCOPE": "PASS",
-  "COOLING_WATER_MAGNITUDE": "UNIDENTIFIED",
+  "CAMPUS_ANNUAL_ELECTRICITY": "PASS",
+  "CAMPUS_ANNUAL_WATER_WITHDRAWAL": "PASS",
+  "CAMPUS_VS_FRC1_SCOPE_SEPARATION": "PASS",
+  "CAMPUS_WATER_CONSUMPTION": "UNIDENTIFIED",
+  "CAMPUS_WITHDRAWAL_INTENSITY": "PASS",
+  "CLEANROOM_FINAL_STATUS": "PASS",
+  "CLEAN_V2_REPRODUCIBILITY": "PASS",
+  "DETAILED_REGIME_SHARE_STATION_ROBUSTNESS": "PARTIAL",
   "ESIF_TRANSFER": "PARTIAL",
+  "FACILITY_AIRFLOW_CFM": "UNIDENTIFIED",
   "FACILITY_EFFECTIVE_DELTA_T": "UNIDENTIFIED",
   "FOREST_CITY_PRINEVILLE_CLIMATE_COMPARISON": "STRONG_SUPPORT",
-  "FRC1_ADDRESS": "UNIDENTIFIED",
+  "FOREST_CITY_V3_FINAL_FREEZE": true,
+  "FRC1_COOLING_ONLY_WATER_MAGNITUDE": "UNIDENTIFIED",
+  "FRC1_TO_LATER_CAMPUS_MAPPING": "UNIDENTIFIED",
   "MASANET_TRANSFER": "PARTIAL",
   "MODEL_CALIBRATED": "NO",
+  "MODEL_REPLAY_NOT_CAUSAL_IDENTIFICATION": true,
+  "MODEL_REPLAY_NOT_WATER_USE": true,
   "QUALITATIVE_PHYSICS_TRANSFER": "PARTIAL",
+  "QUANTITATIVE_COOLING_WATER_TRANSFER": "NOT_VALIDATED",
   "QUANTITATIVE_PHYSICS_TRANSFER": "NOT_VALIDATED",
   "REGIME_TAXONOMY": "PASS",
+  "REPLAY_SHARE_OVER_OBSERVED_USABLE_HOURS": "IDENTIFIED_MODEL_REPLAY",
+  "STOP_MODEL_EXPANSION": true,
+  "SUMMER_DX_STATION_ROBUSTNESS": "STRONG_SUPPORT",
+  "TRUE_FULL_PERIOD_REGIME_SHARE": "UNIDENTIFIED",
   "V2_REPRODUCTION": "PASS",
+  "V3_DEPENDENCY_AUDIT": "PASS",
   "WEATHER_CONTROLLER_DECOMPOSITION": "STRONG_SUPPORT",
-  "WEATHER_ROBUSTNESS": "STRONG_SUPPORT"
+  "WITHDRAWAL_TO_CONSUMPTION_FRACTION": "UNIDENTIFIED",
+  "claims": [
+    {
+      "Claim": "V3_DEPENDENCY_AUDIT",
+      "Evidence class": "PROVENANCE",
+      "Notes": "v2 accessed only as frozen Git blobs; material worktree inputs hash-enforced",
+      "Status": "PASS"
+    },
+    {
+      "Claim": "V2_REPRODUCTION",
+      "Evidence class": "MODEL_REPLAY",
+      "Notes": "exact hour counts against da7fd6f frozen blob",
+      "Status": "PASS"
+    },
+    {
+      "Claim": "REGIME_TAXONOMY",
+      "Evidence class": "MODEL_REPLAY",
+      "Notes": "mutually exclusive and exhaustive on usable hours",
+      "Status": "PASS"
+    },
+    {
+      "Claim": "SUMMER_DX_STATION_ROBUSTNESS",
+      "Evidence class": "MODEL_REPLAY",
+      "Notes": "zero summer DX at KFQD, KEHO, KGSP",
+      "Status": "STRONG_SUPPORT"
+    },
+    {
+      "Claim": "DETAILED_REGIME_SHARE_STATION_ROBUSTNESS",
+      "Evidence class": "MODEL_REPLAY",
+      "Notes": "cross-station sensitivity ranges differ; not confidence intervals",
+      "Status": "PARTIAL"
+    },
+    {
+      "Claim": "FOREST_CITY_PRINEVILLE_CLIMATE_COMPARISON",
+      "Evidence class": "OBSERVED",
+      "Notes": "identical n=1,251 timestamp support",
+      "Status": "STRONG_SUPPORT"
+    },
+    {
+      "Claim": "WEATHER_CONTROLLER_DECOMPOSITION",
+      "Evidence class": "MODEL_REPLAY",
+      "Notes": "mechanism-specific contrasts; not causal and not water use",
+      "Status": "STRONG_SUPPORT"
+    },
+    {
+      "Claim": "QUALITATIVE_PHYSICS_TRANSFER",
+      "Evidence class": "MODEL_REPLAY",
+      "Notes": "shared moist-air mechanisms only",
+      "Status": "PARTIAL"
+    },
+    {
+      "Claim": "MASANET_TRANSFER",
+      "Evidence class": "TRANSFERRED_MODEL",
+      "Notes": "Case 1 scenario; architecture-mismatched; not Forest City estimates",
+      "Status": "PARTIAL"
+    },
+    {
+      "Claim": "ESIF_TRANSFER",
+      "Evidence class": "SCENARIO_INPUT + TRANSFERRED_MODEL_OUTPUT",
+      "Notes": "matched n=1,251 main support; architecture-mismatched",
+      "Status": "PARTIAL"
+    },
+    {
+      "Claim": "QUANTITATIVE_PHYSICS_TRANSFER",
+      "Evidence class": "UNIDENTIFIED",
+      "Notes": "aggregate agreement cannot promote transfer",
+      "Status": "NOT_VALIDATED"
+    },
+    {
+      "Claim": "QUANTITATIVE_COOLING_WATER_TRANSFER",
+      "Evidence class": "UNIDENTIFIED",
+      "Notes": "no identified airflow/heat/water boundary closes a quantitative transfer",
+      "Status": "NOT_VALIDATED"
+    },
+    {
+      "Claim": "FACILITY_EFFECTIVE_DELTA_T",
+      "Evidence class": "UNIDENTIFIED",
+      "Notes": "35 F remains IT/server design rise",
+      "Status": "UNIDENTIFIED"
+    },
+    {
+      "Claim": "FACILITY_AIRFLOW_CFM",
+      "Evidence class": "UNIDENTIFIED",
+      "Notes": "CFM alone cannot identify effective Delta-T",
+      "Status": "UNIDENTIFIED"
+    },
+    {
+      "Claim": "REPLAY_SHARE_OVER_OBSERVED_USABLE_HOURS",
+      "Evidence class": "MODEL_REPLAY",
+      "Notes": "denominator is only observed usable weather hours",
+      "Status": "IDENTIFIED_MODEL_REPLAY"
+    },
+    {
+      "Claim": "TRUE_FULL_PERIOD_REGIME_SHARE",
+      "Evidence class": "UNIDENTIFIED",
+      "Notes": "missing KFQD hours are not silently filled or called observations",
+      "Status": "UNIDENTIFIED"
+    },
+    {
+      "Claim": "CAMPUS_ANNUAL_ELECTRICITY",
+      "Evidence class": "OBSERVED",
+      "Notes": "Meta campus disclosure at the reported annual boundary",
+      "Status": "PASS"
+    },
+    {
+      "Claim": "CAMPUS_ANNUAL_WATER_WITHDRAWAL",
+      "Evidence class": "OBSERVED",
+      "Notes": "Meta campus disclosure; not consumption",
+      "Status": "PASS"
+    },
+    {
+      "Claim": "CAMPUS_WITHDRAWAL_INTENSITY",
+      "Evidence class": "DERIVED",
+      "Notes": "campus withdrawal divided by campus facility electricity; not cooling WUE",
+      "Status": "PASS"
+    },
+    {
+      "Claim": "CAMPUS_WATER_CONSUMPTION",
+      "Evidence class": "UNIDENTIFIED",
+      "Notes": "withdrawal does not identify consumption",
+      "Status": "UNIDENTIFIED"
+    },
+    {
+      "Claim": "WITHDRAWAL_TO_CONSUMPTION_FRACTION",
+      "Evidence class": "UNIDENTIFIED",
+      "Notes": "reuse, return, and blowdown accounting unavailable",
+      "Status": "UNIDENTIFIED"
+    },
+    {
+      "Claim": "FRC1_COOLING_ONLY_WATER_MAGNITUDE",
+      "Evidence class": "UNIDENTIFIED",
+      "Notes": "cooling makeup meter boundary unavailable",
+      "Status": "UNIDENTIFIED"
+    },
+    {
+      "Claim": "CAMPUS_VS_FRC1_SCOPE_SEPARATION",
+      "Evidence class": "OBSERVED",
+      "Notes": "2024 campus totals never substituted for 2012 FRC1",
+      "Status": "PASS"
+    },
+    {
+      "Claim": "FRC1_TO_LATER_CAMPUS_MAPPING",
+      "Evidence class": "UNIDENTIFIED",
+      "Notes": "facility/address/temporal crosswalk absent",
+      "Status": "UNIDENTIFIED"
+    },
+    {
+      "Claim": "ACQUISITION_READINESS",
+      "Evidence class": "QUALITATIVE_PRIORITY",
+      "Notes": "engineering/utility record packages are binding",
+      "Status": "PASS"
+    },
+    {
+      "Claim": "CLEAN_V2_REPRODUCIBILITY",
+      "Evidence class": "REPRODUCIBILITY",
+      "Notes": "clean da7fd6f checkout, generated ignored intermediate, committed v2 guards",
+      "Status": "PASS"
+    },
+    {
+      "Claim": "CLEANROOM_FINAL_STATUS",
+      "Evidence class": "REPRODUCIBILITY",
+      "Notes": "clean replay, v3 guards, and material-output comparison passed",
+      "Status": "PASS"
+    }
+  ]
 }

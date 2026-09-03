@@ -1,13 +1,19 @@
 {
+  "CLEANROOM_FINAL_STATUS": "PASS",
+  "CLEAN_V2_REPRODUCIBILITY": "PASS",
   "FACILITY_EFFECTIVE_DELTA_T": "UNIDENTIFIED",
+  "FOREST_CITY_V3_FINAL_FREEZE": true,
   "MODEL_CALIBRATED": "NO",
   "QUANTITATIVE_PHYSICS_TRANSFER": "NOT_VALIDATED",
   "STOP": true,
-  "prineville_untouched": true,
-  "slurm": {
-    "policy": "Sloan CPU first (sched_mit_sloan_batch_r8 then sched_mit_sloan_batch); never default mit_normal",
-    "this_run": "local_core_deterministic; Masanet via masanet_lei subprocess; mit_normal not used"
-  },
-  "v1_untouched": true,
-  "v2_untouched": true
+  "STOP_MODEL_EXPANSION": true,
+  "cached_origin_main": "b44e262c598a75d13d8aa2a25a99e3245af9ba46",
+  "cleanroom_status_sha256": "7455fc811ed88c36ec4e5eedd5ea9201cde2fe836c3cca563072d37f035cd4c4",
+  "dependency_manifest_sha256": "b70aca86aaffb2299d0703f2ca2bb999d9e5a447b51ca2ea10717361ef06a895",
+  "development_HEAD": "b44e262c598a75d13d8aa2a25a99e3245af9ba46",
+  "external_action": "Acquire a named-period air-side commissioning package (TAB/BMS CFM + SAT/RAT + OA/RA or mixed-air state + matched heat/load boundary), cooling-water meter package, and controller sequence/runtime evidence.",
+  "finalized_utc": "2026-09-03T17:40:24.856642+00:00",
+  "frozen_dependency_commit": "da7fd6f55e1aef5216ceabe80bfc3e31265f7927",
+  "main_timestamp_set_sha256": "3456a8c519da1212310083b87dcc7f9fd2b0a834502284cc5c4a9af01e2cd65e",
+  "v2_dependency_access": "GIT_BLOB_ONLY:da7fd6f55e1aef5216ceabe80bfc3e31265f7927"
 }

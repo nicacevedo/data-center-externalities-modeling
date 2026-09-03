@@ -1,14 +1,15 @@
 quantity,identification,evidence_class,notes
-annual aggregate electricity,IDENTIFIED,OBSERVED,"Meta site row, campus scope"
-annual aggregate water,IDENTIFIED,OBSERVED,"Meta site withdrawal, campus scope"
-aggregate L/kWh intensity,IDENTIFIED,DERIVED,withdrawal/electricity at campus; not FRC1 WUE
-regime frequencies,BOUNDED,MODEL_REPLAY,frozen controllers on observed weather
-station sensitivity,BOUNDED,OBSERVED,KFQD/KEHO/KGSP independent; not chosen by DX
-effective facility Delta-T,UNIDENTIFIED,UNIDENTIFIED,35F is IT design rise only; circular water fit prohibited
-facility airflow / CFM,UNIDENTIFIED,UNIDENTIFIED,needs TAB/BMS
-cooling-only makeup water,UNIDENTIFIED,UNIDENTIFIED,needs meter IDs
-blowdown,UNIDENTIFIED,UNIDENTIFIED,
-reuse / return,UNIDENTIFIED,UNIDENTIFIED,
-withdrawal vs consumption,UNIDENTIFIED,UNIDENTIFIED,Meta reports withdrawal
-FRC1 vs campus mapping,UNIDENTIFIED,UNIDENTIFIED,FRC1_ADDRESS set unresolved
-quantitative cooling-water transfer,UNIDENTIFIED,UNIDENTIFIED,QUANTITATIVE_PHYSICS_TRANSFER=NOT_VALIDATED
+CAMPUS_ANNUAL_ELECTRICITY,IDENTIFIED,OBSERVED,Meta campus annual disclosure
+CAMPUS_ANNUAL_WATER_WITHDRAWAL,IDENTIFIED,OBSERVED,Withdrawal; not consumption or cooling-only water
+CAMPUS_WITHDRAWAL_INTENSITY,IDENTIFIED_DERIVED,DERIVED,campus withdrawal/electricity; not cooling WUE
+REPLAY_SHARE_OVER_OBSERVED_USABLE_HOURS,IDENTIFIED_MODEL_REPLAY,MODEL_REPLAY,exact conditional replay share on usable observations
+TRUE_FULL_PERIOD_REGIME_SHARE,UNIDENTIFIED,UNIDENTIFIED,missing KFQD hours cannot be labeled observations
+SUMMER_DX_STATION_ROBUSTNESS,STRONG_SUPPORT,MODEL_REPLAY,zero DX at KFQD/KEHO/KGSP
+DETAILED_REGIME_SHARE_STATION_ROBUSTNESS,PARTIAL,MODEL_REPLAY,station sensitivity ranges differ
+CAMPUS_WATER_CONSUMPTION,UNIDENTIFIED,UNIDENTIFIED,withdrawal is not consumption
+WITHDRAWAL_TO_CONSUMPTION_FRACTION,UNIDENTIFIED,UNIDENTIFIED,needs return/reuse/blowdown accounting
+FACILITY_EFFECTIVE_DELTA_T,UNIDENTIFIED,UNIDENTIFIED,35 F is IT design rise only; inverse fitting prohibited
+FACILITY_AIRFLOW_CFM,UNIDENTIFIED,UNIDENTIFIED,CFM alone does not identify effective Delta-T
+FRC1_COOLING_ONLY_WATER_MAGNITUDE,UNIDENTIFIED,UNIDENTIFIED,needs cooling makeup meter boundary
+FRC1_TO_LATER_CAMPUS_MAPPING,UNIDENTIFIED,UNIDENTIFIED,facility/address/temporal crosswalk absent
+QUANTITATIVE_COOLING_WATER_TRANSFER,NOT_VALIDATED,TRANSFERRED_MODEL,Masanet/ESIF are architecture-mismatched stress tests

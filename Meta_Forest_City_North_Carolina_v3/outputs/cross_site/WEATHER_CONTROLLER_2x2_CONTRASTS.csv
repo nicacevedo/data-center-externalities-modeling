@@ -1,0 +1,7 @@
+regime,weather_effect_under_PRN_controller_pp,weather_effect_under_FC_controller_pp,controller_effect_under_PRN_weather_pp,controller_effect_under_FC_weather_pp,replay_interaction_pp,mechanism_interpretation,evidence_class,NOT_CAUSAL_IDENTIFICATION,NOT_WATER_USE,unit,n_each_cell
+HUMIDIFICATION,-43.005595523581135,0.0,-43.005595523581135,0.0,43.005595523581135,dry-climate/controller interaction,MODEL_REPLAY,True,True,percentage_points_of_observed_usable_hours,1251
+OA_FREE,-11.750599520383693,-29.656274980015983,69.86410871302957,51.95843325339729,-17.905675459632285,strongly controller-associated,MODEL_REPLAY,True,True,percentage_points_of_observed_usable_hours,1251
+HIGH_RH_MIXING,53.87689848121502,32.29416466826539,-17.505995203836928,-39.088729016786566,-21.582733812949634,strongly climate-driven and controller-modulated,MODEL_REPLAY,True,True,percentage_points_of_observed_usable_hours,1251
+EVAP_COOLING,0.8792965627498012,-2.637889688249401,-9.352517985611511,-12.869704236610712,-3.5171862509992047,predominantly controller-associated in this replay,MODEL_REPLAY,True,True,percentage_points_of_observed_usable_hours,1251
+MECHANICAL_COOLING,0.0,0.0,0.0,0.0,0.0,zero on matched support,MODEL_REPLAY,True,True,percentage_points_of_observed_usable_hours,1251
+UNRESOLVED,0.0,0.0,0.0,0.0,0.0,zero on matched support,MODEL_REPLAY,True,True,percentage_points_of_observed_usable_hours,1251

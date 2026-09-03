@@ -1,4 +1,13 @@
 {
+  "does_not_identify": [
+    "cooling-only water",
+    "water consumption",
+    "cooling architecture causal effects",
+    "FRC1",
+    "workload differences",
+    "reuse/blowdown",
+    "retrofit effects"
+  ],
   "evidence_class": "DERIVED",
   "fc_2024_electricity_MWh": 535555.0,
   "fc_2024_intensity_recomputed": 0.02987554966343326,
@@ -8,5 +17,7 @@
     "B_regime_controller",
     "C_campus_annual_aggregates"
   ],
-  "not_FRC1": true
+  "not_FRC1": true,
+  "not_cooling_WUE": true,
+  "prn_over_fc_intensity_ratio": 6.352452160312501
 }

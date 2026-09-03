@@ -1,0 +1,166 @@
+{
+  "CLEANROOM_FINAL_STATUS": "PASS",
+  "CLEAN_V2_REPRODUCIBILITY": "PASS",
+  "clean_checkout_HEAD": "da7fd6f55e1aef5216ceabe80bfc3e31265f7927",
+  "cleanup_result": "returncode=0",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/forest_city_v3_cleanroom_h_ely0uc/checkout",
+        "da7fd6f55e1aef5216ceabe80bfc3e31265f7927"
+      ],
+      "returncode": 0,
+      "stderr": "Preparing worktree (detached HEAD da7fd6f)\nUpdating files:  18% (298/1614)\nUpdating files:  19% (307/1614)\nUpdating files:  20% (323/1614)\nUpdating files:  21% (339/1614)\nUpdating files:  22% (356/1614)\nUpdating files:  23% (372/1614)\nUpdating files:  24% (388/1614)\nUpdating files:  25% (404/1614)\nUpdating files:  26% (420/1614)\nUpdating files:  27% (436/1614)\nUpdating files:  28% (452/1614)\nUpdating files:  29% (469/1614)\nUpdating files:  30% (485/1614)\nUpdating files:  31% (501/1614)\nUpdating files:  32% (517/1614)\nUpdating files:  33% (533/1614)\nUpdating files:  34% (549/1614)\nUpdating files:  35% (565/1614)\nUpdating files:  36% (582/1614)\nUpdating files:  37% (598/1614)\nUpdating files:  38% (614/1614)\nUpdating files:  39% (630/1614)\nUpdating files:  40% (646/1614)\nUpdating files:  41% (662/1614)\nUpdating files:  42% (678/1614)\nUpdating files:  43% (695/1614)\nUpdating files:  44% (711/1614)\nUpdating files:  45% (727/1614)\nUpdating files:  46% (743/1614)\nUpdating files:  47% (759/1614)\nUpdating files:  48% (775/1614)\nUpdating files:  49% (791/1614)\nUpdating files:  50% (807/1614)\nUpdating files:  51% (824/1614)\nUpdating files:  52% (840/1614)\nUpdating files:  53% (856/1614)\nUpdating files:  54% (872/1614)\nUpdating files:  55% (888/1614)\nUpdating files:  56% (904/1614)\nUpdating files:  57% (920/1614)\nUpdating files:  58% (937/1614)\nUpdating files:  58% (947/1614)\nUpdating files:  59% (953/1614)\nUpdating files:  60% (969/1614)\nUpdating files:  61% (985/1614)\nUpdating files:  62% (1001/1614)\nUpdating files:  63% (1017/1614)\nUpdating files:  64% (1033/1614)\nUpdating files:  65% (1050/1614)\nUpdating files:  66% (1066/1614)\nUpdating files:  67% (1082/1614)\nUpdating files:  68% (1098/1614)\nUpdating files:  69% (1114/1614)\nUpdating files:  70% (1130/1614)\nUpdating files:  71% (1146/1614)\nUpdating files:  72% (1163/1614)\nUpdating files:  73% (1179/1614)\nUpdating files:  74% (1195/1614)\nUpdating files:  74% (1200/1614)\nUpdating files:  75% (1211/1614)\nUpdating files:  76% (1227/1614)\nUpdating files:  77% (1243/1614)\nUpdating files:  78% (1259/1614)\nUpdating files:  79% (1276/1614)\nUpdating files:  80% (1292/1614)\nUpdating files:  81% (1308/1614)\nUpdating files:  82% (1324/1614)\nUpdating files:  83% (1340/1614)\nUpdating files:  84% (1356/1614)\nUpdating files:  85% (1372/1614)\nUpdating files:  85% (1373/1614)\nUpdating files:  86% (1389/1614)\nUpdating files:  87% (1405/1614)\nUpdating files:  88% (1421/1614)\nUpdating files:  89% (1437/1614)\nUpdating files:  90% (1453/1614)\nUpdating files:  91% (1469/1614)\nUpdating files:  92% (1485/1614)\nUpdating files:  93% (1502/1614)\nUpdating files:  94% (1518/1614)\nUpdating files:  95% (1534/1614)\nUpdating files:  96% (1550/1614)\nUpdating files:  97% (1566/1614)\nUpdating files:  98% (1582/1614)\nUpdating files:  99% (1598/1614)\nUpdating files:  99% (1602/1614)\nUpdating files: 100% (1614/1614)\nUpdating files: 100% (1614/1614), done.\n",
+      "stdout": "HEAD is now at da7fd6f [Update] Meta Forest City v2\n"
+    },
+    {
+      "command": [
+        "git",
+        "clone",
+        "--quiet",
+        "https://github.com/nuoaleon/Data-Center-Water-footprint.git",
+        "/tmp/forest_city_v3_cleanroom_h_ely0uc/checkout/other_sources/masanet/external/Data-Center-Water-footprint"
+      ],
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "--detach",
+        "2cc53bee89b0a61bdad10c02b4d170d7f673e2dc"
+      ],
+      "returncode": 0,
+      "stderr": "HEAD is now at 2cc53be Update simulation_funs_DC.py\n"
+    },
+    {
+      "command": [
+        "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+        "src/prepare_weather.py"
+      ],
+      "cwd": "Meta_Prineville_Oregon_v3",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Wrote /tmp/forest_city_v3_cleanroom_h_ely0uc/checkout/Meta_Prineville_Oregon_v3/data/processed/weather_krdm_hourly.csv: 8,784 hours; dry-bulb missing 0.27%\nKRDM baseline only. Canonical model weather is data/processed/weather_hourly.csv (KS39/KRDM mix).\n"
+    },
+    {
+      "command": [
+        "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+        "-c",
+        "import importlib.util; from pathlib import Path; p=Path('scripts/run_pipeline.py'); s=importlib.util.spec_from_file_location('fc2_pipeline', p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); m.municipal_update=lambda canon: None; m.main()"
+      ],
+      "cwd": "Meta_Forest_City_North_Carolina_v2",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\n  \"dx_robustness\": \"STRONG_SUPPORT\",\n  \"shift\": true,\n  \"evap_higher_at_fc\": false,\n  \"events\": \"PASS\"\n}\n"
+    },
+    {
+      "command": [
+        "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_v2_guards.py",
+        "-q"
+      ],
+      "cwd": "Meta_Forest_City_North_Carolina_v2",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ".........                                                                [100%]\n9 passed in 2.95s\n"
+    },
+    {
+      "command": [
+        "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+        "scripts/run_v3_pipeline.py"
+      ],
+      "cwd": "Meta_Forest_City_North_Carolina_v3",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Wrote /tmp/forest_city_v3_cleanroom_h_ely0uc/checkout/Meta_Forest_City_North_Carolina_v3/outputs/intermediates/weather_KRDM_2012.csv: 8,784 hours; dry-bulb missing 0.27%\n{\n  \"v2_repro\": \"PASS\",\n  \"masanet\": \"PARTIAL\",\n  \"end_mismatches\": [],\n  \"2x2_n\": 1251\n}\n"
+    },
+    {
+      "command": [
+        "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_v3_guards.py",
+        "-q"
+      ],
+      "cwd": "Meta_Forest_City_North_Carolina_v3",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ".............................                                            [100%]\n29 passed in 3.22s\n"
+    }
+  ],
+  "comparison_csv": "CLEANROOM_OUTPUT_HASHES.csv",
+  "environment": {
+    "dc_python": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+    "masanet_python": "/home/nacevedo/.conda/envs/masanet_lei/bin/python",
+    "utc": "2026-09-03T17:40:08.046566+00:00"
+  },
+  "frozen_dependency_commit": "da7fd6f55e1aef5216ceabe80bfc3e31265f7927",
+  "generated_inputs": [
+    {
+      "expected_sha256": "1994747ab4af1b97e63adb434b4d0d022f2daee76f0c144ea9ab46be2d906604",
+      "match": true,
+      "path": "Meta_Forest_City_North_Carolina_v1/data/raw/weather/isd-history.csv",
+      "sha256": "1994747ab4af1b97e63adb434b4d0d022f2daee76f0c144ea9ab46be2d906604",
+      "url": "https://www.ncei.noaa.gov/pub/data/noaa/isd-history.csv"
+    },
+    {
+      "expected_sha256": "e4cbfbbfc133cccc1c595b10859546880d169013aec80939bf3728d1bf62ad7f",
+      "match": true,
+      "path": "Meta_Forest_City_North_Carolina_v1/data/raw/weather/72314453890_2012.csv",
+      "sha256": "e4cbfbbfc133cccc1c595b10859546880d169013aec80939bf3728d1bf62ad7f",
+      "url": "https://www.ncei.noaa.gov/data/global-hourly/access/2012/72314453890.csv"
+    },
+    {
+      "expected_sha256": "adc544dfbb31869ffe11ef3788b1763756d559f021966ec22363c60a4c944903",
+      "match": true,
+      "path": "Meta_Forest_City_North_Carolina_v1/data/raw/weather/72027763843_2012.csv",
+      "sha256": "adc544dfbb31869ffe11ef3788b1763756d559f021966ec22363c60a4c944903",
+      "url": "https://www.ncei.noaa.gov/data/global-hourly/access/2012/72027763843.csv"
+    },
+    {
+      "expected_sha256": "d4305277f146bfd81096950fd54f783e43a14767e9e1deec4533e4b7d0907b3a",
+      "match": true,
+      "path": "Meta_Forest_City_North_Carolina_v1/data/raw/weather/72312003870_2012.csv",
+      "sha256": "d4305277f146bfd81096950fd54f783e43a14767e9e1deec4533e4b7d0907b3a",
+      "url": "https://www.ncei.noaa.gov/data/global-hourly/access/2012/72312003870.csv"
+    },
+    {
+      "expected_sha256": "29853f7afa500a5dc8a946cfdc88df9e9f93a459af41c22a27fa91aefafa6fa2",
+      "match": true,
+      "path": "Meta_Prineville_Oregon_v3/data/raw/noaa/72692024230_2012.csv",
+      "sha256": "29853f7afa500a5dc8a946cfdc88df9e9f93a459af41c22a27fa91aefafa6fa2",
+      "url": "https://www.ncei.noaa.gov/data/global-hourly/access/2012/72692024230.csv"
+    },
+    {
+      "path": "Meta_Prineville_Oregon_v3/data/processed/weather_krdm_hourly.csv",
+      "sha256": "940fb6041a723aab7c8609968902ef91ec68d8b88490005f8c2690a90950f198",
+      "source": "frozen src/prepare_weather.py + hash-pinned 2012 KRDM raw"
+    },
+    {
+      "path": "Meta_Forest_City_North_Carolina_v2/data/processed/FOREST_CITY_META_ANNUAL_CANONICAL.csv",
+      "sha256": "aac58b5994d243051c8282d2e89d184ffec98f5c55b46feeaec65202981465c1",
+      "source": "committed v2 scripts/run_pipeline.py"
+    },
+    {
+      "path": "Meta_Forest_City_North_Carolina_v2/outputs/weather_robustness/FULL_JJA_KFQD_HOURS.csv",
+      "sha256": "67899cf0dab5e7391b14549eada7228eb898f7d728232c58ed6f722c3a1e97f2",
+      "source": "committed v2 scripts/run_pipeline.py"
+    }
+  ],
+  "material_outputs_match": true,
+  "n_exact_hash_matches": 32,
+  "n_material_outputs": 32,
+  "prior_attempt": "One earlier clean-room replay was manually interrupted after anomalous sequential Masanet stalling; no result was accepted.",
+  "temporary_worktree_removed_after_audit": true,
+  "v2_pipeline_scope": "committed pipeline with context-only municipal_update explicitly skipped because its ignored mutable web scrape is not a v3 scientific input",
+  "v2_test_summary": ".........                                                                [100%]\n9 passed in 2.95s",
+  "v3_test_summary": ".............................                                            [100%]\n29 passed in 3.22s"
+}

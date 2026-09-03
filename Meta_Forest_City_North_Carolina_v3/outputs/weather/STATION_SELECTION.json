@@ -7,24 +7,24 @@
   "stations": [
     {
       "call_sign": "KFQD",
+      "elev_m": 328.6,
       "raw_name": "72314453890_2012.csv",
-      "reuse_v1_parquet": true,
       "role": "PREFERRED_LOCAL",
       "selection_reason": "Nearest ISD station to the Forest City campus; OCP 2013 used Rutherfordton weather ~6 miles NW. Preferred where observed. Completeness and distance decided a priori; not selected because of a DX outcome.",
       "station_id": "72314453890"
     },
     {
       "call_sign": "KEHO",
+      "elev_m": 258.2,
       "raw_name": "72027763843_2012.csv",
-      "reuse_v1_parquet": false,
       "role": "NEAREST_COMPLETE_2012_JJA",
       "selection_reason": "Independent 2012 JJA representation closer than KGSP and already present in the v1 weather bank. Included for completeness robustness, not because of DX.",
       "station_id": "72027763843"
     },
     {
       "call_sign": "KGSP",
+      "elev_m": 294.4,
       "raw_name": "72312003870_2012.csv",
-      "reuse_v1_parquet": false,
       "role": "FIRST_ORDER_ASOS_INDEPENDENT_REPLICATION",
       "selection_reason": "Complete first-order ASOS for overlap diagnostics. Farther than KFQD/KEHO. Not selected because of a DX outcome.",
       "station_id": "72312003870"

@@ -1,0 +1,455 @@
+{
+  "HEAD": "b44e262c598a75d13d8aa2a25a99e3245af9ba46",
+  "files": [
+    {
+      "bytes": 1163,
+      "relative_path": "README.md",
+      "sha256": "56aca23e671c36dee61ea460b7a9131bb6e820e3de1edf45ba36daa9afd20c24",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1258,
+      "relative_path": "config/claims_contract.yaml",
+      "sha256": "581ac7d08a008e6beb395f76440d9d8fcb0827462c351c2a71cfdf9e9f4714bc",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 609,
+      "relative_path": "outputs/FINAL_CLAIMS_LEDGER.json",
+      "sha256": "cfa53d4d7dac290f6fce25ae7c4bfa38323f93791e323295962dad608cf97939",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1824,
+      "relative_path": "outputs/FINAL_CLAIMS_LEDGER.md",
+      "sha256": "aa5272bf93beb7f62cb4391780403fc0baec97fd2c4f58a853ba2fb78cb52e2c",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 458,
+      "relative_path": "outputs/FOREST_CITY_V3_FREEZE.json",
+      "sha256": "9823abd04f5957e28a58c46969ca8a335f5e8f436e540d8381cbe99643e173b7",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 3718,
+      "relative_path": "outputs/FOREST_CITY_V3_REPORT.md",
+      "sha256": "54bfdf6c40f9eea5782ecfc36ee156ff29e2b2e01622ff87451e28efa8432778",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1241,
+      "relative_path": "outputs/acquisition/DATA_VALUE_MATRIX.csv",
+      "sha256": "43e260b24a71380ce9e2d05f2fcfab486df4e07452cbd9f01797812025725676",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1564,
+      "relative_path": "outputs/acquisition/DATA_VALUE_MATRIX.md",
+      "sha256": "7406668c1ced6853cb55b792a2770d461f5ba734fa9377e133997ab7f683a8b6",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 5711,
+      "relative_path": "outputs/acquisition/FOREST_CITY_MANUAL_DATA_REQUEST_PACKAGE.md",
+      "sha256": "d968fc1375d34cf595511c626d46ab107f9b8bec3f9657caf359563da67add0b",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 588,
+      "relative_path": "outputs/annual/CAMPUS_ANNUAL_COMPARISON.csv",
+      "sha256": "c6628a27c3b90a4b7958e5e4afe3d75c84c3e1e83bf53a5fe0804a2b4327e222",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 303,
+      "relative_path": "outputs/annual/CAMPUS_ANNUAL_COMPARISON.json",
+      "sha256": "4a1045845fec2defff5c979c1bd83888e1f188b44b51d46d3def0c0e1b3c4ad3",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 894,
+      "relative_path": "outputs/annual/CAMPUS_ANNUAL_COMPARISON.md",
+      "sha256": "fa1d67c49a95514c9fac12a0c02aaed8187e8bff5d28856872ee14126402d80a",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 269,
+      "relative_path": "outputs/cross_site/COMMON_PERIOD_CLIMATE.csv",
+      "sha256": "e46b3d8d8fc1438862d91cf443bdf07159ea7d0f08d7245a48c1e784d9de51dd",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 790,
+      "relative_path": "outputs/cross_site/NATIVE_SAME_PERIOD_REGIMES.csv",
+      "sha256": "d61cd746a7040f068fcd6062d0a817e062a093c6d75d0ab896414c957ab5ccfc",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1998,
+      "relative_path": "outputs/cross_site/REGIME_TRANSITIONS.csv",
+      "sha256": "3d572124cd5efd5467b449c02ab0caf3dc08d089bc01f5c1450990145f3656de",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 158,
+      "relative_path": "outputs/cross_site/REGIME_TRANSITION_RATES.csv",
+      "sha256": "155074d25465078ea07235ab8b2832b4e36acdbaecc25e8fa661ccecd26be9be",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1204,
+      "relative_path": "outputs/cross_site/WEATHER_CONTROLLER_2x2.csv",
+      "sha256": "eabd4cfda1f8a649c4969ccbb420a33bec229e82b443179487a36d2b62d38423",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 3396,
+      "relative_path": "outputs/cross_site/WEATHER_CONTROLLER_2x2.json",
+      "sha256": "65e82d50c52d25e0e159964203853270e7af3f1791b4f34e0c66d921cca275ea",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 879,
+      "relative_path": "outputs/cross_site/WEATHER_CONTROLLER_2x2.md",
+      "sha256": "f578ac6d87a1487af27bbc7388a7aba1ad3fd57ec2a742a4e671871ea7b65da6",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1563,
+      "relative_path": "outputs/esif/ESIF_TRANSFER.json",
+      "sha256": "ddbb6972bbdac2866088b21268e56993ccee4db2ee6c55eff1c1bb524d99a64b",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 192012,
+      "relative_path": "outputs/esif/ESIF_TRANSFER_KFQD.csv",
+      "sha256": "a086581344aa5df4e9a7c5de527b446903095233f9b32bcf2b5f18faa00970a1",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 255105,
+      "relative_path": "outputs/esif/ESIF_TRANSFER_KRDM.csv",
+      "sha256": "55de7cae49c075dac98020f203f14a87b390d41a0bba29d81c16e2bef50f4419",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 876,
+      "relative_path": "outputs/esif/ESIF_TRANSFER_SUMMARY.csv",
+      "sha256": "fbb5f2ce38107dbb986e11fabe9a9739fce9321b316586bcaddca250b564b4c8",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 15713,
+      "relative_path": "outputs/evidence/FOREST_CITY_EVIDENCE_SCOPE_CROSSWALK.csv",
+      "sha256": "c843e7edd5487058352eb7ef6b31bd3d3ae8a2db7363e3971c5d69dcef368fdd",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 5937,
+      "relative_path": "outputs/evidence/FOREST_CITY_EVIDENCE_SCOPE_CROSSWALK.md",
+      "sha256": "13ff039d5df1992a931925a0c558a651c813a3f8b39dc95bf3890b451d0685cf",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 19839,
+      "relative_path": "outputs/evidence/FOREST_CITY_EVIDENCE_SCOPE_CROSSWALK.parquet",
+      "sha256": "c7325133054f0961b34b3cf6e4a5815a879bd2d6dacc67bc805a421fa55ba8d6",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 519,
+      "relative_path": "outputs/figures/FIGURE_CAPTIONS.md",
+      "sha256": "1b1f8be49690976b4dbfb778faf646f08be88ece4b94fd4b37150c80f9ffd293",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 84344,
+      "relative_path": "outputs/figures/fig01_same_period_climate_regime.png",
+      "sha256": "7c2e5fab37da1f4732e383dbdcc5c372234160e9bd6f742f55f63f7a90fcd2f8",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 65383,
+      "relative_path": "outputs/figures/fig02_weather_controller_2x2.png",
+      "sha256": "9cc1eca7e5cff193660b3f4e77fec6c9436c8c25420c6a9a794b7a724331fd3c",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 53512,
+      "relative_path": "outputs/figures/fig03_masanet_transfer.png",
+      "sha256": "f1919723daa0d61907a392a8c7d3bb71b4a68411cb1dbbd449d611f41d5443dc",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 116261,
+      "relative_path": "outputs/figures/fig04_esif_overhead_transfer.png",
+      "sha256": "0e95c818fede731af3b655fef6cde1afb9754ef98ed184c18f26e1b071731cd1",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 69582,
+      "relative_path": "outputs/figures/fig05_identification.png",
+      "sha256": "f8488ae017ea9e47de90f10142de75c31958cf484c4d592c852fc38200f06e30",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 61471,
+      "relative_path": "outputs/figures/fig06_data_value_matrix.png",
+      "sha256": "978a46620a9c4b732432f54699e34f9c07127b3444317e8099896fdf656349e8",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1036,
+      "relative_path": "outputs/identification/IDENTIFICATION_LEDGER.csv",
+      "sha256": "5c9f32b4278a1f75fd8bdfe1e1cd2152a7399052b9baa7a603875ecf6e1dd90a",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1278,
+      "relative_path": "outputs/identification/IDENTIFICATION_LEDGER.md",
+      "sha256": "c8e53571aef1948624b8b70a494c3a80028a1ad3a7f1b44dd9edeb98dbbccb2f",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 209257,
+      "relative_path": "outputs/masanet/MASANET_HOURLY_KFQD.csv",
+      "sha256": "a24f3009a826e9f5a67603e6d7fdd033d558b60069f6ed6bcd27baff86a2e81d",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 191958,
+      "relative_path": "outputs/masanet/MASANET_HOURLY_KRDM.csv",
+      "sha256": "9eefb459b81ec0fec6e7210e15a4fa2ae10dbc35967dde03280084cd3fe554a9",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 327,
+      "relative_path": "outputs/masanet/MASANET_MONTHLY.csv",
+      "sha256": "43f1ece2154c7b27c378b0de481624e37fc913c0e4d14e7207cd8ea13381f64a",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 2334,
+      "relative_path": "outputs/masanet/MASANET_TRANSFER.json",
+      "sha256": "b30e3b36b4d761faf376dc5e000f59c4c00db5286be7dfa331c1511f83c894eb",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 391065,
+      "relative_path": "outputs/masanet/masanet_subprocess.log",
+      "sha256": "e4bdfd620d63532e80c9a402accdbcc3cc210f0ca5b65bb05c121ad9e07e1e47",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 112745,
+      "relative_path": "outputs/masanet/weather_KFQD_common.csv",
+      "sha256": "f649a70d8faabc95b3158da94661f919a2378a0b909e6c160a5e35a214bca178",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 106798,
+      "relative_path": "outputs/masanet/weather_KRDM_common.csv",
+      "sha256": "c97ed46345d208ee642c536db51b5ef640da54bff84954e7d4e5d025c6cf1f6d",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 4768,
+      "relative_path": "outputs/preflight/FINAL_HASH_CHECK.json",
+      "sha256": "87a4231d75c83918b14d9236e92b052245db67a32db519c83ec851bd8cc3ac94",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 12687,
+      "relative_path": "outputs/preflight/INITIAL_STATE.json",
+      "sha256": "5ca0250f70a36cfe9322734e58d0559c64409d562a5c68c018bc3bc3d8485d03",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 856,
+      "relative_path": "outputs/regimes/COMMON_TAXONOMY_NATIVE_MAPPING.csv",
+      "sha256": "f9f21c193b98fda114d9a25b0378c18b839edcab097eb2c5ace586e556cd0e58",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 341,
+      "relative_path": "outputs/regimes/JJA_STATION_REGIME_SHARES.csv",
+      "sha256": "c2d018f543a08254bfb84fbf3235b89766dcdd021454b60aa28aa0708a57a05e",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1283697,
+      "relative_path": "outputs/regimes/KFQD_JJA_HOURS.csv",
+      "sha256": "59560712598088aaf337594dd1e91085308d61f4b6eb2447cf25e80f0bf37fab",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 612,
+      "relative_path": "outputs/regimes/V2_REPRODUCTION.json",
+      "sha256": "c297b022e9cdcf66730f86f3e67acc6caf907330f04b263c815e1603cfd59f3d",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 325,
+      "relative_path": "outputs/slurm/RUN_MANIFEST.json",
+      "sha256": "0ccd89f7dd85fb9c71dc58291f1a89ded93f46f8f8a2fc3f657ecba522f44841",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 474,
+      "relative_path": "outputs/weather/STATION_OVERLAP.csv",
+      "sha256": "6dba3d2ecc078a527fd376427e4d12a445d701d363eca0e526a46e7b51cef7cc",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1460,
+      "relative_path": "outputs/weather/STATION_SELECTION.json",
+      "sha256": "547cc7320b69c22749f25f8395d136254f699425157c07f5a35d122716f894e2",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 639,
+      "relative_path": "outputs/weather/WEATHER_COVERAGE.csv",
+      "sha256": "18a0fffdfc0d3e92d49f6ddf0da5556e880ad0870a7ae2c381df554ca887a6f5",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 957,
+      "relative_path": "outputs/weather/WEATHER_COVERAGE.md",
+      "sha256": "e55f2be836f593ecd2a06d7e17f08ee82c11ab34687fb5009bad6a51574372dd",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 190,
+      "relative_path": "outputs/weather/WEATHER_MISSINGNESS.csv",
+      "sha256": "7f42f4f5be8c27b74494e7641e93f2ca36e88acc806aea7d5bb2f4370ce40707",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 5186,
+      "relative_path": "scripts/run_masanet_transfer.py",
+      "sha256": "149daf61b86eb971568b1f763f89af83dec7b38722421b61708a8bad464b74e2",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 54547,
+      "relative_path": "scripts/run_v3_pipeline.py",
+      "sha256": "53d13ba2aad4957c4351881ba2411779091228e9a6a3c2a75b63d47ec2c09138",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 897,
+      "relative_path": "slurm/run_masanet_sloan.sh",
+      "sha256": "3e149fd6d7a1d92c7e353c2a0f8ad84c435f9ef0f88b63bdb92dff745f8592fb",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 0,
+      "relative_path": "src/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 2779,
+      "relative_path": "src/__pycache__/esif_frozen.cpython-311.pyc",
+      "sha256": "fbd81bbbd2efce196f48cede4962b14133951b4a746d3cb3949b26fd35b5e30f",
+      "tracked_at_HEAD": false
+    },
+    {
+      "bytes": 2092,
+      "relative_path": "src/__pycache__/fc3_paths.cpython-311.pyc",
+      "sha256": "be972dcccf2db975cf700ff25b9d164bccf8c1b3dbdcc4200ccd7953993d17ba",
+      "tracked_at_HEAD": false
+    },
+    {
+      "bytes": 1744,
+      "relative_path": "src/__pycache__/hashes.cpython-311.pyc",
+      "sha256": "1a3136e701c7934957a7d24a885f16f9c69b40e1208f405299b602096ac38f13",
+      "tracked_at_HEAD": false
+    },
+    {
+      "bytes": 1975,
+      "relative_path": "src/__pycache__/paths.cpython-311.pyc",
+      "sha256": "3c701d204a6e276e00d39a6311037c7bd646a9d1a9c3d87dbdbee69bed6c955b",
+      "tracked_at_HEAD": false
+    },
+    {
+      "bytes": 4005,
+      "relative_path": "src/__pycache__/taxonomy.cpython-311.pyc",
+      "sha256": "9f7ea4173ea809be549f788c35c6bfc558bcc462b8824b30385d3824b41c465a",
+      "tracked_at_HEAD": false
+    },
+    {
+      "bytes": 16366,
+      "relative_path": "src/__pycache__/weather_hourly.cpython-311.pyc",
+      "sha256": "4766c36f6b38d6223b8e87e1ab2fbae5c0a8d337e6ec682fb3552a01d0b680d1",
+      "tracked_at_HEAD": false
+    },
+    {
+      "bytes": 1244,
+      "relative_path": "src/esif_frozen.py",
+      "sha256": "3bdffb5d11c620320ce7fc1c8967e37c179b4fda63a3bc5143909e47c30270fa",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 1627,
+      "relative_path": "src/fc3_paths.py",
+      "sha256": "e013ea6aae26578f55a279e7970389a49a12882492d639f274aa72ea03c684ad",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 469,
+      "relative_path": "src/hashes.py",
+      "sha256": "2675546b55fca313b19aa7b569224d0ce1e3039dccba713eaf50a2853387939c",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 3086,
+      "relative_path": "src/taxonomy.py",
+      "sha256": "007585f8af36a17965efb039f52707ca504e3a411ff395996493d67c62976022",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 6940,
+      "relative_path": "src/weather_hourly.py",
+      "sha256": "fe3a2e7abaf89fe00178f19731797631482d4cfc45bd2024953712627b84f9f7",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 0,
+      "relative_path": "tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_HEAD": true
+    },
+    {
+      "bytes": 214,
+      "relative_path": "tests/__pycache__/__init__.cpython-311.pyc",
+      "sha256": "453ef68000d47dcf327296c79b003b1fb96eb27d96ec19dc4563113c4d832ac8",
+      "tracked_at_HEAD": false
+    },
+    {
+      "bytes": 69154,
+      "relative_path": "tests/__pycache__/test_v3_guards.cpython-311-pytest-9.1.1.pyc",
+      "sha256": "2cdf944b79ea82acdcb00d81aceae31209520a5ae85237cf6e2cbe65ba753475",
+      "tracked_at_HEAD": false
+    },
+    {
+      "bytes": 9702,
+      "relative_path": "tests/test_v3_guards.py",
+      "sha256": "a98ac6b2342459775ce012d13b5632c4a2de1e2c8e26e618430bc90b57660157",
+      "tracked_at_HEAD": true
+    }
+  ],
+  "git_status_before": " m Data-center-PUE-prediction-tool\n?? Meta_Forest_City_North_Carolina_v3/outputs/refinement_baseline/\n?? Meta_Forest_City_North_Carolina_v3/scripts/snapshot_refinement_baseline.py\n",
+  "n_files": 73,
+  "n_output_files": 52,
+  "origin_fetch": {
+    "attempted": true,
+    "stderr": "git@ssh.github.com: Permission denied (publickey); remote-tracking ref could not be refreshed",
+    "success": false
+  },
+  "origin_main_local_tracking_ref": "b44e262c598a75d13d8aa2a25a99e3245af9ba46",
+  "scope": "all files present under v3 before refinement; snapshot artifacts and this one-time snapshot script excluded",
+  "snapshot_utc": "2026-09-03T15:51:11.125468+00:00",
+  "v3_git_tree": "cd42547af541ba43fde4bcd93132bfa5d5a692f9"
+}

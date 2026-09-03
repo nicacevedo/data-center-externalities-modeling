@@ -1,0 +1,16 @@
+{
+  "CLEAN_V2_REPRODUCIBILITY": "PASS",
+  "deterministic_preprocessing": "hash-pinned NOAA inputs -> frozen KRDM preprocessor -> committed v2 pipeline (context-only municipal_update skipped) -> ignored intermediates -> guards",
+  "frozen_commit": "da7fd6f55e1aef5216ceabe80bfc3e31265f7927",
+  "generated_files": [
+    {
+      "path": "Meta_Forest_City_North_Carolina_v2/data/processed/FOREST_CITY_META_ANNUAL_CANONICAL.csv",
+      "sha256": "aac58b5994d243051c8282d2e89d184ffec98f5c55b46feeaec65202981465c1"
+    },
+    {
+      "path": "Meta_Forest_City_North_Carolina_v2/outputs/weather_robustness/FULL_JJA_KFQD_HOURS.csv",
+      "sha256": "67899cf0dab5e7391b14549eada7228eb898f7d728232c58ed6f722c3a1e97f2"
+    }
+  ],
+  "test_summary": ".........                                                                [100%]\n9 passed in 2.95s"
+}

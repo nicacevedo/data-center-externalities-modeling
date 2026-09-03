@@ -1,0 +1,98 @@
+{
+  "NOT_CAUSAL_IDENTIFICATION": true,
+  "NOT_WATER_USE": true,
+  "cell_definitions": {
+    "A": "PRN_weather+PRN_controller",
+    "B": "PRN_weather+FC_controller",
+    "C": "FC_weather+PRN_controller",
+    "D": "FC_weather+FC_controller"
+  },
+  "evidence_class": "MODEL_REPLAY",
+  "rows": [
+    {
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
+      "controller_effect_under_FC_weather_pp": 0.0,
+      "controller_effect_under_PRN_weather_pp": -43.005595523581135,
+      "evidence_class": "MODEL_REPLAY",
+      "mechanism_interpretation": "dry-climate/controller interaction",
+      "n_each_cell": 1251,
+      "regime": "HUMIDIFICATION",
+      "replay_interaction_pp": 43.005595523581135,
+      "unit": "percentage_points_of_observed_usable_hours",
+      "weather_effect_under_FC_controller_pp": 0.0,
+      "weather_effect_under_PRN_controller_pp": -43.005595523581135
+    },
+    {
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
+      "controller_effect_under_FC_weather_pp": 51.95843325339729,
+      "controller_effect_under_PRN_weather_pp": 69.86410871302957,
+      "evidence_class": "MODEL_REPLAY",
+      "mechanism_interpretation": "strongly controller-associated",
+      "n_each_cell": 1251,
+      "regime": "OA_FREE",
+      "replay_interaction_pp": -17.905675459632285,
+      "unit": "percentage_points_of_observed_usable_hours",
+      "weather_effect_under_FC_controller_pp": -29.656274980015983,
+      "weather_effect_under_PRN_controller_pp": -11.750599520383693
+    },
+    {
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
+      "controller_effect_under_FC_weather_pp": -39.088729016786566,
+      "controller_effect_under_PRN_weather_pp": -17.505995203836928,
+      "evidence_class": "MODEL_REPLAY",
+      "mechanism_interpretation": "strongly climate-driven and controller-modulated",
+      "n_each_cell": 1251,
+      "regime": "HIGH_RH_MIXING",
+      "replay_interaction_pp": -21.582733812949634,
+      "unit": "percentage_points_of_observed_usable_hours",
+      "weather_effect_under_FC_controller_pp": 32.29416466826539,
+      "weather_effect_under_PRN_controller_pp": 53.87689848121502
+    },
+    {
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
+      "controller_effect_under_FC_weather_pp": -12.869704236610712,
+      "controller_effect_under_PRN_weather_pp": -9.352517985611511,
+      "evidence_class": "MODEL_REPLAY",
+      "mechanism_interpretation": "predominantly controller-associated in this replay",
+      "n_each_cell": 1251,
+      "regime": "EVAP_COOLING",
+      "replay_interaction_pp": -3.5171862509992047,
+      "unit": "percentage_points_of_observed_usable_hours",
+      "weather_effect_under_FC_controller_pp": -2.637889688249401,
+      "weather_effect_under_PRN_controller_pp": 0.8792965627498012
+    },
+    {
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
+      "controller_effect_under_FC_weather_pp": 0.0,
+      "controller_effect_under_PRN_weather_pp": 0.0,
+      "evidence_class": "MODEL_REPLAY",
+      "mechanism_interpretation": "zero on matched support",
+      "n_each_cell": 1251,
+      "regime": "MECHANICAL_COOLING",
+      "replay_interaction_pp": 0.0,
+      "unit": "percentage_points_of_observed_usable_hours",
+      "weather_effect_under_FC_controller_pp": 0.0,
+      "weather_effect_under_PRN_controller_pp": 0.0
+    },
+    {
+      "NOT_CAUSAL_IDENTIFICATION": true,
+      "NOT_WATER_USE": true,
+      "controller_effect_under_FC_weather_pp": 0.0,
+      "controller_effect_under_PRN_weather_pp": 0.0,
+      "evidence_class": "MODEL_REPLAY",
+      "mechanism_interpretation": "zero on matched support",
+      "n_each_cell": 1251,
+      "regime": "UNRESOLVED",
+      "replay_interaction_pp": 0.0,
+      "unit": "percentage_points_of_observed_usable_hours",
+      "weather_effect_under_FC_controller_pp": 0.0,
+      "weather_effect_under_PRN_controller_pp": 0.0
+    }
+  ],
+  "unit": "percentage points"
+}

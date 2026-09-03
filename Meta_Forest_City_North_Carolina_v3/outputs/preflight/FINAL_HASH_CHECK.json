@@ -48,18 +48,6 @@
       "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/nlr_esif_fullstack/genai_h100/manifests/H100_COMPUTE_FINAL_FREEZE.json",
       "sha256": "a620d649a932f2388aa2f35bac2730eb75fe1dc74529668de4f30ee814600076"
     },
-    "kfqd_parquet": {
-      "exists": true,
-      "match": true,
-      "path": "/home/nacevedo/RA/data-center-externalities-modeling/Meta_Forest_City_North_Carolina_v1/data/processed/forest_city_weather_2012_hourly.parquet",
-      "sha256": "f87a2e61120cf2d8e3117ff20e838567d0f8525a650a7fdaad221f9b3044e1d9"
-    },
-    "masanet_first": {
-      "exists": true,
-      "match": true,
-      "path": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/masanet/results/FIRST_RUN_STATUS.json",
-      "sha256": "70782ac8597d81d8d970fdbffb427969cc5618526df0191146b382e7cb1d1d8a"
-    },
     "prn_arch": {
       "exists": true,
       "match": true,
@@ -96,6 +84,7 @@
   "trees": {
     "prn_src_HEAD": "3eea7255eaa85a6aff4bad7627a7e2c9eb14e7aa",
     "v1_tree_HEAD": "badbbad946c1b0bda96d4907f5d76f98ac54d496",
-    "v2_tree_HEAD": "01fad3c0e02cf63b96b3f0f8e48c1ec69fc90b8b"
+    "v2_tree_HEAD": "ea09ba6802185e3eee7e1702f276b032afc912ce",
+    "v2_tree_intended": "01fad3c0e02cf63b96b3f0f8e48c1ec69fc90b8b"
   }
 }

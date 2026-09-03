@@ -1,6 +1,6 @@
 # Weather × controller 2×2 (MODEL_REPLAY)
 
-Not causal identification. Not gallons. Common UTC window 2012-06-21 through 2012-08-31.
+MODEL_REPLAY · NOT_CAUSAL_IDENTIFICATION · NOT_WATER_USE. Common UTC window 2012-06-21 through 2012-08-31.
 
 | combination | valid_hours | P(HUMIDIFICATION) | P(OA_FREE) | P(HIGH_RH_MIXING) | P(EVAP_COOLING) | P(MECHANICAL_COOLING) | P(UNRESOLVED) | matches_committed_v2 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |

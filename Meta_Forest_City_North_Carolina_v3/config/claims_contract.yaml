@@ -23,9 +23,31 @@ prohibited:
   - mapping 2023-2024 campus totals onto 2012 FRC1
   - choosing Delta-T to match annual water
   - QUANTITATIVE_PHYSICS_TRANSFER=PASS from annual-aggregate agreement with a transferred model
+  - calling campus water withdrawal water consumption or cooling WUE
+  - inferring effective facility Delta-T from CFM alone
+  - reporting replay contrasts as causal effects or gallons
+  - reporting cross-station sensitivity ranges as confidence intervals
+  - reporting a numerical value-of-information score without explicit criteria, weights, and sensitivity analysis
 
 frozen_findings_from_v2:
   QUANTITATIVE_PHYSICS_TRANSFER: NOT_VALIDATED
   FACILITY_EFFECTIVE_DELTA_T: UNIDENTIFIED
-  FRC1_ADDRESS: INTERVAL/SET_UNRESOLVED
+  FACILITY_AIRFLOW_CFM: UNIDENTIFIED
+  FRC1_COOLING_ONLY_WATER_MAGNITUDE: UNIDENTIFIED
+  FRC1_TO_LATER_CAMPUS_MAPPING: UNIDENTIFIED
+  QUANTITATIVE_COOLING_WATER_TRANSFER: NOT_VALIDATED
   dashboard: SCREENSHOT_ONLY
+
+accounting_semantics:
+  CAMPUS_ANNUAL_ELECTRICITY: IDENTIFIED
+  CAMPUS_ANNUAL_WATER_WITHDRAWAL: IDENTIFIED
+  CAMPUS_WITHDRAWAL_INTENSITY: IDENTIFIED_DERIVED
+  CAMPUS_WATER_CONSUMPTION: UNIDENTIFIED
+  WITHDRAWAL_TO_CONSUMPTION_FRACTION: UNIDENTIFIED
+
+replay_semantics:
+  labels: [MODEL_REPLAY, NOT_CAUSAL_IDENTIFICATION, NOT_WATER_USE]
+  observed_usable_hour_share: IDENTIFIED_WITHIN_REPLAY_SUPPORT
+  true_full_period_regime_share: UNIDENTIFIED
+  SUMMER_DX_STATION_ROBUSTNESS: STRONG_SUPPORT
+  DETAILED_REGIME_SHARE_STATION_ROBUSTNESS: PARTIAL

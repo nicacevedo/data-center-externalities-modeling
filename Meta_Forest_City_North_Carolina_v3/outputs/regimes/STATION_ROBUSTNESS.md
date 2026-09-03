@@ -1,0 +1,14 @@
+# Weather-station robustness
+
+SUMMER_DX_STATION_ROBUSTNESS = STRONG_SUPPORT.  DETAILED_REGIME_SHARE_STATION_ROBUSTNESS = PARTIAL.
+
+MODEL_REPLAY. Shares condition on observed usable JJA hours; missing KFQD hours remain UNIDENTIFIED. Ranges are cross-station sensitivity ranges, not confidence intervals.
+
+| regime | min_share_pp | max_share_pp | range_type | denominator | true_full_period_share | evidence_class |
+| --- | --- | --- | --- | --- | --- | --- |
+| HUMIDIFICATION | 0.0 | 0.0 | cross-station sensitivity range; not a confidence interval | observed usable JJA hours at each station | UNIDENTIFIED | MODEL_REPLAY |
+| OA_FREE | 54.03032721468476 | 65.03131524008352 | cross-station sensitivity range; not a confidence interval | observed usable JJA hours at each station | UNIDENTIFIED | MODEL_REPLAY |
+| HIGH_RH_MIXING | 19.429347826086957 | 35.35514764565043 | cross-station sensitivity range; not a confidence interval | observed usable JJA hours at each station | UNIDENTIFIED | MODEL_REPLAY |
+| EVAP_COOLING | 9.08141962421712 | 16.440217391304348 | cross-station sensitivity range; not a confidence interval | observed usable JJA hours at each station | UNIDENTIFIED | MODEL_REPLAY |
+| MECHANICAL_COOLING | 0.0 | 0.0 | cross-station sensitivity range; not a confidence interval | observed usable JJA hours at each station | UNIDENTIFIED | MODEL_REPLAY |
+| UNRESOLVED | 0.0 | 0.0 | cross-station sensitivity range; not a confidence interval | observed usable JJA hours at each station | UNIDENTIFIED | MODEL_REPLAY |

@@ -8,6 +8,6 @@
     "masanet_subprocess"
   ],
   "mit_normal_used": false,
-  "reason_local": "Core replay is deterministic and short; Masanet hourly Case-1 midpoint is a single-process intensity eval.",
+  "reason_local": "Core replay is deterministic and short; the four frozen Masanet station evaluations run locally on CPU workers.",
   "sloan_partitions_used": []
 }

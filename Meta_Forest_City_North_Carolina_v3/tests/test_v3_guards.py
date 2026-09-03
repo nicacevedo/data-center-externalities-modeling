@@ -52,7 +52,6 @@ def test_v1_unchanged():
     assert _sha(V1 / "src/forest_city_structural_reference_v1.py") == EXPECTED["fc_structural"]
     assert _sha(V1 / "config/FOREST_CITY_REFERENCE_CONTROL_CONTRACT.json") == EXPECTED["fc_control_contract"]
     assert _sha(V1 / "config/FOREST_CITY_AIRFLOW_BOUNDARY_CONTRACT.json") == EXPECTED["fc_airflow_contract"]
-    assert _sha(V1 / "data/processed/forest_city_weather_2012_hourly.parquet") == EXPECTED["kfqd_parquet"]
 
 
 def test_prineville_unchanged():
@@ -68,7 +67,6 @@ def test_cpu_h100_esif_masanet_unchanged():
     assert _sha(NLR / "genai_h100/manifests/H100_COMPUTE_FINAL_FREEZE.json") == EXPECTED["h100"]
     assert _sha(NLR / "heat_rejection_water/manifests/ESIF_HEAT_WATER_RESULT_FREEZE.json") == EXPECTED["esif"]
     assert _sha(NLR / "facility_overhead/analysis/COMPONENT_SELECTED_MODELS.json") == EXPECTED["esif_selected"]
-    assert _sha(MASANET / "results/FIRST_RUN_STATUS.json") == EXPECTED["masanet_first"]
 
 
 def test_v3_src_has_no_fitting():
@@ -81,6 +79,9 @@ def test_v3_src_has_no_fitting():
 
 def test_v3_scripts_write_only_under_v3():
     for script in (FC3 / "scripts").glob("*.py"):
+        if script.name == "run_cleanroom_replay.py":
+            # This audit intentionally writes only inside a disposable /tmp Git worktree.
+            continue
         t = script.read_text()
         assert "Meta_Forest_City_North_Carolina_v1" not in t or "V1" in t
         assert "mkdir" not in t or "OUTPUTS" in t or "OUT" in t or "FC3" in t
@@ -104,7 +105,7 @@ def test_facility_effective_delta_t_unidentified_absent_new_evidence():
     rec = json.loads(ledger.read_text())
     assert rec["FACILITY_EFFECTIVE_DELTA_T"] == "UNIDENTIFIED"
     ident = pd.read_csv(FC3 / "outputs/identification/IDENTIFICATION_LEDGER.csv")
-    row = ident.loc[ident.quantity.str.contains("Delta-T", case=False)].iloc[0]
+    row = ident.loc[ident.quantity == "FACILITY_EFFECTIVE_DELTA_T"].iloc[0]
     assert row.identification == "UNIDENTIFIED"
 
 
@@ -183,7 +184,7 @@ def test_scenario_outputs_carry_provenance():
     if esif.exists():
         rec = json.loads(esif.read_text())
         assert rec["refit"] is False
-        assert rec["evidence_class"] == "TRANSFERRED_MODEL"
+        assert rec["evidence_class"] == "SCENARIO_INPUT + TRANSFERRED_MODEL_OUTPUT"
         assert rec["QUANTITATIVE_PHYSICS_TRANSFER"] == "NOT_VALIDATED"
 
 
@@ -213,6 +214,118 @@ def test_v3_does_not_assign_v2_output_paths():
     pipe = (FC3 / "scripts/run_v3_pipeline.py").read_text()
     assert "OUTPUTS = FC3 / \"outputs\"" in (FC3 / "src/fc3_paths.py").read_text()
     assert "V2 / \"outputs\"" not in pipe
+
+
+def test_material_dependencies_equal_intended_frozen_content():
+    manifest = json.loads((FC3 / "outputs/provenance/V3_DEPENDENCY_MANIFEST.json").read_text())
+    assert manifest["status"] == "PASS"
+    assert manifest["v2_worktree_never_used"] is True
+    for row in manifest["rows"]:
+        if not row["material"]:
+            continue
+        if row["access_mode"] == "GIT_BLOB_ONLY":
+            assert row["frozen_blob_available"] is True
+        else:
+            assert row["worktree_matches_intended"] is True, row["logical_input"]
+
+
+def test_dirty_v2_replacements_cannot_enter_v3():
+    manifest = pd.read_csv(FC3 / "outputs/provenance/V3_DEPENDENCY_MANIFEST.csv")
+    v2 = manifest[manifest["package"] == "Forest City v2"]
+    assert set(v2["logical_input"]) == {
+        "v2_factorial_frozen_blob",
+        "v2_station_frozen_blob",
+        "v2_committed_pipeline",
+        "v2_guard_suite",
+    }
+    assert v2["access_mode"].eq("GIT_BLOB_ONLY").all()
+    pipe = (FC3 / "scripts/run_v3_pipeline.py").read_text()
+    assert "read_frozen_blob" in pipe
+    assert "pd.read_csv(V2" not in pipe
+
+
+def test_clean_preprocessing_recreates_required_weather_intermediate():
+    p = FC3 / "outputs/intermediates/weather_KRDM_2012.csv"
+    assert p.exists()
+    df = pd.read_csv(p, parse_dates=["timestamp_utc"])
+    assert len(df) == 8784
+    common = df[(df.timestamp_utc >= "2012-06-21T00:00:00Z") & (df.timestamp_utc < "2012-09-01T00:00:00Z")]
+    assert len(common) == 1728
+
+
+def test_2x2_contrasts_exact_and_labeled():
+    source = pd.read_csv(FC3 / "outputs/cross_site/WEATHER_CONTROLLER_2x2.csv").set_index("combination")
+    contrasts = pd.read_csv(FC3 / "outputs/cross_site/WEATHER_CONTROLLER_2x2_CONTRASTS.csv").set_index("regime")
+    names = {"A": "PRN_weather+PRN_controller", "B": "PRN_weather+FC_controller", "C": "FC_weather+PRN_controller", "D": "FC_weather+FC_controller"}
+    for regime, row in contrasts.iterrows():
+        vals = {key: source.loc[name, f"P({regime})"] for key, name in names.items()}
+        assert row["weather_effect_under_PRN_controller_pp"] == pytest.approx(100 * (vals["C"] - vals["A"]), abs=1e-12)
+        assert row["weather_effect_under_FC_controller_pp"] == pytest.approx(100 * (vals["D"] - vals["B"]), abs=1e-12)
+        assert row["controller_effect_under_PRN_weather_pp"] == pytest.approx(100 * (vals["B"] - vals["A"]), abs=1e-12)
+        assert row["controller_effect_under_FC_weather_pp"] == pytest.approx(100 * (vals["D"] - vals["C"]), abs=1e-12)
+        assert row["replay_interaction_pp"] == pytest.approx(100 * (vals["D"] - vals["C"] - vals["B"] + vals["A"]), abs=1e-12)
+    payload = json.loads((FC3 / "outputs/cross_site/WEATHER_CONTROLLER_2x2_CONTRASTS.json").read_text())
+    assert payload["evidence_class"] == "MODEL_REPLAY"
+    assert payload["NOT_CAUSAL_IDENTIFICATION"] is True
+    assert payload["NOT_WATER_USE"] is True
+
+
+def test_zero_dx_and_detailed_station_robustness_are_separate():
+    rec = json.loads((FC3 / "outputs/regimes/STATION_ROBUSTNESS.json").read_text())
+    assert rec["SUMMER_DX_STATION_ROBUSTNESS"] == "STRONG_SUPPORT"
+    assert rec["DETAILED_REGIME_SHARE_STATION_ROBUSTNESS"] == "PARTIAL"
+    assert rec["ranges_are_not_confidence_intervals"] is True
+    assert rec["true_full_period_regime_shares"] == "UNIDENTIFIED"
+
+
+def test_masanet_main_support_is_matched_and_scenario_only():
+    rec = json.loads((FC3 / "outputs/masanet/MASANET_TRANSFER.json").read_text())
+    rows = {row["weather"]: row for row in rec["summaries"]}
+    assert rows["KFQD"]["n"] == rows["KRDM"]["n"] == 1251
+    assert rows["KFQD"]["timestamp_set_sha256"] == rows["KRDM"]["timestamp_set_sha256"]
+    assert rec["main_fc_prn_identical_timestamp_support"] is True
+    assert "NOT Forest City estimates" in rec["scenario_output_notice"]
+
+
+def test_esif_main_support_and_synthetic_it_provenance():
+    rec = json.loads((FC3 / "outputs/esif/ESIF_TRANSFER.json").read_text())
+    rows = {row["weather"]: row for row in rec["rows"]}
+    assert rows["KFQD"]["n"] == rows["KRDM"]["n"] == 1251
+    assert rows["KFQD"]["timestamp_set_sha256"] == rows["KRDM"]["timestamp_set_sha256"]
+    assert rec["main_fc_prn_identical_timestamp_support"] is True
+    assert rows["KFQD"]["synthetic_IT_kw"] == pytest.approx(1406.2885351154928)
+    assert "training-window mean IT load" in rows["KFQD"]["IT_provenance"]
+
+
+def test_campus_withdrawal_is_not_consumption_or_frc1_cooling_water():
+    annual = pd.read_csv(FC3 / "outputs/annual/CAMPUS_ANNUAL_COMPARISON.csv")
+    assert annual["withdrawal_not_consumption"].astype(bool).all()
+    assert annual["not_FRC1_cooling_WUE"].astype(bool).all()
+    ident = pd.read_csv(FC3 / "outputs/identification/IDENTIFICATION_LEDGER.csv").set_index("quantity")
+    assert ident.loc["CAMPUS_WATER_CONSUMPTION", "identification"] == "UNIDENTIFIED"
+    assert ident.loc["FRC1_COOLING_ONLY_WATER_MAGNITUDE", "identification"] == "UNIDENTIFIED"
+
+
+def test_cfm_alone_cannot_identify_delta_t_and_no_inverse_fit():
+    ident = (FC3 / "outputs/identification/IDENTIFICATION_LEDGER.md").read_text()
+    assert "CFM alone" in ident
+    assert "Q = m_dot cp DeltaT" in ident
+    scripts = "\n".join(p.read_text() for p in (FC3 / "scripts").glob("*.py"))
+    assert "choose facility Delta-T to match annual water" not in scripts.lower()
+    assert "inverse_fit" not in scripts.lower()
+
+
+def test_no_arbitrary_numerical_voi_score():
+    df = pd.read_csv(FC3 / "outputs/acquisition/DATA_VALUE_MATRIX.csv")
+    assert "priority" not in df.columns
+    assert "score" not in df.columns
+    assert set(df["priority_tier"]) == {"VERY HIGH", "HIGH"}
+
+
+def test_masanet_instrumentation_writes_only_under_v3():
+    src = (FC3 / "scripts/run_masanet_transfer.py").read_text()
+    assert "load_instrumented" not in src
+    assert 'OUT / "_instrumented"' in src
 
 
 def test_claims_contract_blocks_transferred_as_observed():

@@ -6,8 +6,18 @@ Must run under masanet_lei. Writes only under Meta_Forest_City_North_Carolina_v3
 from __future__ import annotations
 
 import json
+import hashlib
+import importlib.util
+import os
+import re
 import sys
+import warnings
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+
+for _name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"):
+    os.environ[_name] = "1"
+warnings.filterwarnings("ignore")
 
 import numpy as np
 import pandas as pd
@@ -21,7 +31,9 @@ sys.path.insert(0, str(MASANET / "scripts"))
 
 from facility_adapter import FacilityIntensityAdapter, paper_mean_intensity  # noqa: E402
 from followup_common import active_params_for_function  # noqa: E402
-from instrument_upstream import load_instrumented  # noqa: E402
+from common import patch_cop_models  # noqa: E402
+
+UPSTREAM = REPO / "other_sources" / "masanet" / "external" / "Data-Center-Water-footprint"
 
 SEED = 2025
 PAPER_CASE = 1
@@ -31,6 +43,51 @@ ARCHITECTURE_NOTE = (
     "(PUE_WUE_AE_Chiller). Forest City documented architecture is direct evaporative "
     "with unused DX backup. This is a transfer stress test, not calibration."
 )
+
+RECORD_FN = '''
+_POWER_IT = 1.0
+_LAST = {}
+def _record_eval(loc):
+    keep = ["PUE", "WUE", "Power_comp", "Water_comp", "Power_IT", "Q", "AE_use", "WE_use", "HD_use", "COP_chiller", "Chiller_heat_removed", "CT_heat_removed", "Cooling_required", "WE_heat_removed", "hd_amount", "hd_amount_ae", "Power_Fan_CRAC", "Power_Pump_hd", "Power_hd", "Power_Chiller", "Power_Pump_CW", "Power_Pump_CT", "Power_Fan_CT", "Power_Pump_WE", "T_sa", "d_sa", "T_ra"]
+    rec = {}
+    for k in keep:
+        if k in loc:
+            v = loc[k]
+            try:
+                import numpy as _np
+                rec[k] = v.tolist() if isinstance(v, _np.ndarray) else v
+            except Exception:
+                rec[k] = v
+    _LAST.clear(); _LAST.update(rec)
+'''
+
+
+def load_local_instrumented(power_it: float = 1.0, tag: str = "main"):
+    """Instrument the frozen source under v3 outputs; never write into Masanet."""
+    source = (UPSTREAM / "simulation_funs_DC.py").read_text()
+    for name in ("COP_2.pkl", "COP_DX.pkl", "COP_AC.pkl"):
+        source = source.replace(
+            f"pickle.load(open('{name}', 'rb'))",
+            f"pickle.load(open(r'{UPSTREAM / name}', 'rb'))",
+        )
+    source = re.sub(r"^([ \t]*)Power_IT\s*=\s*1[ \t]*(#.*)?$", r"\1Power_IT = float(_POWER_IT)", source, flags=re.M)
+    source = source.replace("return PUE, WUE", "_record_eval(locals())\n    return PUE, WUE")
+    instrumented = OUT / "_instrumented" / f"simulation_funs_DC_instrumented_{tag}.py"
+    instrumented.parent.mkdir(parents=True, exist_ok=True)
+    instrumented.write_text("# Runtime diagnostic copy under v3 only.\n" + RECORD_FN + "\n" + source)
+    module_name = f"masanet_instrumented_v3_{tag}"
+    spec = importlib.util.spec_from_file_location(module_name, instrumented)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    patch_cop_models(module)
+    module._POWER_IT = float(power_it)
+    return module
+
+
+def timestamp_hash(series: pd.Series) -> str:
+    values = sorted(pd.to_datetime(series, utc=True).dt.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    return hashlib.sha256(("\n".join(values) + "\n").encode()).hexdigest()
 
 
 def theta_mid(case: int) -> dict:
@@ -64,47 +121,66 @@ def eval_frame(ad, theta, weather_df: pd.DataFrame, weather_name: str) -> pd.Dat
     return pd.DataFrame(rows)
 
 
+def evaluate_station(name: str) -> tuple[dict, list[dict]]:
+    theta = theta_mid(PAPER_CASE)
+    inst = load_local_instrumented(1.0, tag=name)
+    ad = FacilityIntensityAdapter(inst, PAPER_CASE)
+    p = OUT / f"weather_{name}_target.csv"
+    if not p.exists():
+        raise FileNotFoundError(p)
+    w = pd.read_csv(p)
+    out = eval_frame(ad, theta, w, name)
+    out.to_csv(OUT / f"MASANET_HOURLY_{name}.csv", index=False)
+    monthly = out.copy()
+    monthly["month"] = pd.to_datetime(monthly["timestamp_utc"], utc=True).dt.month
+    grouped = monthly.groupby("month").agg(PUE_mean=("PUE", "mean"), WUE_mean=("WUE_L_per_kWh", "mean"), n=("PUE", "size")).reset_index()
+    grouped["weather"] = name
+    corr = float(np.corrcoef(out.t_db_C, out.PUE)[0, 1]) if len(out) > 2 else float("nan")
+    corr_twb = float(np.corrcoef(w.t_wb_C, out.PUE)[0, 1]) if len(out) > 2 else float("nan")
+    corr_wue_twb = float(np.corrcoef(w.t_wb_C, out.WUE_L_per_kWh)[0, 1]) if len(out) > 2 else float("nan")
+    summary = {
+        "weather": name,
+        "n": int(len(out)),
+        "PUE_mean": paper_mean_intensity(out.PUE.to_numpy()),
+        "WUE_mean": paper_mean_intensity(out.WUE_L_per_kWh.to_numpy()),
+        "corr_PUE_vs_tdb": corr,
+        "corr_PUE_vs_twb": corr_twb,
+        "corr_WUE_vs_twb": corr_wue_twb,
+        "target_n": int(w["target_n"].iloc[0]),
+        "matched_timestamp_coverage": float(w["matched_timestamp_coverage"].iloc[0]),
+        "timestamp_set_sha256": timestamp_hash(w["timestamp_utc"]),
+        "evidence_class": "TRANSFERRED_MODEL",
+        "not_fc_pue_validation": True,
+        "not_fc_wue_validation": True,
+        "not_cooling_water_magnitude_validation": True,
+    }
+    return summary, grouped.to_dict("records")
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     theta = theta_mid(PAPER_CASE)
-    inst = load_instrumented(1.0, rewrite=True)
-    ad = FacilityIntensityAdapter(inst, PAPER_CASE)
-    monthly_rows = []
-    summaries = []
-    frames = []
-    for name in ("KFQD", "KRDM"):
-        p = OUT / f"weather_{name}_common.csv"
-        if not p.exists():
-            raise FileNotFoundError(p)
-        w = pd.read_csv(p)
-        out = eval_frame(ad, theta, w, name)
-        out.to_csv(OUT / f"MASANET_HOURLY_{name}.csv", index=False)
-        frames.append(out)
-        out = out.copy()
-        out["month"] = pd.to_datetime(out["timestamp_utc"], utc=True).dt.month
-        g = out.groupby("month").agg(PUE_mean=("PUE", "mean"), WUE_mean=("WUE_L_per_kWh", "mean"), n=("PUE", "size"))
-        g = g.reset_index()
-        g["weather"] = name
-        monthly_rows.append(g)
-        corr = float(np.corrcoef(out.t_db_C, out.PUE)[0, 1]) if len(out) > 2 else float("nan")
-        summaries.append(
-            {
-                "weather": name,
-                "n": int(len(out)),
-                "PUE_mean": paper_mean_intensity(out.PUE.to_numpy()),
-                "WUE_mean": paper_mean_intensity(out.WUE_L_per_kWh.to_numpy()),
-                "corr_PUE_vs_tdb": corr,
-                "evidence_class": "TRANSFERRED_MODEL",
-                "not_fc_pue_validation": True,
-                "not_fc_wue_validation": True,
-                "not_cooling_water_magnitude_validation": True,
-            }
-        )
-    monthly = pd.concat(monthly_rows, ignore_index=True)
+    names = ("KFQD", "KRDM", "KEHO", "KGSP")
+    with ProcessPoolExecutor(max_workers=4) as pool:
+        results = list(pool.map(evaluate_station, names))
+    summaries = [item[0] for item in results]
+    monthly = pd.DataFrame([row for _, rows in results for row in rows])
     monthly.to_csv(OUT / "MASANET_MONTHLY.csv", index=False)
+    frames = [pd.read_csv(OUT / f"MASANET_HOURLY_{name}.csv") for name in names]
+    all_hourly = pd.concat(frames, ignore_index=True)
+    all_hourly["t_wb_C"] = pd.concat([pd.read_csv(OUT / f"weather_{name}_target.csv")["t_wb_C"] for name in ("KFQD", "KRDM", "KEHO", "KGSP")], ignore_index=True)
+    all_hourly["twb_bin_lower_C"] = np.floor(all_hourly["t_wb_C"] / 2.0) * 2.0
+    bins = all_hourly.groupby(["weather", "twb_bin_lower_C"]).agg(
+        n=("PUE", "size"), PUE_mean=("PUE", "mean"), WUE_mean=("WUE_L_per_kWh", "mean")
+    ).reset_index()
+    bins["PUE_minus_station_mean"] = bins["PUE_mean"] - bins.groupby("weather")["PUE_mean"].transform("mean")
+    bins.to_csv(OUT / "MASANET_CLIMATE_BINS.csv", index=False)
     # Directional comparison: does PUE rise with Tdb at both sites?
     k = next(s for s in summaries if s["weather"] == "KFQD")
     p = next(s for s in summaries if s["weather"] == "KRDM")
+    main_matched = k["n"] == p["n"] == 1251 and k["timestamp_set_sha256"] == p["timestamp_set_sha256"]
+    if not main_matched:
+        raise RuntimeError("Masanet main KFQD/KRDM support is not identical n=1,251")
     status = "PARTIAL"
     rec = {
         "status": status,
@@ -116,6 +192,9 @@ def main():
         "theta_midpoint": theta,
         "theta_provenance": "SCENARIO Table 3 midpoints; not Forest City calibrated",
         "architecture_note": ARCHITECTURE_NOTE,
+        "scenario_output_notice": "PUE/WUE values are scenario outputs, NOT Forest City estimates.",
+        "main_fc_prn_identical_timestamp_support": main_matched,
+        "main_timestamp_set_sha256": k["timestamp_set_sha256"],
         "QUANTITATIVE_PHYSICS_TRANSFER": "NOT_VALIDATED",
         "suitable": [
             "directional consistency of climate response",
