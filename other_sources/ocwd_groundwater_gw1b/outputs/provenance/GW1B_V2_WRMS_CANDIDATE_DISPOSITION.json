@@ -1,0 +1,33 @@
+{
+  "source_scan": "GW1B_V2_WRMS_AVAILABILITY_CHECK.json",
+  "method": "path and filename adjudication only; no candidate contents inspected and no second workspace scan performed",
+  "raw_scan_candidate_count": 4,
+  "dispositions": [
+    {
+      "path": "Meta_Prineville_Oregon_v3/data/manual_templates/city_well_production_monthly.csv",
+      "disposition": "FALSE_POSITIVE_DIFFERENT_SITE_PACKAGE",
+      "reason": "Prineville module, not OCWD or WRMS"
+    },
+    {
+      "path": "Meta_Prineville_Oregon_v3/data/processed/groundwater/groundwater_pumping_monthly.csv",
+      "disposition": "FALSE_POSITIVE_DIFFERENT_SITE_PACKAGE",
+      "reason": "Prineville module, not OCWD or WRMS"
+    },
+    {
+      "path": "other_sources/m100/external/exadata/data_extraction/M100_metrics.csv",
+      "disposition": "FALSE_POSITIVE_DIFFERENT_EXPERIMENT_PACKAGE",
+      "reason": "M100 external-validation module, not OCWD or WRMS"
+    },
+    {
+      "path": "other_sources/m100/results/suitability_2021_v3_closure/tables/literature_dynamic_reproduction.csv",
+      "disposition": "FALSE_POSITIVE_DIFFERENT_EXPERIMENT_PACKAGE",
+      "reason": "M100 external-validation module, not OCWD or WRMS"
+    }
+  ],
+  "unresolved_OCWD_WRMS_candidates": [],
+  "WRMS_delivery_present_after_path_adjudication": false,
+  "GW1B_DATA_STATUS": "WAITING_FOR_WRMS",
+  "second_scan_performed": false,
+  "email_or_external_account_polled": false
+}
+

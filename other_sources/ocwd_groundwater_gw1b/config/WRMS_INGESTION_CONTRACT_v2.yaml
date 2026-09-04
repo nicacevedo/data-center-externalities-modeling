@@ -1,0 +1,68 @@
+contract_id: OCWD_WRMS_INGESTION_V2_20260904
+status: FROZEN_BEFORE_DELIVERY_CHECK
+manifest_file: delivery_manifest.yaml
+accepted_file_formats: [csv, parquet, xlsx]
+canonical_volume_unit: acre_feet
+monthly_volume_is_daily_measurement: false
+transition_exposure_class: DERIVED_FROM_MONTHLY_VOLUME
+
+tables:
+  well_master:
+    required_columns:
+      - well_id
+      - well_name
+      - easting_m
+      - northing_m
+      - coordinate_crs
+      - active_start
+      - active_end
+      - screen_top
+      - screen_bottom
+      - screen_unit
+      - aquifer_id
+      - model_layer_id
+      - evidence_class
+      - qa_flag
+      - revision_flag
+  monthly_pumping:
+    required_columns: [well_id, month, volume, volume_unit, measurement_class, qa_flag, revision_flag]
+    nonnegative_volume: true
+  managed_recharge:
+    required_columns: [facility_id, month, volume, volume_unit, measurement_class, easting_m, northing_m, coordinate_crs, active_start, active_end, aquifer_id, model_layer_id, qa_flag, revision_flag]
+    nonnegative_volume: true
+  injection:
+    required_columns: [well_id, month, volume, volume_unit, measurement_class, easting_m, northing_m, coordinate_crs, active_start, active_end, aquifer_id, model_layer_id, qa_flag, revision_flag]
+    nonnegative_volume: true
+  id_crosswalk:
+    required_columns: [source_table, source_id, canonical_id, match_status, match_basis]
+
+allowed_measurement_classes:
+  - MEASURED_REPORTED
+  - ALLOCATED
+  - ESTIMATED
+  - CALCULATED
+allowed_crosswalk_classes: [EXACT, HIGH_CONFIDENCE, AMBIGUOUS, NO_MATCH]
+primary_crosswalk_classes: [EXACT, HIGH_CONFIDENCE]
+unit_aliases:
+  acre_feet: [acre_feet, acre_ft, acre-feet, af]
+  gallons: [gallon, gallons, gal]
+  million_gallons: [million_gallons, mg, mgal]
+  cubic_meters: [cubic_meter, cubic_meters, m3]
+required_qa_checks:
+  - required_columns
+  - missing_identifiers
+  - duplicate_identifier_month
+  - supported_units
+  - nonnegative_volume
+  - measurement_class_preserved
+  - coordinate_conflict
+  - active_date_consistency
+  - ambiguous_crosswalk_excluded_from_primary
+  - monthly_total_conservation
+monthly_panel_completeness:
+  rule: active_locations_require_explicit_monthly_rows_including_explicit_zero_volume
+  missing_month_as_zero: prohibited
+silent_fuzzy_matching: prohibited
+guessed_layer_assignment: prohibited
+scientific_synthetic_data: prohibited
+test_only_artificial_fixtures: allowed

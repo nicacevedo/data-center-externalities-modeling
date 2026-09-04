@@ -1,0 +1,77 @@
+{
+  "B7_executed": false,
+  "GW1B_DATA_GATE": "PENDING_WRMS",
+  "GW1B_DATA_STATUS": "WAITING_FOR_WRMS",
+  "GW1B_PROTOCOL_V2": "FROZEN",
+  "NETWORK_MODEL_JUSTIFICATION": "UNRESOLVED",
+  "WRMS_INGESTION_READY": "YES",
+  "WRMS_check": {
+    "false_positive_count": 4,
+    "raw_scan_candidate_count": 4,
+    "second_scan_performed": false,
+    "unresolved_OCWD_WRMS_candidates": []
+  },
+  "figures_created": [],
+  "models_fit": [],
+  "next_action": "Preserve/hash WRMS delivery, run frozen ingestion QA/gates, build one S*, execute B4-B6/placebos, and stop before B7.",
+  "parents": {
+    "material_dependencies": 16,
+    "status": "PASS"
+  },
+  "previous_protocol_preserved": {
+    "failures": [],
+    "files_verified": 5,
+    "status": "PASS"
+  },
+  "protocol": {
+    "all_protocol_files_predate_WRMS_scan": true,
+    "common_support": "one_S_star_for_BC_B4_B5_B6",
+    "hierarchy": "BC_subset_B4_subset_B5_subset_B6",
+    "id": "OCWD_GW1B_NESTED_MANAGED_FORCING_V2_20260904",
+    "primary_contrasts": {
+      "pumping_quantity": "B5_minus_B4",
+      "spatial_location": "B6_minus_B5"
+    },
+    "status": "FROZEN"
+  },
+  "repository": {
+    "HEAD": "131657d62712f76acd12dcff461524937ca9fe44",
+    "branch": "main",
+    "python_executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+    "python_version": "3.11.15",
+    "repo_root": "/home/nacevedo/RA/data-center-externalities-modeling"
+  },
+  "reserved_validation": "UNTOUCHED",
+  "results": {
+    "MANAGED_RECHARGE_VALUE": "NOT_RUN_WAITING_FOR_WRMS",
+    "PUMPING_PREDICTIVE_VALUE": "UNRESOLVED",
+    "SPATIAL_FORCING_VALUE": "UNRESOLVED",
+    "SPATIAL_PLACEBO": "NOT_RUN_WAITING_FOR_WRMS",
+    "TEMPORAL_PLACEBO": "NOT_RUN_WAITING_FOR_WRMS"
+  },
+  "scientific_baseline_commit": "131657d62712f76acd12dcff461524937ca9fe44",
+  "scientific_substitutions": {
+    "MODFLOW_forcing": false,
+    "aggregate_public_pumping": false,
+    "pumping_inferred_from_heads": false,
+    "synthetic_pumping": false
+  },
+  "support": {
+    "S_star_retention_percentage": null,
+    "S_star_status": "PENDING_WRMS_NOT_CONSTRUCTIBLE",
+    "frozen_rule": "one common S* for BC/B4/B5/B6 requiring every feature through all B6 scale candidates",
+    "original_GW1C_transition_count": 9406,
+    "period_or_fold_changed": false,
+    "pre_WRMS_BC_counts_by_split": {
+      "TEST": 1241,
+      "TRAIN": 5986,
+      "VALIDATION": 1459
+    },
+    "pre_WRMS_BC_counts_by_split_and_fold_path": "outputs/readiness/S_STAR_PRE_WRMS_BC_SUPPORT_BY_SPLIT_FOLD.csv",
+    "pre_WRMS_BC_eligible_transition_count": 8686,
+    "pre_WRMS_BC_eligible_wells": 186,
+    "reason": "WRMS pumping/recharge/injection, identity, and spatial features through B6 are absent; missing forcing cannot be interpreted as zero.",
+    "retained_S_star_transition_count": null,
+    "retained_S_star_wells": null
+  }
+}

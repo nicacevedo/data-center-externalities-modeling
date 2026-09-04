@@ -1,0 +1,48 @@
+{
+  "HEAD": "131657d62712f76acd12dcff461524937ca9fe44",
+  "HEAD_matches_baseline": true,
+  "branch": "main",
+  "captured_at_utc": "2026-09-04T17:00:13.971828+00:00",
+  "parent_summary": {
+    "feasibility": {
+      "current_total_files_excluding_pycache": 130,
+      "current_tree_sha256": "cdd444e83df809aa1415e605c97b3eda3598ccdeec9f411624650fbdfc225187",
+      "git_diff_from_baseline": "CLEAN",
+      "manifest_entries_verified": 119,
+      "manifest_git_blob_sha1": "3e889d820ff9bcaba020bf5b9fef16f386a3a319",
+      "path": "other_sources/ocwd_groundwater_feasibility",
+      "tracked_files_verified": 74
+    },
+    "gw1a": {
+      "current_total_files_excluding_pycache": 59,
+      "current_tree_sha256": "f12ff835950d65c526abf2d451dcc72859f3d87637a5a7b95bd9346b9b710520",
+      "git_diff_from_baseline": "CLEAN",
+      "manifest_entries_verified": 57,
+      "manifest_git_blob_sha1": "b3e9cc10d10ea514fc8ece9ad7f1b2f86e47d9ea",
+      "path": "other_sources/ocwd_groundwater_gw1_preflight",
+      "tracked_files_verified": 53
+    },
+    "gw1c": {
+      "current_total_files_excluding_pycache": 64,
+      "current_tree_sha256": "e400d1fd1f7e1693d5d433c208660faafc8e9321263aa9dfac6966b07032f8c6",
+      "git_diff_from_baseline": "CLEAN",
+      "manifest_entries_verified": 61,
+      "manifest_git_blob_sha1": "c0cf935b524f727145268ac7a9a57b365bab9e47",
+      "path": "other_sources/ocwd_groundwater_gw1_climate",
+      "tracked_files_verified": 38
+    }
+  },
+  "pre_existing_unrelated_dirty_paths": [
+    "Data-center-PUE-prediction-tool"
+  ],
+  "python_executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+  "python_version": "3.11.15",
+  "repo_root": "/home/nacevedo/RA/data-center-externalities-modeling",
+  "scientific_baseline_commit": "131657d62712f76acd12dcff461524937ca9fe44",
+  "submodule_status_exit_code": 128,
+  "submodule_status_stderr": "fatal: no submodule mapping found in .gitmodules for path 'Data-center-PUE-prediction-tool'",
+  "submodule_status_stdout": [],
+  "task_start_git_status_short": [
+    " m Data-center-PUE-prediction-tool"
+  ]
+}

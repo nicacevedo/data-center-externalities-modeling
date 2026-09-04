@@ -1,0 +1,28 @@
+{
+  "captured_at_utc": "2026-09-04T16:48:29Z",
+  "scientific_baseline_commit": "131657d62712f76acd12dcff461524937ca9fe44",
+  "purpose": "Prove that the existing waiting preregistration and reports remain byte-identical while additive v2 files are created.",
+  "files": [
+    {
+      "path": "config/GW1B_PROTOCOL_AMENDMENT_20260904.yaml",
+      "sha256": "6bf11f959dfea07fc334349a793f43839f4d5cba1ce88468a297fbaaad4ed1ff"
+    },
+    {
+      "path": "outputs/protocol/GW1B_PROTOCOL_AMENDMENT_20260904.md",
+      "sha256": "44793fbe4d6544b8181f82bb7ea0bb36420f8358651ab828c62066288e0c6215"
+    },
+    {
+      "path": "outputs/FINAL_GW1B_REPORT.md",
+      "sha256": "f5d892aae611a7e1ad950764e3c5984064eafe28c7da76c4da2511e3cf79d41a"
+    },
+    {
+      "path": "outputs/FINAL_GW1B_STATUS.json",
+      "sha256": "667c3eb376266ec2ede5d28c9e09fb1c10af70fdb111521141d25ff88793b08f"
+    },
+    {
+      "path": "outputs/provenance/GW1B_OUTPUT_HASHES.csv",
+      "sha256": "fd2619e90d598d3d00bf2ae2e6e880afb58bab48c5527a14b9bb06f92367949e"
+    }
+  ]
+}
+

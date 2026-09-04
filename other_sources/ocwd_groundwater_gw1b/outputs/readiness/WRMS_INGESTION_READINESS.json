@@ -1,0 +1,44 @@
+{
+  "B4_B5_B6_fitted": false,
+  "B7_code_executed": false,
+  "QA_guards": [
+    "unit conversion",
+    "duplicate ID-month",
+    "missing ID",
+    "coordinate conflict",
+    "ambiguous crosswalk exclusion",
+    "negative volume",
+    "activity-date conflict",
+    "measurement-class preservation",
+    "missing month not zero",
+    "monthly-total conservation"
+  ],
+  "WRMS_INGESTION_READY": "YES",
+  "accepted_tables": [
+    "well_master",
+    "monthly_pumping",
+    "managed_recharge",
+    "injection",
+    "id_crosswalk"
+  ],
+  "artificial_data_scope": "tests only",
+  "contract": "config/WRMS_INGESTION_CONTRACT_v2.yaml",
+  "placebo_replicates_each": 100,
+  "scientific_synthetic_data": false,
+  "spatial_exposure_lengths_km": [
+    2,
+    5,
+    10
+  ],
+  "supported_requirements": [
+    "well IDs/names and authoritative projected coordinates",
+    "individual-well monthly pumping",
+    "managed recharge and injection",
+    "active dates",
+    "screen/perforation and authoritative aquifer/model-layer fields",
+    "measurement/evidence classes",
+    "QA and revision flags",
+    "explicit units"
+  ],
+  "transition_allocation": "proportional calendar-day overlap; DERIVED_FROM_MONTHLY_VOLUME"
+}

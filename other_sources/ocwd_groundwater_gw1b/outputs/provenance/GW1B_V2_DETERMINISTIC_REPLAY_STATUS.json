@@ -1,0 +1,8 @@
+{
+  "files_compared": 35,
+  "mismatches": [],
+  "output_manifest_sha256": "4873e234a0a3d181238debd046811fec430b7773a3a4e4d14c8f50405cd7f5c0",
+  "scope": "canonical GW1B v2 waiting/readiness outputs; WRMS availability scan not rerun",
+  "second_WRMS_scan_performed": false,
+  "status": "PASS"
+}

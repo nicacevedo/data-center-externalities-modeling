@@ -1,0 +1,172 @@
+protocol_id: OCWD_GW1B_NESTED_MANAGED_FORCING_V2_20260904
+status: FROZEN_BEFORE_WRMS_DELIVERY_CHECK_OR_RESPONSE_INSPECTION
+scientific_baseline_commit: 131657d62712f76acd12dcff461524937ca9fe44
+additive_amendment_to: GW1B_PROTOCOL_AMENDMENT_20260904.yaml
+supersedes_only:
+  - non_nested_B6_definition
+preserves_prior_protocol_files_byte_for_byte: true
+
+response:
+  primary: delta_h
+  units: ft
+  head_interpolation: prohibited
+
+frozen_population:
+  primary_window: [1991-10, 1998-11]
+  temporal_split:
+    TRAIN: [1991-10, 1996-09]
+    VALIDATION: [1996-10, 1997-10]
+    TEST: [1997-11, 1998-11]
+  spatial_folds: ../ocwd_groundwater_gw1_preflight/config/SPATIAL_FOLDS.csv
+  fold_modification: prohibited
+  primary_transition_gap_days: 120
+
+background:
+  name: BC
+  frozen_definition: GW1C_B1C
+  features:
+    - delta_days
+    - season_sin
+    - season_cos
+    - time_trend_years
+    - P_interval_mm
+    - ET0_interval_mm
+    - P_pre30_mm
+    - P_pre90_mm
+    - ET0_pre30_mm
+    - ET0_pre90_mm
+  Prado_primary_role: EXCLUDED
+  Prado_sensitivity_role: SENSITIVITY_ONLY_PUBLIC_BACKGROUND_HYDROLOGY
+  reason: GW1C_PRADO_AFTER_CLIMATE_SKILL_NONE
+
+nested_hierarchy:
+  BC: frozen_GW1C_B1C
+  B4: BC_plus_Phi_basin_total_managed_recharge_plus_Phi_basin_total_injection
+  B5: B4_plus_Phi_basin_total_pumping
+  B6: B5_plus_Phi_spatial_pumping_plus_Phi_spatial_managed_recharge_plus_Phi_spatial_injection
+  set_relation: BC_subset_B4_subset_B5_subset_B6
+  B6_must_retain_all_B5_features: true
+
+primary_contrasts:
+  pumping_quantity: B5_minus_B4
+  spatial_location: B6_minus_B5
+  managed_recharge_context: B4_minus_BC
+
+common_support:
+  name: S_star
+  apply_identically_to: [BC, B4, B5, B6]
+  required:
+    - all_BC_features_complete
+    - all_basin_total_Phi_features_complete
+    - all_spatial_Phi_features_complete_for_2_5_10_km_candidates
+    - authoritative_monitoring_well_coordinates
+    - eligible_forcing_location_coordinates
+    - crosswalk_status_EXACT_or_HIGH_CONFIDENCE
+    - original_frozen_temporal_split
+    - original_frozen_spatial_fold
+  prohibited:
+    - per_model_sample_differences
+    - favorable_period_reselection
+    - outcome_based_row_selection
+  stop_conditions:
+    - scientifically_inadequate_common_support
+    - any_spatial_fold_without_meaningful_TEST_support
+
+monthly_forcing_alignment:
+  source_resolution: monthly
+  daily_measurement_label: prohibited
+  allocation_assumption: uniform_within_calendar_month
+  interval_formula: sum_Q_jm_times_intersection_days_over_days_in_month_for_t0_exclusive_t1_inclusive
+  Phi_windows: [interval, pre30, pre90]
+  pre30: 30_complete_calendar_days_before_origin_date
+  pre90: 90_complete_calendar_days_before_origin_date
+  alternative_lag_search: prohibited
+  transition_exposure_class: DERIVED_FROM_MONTHLY_VOLUME
+  preserve_source_measurement_classes: true
+  allowed_source_measurement_classes:
+    - MEASURED_REPORTED
+    - ALLOCATED
+    - ESTIMATED
+    - CALCULATED
+  month_compatible_sensitivity:
+    definition: origin_date_and_target_date_are_both_calendar_month_end
+    rationale: interval_contains_only_complete_intervening_calendar_months
+
+spatial_exposure:
+  coordinate_requirement: authoritative_projected_metric_coordinates
+  weight: exp_minus_distance_over_l
+  candidate_l_km: [2, 5, 10]
+  selected_l_scope: one_common_l_for_primary_spatial_forcing_family
+  selected_on: VALIDATION_ONLY
+  TEST_selection_use: prohibited
+  formula: E_i_k_equals_sum_j_weight_ij_times_Q_jk
+  forcing_families: [pumping, managed_recharge, injection]
+  same_layer_sensitivity: only_with_authoritative_aquifer_or_model_layer
+  guessed_layers: prohibited
+
+model:
+  family: train_scaled_OLS
+  fit_split: TRAIN_ONLY
+  scaling_split: TRAIN_ONLY
+  primary_metric: TEST_RMSE_delta_h
+  secondary_metrics:
+    - TEST_MAE_delta_h
+    - TEST_bias_delta_h
+    - fraction_wells_improved
+    - median_per_well_improvement
+    - per_well_improvement_IQR
+  optional_regularization:
+    condition: only_if_standardized_design_is_numerically_problematic
+    family: Ridge
+    alpha_grid: [0.000001, 0.0001, 0.01]
+    selected_on: VALIDATION_ONLY
+  prohibited_families:
+    - Random_Forest
+    - XGBoost
+    - LightGBM
+    - neural_network
+    - GNN
+    - unconstrained_A_matrix
+    - broad_hyperparameter_search
+
+uncertainty:
+  resampling_unit: well
+  bootstrap_resamples: 1000
+  seed: 20260904
+  transition_row_bootstrap: prohibited
+
+placebos:
+  temporal_pumping:
+    replicates: 100
+    seed_base: 2026090400
+    permutation_unit: production_well_within_calendar_month_and_temporal_split
+    split_crossing: prohibited
+    validation_procedure: same_as_real_model
+  spatial:
+    replicates: 100
+    seed_base: 2026090500
+    eligibility: authoritative_aquifer_layer_or_defensible_strata_required
+    permutation_unit: production_well_spatial_identity_within_stratum
+    physically_impossible_layer_assignment: prohibited
+    validation_procedure: same_as_real_model
+  TEST_selection_use: prohibited
+
+crosswalk:
+  statuses: [EXACT, HIGH_CONFIDENCE, AMBIGUOUS, NO_MATCH]
+  primary_eligible: [EXACT, HIGH_CONFIDENCE]
+  ambiguous_primary_use: prohibited
+  silent_fuzzy_match: prohibited
+
+network:
+  B7_execution: prohibited_in_this_task
+  GNN_execution: prohibited
+  A_matrix_estimation: prohibited
+  tracer_or_MBI_use: prohibited
+  final_classification: [EARNED, NOT_EARNED, UNRESOLVED]
+
+interpretation_matrix:
+  CASE_A: B5_strong_B6_strong__network_justification_strongest
+  CASE_B: B5_weak_B6_strong__basin_totals_hide_spatial_impacts__network_justified
+  CASE_C: B5_strong_B6_weak__quantity_matters_location_not_supported__network_not_yet_justified
+  CASE_D: B5_weak_B6_weak__do_not_force_network
+

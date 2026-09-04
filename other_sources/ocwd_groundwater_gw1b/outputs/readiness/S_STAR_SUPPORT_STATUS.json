@@ -1,0 +1,18 @@
+{
+  "S_star_retention_percentage": null,
+  "S_star_status": "PENDING_WRMS_NOT_CONSTRUCTIBLE",
+  "frozen_rule": "one common S* for BC/B4/B5/B6 requiring every feature through all B6 scale candidates",
+  "original_GW1C_transition_count": 9406,
+  "period_or_fold_changed": false,
+  "pre_WRMS_BC_counts_by_split": {
+    "TEST": 1241,
+    "TRAIN": 5986,
+    "VALIDATION": 1459
+  },
+  "pre_WRMS_BC_counts_by_split_and_fold_path": "outputs/readiness/S_STAR_PRE_WRMS_BC_SUPPORT_BY_SPLIT_FOLD.csv",
+  "pre_WRMS_BC_eligible_transition_count": 8686,
+  "pre_WRMS_BC_eligible_wells": 186,
+  "reason": "WRMS pumping/recharge/injection, identity, and spatial features through B6 are absent; missing forcing cannot be interpreted as zero.",
+  "retained_S_star_transition_count": null,
+  "retained_S_star_wells": null
+}

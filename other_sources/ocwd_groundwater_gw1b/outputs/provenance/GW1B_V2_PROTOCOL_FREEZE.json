@@ -1,0 +1,59 @@
+{
+  "WRMS_scan_time_utc": "2026-09-04T16:55:33.671749+00:00",
+  "all_protocol_files_predate_WRMS_scan": true,
+  "files": [
+    {
+      "bytes": 5633,
+      "filesystem_mtime_utc": "2026-09-04T16:50:44.792413950+00:00",
+      "path": "config/GW1B_PROTOCOL_AMENDMENT_20260904_v2.yaml",
+      "predates_WRMS_scan": true,
+      "sha256": "be01b9fbc240076c4fe4985603deca67b1c98a2c7fc110836e96c85a773a2da5"
+    },
+    {
+      "bytes": 4601,
+      "filesystem_mtime_utc": "2026-09-04T16:50:47.589989901+00:00",
+      "path": "outputs/protocol/GW1B_PROTOCOL_AMENDMENT_20260904_v2.md",
+      "predates_WRMS_scan": true,
+      "sha256": "fdb48bef4254e234bc5223b8759347fd6cd86f4c1a28bf10b2c626d554d5aff4"
+    },
+    {
+      "bytes": 2392,
+      "filesystem_mtime_utc": "2026-09-04T16:54:48.601155996+00:00",
+      "path": "config/WRMS_INGESTION_CONTRACT_v2.yaml",
+      "predates_WRMS_scan": true,
+      "sha256": "0f416618007b95f6fa8f71fb19e98feb2e4267329d35ae02ead576755271dbc3"
+    }
+  ],
+  "nested_hierarchy": {
+    "B6_scale_rule": "one validation-selected length only; candidate lengths are not simultaneous fitted features",
+    "feature_counts": {
+      "B4": 16,
+      "B5": 19,
+      "B6_l10km": 28,
+      "B6_l2km": 28,
+      "B6_l5km": 28,
+      "BC": 10,
+      "S_star_candidate_universe": 46
+    },
+    "relations": {
+      "B4_subset_B5": true,
+      "B5_subset_B6_l10km": true,
+      "B5_subset_B6_l2km": true,
+      "B5_subset_B6_l5km": true,
+      "B6_l10km_retains_every_B5_feature": true,
+      "B6_l2km_retains_every_B5_feature": true,
+      "B6_l5km_retains_every_B5_feature": true,
+      "BC_subset_B4": true
+    },
+    "status": "PASS"
+  },
+  "previous_protocol_preserved": {
+    "failures": [],
+    "files_verified": 5,
+    "status": "PASS"
+  },
+  "protocol_id": "OCWD_GW1B_NESTED_MANAGED_FORCING_V2_20260904",
+  "scientific_baseline_commit": "131657d62712f76acd12dcff461524937ca9fe44",
+  "scientific_outcomes_inspected_before_freeze": false,
+  "status": "FROZEN"
+}

@@ -1,0 +1,113 @@
+{
+  "GW1B_DATA_STATUS": "DELIVERY_CANDIDATE_REQUIRES_RAW_PRESERVATION_AND_AUDIT",
+  "MODFLOW_forcing_substituted": false,
+  "WRMS_delivery_present": true,
+  "aggregate_public_pumping_substituted": false,
+  "checked_once_at_utc": "2026-09-04T16:55:33.671749+00:00",
+  "data_filename_candidates": [
+    {
+      "bytes": 66,
+      "new_delivery_candidate": true,
+      "path": "Meta_Prineville_Oregon_v3/data/manual_templates/city_well_production_monthly.csv",
+      "tracked_at_scientific_baseline": false
+    },
+    {
+      "bytes": 455054,
+      "new_delivery_candidate": true,
+      "path": "Meta_Prineville_Oregon_v3/data/processed/groundwater/groundwater_pumping_monthly.csv",
+      "tracked_at_scientific_baseline": false
+    },
+    {
+      "bytes": 62150,
+      "new_delivery_candidate": false,
+      "path": "other_sources/cooling_technology_proxies/analysis/lei2025_reproduction.csv",
+      "tracked_at_scientific_baseline": true
+    },
+    {
+      "bytes": 35084,
+      "new_delivery_candidate": false,
+      "path": "other_sources/cooling_technology_proxies/analysis/lei2025_reproduction_rmd_filtered.csv",
+      "tracked_at_scientific_baseline": true
+    },
+    {
+      "bytes": 3071,
+      "new_delivery_candidate": false,
+      "path": "other_sources/cooling_technology_proxies/data_processed/PDF_PARAMETER_EXTRACTIONS.csv",
+      "tracked_at_scientific_baseline": true
+    },
+    {
+      "bytes": 26899,
+      "new_delivery_candidate": true,
+      "path": "other_sources/m100/external/exadata/data_extraction/M100_metrics.csv",
+      "tracked_at_scientific_baseline": false
+    },
+    {
+      "bytes": 1247,
+      "new_delivery_candidate": true,
+      "path": "other_sources/m100/results/suitability_2021_v3_closure/tables/literature_dynamic_reproduction.csv",
+      "tracked_at_scientific_baseline": false
+    },
+    {
+      "bytes": 2258,
+      "new_delivery_candidate": false,
+      "path": "other_sources/nlr_esif_fullstack/genai_h100/analysis/SOURCE_REPRODUCTION.csv",
+      "tracked_at_scientific_baseline": true
+    },
+    {
+      "bytes": 1210,
+      "new_delivery_candidate": false,
+      "path": "other_sources/nlr_esif_fullstack/heat_rejection_water/analysis/FIRST_YEAR_WATER_ACCOUNTING_REPRODUCTION.csv",
+      "tracked_at_scientific_baseline": true
+    },
+    {
+      "bytes": 2837,
+      "new_delivery_candidate": false,
+      "path": "other_sources/ocwd_groundwater_feasibility/outputs/tables/OCWD_MBI_2023_MONTHLY_INJECTION.csv",
+      "tracked_at_scientific_baseline": true
+    },
+    {
+      "bytes": 1080,
+      "new_delivery_candidate": false,
+      "path": "other_sources/ocwd_groundwater_gw1_climate/outputs/tables/B1_REPRODUCTION_COMPARISON.csv",
+      "tracked_at_scientific_baseline": true
+    },
+    {
+      "bytes": 538,
+      "new_delivery_candidate": false,
+      "path": "outputs/glossary_refresh_20260903/REGISTRY_REPRODUCTION_COMPARISON.csv",
+      "tracked_at_scientific_baseline": true
+    }
+  ],
+  "files_seen_excluding_git_and_pycache": 5889,
+  "inferred_pumping_from_heads": false,
+  "method": "one repository-local filename/type scan; no file contents, email, or external accounts inspected",
+  "new_delivery_candidates": [
+    {
+      "bytes": 66,
+      "new_delivery_candidate": true,
+      "path": "Meta_Prineville_Oregon_v3/data/manual_templates/city_well_production_monthly.csv",
+      "tracked_at_scientific_baseline": false
+    },
+    {
+      "bytes": 455054,
+      "new_delivery_candidate": true,
+      "path": "Meta_Prineville_Oregon_v3/data/processed/groundwater/groundwater_pumping_monthly.csv",
+      "tracked_at_scientific_baseline": false
+    },
+    {
+      "bytes": 26899,
+      "new_delivery_candidate": true,
+      "path": "other_sources/m100/external/exadata/data_extraction/M100_metrics.csv",
+      "tracked_at_scientific_baseline": false
+    },
+    {
+      "bytes": 1247,
+      "new_delivery_candidate": true,
+      "path": "other_sources/m100/results/suitability_2021_v3_closure/tables/literature_dynamic_reproduction.csv",
+      "tracked_at_scientific_baseline": false
+    }
+  ],
+  "scientific_baseline_commit": "131657d62712f76acd12dcff461524937ca9fe44",
+  "scope": "/home/nacevedo/RA/data-center-externalities-modeling",
+  "synthetic_pumping_created": false
+}
