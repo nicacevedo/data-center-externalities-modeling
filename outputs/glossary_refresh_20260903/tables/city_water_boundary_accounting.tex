@@ -1,0 +1,30 @@
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\setlength{\emergencystretch}{3em}
+\raggedright
+\sloppy
+\begin{longtable}{@{}p{0.170\linewidth}p{0.170\linewidth}p{0.200\linewidth}p{0.080\linewidth}p{0.300\linewidth}@{}}
+\caption{City/Meta/OWRD water-boundary map. No row may be automatically summed with another without an identified accounting relationship.}\\
+\toprule
+\textbf{Boundary / source} & \textbf{Canonical quantity} & \textbf{Status / coverage} & \textbf{Auto-sum?} & \textbf{Role / caveat} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Boundary / source} & \textbf{Canonical quantity} & \textbf{Status / coverage} & \textbf{Auto-sum?} & \textbf{Role / caveat} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{5}{r}{\emph{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+Meta annual withdrawal & \path{Q_W_WITH}\newline W\_Meta,y & REPORTED; 2014--2024 (11 annual values) & No & Annual campus disclosure; withdrawal, not consumption; no monthly allocation implied. \\
+City WATER-COMM + ADD'L WATER service & \path{Q_CITY_METER_SERVICE}\newline W\_City,service,m & OBSERVED/REPORTED; 2012-12 to 2026-07 (163 observed months; 2012, 2015, and 2026 partial) & No & Customer municipal-service component; model response; not all-source campus withdrawal. \\
+City bulk/hydrant & \path{Q_CITY_BULK_WATER} & OBSERVED/REPORTED; 2018-02 to 2026-08 (103 billing months) & No & Billing-month component with unresolved campus/use boundary; service+bulk is diagnostic only. \\
+City SWR METER & \path{Q_CITY_SWR_METER} & OBSERVED/REPORTED; identity unresolved; 2012-12 to 2026-07 (163 months) & No & Keep separate; naming/numerical proximity does not establish master/submeter or return semantics. \\
+City WELL METER FOR SEW & \path{Q_CITY_WELL_METER_SEW} & OBSERVED/REPORTED; identity unresolved; 2012-12 to 2026-07 (163 months) & No & Weak OWRD-POD correspondence; do not infer source, sewer, or master/submeter identity. \\
+OWRD direct Vitesse/Facebook POD & \path{Q_DIRECT_POD} & REPORTED; 2010-10 to 2024-09 (450 reported POD-month rows) & No & Direct-POD reporting boundary; not total Meta withdrawal and not automatically additive to City service. \\
+All-source monthly Meta/campus withdrawal & W\_Meta,total,m (coverage/report concept; no distinct registry row) & NOT IDENTIFIED; None & No & Service, bulk, SWR/WELL, direct POD, reuse/return/storage, lifecycle, and campus-scope relations do not close a mass balance. \\
+\end{longtable}
+\endgroup

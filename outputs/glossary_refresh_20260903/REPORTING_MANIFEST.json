@@ -1,0 +1,21 @@
+{
+  "created_utc": "2026-09-03T20:02:17.256060+00:00",
+  "branch": "main",
+  "head": "08b0c112d8883eb4d23bb05d0d40e1a42c863593",
+  "git_status_at_generation": [
+    "m Data-center-PUE-prediction-tool",
+    "?? main_documents/glossary/",
+    "?? outputs/",
+    "?? texput.log"
+  ],
+  "target_tex": "main_documents/glossary/Network_Based_Data_Center_Glossary.tex",
+  "target_pdf": "main_documents/glossary/Network_Based_Data_Center_Glossary.pdf",
+  "prineville_readme": "Meta_Prineville_Oregon_v3/README.md",
+  "prineville_report": "Meta_Prineville_Oregon_v3/docs/PIPELINE_DATA_MODEL_REPORT.md",
+  "canonical_registry_paths": [
+    "Meta_Prineville_Oregon_v3/outputs/pipeline_report/data_source_inventory.csv",
+    "Meta_Prineville_Oregon_v3/outputs/pipeline_report/model_quantity_registry.csv",
+    "Meta_Prineville_Oregon_v3/outputs/pipeline_report/model_registry.csv"
+  ],
+  "mode": "REPORTING_ONLY_NO_SCIENTIFIC_REFIT"
+}

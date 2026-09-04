@@ -1,0 +1,21 @@
+{
+  "coordinate_datum": "NAD83",
+  "daily_qa_counts": {
+    "A": 31202,
+    "A:e": 103,
+    "P": 79
+  },
+  "daylight_saving_flag": "Y",
+  "earliest_daily_record": "1940-09-30 00:00:00",
+  "external_observed_forcing": true,
+  "gage_elevation": 451.58,
+  "gage_elevation_datum": "NAVD88",
+  "latest_daily_record": "2026-09-02 00:00:00",
+  "latitude": 33.88334875,
+  "longitude": -117.6453296,
+  "n_daily_records": 31384,
+  "n_recent_instantaneous_records": 3240,
+  "site_no": "11074000",
+  "station_name": "SANTA ANA R BL PRADO DAM CA",
+  "timezone": "PST"
+}

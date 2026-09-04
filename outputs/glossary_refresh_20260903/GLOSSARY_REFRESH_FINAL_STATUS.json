@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "reporting_only": true,
+  "scientific_models_refit": false,
+  "branch": "main",
+  "head": "08b0c112d8883eb4d23bb05d0d40e1a42c863593",
+  "origin_main": "08b0c112d8883eb4d23bb05d0d40e1a42c863593",
+  "git_status_after": [
+    "m Data-center-PUE-prediction-tool",
+    "?? main_documents/glossary/",
+    "?? outputs/"
+  ],
+  "checks_passed": 21,
+  "checks_failed": 0,
+  "focused_tests_passed": 39,
+  "pdf_pages": 40,
+  "tex_sha256": "cf880b49cde92bc241e07f56b1034bf796c8b748bde0ec97b93d60905f2e0946",
+  "pdf_sha256": "e86db3edcb7ea78e2c94f850e80b641332583d05a6f75893a9ba24bb7abc561a",
+  "max_overfull_hbox_pt": 7.4659
+}

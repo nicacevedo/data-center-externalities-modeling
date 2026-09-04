@@ -1,0 +1,12 @@
+{
+  "command": "/home/nacevedo/.conda/envs/dc_externalities/bin/python scripts/build_feasibility_audit.py",
+  "groundwater_model_fitted": false,
+  "matplotlib_version": "3.11.1",
+  "numpy_version": "2.4.6",
+  "pandas_version": "3.0.5",
+  "platform": "Linux-5.14.0-687.39.1.el9_8.x86_64-x86_64-with-glibc2.28",
+  "pymupdf_version": "1.28.2",
+  "python_executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+  "python_version": "3.11.15",
+  "working_directory": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/ocwd_groundwater_feasibility"
+}

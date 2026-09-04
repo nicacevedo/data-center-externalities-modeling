@@ -1,0 +1,5 @@
+quantity,published_annual_total,sum_of_published_rounded_months,rounding_difference,source_file,pdf_page,pdf_table,evidence_class,note
+total_injection_mg,2395.35,2395.36,0.010000000000218279,data/raw/ocwd/gwrs_annual_report_2023.pdf,202,Table 7-2,REPORTED_MEASURED,"Use the published annual total; small differences from summed monthly rows are displayed rounding, not an inferred correction."
+total_injection_af,7351.06,7351.06,0.0,data/raw/ocwd/gwrs_annual_report_2023.pdf,202,Table 7-2,REPORTED_MEASURED,"Use the published annual total; small differences from summed monthly rows are displayed rounding, not an inferred correction."
+total_backwash_mg,18.12,18.109999999999996,-0.010000000000005116,data/raw/ocwd/gwrs_annual_report_2023.pdf,202,Table 7-2,REPORTED_MEASURED,"Use the published annual total; small differences from summed monthly rows are displayed rounding, not an inferred correction."
+total_backwash_af,55.6,55.599999999999994,-7.105427357601002e-15,data/raw/ocwd/gwrs_annual_report_2023.pdf,202,Table 7-2,REPORTED_MEASURED,"Use the published annual total; small differences from summed monthly rows are displayed rounding, not an inferred correction."

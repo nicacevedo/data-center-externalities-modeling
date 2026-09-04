@@ -1,0 +1,21 @@
+,column,type,label,description
+0,_id,int,,
+1,site_code,text,Site Code,Location based 18 character alphanumeric code assigned to each well.
+2,stn_id,numeric,,
+3,swn,text,State Well Number,DWR Issued State Well Number. 
+4,well_name,text,Well Name,
+5,continuous_data_station_number,text,,
+6,latitude,numeric,Latitude (NAD83),Latitude (NAD83)
+7,longitude,numeric,Longitude (NAD83),Longitude (NAD83)
+8,gse,numeric,"Ground surface elevation (feet, NAVD88)","Ground surface elevation (feet, NAVD88)"
+9,rpe,numeric,"Reference point elevation (feet, NAVD88)","Reference point elevation (feet, NAVD88)"
+10,gse_method,text,Ground surface elevation measurement method,Ground surface elevation measurement method
+11,gse_acc,text,,
+12,basin_code,text,DWR Bulletin 118 Basin-Subbasin Code,DWR Bulletin 118 Basin Code for basin where monitoring location is located.
+13,basin_name,text,DWR Bulletin 118 Basin-Subbasin Name,DWR Bulletin 118 Basin-Subbasin Name where monitoring location is located
+14,county_name,text,County Name,County Name.
+15,well_depth,numeric,Well depth,Well depth in feet below ground surface. 
+16,well_use,text,Well use,
+17,well_type,text,Well type,
+18,wcr_no,text,Well completion report number,Well completion report number
+19,monitoring_program,text,Monitoring program,DWR monitoring program well is primarily monitored under.

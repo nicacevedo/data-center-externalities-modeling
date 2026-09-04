@@ -1,0 +1,46 @@
+schema_version: 1
+scope:
+  basin_id: "8-001"
+  basin_name: Coastal Plain of Orange County
+  task: DATA_AVAILABILITY_AND_IDENTIFICATION_AUDIT
+  groundwater_model_fitting_allowed: false
+  groundwater_head_interpolation_allowed: false
+  future_node_selection_allowed: false
+  pumping_inference_from_heads_allowed: false
+canonical_quantities:
+  groundwater_level_measurement:
+    evidence_class: OBSERVED
+    preserve_raw_values: true
+    preserve_qa_flags: true
+  large_well_monthly_pumping:
+    evidence_class: REPORTED_MEASURED
+  recharge_basin_calculated_percolation:
+    evidence_class: DERIVED_FROM_MEASUREMENTS
+  natural_recharge_from_rainfall_relationship:
+    evidence_class: ESTIMATED
+  ocwd_calculated_monthly_storage_change:
+    evidence_class: DERIVED_FROM_MEASUREMENTS
+    independent_validation_allowed: false
+  modflow_simulated_head:
+    evidence_class: REFERENCE_MODEL
+    empirical_ground_truth: false
+  santa_ana_river_discharge:
+    evidence_class: OBSERVED
+independence_classes:
+  - INDEPENDENT_AGENCY_OBSERVATION
+  - OCWD_ORIGIN_REPUBLISHED_BY_DWR
+  - UNKNOWN_ORIGIN
+wcr_coordinate_policy:
+  may_replace_monitoring_station_coordinates: false
+  allowed_match_statuses:
+    - EXACT_ID
+    - HIGH_CONFIDENCE_METADATA_MATCH
+    - AMBIGUOUS
+    - NO_MATCH
+layer_assignment_policy:
+  invented_depth_thresholds_allowed: false
+  authoritative_ocwd_or_model_metadata_required: true
+dwr_continuous_gwl:
+  expected_status: EXCLUDED_GEOGRAPHICALLY
+  expected_reason: no Orange County stations in current dataset
+

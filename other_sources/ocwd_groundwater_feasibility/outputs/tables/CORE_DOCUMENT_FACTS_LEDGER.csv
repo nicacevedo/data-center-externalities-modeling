@@ -1,0 +1,13 @@
+fact_id,verified_value,source_file,source_page,interpretation,verification_status
+BASIN_MODEL_TRANSIENT_PERIOD,November 1990-November 1999,ocwd/basin_model_appendix_b.pdf,50,"Appendix B states the nine-year transient period used the then-most-detailed head, production, and recharge data.",VERIFIED
+BASIN_MODEL_TEMPORAL_INPUT,monthly flow and water-level data,ocwd/basin_model_appendix_b.pdf,50,Appendix B reports more than 50 calibration runs using monthly flow and water-level data.,VERIFIED
+BASIN_MODEL_TARGET_SCALE,almost 250 target locations,ocwd/basin_model_appendix_b.pdf,50,Targets were densely distributed and covered all three model layers.,VERIFIED
+BASIN_MODEL_PRODUCTION_PROVENANCE,monthly production extracted from WRMS,ocwd/basin_model_appendix_b.pdf,56,Large-system well pumping was used directly and allocated vertically using screened intervals.,VERIFIED
+BASIN_MODEL_RECHARGE_PROVENANCE,monthly recharge recorded in WRMS from 1990-present,ocwd/basin_model_appendix_b.pdf,56,Documented as based on OCWD Forebay observed percolation measurements and used as model input.,VERIFIED
+WRMS_LARGE_WELL_REPORTING,individual large-well monthly reporting since 1990,ocwd/groundwater_management_plan_2004.pdf,14; 60,Large-capacity well owners report production monthly for each well into WRMS.,VERIFIED
+LARGE_WELL_EXTRACTION_SHARE,about 200 wells account for 97 percent of extraction,ocwd/groundwater_management_plan_2004.pdf,14; 60,Documentation establishes expected WRMS production coverage but is not the raw pumping table.,VERIFIED
+MONITORING_SCALE_2004,"more than 1,000 water-level measurement points, mainly monthly or bimonthly",ocwd/groundwater_management_plan_2004.pdf,61,The 2004 plan documents a richer OCWD monitoring system than the public DWR subset necessarily contains.,VERIFIED
+AQUIFER_SYSTEMS,"Shallow, Principal, and Deep systems",ocwd/groundwater_location_maps_page.html,HTML,OCWD presents the Basin Model as three separate layers; no depth-threshold reassignment is made here.,VERIFIED
+RECHARGE_NETWORK_2022,"25 surface-water facilities with more than 25,000 acre-feet storage",ocwd/basin_8_001_alternative_2022_update.pdf,92,OCWD reports daily tracking and a monthly Water Resources Summary.,VERIFIED
+MONTHLY_ACCOUNTING_SCHEMA,"source volumes, estimated percolation, pumping, and estimated storage change",ocwd/basin_8_001_alternative_2022_update.pdf,92,"The report explicitly mixes reported/measured, derived, and estimated quantities.",VERIFIED
+DWR_CONTINUOUS_GEOGRAPHY,Orange County absent from covered counties,dwr_continuous_groundwater_levels_package.json,metadata,The separate DWR continuous dataset is excluded geographically; no data table was forced into the audit.,VERIFIED

@@ -1,0 +1,38 @@
+schema_version: 1
+allowed_results:
+  - PASS
+  - PARTIAL
+  - FAIL
+  - PENDING_REQUEST
+tiers:
+  TIER_A: well/facility-resolution dynamic network benchmark possible
+  TIER_B: defensible regional/zonal dynamic benchmark possible
+  TIER_C: only aggregate water-budget benchmark possible
+gates:
+  G1_STATE:
+    requirement: at least 50 usable spatial groundwater-head series
+    threshold: 50
+  G2_TEMPORAL:
+    requirement: at least 5 years meaningful common support; at least 10 years strongly preferred
+    minimum_years: 5
+    preferred_years: 10
+    audit_operationalization: PASS requires at least 50 observed wells in every calendar month for 60 consecutive months and at least 50 wells represented in every year of a five-year window; annual ten-year intersection is reported separately.
+  G3_PUMPING:
+    requirement: monthly geocoded pumping covering at least 90 percent of basin extraction
+    minimum_extraction_share: 0.90
+  G4_RECHARGE:
+    requirement: geocoded recharge and injection forcing at monthly or finer resolution
+  G5_VERTICAL:
+    requirement: authoritative screen or layer metadata for material state and forcing nodes
+  G6_PROVENANCE:
+    requirement: measured, reported, derived, and estimated quantities are distinguishable
+  G7_COMMON_SUPPORT:
+    requirement: states, pumping, and recharge overlap sufficiently for dynamic estimation
+  G8_SPATIAL_VALIDATION:
+    requirement: enough state locations remain for full held-out-well validation
+    audit_operationalization: PASS requires at least 75 usable spatial series and at least 50 wells represented in every year of the best five-year window; no wells are selected by future model performance.
+  G9_INDEPENDENT_PROPAGATION_VALIDATION:
+    requirement: tracer and/or intervention-response evidence exists
+  G10_REPRODUCIBILITY:
+    requirement: required data are machine-readable or reproducibly extractable
+note: These thresholds are research-design gates, not physical laws; source selection must not be manipulated to pass them.

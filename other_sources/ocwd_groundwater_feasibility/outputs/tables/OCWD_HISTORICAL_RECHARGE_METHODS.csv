@@ -1,0 +1,6 @@
+quantity,reported_method,measurement_class,pdf_page,source_file
+surface water flows,"flumes, weirs, ultrasonic, propeller, and magnetic flow meters",REPORTED_MEASURED,61,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf
+recharge facility water levels,"pressure transducers, air-pressure orifice lines, and staff gages",OBSERVED,61,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf
+facility storage,water level plus digitized topographic storage-elevation relationship,DERIVED_FROM_MEASUREMENTS,62,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf
+facility percolation,storage change with inflow and outflow,DERIVED_FROM_MEASUREMENTS,62,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf
+incidental recharge,estimated by comparing basin water levels/storage,ESTIMATED,62,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf

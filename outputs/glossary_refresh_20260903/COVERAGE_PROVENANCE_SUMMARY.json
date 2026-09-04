@@ -1,0 +1,92 @@
+{
+  "source_count": 50,
+  "quantity_count": 82,
+  "method_model_count": 26,
+  "city_service": {
+    "observed_months": 163,
+    "first_observed": "2012-12",
+    "last_observed": "2026-07",
+    "years_with_observation": [
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "partial_years": [
+      2012,
+      2015,
+      2026
+    ],
+    "boundary": "observed City customer-service component; not total Meta monthly withdrawal"
+  },
+  "meta_annual_withdrawal": {
+    "reported_years": [
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "n_years": 11,
+    "boundary": "reported annual Meta campus withdrawal"
+  },
+  "weather": {
+    "rows": 122736,
+    "unique_local_hours": 122736,
+    "first_year": 2011,
+    "last_year": 2024,
+    "finite_driver_hours": 122736,
+    "source_hours": {
+      "KS39": 79369,
+      "KRDM": 43332,
+      "KBDN": 35
+    },
+    "method_hours": {
+      "ks39_valid_observed": 78712,
+      "krdm_observed": 40769,
+      "krdm_gapfill": 2457,
+      "interpolated_short_gap": 763,
+      "kbdn_tertiary_gapfill": 35
+    },
+    "hierarchy": "KS39 when QC-usable; KRDM observational fallback/backbone; monthly-bias-adjusted KBDN tertiary fallback; short bracketed gaps only"
+  },
+  "pumping_gwis": {
+    "pumping_rows": 1751,
+    "pumping_groups": 14,
+    "pumping_first_month": "2009-10",
+    "pumping_last_month": "2025-09",
+    "gwis_rows": 812,
+    "gwis_numeric_bls": 800,
+    "gwis_eligible_state_rows": 796,
+    "gwis_first_year_numeric": 1980,
+    "gwis_last_year_numeric": 2026,
+    "response_model_fitted": false
+  },
+  "regional_grid": {
+    "eia930_rows": 83320,
+    "eia930_first_timestamp": "2015-07-01T08:00:00+00:00",
+    "eia930_last_timestamp": "2024-12-31T23:00:00+00:00",
+    "ferc_backcast_rows": 70120,
+    "ferc_backcast_first_timestamp": "2011-01-01T09:00:00+00:00",
+    "ferc_backcast_last_timestamp": "2019-01-01T08:00:00+00:00",
+    "boundary": "PACW regional context; not campus electricity"
+  },
+  "registry_gap_note": "All-source monthly campus withdrawal is explicit in coverage/reporting but is not a distinct row in the current 82-row quantity registry; Q_W_WITH is annual."
+}

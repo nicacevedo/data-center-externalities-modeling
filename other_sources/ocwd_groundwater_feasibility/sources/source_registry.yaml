@@ -1,0 +1,633 @@
+schema_version: 1
+sources:
+- source_id: CA_SGMA_8_001_PORTAL
+  agency: California Department of Water Resources
+  title: California DWR SGMA Portal
+  source_type: portal_page
+  official_url: https://sgma.water.ca.gov/portal/alternative/periodiceval/preview/10
+  accessed_at: '2026-09-04T01:55:57.104789+00:00'
+  temporal_coverage: alternative review period
+  spatial_resolution: Basin 8-001
+  temporal_resolution: plan/review
+  raw_machine_readable: 'true'
+  measurement_class: REFERENCE_MODEL
+  intended_use: management-plan provenance
+  validation_use: scope confirmation
+  limitations: management assessment is not a groundwater observation
+  sha256: 389645b347000ccc607714569936b08f2d26f2e78467d9a48535c7fa2c819d30
+- source_id: CLARK_ET_AL_2014_TRACER
+  agency: Peer-reviewed study (OCWD and University of California authors)
+  title: Investigation of Groundwater Flow Variations near a Recharge Pond with Repeat
+    Deliberate Tracer Experiments
+  source_type: journal_pdf
+  official_url: https://mdpi-res.com/d_attachment/water/water-06-01826/article_deploy/water-06-01826.pdf
+  accessed_at: '2026-09-04T01:51:45.628313+00:00'
+  temporal_coverage: 1998 and 2008 experiments
+  spatial_resolution: Kraemer Basin to wells
+  temporal_resolution: experiment
+  raw_machine_readable: 'false'
+  measurement_class: OBSERVED
+  intended_use: repeat tracer travel quantities
+  validation_use: future physical propagation validation
+  limitations: reported table values only; origin is not independent of OCWD participation
+  sha256: 224fb4cb60db92c98f18de18760ea60e50b1b54fb69aa4c957d971a3d32c9541
+- source_id: DOE_OSTI_15013774_METADATA
+  agency: U.S. Department of Energy / OSTI
+  title: LLNL Forebay isotope tracer report metadata
+  source_type: web_page
+  official_url: https://www.osti.gov/biblio/15013774
+  accessed_at: '2026-09-04T01:50:39.439536+00:00'
+  temporal_coverage: 1995-2001 study
+  spatial_resolution: Forebay tracer network
+  temporal_resolution: experiment
+  raw_machine_readable: 'true'
+  measurement_class: OBSERVED
+  intended_use: tracer provenance
+  validation_use: independent physical propagation validation
+  limitations: study observations are sparse experiments, not routine forcing/state
+    time series
+  sha256: 79b413c8329b81786cce2309b6a622921c3277006da1898004af8cb2ee70d947
+- source_id: DWR_B118_GEOJSON
+  agency: California Department of Water Resources
+  title: Bulletin 118 California Groundwater Basins GeoJSON
+  source_type: geojson
+  official_url: https://gis.data.cnra.ca.gov/api/download/v1/items/49807a1fbc584631bdf88d9ca71dd083/geojson?layers=0
+  accessed_at: '2026-09-04T01:48:16.701996+00:00'
+  temporal_coverage: current official release
+  spatial_resolution: basin polygon
+  temporal_resolution: versioned release
+  raw_machine_readable: 'true'
+  measurement_class: REFERENCE_MODEL
+  intended_use: select Basin 8-001 and spatially join stations
+  validation_use: spatial coverage audit
+  limitations: CRS84 GeoJSON; boundary is an authoritative reference geometry
+  sha256: 6ef98b660f7c81a900122fd3773c5d03fea70604161aded2d5b06e7c315dc097
+- source_id: DWR_B118_METADATA
+  agency: California Department of Water Resources
+  title: Bulletin 118 California Groundwater Basins metadata
+  source_type: dataset_metadata
+  official_url: https://data.cnra.ca.gov/api/3/action/package_show?id=i08-b118-ca-groundwaterbasins
+  accessed_at: '2026-09-04T01:46:13.654341+00:00'
+  temporal_coverage: current official release
+  spatial_resolution: basin polygon
+  temporal_resolution: versioned release
+  raw_machine_readable: 'true'
+  measurement_class: REFERENCE_MODEL
+  intended_use: boundary provenance
+  validation_use: spatial inclusion audit
+  limitations: official delineation, not a groundwater-state measurement
+  sha256: e76684fde144cd4f3127013437776d895befe63eb051115fd69655ff5ffa0e25
+- source_id: DWR_CONTINUOUS_METADATA
+  agency: California Department of Water Resources
+  title: Continuous Groundwater Level Measurements metadata
+  source_type: dataset_metadata
+  official_url: https://data.cnra.ca.gov/api/3/action/package_show?id=continuous-groundwater-level-measurements
+  accessed_at: '2026-09-04T01:46:13.776330+00:00'
+  temporal_coverage: current official release
+  spatial_resolution: listed counties
+  temporal_resolution: 15-minute to hourly source cadence
+  raw_machine_readable: 'true'
+  measurement_class: OBSERVED
+  intended_use: geographic eligibility audit
+  validation_use: negative-result guard
+  limitations: current county list excludes Orange County
+  sha256: 304225d44ad02212f484900f4c57d3325d0c47aae40850915680ba9bf8c981f6
+- source_id: DWR_PERIODIC_BULK
+  agency: California Department of Water Resources
+  title: Periodic Groundwater Level Measurements bulk tables
+  source_type: zip_csv
+  official_url: https://data.cnra.ca.gov/dataset/dd9b15f5-6d08-4d8c-bace-37dc761a9c08/resource/c51e0af9-5980-4aa3-8965-e9ea494ad468/download/periodic_gwl_bulkdatadownload.zip
+  accessed_at: '2026-09-04T01:48:14.522061+00:00'
+  temporal_coverage: 1900-present
+  spatial_resolution: station
+  temporal_resolution: measurement timestamp
+  raw_machine_readable: 'true'
+  measurement_class: OBSERVED
+  intended_use: Basin 8-001 head and station coverage
+  validation_use: future held-out state observations
+  limitations: cooperating-agency observations require origin audit; QA varies
+  sha256: 48b197bd5a600ce2847ed2469e656306ca2daad7c86962ba6e88eed0020ab817
+- source_id: DWR_PERIODIC_METADATA
+  agency: California Department of Water Resources
+  title: Periodic Groundwater Level Measurements metadata
+  source_type: dataset_metadata
+  official_url: https://data.cnra.ca.gov/api/3/action/package_show?id=periodic-groundwater-level-measurements
+  accessed_at: '2026-09-04T01:46:13.549322+00:00'
+  temporal_coverage: 1900-present (dataset statement)
+  spatial_resolution: station
+  temporal_resolution: periodic; some daily/weekly/monthly
+  raw_machine_readable: 'true'
+  measurement_class: OBSERVED
+  intended_use: source schema and provenance
+  validation_use: independence and QA audit
+  limitations: metadata is not the measurement table
+  sha256: 4a81c0593a215528e644266df91abb01a93823512b3d6beca1c89972dccb8e25
+- source_id: DWR_SGMA_FINDINGS
+  agency: California Department of Water Resources
+  title: 'DWR Statement of Findings: Coastal Plain of Orange County Alternative'
+  source_type: report_pdf
+  official_url: https://water.ca.gov/-/media/DWR-Website/Web-Pages/Programs/Groundwater-Management/Sustainable-Groundwater-Management/Alternatives/Files/10year/CoastalPlain/02_CoastalPlain_Statement_of_Findings.pdf
+  accessed_at: '2026-09-04T01:55:58.080805+00:00'
+  temporal_coverage: alternative review period
+  spatial_resolution: Basin 8-001
+  temporal_resolution: plan/review
+  raw_machine_readable: 'false'
+  measurement_class: REFERENCE_MODEL
+  intended_use: management-plan provenance
+  validation_use: scope confirmation
+  limitations: management assessment is not a groundwater observation
+  sha256: 2903d49b59801b229ee623f4718746849e886f50b1b1774dd88c11722c9c4cc2
+- source_id: DWR_SGMA_STAFF_REPORT
+  agency: California Department of Water Resources
+  title: DWR Alternative Assessment Staff Report
+  source_type: report_pdf
+  official_url: https://water.ca.gov/-/media/DWR-Website/Web-Pages/Programs/Groundwater-Management/Sustainable-Groundwater-Management/Alternatives/Files/10year/CoastalPlain/03_CoastalPlain_Staff_Report.pdf
+  accessed_at: '2026-09-04T01:55:57.864766+00:00'
+  temporal_coverage: alternative review period
+  spatial_resolution: Basin 8-001
+  temporal_resolution: plan/review
+  raw_machine_readable: 'false'
+  measurement_class: REFERENCE_MODEL
+  intended_use: management-plan provenance
+  validation_use: scope confirmation
+  limitations: management assessment is not a groundwater observation
+  sha256: ebfe6c87c8426e76580b210a5b3ceaaf77bebacb18f84cd2b968761559d3740e
+- source_id: DWR_WCR_METADATA
+  agency: California Department of Water Resources
+  title: Well Completion Reports metadata
+  source_type: dataset_metadata
+  official_url: https://data.cnra.ca.gov/api/3/action/package_show?id=well-completion-reports
+  accessed_at: '2026-09-04T01:46:13.896333+00:00'
+  temporal_coverage: historical-present
+  spatial_resolution: well/report
+  temporal_resolution: event/report
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: construction-table provenance
+  validation_use: supplementary vertical evidence
+  limitations: known missing, duplicate, and inaccurate fields; many approximate PLSS
+    coordinates
+  sha256: 18a5a251db4966f4422c37dfe8f3fbf78b99efaef5517b4d08b4e2609f13a1d5
+- source_id: DWR_WCR_ORANGE_BOREHOLE
+  agency: California Department of Water Resources
+  title: "Well Completion Reports \u2014 Orange County borehole"
+  source_type: CKAN_DataStore_JSON
+  official_url: https://data.cnra.ca.gov/api/3/action/datastore_search_sql?sql=SELECT%20c.%2A%20FROM%20%22735030c5-3d4f-428f-a5c7-c258cacdc307%22%20c%20JOIN%20%228da7b93b-4e69-495d-9caa-335691a1896b%22%20w%20ON%20c.%22WCRNUMBER%22%3Dw.%22WCRNUMBER%22%20WHERE%20w.%22COUNTYNAME%22%3D%27Orange%27%20ORDER%20BY%20c.%22_id%22
+  accessed_at: '2026-09-04T01:49:41.989186+00:00'
+  temporal_coverage: historical-present
+  spatial_resolution: Orange County report/well
+  temporal_resolution: event/report
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: supplementary construction and hydrostratigraphy evidence
+  validation_use: screen/construction metadata only
+  limitations: not limited to Basin 8-001; no fuzzy matching; WCR approximate coordinates
+    never replace station coordinates
+  sha256: 63b383ee3ed498b7def21b82493775f0517c0c7e1a8a56c15dff4ee039339f69
+- source_id: DWR_WCR_ORANGE_CASING
+  agency: California Department of Water Resources
+  title: "Well Completion Reports \u2014 Orange County casing"
+  source_type: CKAN_DataStore_JSON
+  official_url: https://data.cnra.ca.gov/api/3/action/datastore_search_sql?sql=SELECT%20c.%2A%20FROM%20%2293fddfef-8c92-4ea1-b6c8-980997bb5fb8%22%20c%20JOIN%20%228da7b93b-4e69-495d-9caa-335691a1896b%22%20w%20ON%20c.%22WCRNUMBER%22%3Dw.%22WCRNUMBER%22%20WHERE%20w.%22COUNTYNAME%22%3D%27Orange%27%20ORDER%20BY%20c.%22_id%22
+  accessed_at: '2026-09-04T01:49:42.593222+00:00'
+  temporal_coverage: historical-present
+  spatial_resolution: Orange County report/well
+  temporal_resolution: event/report
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: supplementary construction and hydrostratigraphy evidence
+  validation_use: screen/construction metadata only
+  limitations: not limited to Basin 8-001; no fuzzy matching; WCR approximate coordinates
+    never replace station coordinates
+  sha256: 277c56d822d195260388ef57af16bb920027bc1248ef13bd046341b5e8e40132
+- source_id: DWR_WCR_ORANGE_GEOLOGIC_FREEFORM
+  agency: California Department of Water Resources
+  title: "Well Completion Reports \u2014 Orange County geologic freeform"
+  source_type: CKAN_DataStore_JSON
+  official_url: https://data.cnra.ca.gov/api/3/action/datastore_search_sql?sql=SELECT%20c.%2A%20FROM%20%22def8769a-c9a1-4cf7-9522-2588f20f2f39%22%20c%20JOIN%20%228da7b93b-4e69-495d-9caa-335691a1896b%22%20w%20ON%20c.%22WCRNUMBER%22%3Dw.%22WCRNUMBER%22%20WHERE%20w.%22COUNTYNAME%22%3D%27Orange%27%20ORDER%20BY%20c.%22_id%22
+  accessed_at: '2026-09-04T01:49:40.963244+00:00'
+  temporal_coverage: historical-present
+  spatial_resolution: Orange County report/well
+  temporal_resolution: event/report
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: supplementary construction and hydrostratigraphy evidence
+  validation_use: screen/construction metadata only
+  limitations: not limited to Basin 8-001; no fuzzy matching; WCR approximate coordinates
+    never replace station coordinates
+  sha256: 2b14cba03f8ffb29149c9ec1f4eb51297d43ec510a5922a6629f84e529dace6c
+- source_id: DWR_WCR_ORANGE_GEOLOGIC_QUICKPICK
+  agency: California Department of Water Resources
+  title: "Well Completion Reports \u2014 Orange County geologic quickpick"
+  source_type: CKAN_DataStore_JSON
+  official_url: https://data.cnra.ca.gov/api/3/action/datastore_search_sql?sql=SELECT%20c.%2A%20FROM%20%2235a622d6-58e5-406a-a034-a17012132fc5%22%20c%20JOIN%20%228da7b93b-4e69-495d-9caa-335691a1896b%22%20w%20ON%20c.%22WCRNUMBER%22%3Dw.%22WCRNUMBER%22%20WHERE%20w.%22COUNTYNAME%22%3D%27Orange%27%20ORDER%20BY%20c.%22_id%22
+  accessed_at: '2026-09-04T01:49:43.213168+00:00'
+  temporal_coverage: historical-present
+  spatial_resolution: Orange County report/well
+  temporal_resolution: event/report
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: supplementary construction and hydrostratigraphy evidence
+  validation_use: screen/construction metadata only
+  limitations: not limited to Basin 8-001; no fuzzy matching; WCR approximate coordinates
+    never replace station coordinates
+  sha256: 4efa64768f2b8868b7d1356f7f1cfd035b187539460ab809918117323a440048
+- source_id: DWR_WCR_ORANGE_GEOLOGIC_USCS
+  agency: California Department of Water Resources
+  title: "Well Completion Reports \u2014 Orange County geologic uscs"
+  source_type: CKAN_DataStore_JSON
+  official_url: https://data.cnra.ca.gov/api/3/action/datastore_search_sql?sql=SELECT%20c.%2A%20FROM%20%228762f589-156d-499d-9a06-3a7db1ebe34d%22%20c%20JOIN%20%228da7b93b-4e69-495d-9caa-335691a1896b%22%20w%20ON%20c.%22WCRNUMBER%22%3Dw.%22WCRNUMBER%22%20WHERE%20w.%22COUNTYNAME%22%3D%27Orange%27%20ORDER%20BY%20c.%22_id%22
+  accessed_at: '2026-09-04T01:49:42.052273+00:00'
+  temporal_coverage: historical-present
+  spatial_resolution: Orange County report/well
+  temporal_resolution: event/report
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: supplementary construction and hydrostratigraphy evidence
+  validation_use: screen/construction metadata only
+  limitations: not limited to Basin 8-001; no fuzzy matching; WCR approximate coordinates
+    never replace station coordinates
+  sha256: 37f5f64da6decbf0040efce9d1f6aca11b4c727ea480002bb7209fe8b5223f3f
+- source_id: DWR_WCR_ORANGE_PDF_LINKS
+  agency: California Department of Water Resources
+  title: "Well Completion Reports \u2014 Orange County pdf links"
+  source_type: CKAN_DataStore_JSON
+  official_url: https://data.cnra.ca.gov/api/3/action/datastore_search_sql?sql=SELECT%20c.%2A%20FROM%20%22bff565b3-b3b4-4727-b10b-e09e0012ec3b%22%20c%20JOIN%20%228da7b93b-4e69-495d-9caa-335691a1896b%22%20w%20ON%20c.%22WCRNumber%22%3Dw.%22WCRNUMBER%22%20WHERE%20w.%22COUNTYNAME%22%3D%27Orange%27%20ORDER%20BY%20c.%22_id%22
+  accessed_at: '2026-09-04T01:49:43.118183+00:00'
+  temporal_coverage: historical-present
+  spatial_resolution: Orange County report/well
+  temporal_resolution: event/report
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: supplementary construction and hydrostratigraphy evidence
+  validation_use: screen/construction metadata only
+  limitations: not limited to Basin 8-001; no fuzzy matching; WCR approximate coordinates
+    never replace station coordinates
+  sha256: eaee52f820581a6974b1be4cd871b6e7a8a706035af52717c6f12c33fc8fa75e
+- source_id: DWR_WCR_ORANGE_WCR
+  agency: California Department of Water Resources
+  title: "Well Completion Reports \u2014 Orange County wcr"
+  source_type: CKAN_DataStore_JSON
+  official_url: https://data.cnra.ca.gov/api/3/action/datastore_search_sql?sql=SELECT%20%2A%20FROM%20%228da7b93b-4e69-495d-9caa-335691a1896b%22%20WHERE%20%22COUNTYNAME%22%3D%27Orange%27%20ORDER%20BY%20%22_id%22
+  accessed_at: '2026-09-04T01:49:45.260162+00:00'
+  temporal_coverage: historical-present
+  spatial_resolution: Orange County report/well
+  temporal_resolution: event/report
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: supplementary construction and hydrostratigraphy evidence
+  validation_use: screen/construction metadata only
+  limitations: not limited to Basin 8-001; no fuzzy matching; WCR approximate coordinates
+    never replace station coordinates
+  sha256: 39a599b25132a01f7a0c92b658728a518aa4fad0345b716daf94265c956340f8
+- source_id: DWR_WCR_ORANGE_WELL_NUMBERS
+  agency: California Department of Water Resources
+  title: "Well Completion Reports \u2014 Orange County well numbers"
+  source_type: CKAN_DataStore_JSON
+  official_url: https://data.cnra.ca.gov/api/3/action/datastore_search_sql?sql=SELECT%20c.%2A%20FROM%20%2285b91c71-d8b4-44b0-8fb3-fe1fe5327ca8%22%20c%20JOIN%20%228da7b93b-4e69-495d-9caa-335691a1896b%22%20w%20ON%20c.%22WCRNUMBER%22%3Dw.%22WCRNUMBER%22%20WHERE%20w.%22COUNTYNAME%22%3D%27Orange%27%20ORDER%20BY%20c.%22_id%22
+  accessed_at: '2026-09-04T01:49:42.374234+00:00'
+  temporal_coverage: historical-present
+  spatial_resolution: Orange County report/well
+  temporal_resolution: event/report
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: supplementary construction and hydrostratigraphy evidence
+  validation_use: screen/construction metadata only
+  limitations: not limited to Basin 8-001; no fuzzy matching; WCR approximate coordinates
+    never replace station coordinates
+  sha256: bddcd08b5d2b7f106c0bbe61892469551d6ef0fe1b20dd95638aa2a7cd72655f
+- source_id: EPA_CA0110604_PAGE
+  agency: U.S. Environmental Protection Agency
+  title: NPDES permit CA0110604 page
+  source_type: web_page
+  official_url: https://www.epa.gov/npdes-permits/CA0110604
+  accessed_at: '2026-09-04T01:52:16.544792+00:00'
+  temporal_coverage: varies/current
+  spatial_resolution: wastewater facility or permit
+  temporal_resolution: annual/permit/reporting
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: secondary wastewater inventory only
+  validation_use: not used to decide groundwater feasibility
+  limitations: aggregate/permit data do not provide groundwater pumping or head forcing
+  sha256: 146214462a7a42671318be03042fa9c6941bd2be131f836304d75ae4e5dc4870
+- source_id: EPA_CA0110604_PERMIT
+  agency: U.S. Environmental Protection Agency / California Water Boards
+  title: Joint EPA/State NPDES Permit CA0110604
+  source_type: permit_pdf
+  official_url: https://www.epa.gov/system/files/documents/2021-07/r8-2021-0010-ca0110604-oc-sanitation-district-2021-06-23.pdf
+  accessed_at: '2026-09-04T01:52:34.472642+00:00'
+  temporal_coverage: varies/current
+  spatial_resolution: wastewater facility or permit
+  temporal_resolution: annual/permit/reporting
+  raw_machine_readable: 'false'
+  measurement_class: REPORTED_MEASURED
+  intended_use: secondary wastewater inventory only
+  validation_use: not used to decide groundwater feasibility
+  limitations: aggregate/permit data do not provide groundwater pumping or head forcing
+  sha256: 98ae694a226dad1a6d01043849bac72d04b9aa2d14d75b68b7e2f3816062e31c
+- source_id: EPA_ICIS_DMR_DOWNLOAD
+  agency: U.S. Environmental Protection Agency
+  title: ICIS-NPDES permit limit and DMR datasets
+  source_type: web_page
+  official_url: https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-and-limit-data-set
+  accessed_at: '2026-09-04T01:52:16.707787+00:00'
+  temporal_coverage: varies/current
+  spatial_resolution: wastewater facility or permit
+  temporal_resolution: annual/permit/reporting
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: secondary wastewater inventory only
+  validation_use: not used to decide groundwater feasibility
+  limitations: aggregate/permit data do not provide groundwater pumping or head forcing
+  sha256: 997b1a48f721cca17f71d8fc1dea86c039c7789d6d112960b05ae32fe5fd4a0a
+- source_id: EPA_ICIS_GUIDE
+  agency: U.S. Environmental Protection Agency
+  title: ICIS-NPDES search user guide
+  source_type: web_page
+  official_url: https://www.epa.gov/enviro/icis-npdes-search-user-guide
+  accessed_at: '2026-09-04T01:52:16.225751+00:00'
+  temporal_coverage: varies/current
+  spatial_resolution: wastewater facility or permit
+  temporal_resolution: annual/permit/reporting
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: secondary wastewater inventory only
+  validation_use: not used to decide groundwater feasibility
+  limitations: aggregate/permit data do not provide groundwater pumping or head forcing
+  sha256: 5ede6cad0539b3c6fc20a69603cafa2ea0d1111671fa31dc0a5b56705d45e1f2
+- source_id: LLNL_TRACER_FINAL
+  agency: Lawrence Livermore National Laboratory / U.S. Department of Energy
+  title: Final report on isotope tracer investigations in the Forebay
+  source_type: technical_report_pdf
+  official_url: https://www.osti.gov/servlets/purl/15013774
+  accessed_at: '2026-09-04T01:50:42.740702+00:00'
+  temporal_coverage: 1995-2001
+  spatial_resolution: recharge basin to monitoring/production well
+  temporal_resolution: experiment
+  raw_machine_readable: 'false'
+  measurement_class: OBSERVED
+  intended_use: explicit tracer travel quantities
+  validation_use: future independent physical connectivity/travel validation
+  limitations: published experimental summaries; no graph-pixel digitization
+  sha256: c6725fb3e2020aff9a92f16b970312a9fee525e3ea7a7cf27877227fe6223ffe
+- source_id: OCSAN_PRETREATMENT_2025
+  agency: Orange County Sanitation District
+  title: Resource Protection Division Annual Report FY 2024-2025
+  source_type: report_pdf
+  official_url: https://ocsan.gov/wp-content/uploads/2025/10/OC_San_Pretreatment_Annual_Report_FY_2024_2025_Final.pdf
+  accessed_at: '2026-09-04T01:52:17.056826+00:00'
+  temporal_coverage: varies/current
+  spatial_resolution: wastewater facility or permit
+  temporal_resolution: annual/permit/reporting
+  raw_machine_readable: 'false'
+  measurement_class: REPORTED_MEASURED
+  intended_use: secondary wastewater inventory only
+  validation_use: not used to decide groundwater feasibility
+  limitations: aggregate/permit data do not provide groundwater pumping or head forcing
+  sha256: e192f27a4309b4d2aa55725487e4bb7cda683dbc0a0635a45270cdb273c1b3df
+- source_id: OCSAN_REPORT_INDEX
+  agency: Orange County Sanitation District
+  title: OC San reports index
+  source_type: web_page
+  official_url: https://ocsan.gov/annual-reports/
+  accessed_at: '2026-09-04T01:52:19.718789+00:00'
+  temporal_coverage: varies/current
+  spatial_resolution: wastewater facility or permit
+  temporal_resolution: annual/permit/reporting
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: secondary wastewater inventory only
+  validation_use: not used to decide groundwater feasibility
+  limitations: aggregate/permit data do not provide groundwater pumping or head forcing
+  sha256: 60a09dc5693a4f55c488daccf57b9ad50c49bd62bf1daf60f6c67095425b8302
+- source_id: OCWD_BASIN_ALTERNATIVE_2022
+  agency: Orange County Water District
+  title: Basin 8-001 Alternative 2022 Update
+  source_type: report_pdf
+  official_url: https://www.ocwd.com/wp-content/uploads/basin-8-1-alternative-draft-2022-update.pdf
+  accessed_at: '2026-09-04T01:48:14.707078+00:00'
+  temporal_coverage: through 2021
+  spatial_resolution: basin/facility/well
+  temporal_resolution: monthly Water Resources Summary documented
+  raw_machine_readable: 'true'
+  measurement_class: DERIVED_FROM_MEASUREMENTS
+  intended_use: monitoring and recharge-accounting provenance
+  validation_use: data-schema evidence
+  limitations: mixes measured, calculated, and estimated quantities
+  sha256: 9d6b3654b294f8c0f11cb813b74203611c052e642aa64ed1f15e2746eb75c0c3
+- source_id: OCWD_BASIN_MODEL_APPENDIX_B
+  agency: Orange County Water District
+  title: Basin Model and Talbert Model Update / Appendix B
+  source_type: report_pdf
+  official_url: https://www.ocwd.com/wp-content/uploads/appendix-b.pdf
+  accessed_at: '2026-09-04T01:48:15.258103+00:00'
+  temporal_coverage: 1990-2011 discussion
+  spatial_resolution: basin/model layer
+  temporal_resolution: monthly inputs documented
+  raw_machine_readable: 'true'
+  measurement_class: REFERENCE_MODEL
+  intended_use: document WRMS/model-input provenance
+  validation_use: not empirical ground truth
+  limitations: documents model and input existence; does not release raw WRMS or model
+    package
+  sha256: 62e4c7a246672b19a734287ba7c27db17d3152fed75b3ebf15ffe66711f01977
+- source_id: OCWD_GWMP_2004
+  agency: Orange County Water District
+  title: 2004 Groundwater Management Plan
+  source_type: report_pdf
+  official_url: https://www.ocwd.com/wp-content/uploads/2004_03XX_OCWD-GWMP-2004.pdf
+  accessed_at: '2026-09-04T01:48:14.119071+00:00'
+  temporal_coverage: historical-2004
+  spatial_resolution: basin/well
+  temporal_resolution: monthly reporting documented
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: document monitoring and WRMS provenance
+  validation_use: supports data-existence audit
+  limitations: documentation is not the raw records
+  sha256: 403eeb771da8c24466d8929e3872c9d4decde4029313edf94d2ec8a895eba824
+- source_id: OCWD_GWRS_2023
+  agency: Orange County Water District
+  title: 2023 GWRS Annual Report
+  source_type: report_pdf
+  official_url: https://www.ocwd.com/wp-content/uploads/2023-GWRS-Annual-Report.pdf
+  accessed_at: '2026-09-04T01:55:34.735943+00:00'
+  temporal_coverage: '2023'
+  spatial_resolution: injection and monitoring wells
+  temporal_resolution: annual report; well metadata
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: MBI well/screen/aquifer metadata
+  validation_use: future intervention monitoring design
+  limitations: report is not the underlying time series
+  sha256: 310e948f02de0786b6d5814d2b990a4df21751cc19f2390f8f2c6fe58777607d
+- source_id: OCWD_LOCATION_MAPS
+  agency: Orange County Water District
+  title: Groundwater and location maps
+  source_type: web_page
+  official_url: https://www.ocwd.com/what-we-do/groundwater-management/groundwater-location-maps/
+  accessed_at: '2026-09-04T01:48:15.598097+00:00'
+  temporal_coverage: current and archived maps
+  spatial_resolution: basin/aquifer system
+  temporal_resolution: annual or map-specific
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: monitoring-network and aquifer-system inventory
+  validation_use: spatial context only
+  limitations: maps are not raw monitoring time series
+  sha256: 6493a303e5e549ac9037e8f3ffbcf295693f737112af639ee837b7f38a7f205d
+- source_id: OCWD_MBI_2020
+  agency: Orange County Water District
+  title: Mid-Basin Injection Centennial Park Project in Operation
+  source_type: web_page
+  official_url: https://www.ocwd.com/news-events/newsletter/2020/april-2020/mid-basin-injection-centennial-park-project-in-operation/
+  accessed_at: '2026-09-04T01:48:16.133102+00:00'
+  temporal_coverage: 2015-2020 milestones
+  spatial_resolution: injection facility
+  temporal_resolution: event month
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: intervention event dates
+  validation_use: future response validation event
+  limitations: operational dates do not provide forcing volumes or response series
+  sha256: 2ca83cd43e9017ec20d968fe3fa40a07908d6a61085f0e577bea07f4f8b02bd0
+- source_id: OCWD_RECHARGE_2009_2010
+  agency: Orange County Water District
+  title: 2009-2010 Report on Groundwater Recharge
+  source_type: report_pdf
+  official_url: https://www.ocwd.com/wp-content/uploads/09-10annualrechargereport_all.pdf
+  accessed_at: '2026-09-04T01:48:13.947060+00:00'
+  temporal_coverage: 2009-07 to 2010-06 with historical context
+  spatial_resolution: recharge facility
+  temporal_resolution: monthly
+  raw_machine_readable: 'true'
+  measurement_class: DERIVED_FROM_MEASUREMENTS
+  intended_use: historic facility/source/accounting schema
+  validation_use: future forcing provenance
+  limitations: percolation and storage are calculated from measured flows/levels;
+    some inputs estimated
+  sha256: b541d9f81f00d5cca3cc8ef70709647b05dcbb8907ae4fddf0f1d515b85dfe3a
+- source_id: OCWD_WATER_RESOURCES_INDEX
+  agency: Orange County Water District
+  title: Groundwater supplies and Water Resources Reports index
+  source_type: web_page
+  official_url: https://www.ocwd.com/what-we-do/groundwater-management/groundwater-supplies/
+  accessed_at: '2026-09-04T01:48:15.801065+00:00'
+  temporal_coverage: current reports
+  spatial_resolution: basin
+  temporal_resolution: monthly
+  raw_machine_readable: 'true'
+  measurement_class: DERIVED_FROM_MEASUREMENTS
+  intended_use: report index and accounting definitions
+  validation_use: provenance audit
+  limitations: index is not a raw time series
+  sha256: 92b77d82551e57f9ca8bb6e102b57f9d3f8325c6218d6546f3a15aaed3025089
+- source_id: OCWD_WIC_20260311
+  agency: Orange County Water District
+  title: Water Issues Committee packet, 2026-03-11
+  source_type: report_pdf
+  official_url: https://www.ocwd.com/wp-content/uploads/WIC_20260311.pdf
+  accessed_at: '2026-09-04T01:48:13.960065+00:00'
+  temporal_coverage: '2026'
+  spatial_resolution: MBI system
+  temporal_resolution: meeting packet
+  raw_machine_readable: 'true'
+  measurement_class: REPORTED_MEASURED
+  intended_use: current MBI system/map inventory
+  validation_use: intervention context
+  limitations: meeting packet is not the underlying injection data
+  sha256: b7a4fb6c2eca86f2ae74853f1b2011ac4232e0b8b0af6e2884149dc0e631d93a
+- source_id: OCWD_WRR_2025_07
+  agency: Orange County Water District
+  title: Water Resources Report 2025-07
+  source_type: report_pdf
+  official_url: https://www.ocwd.com/wp-content/uploads/WRR-July-2025.pdf
+  accessed_at: '2026-09-04T01:50:25.280204+00:00'
+  temporal_coverage: 2025-07
+  spatial_resolution: basin/recharge system
+  temporal_resolution: monthly
+  raw_machine_readable: 'false'
+  measurement_class: DERIVED_FROM_MEASUREMENTS
+  intended_use: recent accounting schema sample
+  validation_use: not independent groundwater-state validation
+  limitations: preliminary report; mixes measured/reported, calculated, and estimated
+    components
+  sha256: 911f53b654f9f9f95c4f79ac8600ecec6dd6be4f260b939eed0a48b42486de43
+- source_id: OCWD_WRR_2026_01
+  agency: Orange County Water District
+  title: Water Resources Report 2026-01
+  source_type: report_pdf
+  official_url: https://www.ocwd.com/wp-content/uploads/WRR_2026_01.pdf
+  accessed_at: '2026-09-04T01:50:09.444166+00:00'
+  temporal_coverage: 2026-01
+  spatial_resolution: basin/recharge system
+  temporal_resolution: monthly
+  raw_machine_readable: 'false'
+  measurement_class: DERIVED_FROM_MEASUREMENTS
+  intended_use: recent accounting schema sample
+  validation_use: not independent groundwater-state validation
+  limitations: preliminary report; mixes measured/reported, calculated, and estimated
+    components
+  sha256: 2a7344959c074d085c3b7db044d6ab07b26f27245cc051d3fc27b91f4a6d6f36
+- source_id: OCWD_WRR_2026_07
+  agency: Orange County Water District
+  title: Water Resources Report 2026-07
+  source_type: report_pdf
+  official_url: https://www.ocwd.com/wp-content/uploads/WRR_2026_07.pdf
+  accessed_at: '2026-09-04T01:50:09.897155+00:00'
+  temporal_coverage: 2026-07
+  spatial_resolution: basin/recharge system
+  temporal_resolution: monthly
+  raw_machine_readable: 'false'
+  measurement_class: DERIVED_FROM_MEASUREMENTS
+  intended_use: recent accounting schema sample
+  validation_use: not independent groundwater-state validation
+  limitations: preliminary report; mixes measured/reported, calculated, and estimated
+    components
+  sha256: d9f8f8166f7f031e11235d29a7ab26ad80877de8e2c706577c2fd8410e8fa734
+- source_id: USGS_11074000_DAILY
+  agency: U.S. Geological Survey
+  title: Santa Ana River below Prado Dam daily discharge
+  source_type: NWIS_RDB
+  official_url: https://waterservices.usgs.gov/nwis/dv/?format=rdb&sites=11074000&startDT=1900-01-01&endDT=2026-09-03&parameterCd=00060&siteStatus=all
+  accessed_at: '2026-09-04T01:50:11.064643+00:00'
+  temporal_coverage: 1940-present
+  spatial_resolution: gage
+  temporal_resolution: daily
+  raw_machine_readable: 'true'
+  measurement_class: OBSERVED
+  intended_use: river forcing coverage
+  validation_use: external observed forcing
+  limitations: estimated/provisional qualifiers retained
+  sha256: 5f7d90dce443b9a8f17a6cf7fa77200cbb1688b7fe5e1e739a0a0814cbc4ee9c
+- source_id: USGS_11074000_IV_RECENT
+  agency: U.S. Geological Survey
+  title: Santa Ana River below Prado Dam recent instantaneous discharge
+  source_type: NWIS_RDB
+  official_url: https://waterservices.usgs.gov/nwis/iv/?format=rdb&sites=11074000&startDT=2026-08-01&endDT=2026-09-03&parameterCd=00060&siteStatus=all
+  accessed_at: '2026-09-04T01:50:09.645620+00:00'
+  temporal_coverage: 2026-08-01 to 2026-09-03
+  spatial_resolution: gage
+  temporal_resolution: 15-minute
+  raw_machine_readable: 'true'
+  measurement_class: OBSERVED
+  intended_use: timezone/QA schema demonstration
+  validation_use: external observed forcing
+  limitations: recent slice only; provisional values expected
+  sha256: 9f09bd67f756e95a10918f2c801c62eab01ff1fb94b0a869679a0de183175188
+- source_id: USGS_11074000_SITE
+  agency: U.S. Geological Survey
+  title: Santa Ana River below Prado Dam site metadata
+  source_type: NWIS_RDB
+  official_url: https://waterservices.usgs.gov/nwis/site/?format=rdb&sites=11074000&siteOutput=expanded&siteStatus=all
+  accessed_at: '2026-09-04T01:50:09.259718+00:00'
+  temporal_coverage: station record
+  spatial_resolution: gage
+  temporal_resolution: static metadata
+  raw_machine_readable: 'true'
+  measurement_class: OBSERVED
+  intended_use: river forcing metadata
+  validation_use: external observed forcing
+  limitations: site timezone is PST with daylight-saving flag; coordinate datum retained
+  sha256: ea43641e990a032c035fc107b269e99704378c75f9e2c95d8ca69e0011372684

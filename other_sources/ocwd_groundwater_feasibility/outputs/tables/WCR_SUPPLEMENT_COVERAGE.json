@@ -1,0 +1,16 @@
+{
+  "borehole": 2781,
+  "casing": 5481,
+  "geologic_freeform": 12902,
+  "geologic_quickpick": 711,
+  "geologic_uscs": 1154,
+  "match_status": {
+    "AMBIGUOUS": 116,
+    "EXACT_ID": 57,
+    "HIGH_CONFIDENCE_METADATA_MATCH": 171,
+    "NO_MATCH": 282
+  },
+  "pdf_links": 22293,
+  "wcr": 28290,
+  "well_numbers": 3237
+}

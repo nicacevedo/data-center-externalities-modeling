@@ -1,0 +1,369 @@
+series,year,coverage_status
+Meta facility electricity,2011,reported
+Meta facility electricity,2012,reported
+Meta facility electricity,2013,reported
+Meta facility electricity,2014,reported
+Meta facility electricity,2015,reported
+Meta facility electricity,2016,reported
+Meta facility electricity,2017,reported
+Meta facility electricity,2018,reported
+Meta facility electricity,2019,reported
+Meta facility electricity,2020,reported
+Meta facility electricity,2021,reported
+Meta facility electricity,2022,reported
+Meta facility electricity,2023,reported
+Meta facility electricity,2024,reported
+Meta facility electricity,2025,missing
+Meta facility electricity,2026,missing
+Meta water withdrawal,2011,missing
+Meta water withdrawal,2012,missing
+Meta water withdrawal,2013,missing
+Meta water withdrawal,2014,reported
+Meta water withdrawal,2015,reported
+Meta water withdrawal,2016,reported
+Meta water withdrawal,2017,reported
+Meta water withdrawal,2018,reported
+Meta water withdrawal,2019,reported
+Meta water withdrawal,2020,reported
+Meta water withdrawal,2021,reported
+Meta water withdrawal,2022,reported
+Meta water withdrawal,2023,reported
+Meta water withdrawal,2024,reported
+Meta water withdrawal,2025,missing
+Meta water withdrawal,2026,missing
+Meta location Scope 2,2011,missing
+Meta location Scope 2,2012,reported
+Meta location Scope 2,2013,reported
+Meta location Scope 2,2014,reported
+Meta location Scope 2,2015,reported
+Meta location Scope 2,2016,reported
+Meta location Scope 2,2017,reported
+Meta location Scope 2,2018,reported
+Meta location Scope 2,2019,reported
+Meta location Scope 2,2020,reported
+Meta location Scope 2,2021,reported
+Meta location Scope 2,2022,reported
+Meta location Scope 2,2023,reported
+Meta location Scope 2,2024,reported
+Meta location Scope 2,2025,missing
+Meta location Scope 2,2026,missing
+Canonical weather (KS39/KRDM + KBDN fallback),2011,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2012,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2013,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2014,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2015,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2016,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2017,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2018,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2019,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2020,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2021,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2022,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2023,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2024,measured
+Canonical weather (KS39/KRDM + KBDN fallback),2025,missing
+Canonical weather (KS39/KRDM + KBDN fallback),2026,missing
+Conditional IT/facility power,2011,fitted
+Conditional IT/facility power,2012,fitted
+Conditional IT/facility power,2013,fitted
+Conditional IT/facility power,2014,fitted
+Conditional IT/facility power,2015,fitted
+Conditional IT/facility power,2016,fitted
+Conditional IT/facility power,2017,fitted
+Conditional IT/facility power,2018,fitted
+Conditional IT/facility power,2019,fitted
+Conditional IT/facility power,2020,fitted
+Conditional IT/facility power,2021,fitted
+Conditional IT/facility power,2022,fitted
+Conditional IT/facility power,2023,fitted
+Conditional IT/facility power,2024,fitted
+Conditional IT/facility power,2025,missing
+Conditional IT/facility power,2026,missing
+Water proxy (evap × scale),2011,fitted
+Water proxy (evap × scale),2012,fitted
+Water proxy (evap × scale),2013,fitted
+Water proxy (evap × scale),2014,proxy
+Water proxy (evap × scale),2015,proxy
+Water proxy (evap × scale),2016,proxy
+Water proxy (evap × scale),2017,proxy
+Water proxy (evap × scale),2018,proxy
+Water proxy (evap × scale),2019,proxy
+Water proxy (evap × scale),2020,proxy
+Water proxy (evap × scale),2021,proxy
+Water proxy (evap × scale),2022,proxy
+Water proxy (evap × scale),2023,proxy
+Water proxy (evap × scale),2024,proxy
+Water proxy (evap × scale),2025,missing
+Water proxy (evap × scale),2026,missing
+EIA-930 PACW hourly demand,2011,not_necessary
+EIA-930 PACW hourly demand,2012,not_necessary
+EIA-930 PACW hourly demand,2013,not_necessary
+EIA-930 PACW hourly demand,2014,not_necessary
+EIA-930 PACW hourly demand,2015,reported
+EIA-930 PACW hourly demand,2016,reported
+EIA-930 PACW hourly demand,2017,reported
+EIA-930 PACW hourly demand,2018,reported
+EIA-930 PACW hourly demand,2019,reported
+EIA-930 PACW hourly demand,2020,reported
+EIA-930 PACW hourly demand,2021,reported
+EIA-930 PACW hourly demand,2022,reported
+EIA-930 PACW hourly demand,2023,reported
+EIA-930 PACW hourly demand,2024,reported
+EIA-930 PACW hourly demand,2025,missing
+EIA-930 PACW hourly demand,2026,missing
+FERC PacifiCorp-West monthly,2011,reported
+FERC PacifiCorp-West monthly,2012,reported
+FERC PacifiCorp-West monthly,2013,reported
+FERC PacifiCorp-West monthly,2014,reported
+FERC PacifiCorp-West monthly,2015,reported
+FERC PacifiCorp-West monthly,2016,reported
+FERC PacifiCorp-West monthly,2017,reported
+FERC PacifiCorp-West monthly,2018,reported
+FERC PacifiCorp-West monthly,2019,not_necessary
+FERC PacifiCorp-West monthly,2020,not_necessary
+FERC PacifiCorp-West monthly,2021,not_necessary
+FERC PacifiCorp-West monthly,2022,not_necessary
+FERC PacifiCorp-West monthly,2023,not_necessary
+FERC PacifiCorp-West monthly,2024,not_necessary
+FERC PacifiCorp-West monthly,2025,not_necessary
+FERC PacifiCorp-West monthly,2026,not_necessary
+FERC PACW-West hourly proxy,2011,proxy
+FERC PACW-West hourly proxy,2012,proxy
+FERC PACW-West hourly proxy,2013,proxy
+FERC PACW-West hourly proxy,2014,proxy
+FERC PACW-West hourly proxy,2015,proxy
+FERC PACW-West hourly proxy,2016,proxy
+FERC PACW-West hourly proxy,2017,proxy
+FERC PACW-West hourly proxy,2018,proxy
+FERC PACW-West hourly proxy,2019,not_necessary
+FERC PACW-West hourly proxy,2020,not_necessary
+FERC PACW-West hourly proxy,2021,not_necessary
+FERC PACW-West hourly proxy,2022,not_necessary
+FERC PACW-West hourly proxy,2023,not_necessary
+FERC PACW-West hourly proxy,2024,not_necessary
+FERC PACW-West hourly proxy,2025,not_necessary
+FERC PACW-West hourly proxy,2026,not_necessary
+PACW consumed CO2 intensity,2011,missing
+PACW consumed CO2 intensity,2012,missing
+PACW consumed CO2 intensity,2013,missing
+PACW consumed CO2 intensity,2014,missing
+PACW consumed CO2 intensity,2015,proxy
+PACW consumed CO2 intensity,2016,proxy
+PACW consumed CO2 intensity,2017,proxy
+PACW consumed CO2 intensity,2018,reported
+PACW consumed CO2 intensity,2019,reported
+PACW consumed CO2 intensity,2020,reported
+PACW consumed CO2 intensity,2021,reported
+PACW consumed CO2 intensity,2022,reported
+PACW consumed CO2 intensity,2023,reported
+PACW consumed CO2 intensity,2024,reported
+PACW consumed CO2 intensity,2025,missing
+PACW consumed CO2 intensity,2026,missing
+eGRID NWPP benchmark,2011,derived
+eGRID NWPP benchmark,2012,derived
+eGRID NWPP benchmark,2013,derived
+eGRID NWPP benchmark,2014,derived
+eGRID NWPP benchmark,2015,derived
+eGRID NWPP benchmark,2016,derived
+eGRID NWPP benchmark,2017,derived
+eGRID NWPP benchmark,2018,derived
+eGRID NWPP benchmark,2019,derived
+eGRID NWPP benchmark,2020,derived
+eGRID NWPP benchmark,2021,derived
+eGRID NWPP benchmark,2022,derived
+eGRID NWPP benchmark,2023,derived
+eGRID NWPP benchmark,2024,derived
+eGRID NWPP benchmark,2025,missing
+eGRID NWPP benchmark,2026,missing
+OWRD City production,2011,reported
+OWRD City production,2012,reported
+OWRD City production,2013,reported
+OWRD City production,2014,reported
+OWRD City production,2015,reported
+OWRD City production,2016,reported
+OWRD City production,2017,reported
+OWRD City production,2018,reported
+OWRD City production,2019,reported
+OWRD City production,2020,reported
+OWRD City production,2021,reported
+OWRD City production,2022,reported
+OWRD City production,2023,reported
+OWRD City production,2024,reported
+OWRD City production,2025,reported
+OWRD City production,2026,missing
+OWRD Vitesse/Facebook POD,2011,reported
+OWRD Vitesse/Facebook POD,2012,reported
+OWRD Vitesse/Facebook POD,2013,reported
+OWRD Vitesse/Facebook POD,2014,reported
+OWRD Vitesse/Facebook POD,2015,reported
+OWRD Vitesse/Facebook POD,2016,reported
+OWRD Vitesse/Facebook POD,2017,reported
+OWRD Vitesse/Facebook POD,2018,reported
+OWRD Vitesse/Facebook POD,2019,reported
+OWRD Vitesse/Facebook POD,2020,reported
+OWRD Vitesse/Facebook POD,2021,reported
+OWRD Vitesse/Facebook POD,2022,reported
+OWRD Vitesse/Facebook POD,2023,reported
+OWRD Vitesse/Facebook POD,2024,reported
+OWRD Vitesse/Facebook POD,2025,missing
+OWRD Vitesse/Facebook POD,2026,missing
+USGS IWA (site HUC12),2011,proxy
+USGS IWA (site HUC12),2012,proxy
+USGS IWA (site HUC12),2013,proxy
+USGS IWA (site HUC12),2014,proxy
+USGS IWA (site HUC12),2015,proxy
+USGS IWA (site HUC12),2016,proxy
+USGS IWA (site HUC12),2017,proxy
+USGS IWA (site HUC12),2018,proxy
+USGS IWA (site HUC12),2019,proxy
+USGS IWA (site HUC12),2020,proxy
+USGS IWA (site HUC12),2021,missing
+USGS IWA (site HUC12),2022,missing
+USGS IWA (site HUC12),2023,missing
+USGS IWA (site HUC12),2024,missing
+USGS IWA (site HUC12),2025,missing
+USGS IWA (site HUC12),2026,missing
+USGS PS / irrigation,2011,proxy
+USGS PS / irrigation,2012,proxy
+USGS PS / irrigation,2013,proxy
+USGS PS / irrigation,2014,proxy
+USGS PS / irrigation,2015,proxy
+USGS PS / irrigation,2016,proxy
+USGS PS / irrigation,2017,proxy
+USGS PS / irrigation,2018,proxy
+USGS PS / irrigation,2019,proxy
+USGS PS / irrigation,2020,proxy
+USGS PS / irrigation,2021,missing
+USGS PS / irrigation,2022,missing
+USGS PS / irrigation,2023,missing
+USGS PS / irrigation,2024,missing
+USGS PS / irrigation,2025,missing
+USGS PS / irrigation,2026,missing
+Oregon CAMPD/EIA generators,2011,measured
+Oregon CAMPD/EIA generators,2012,measured
+Oregon CAMPD/EIA generators,2013,measured
+Oregon CAMPD/EIA generators,2014,measured
+Oregon CAMPD/EIA generators,2015,measured
+Oregon CAMPD/EIA generators,2016,measured
+Oregon CAMPD/EIA generators,2017,measured
+Oregon CAMPD/EIA generators,2018,measured
+Oregon CAMPD/EIA generators,2019,measured
+Oregon CAMPD/EIA generators,2020,measured
+Oregon CAMPD/EIA generators,2021,measured
+Oregon CAMPD/EIA generators,2022,measured
+Oregon CAMPD/EIA generators,2023,measured
+Oregon CAMPD/EIA generators,2024,measured
+Oregon CAMPD/EIA generators,2025,missing
+Oregon CAMPD/EIA generators,2026,missing
+Hourly IT telemetry,2011,not_necessary
+Hourly IT telemetry,2012,not_necessary
+Hourly IT telemetry,2013,not_necessary
+Hourly IT telemetry,2014,not_necessary
+Hourly IT telemetry,2015,not_necessary
+Hourly IT telemetry,2016,not_necessary
+Hourly IT telemetry,2017,not_necessary
+Hourly IT telemetry,2018,not_necessary
+Hourly IT telemetry,2019,not_necessary
+Hourly IT telemetry,2020,not_necessary
+Hourly IT telemetry,2021,not_necessary
+Hourly IT telemetry,2022,not_necessary
+Hourly IT telemetry,2023,not_necessary
+Hourly IT telemetry,2024,not_necessary
+Hourly IT telemetry,2025,not_necessary
+Hourly IT telemetry,2026,not_necessary
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2011,missing
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2012,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2013,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2014,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2015,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2016,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2017,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2018,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2019,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2020,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2021,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2022,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2023,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2024,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2025,reported
+City customer-service meter — observed 2012–2026-07 (2012 and 2026 partial),2026,reported
+All-source monthly campus withdrawal / complete campus water balance,2011,missing
+All-source monthly campus withdrawal / complete campus water balance,2012,missing
+All-source monthly campus withdrawal / complete campus water balance,2013,missing
+All-source monthly campus withdrawal / complete campus water balance,2014,missing
+All-source monthly campus withdrawal / complete campus water balance,2015,missing
+All-source monthly campus withdrawal / complete campus water balance,2016,missing
+All-source monthly campus withdrawal / complete campus water balance,2017,missing
+All-source monthly campus withdrawal / complete campus water balance,2018,missing
+All-source monthly campus withdrawal / complete campus water balance,2019,missing
+All-source monthly campus withdrawal / complete campus water balance,2020,missing
+All-source monthly campus withdrawal / complete campus water balance,2021,missing
+All-source monthly campus withdrawal / complete campus water balance,2022,missing
+All-source monthly campus withdrawal / complete campus water balance,2023,missing
+All-source monthly campus withdrawal / complete campus water balance,2024,missing
+All-source monthly campus withdrawal / complete campus water balance,2025,missing
+All-source monthly campus withdrawal / complete campus water balance,2026,missing
+Monthly campus wastewater/sewer discharge,2011,missing
+Monthly campus wastewater/sewer discharge,2012,missing
+Monthly campus wastewater/sewer discharge,2013,missing
+Monthly campus wastewater/sewer discharge,2014,missing
+Monthly campus wastewater/sewer discharge,2015,missing
+Monthly campus wastewater/sewer discharge,2016,missing
+Monthly campus wastewater/sewer discharge,2017,missing
+Monthly campus wastewater/sewer discharge,2018,missing
+Monthly campus wastewater/sewer discharge,2019,missing
+Monthly campus wastewater/sewer discharge,2020,missing
+Monthly campus wastewater/sewer discharge,2021,missing
+Monthly campus wastewater/sewer discharge,2022,missing
+Monthly campus wastewater/sewer discharge,2023,missing
+Monthly campus wastewater/sewer discharge,2024,missing
+Monthly campus wastewater/sewer discharge,2025,missing
+Monthly campus wastewater/sewer discharge,2026,missing
+Monthly/hourly campus electricity meter,2011,missing
+Monthly/hourly campus electricity meter,2012,missing
+Monthly/hourly campus electricity meter,2013,missing
+Monthly/hourly campus electricity meter,2014,missing
+Monthly/hourly campus electricity meter,2015,missing
+Monthly/hourly campus electricity meter,2016,missing
+Monthly/hourly campus electricity meter,2017,missing
+Monthly/hourly campus electricity meter,2018,missing
+Monthly/hourly campus electricity meter,2019,missing
+Monthly/hourly campus electricity meter,2020,missing
+Monthly/hourly campus electricity meter,2021,missing
+Monthly/hourly campus electricity meter,2022,missing
+Monthly/hourly campus electricity meter,2023,missing
+Monthly/hourly campus electricity meter,2024,missing
+Monthly/hourly campus electricity meter,2025,missing
+Monthly/hourly campus electricity meter,2026,missing
+Groundwater head observations,2011,measured
+Groundwater head observations,2012,measured
+Groundwater head observations,2013,measured
+Groundwater head observations,2014,measured
+Groundwater head observations,2015,measured
+Groundwater head observations,2016,measured
+Groundwater head observations,2017,measured
+Groundwater head observations,2018,measured
+Groundwater head observations,2019,measured
+Groundwater head observations,2020,measured
+Groundwater head observations,2021,measured
+Groundwater head observations,2022,measured
+Groundwater head observations,2023,measured
+Groundwater head observations,2024,measured
+Groundwater head observations,2025,measured
+Groundwater head observations,2026,measured
+Indirect electricity water (EWIF),2011,missing
+Indirect electricity water (EWIF),2012,missing
+Indirect electricity water (EWIF),2013,missing
+Indirect electricity water (EWIF),2014,proxy
+Indirect electricity water (EWIF),2015,proxy
+Indirect electricity water (EWIF),2016,proxy
+Indirect electricity water (EWIF),2017,proxy
+Indirect electricity water (EWIF),2018,proxy
+Indirect electricity water (EWIF),2019,proxy
+Indirect electricity water (EWIF),2020,proxy
+Indirect electricity water (EWIF),2021,proxy
+Indirect electricity water (EWIF),2022,proxy
+Indirect electricity water (EWIF),2023,proxy
+Indirect electricity water (EWIF),2024,proxy
+Indirect electricity water (EWIF),2025,missing
+Indirect electricity water (EWIF),2026,missing

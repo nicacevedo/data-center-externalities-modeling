@@ -1,0 +1,14 @@
+Annual boundary-reconciliation diagnostic for complete City-service years. Service + bulk is diagnostic only -- not an identified campus mass balance; blank bulk combinations lack 12 billing months.
+
+| Year | Meta m3 | City service m3 | Service/Meta | Bulk m3 | Service+bulk m3 | (Service+bulk)/Meta |
+|---|---|---|---|---|---|---|
+| 2014 | 39,747 | 5,000 | 0.126 |  |  |  |
+| 2016 | 70,000 | 32,769 | 0.468 |  |  |  |
+| 2017 | 172,000 | 86,355 | 0.502 |  |  |  |
+| 2018 | 160,000 | 120,859 | 0.755 |  |  |  |
+| 2019 | 208,000 | 177,673 | 0.854 | 19,344 | 197,017 | 0.947 |
+| 2020 | 445,000 | 328,339 | 0.738 | 43,067 | 371,407 | 0.835 |
+| 2021 | 354,000 | 380,331 | 1.074 | 41,163 | 421,494 | 1.191 |
+| 2022 | 240,000 | 239,368 | 0.997 | 26,493 | 265,862 | 1.108 |
+| 2023 | 180,000 | 164,878 | 0.916 | 14,873 | 179,751 | 0.999 |
+| 2024 | 328,000 | 320,966 | 0.979 | 5,484 | 326,450 | 0.995 |

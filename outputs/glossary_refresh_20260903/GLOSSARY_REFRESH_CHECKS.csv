@@ -1,0 +1,22 @@
+check,pass,detail
+branch,True,main
+head_equals_origin_main,True,HEAD=08b0c112d8883eb4d23bb05d0d40e1a42c863593; origin/main=08b0c112d8883eb4d23bb05d0d40e1a42c863593
+master_tex_untouched,True,git diff --quiet HEAD -- main_documents/master.tex
+registries_byte_identical,True,"[{""artifact"":""data_source_inventory.csv"",""canonical_sha256"":""e2244578b589a0808698353d0a4c2c7548483195203c95d17c3ce15d950b63dd"",""regenerated_sha256"":""e2244578b589a0808698353d0a4c2c7548483195203c95d17c3ce15d950b63dd"",""byte_identical"":true},{""artifact"":""model_quantity_registry.csv"",""canonical_sha256"":""abb2e332517ae70e568a7f657c3ba81af7ad8601de3f322ffb2aae583763a019"",""regenerated_sha256"":""abb2e332517ae70e568a7f657c3ba81af7ad8601de3f322ffb2aae583763a019"",""byte_identical"":true},{""artifact"":""model_registry.csv"",""canonical_sha256"":""279e9999d72e4b521718a2895367a7d0ea2b5f8e80d3618cbc6c739296b923e9"",""regenerated_sha256"":""279e9999d72e4b521718a2895367a7d0ea2b5f8e80d3618cbc6c739296b923e9"",""byte_identical"":true}]"
+registry_counts,True,50 sources; 82 quantities; 26 methods/models
+city_partial_years,True,"[2012, 2015, 2026]"
+weather_complete,True,"122,736/122,736 finite required-driver hours"
+groundwater_not_fitted,True,pumping->groundwater response remains NOT IDENTIFIED
+city_validation_gate,True,gate=PASS; n=120
+seasonal_persistence_wins,True,7473.075529 < 11728.128346
+graybox_shape_signal,True,r=0.751399817
+external_statuses,True,"{""Forest City v3"": ""Qualitative PARTIAL; quantitative NOT VALIDATED"", ""Frontier"": ""CLOSED"", ""Lei--Masanet"": ""PARTIAL / CLOSED; adapter blocked"", ""M100"": ""CLOSED / FROZEN; limitations"", ""Modern AI IT-power layer"": ""FROZEN / BOUNDED; node uncertainty"", ""NLR/ESIF facility overhead"": ""PARTIAL / CLOSED""}"
+focused_tests,True,39 passed; 0 failures/errors
+stale_language_active_hits,True,"[{""phrase_class"": ""Baseline v1"", ""all_source_hits"": 2, ""active_after_oldtxt_removed"": 0, ""disposition"": ""PASS""}, {""phrase_class"": ""old registry counts"", ""all_source_hits"": 3, ""active_after_oldtxt_removed"": 0, ""disposition"": ""PASS""}, {""phrase_class"": ""no monthly campus meter"", ""all_source_hits"": 1, ""active_after_oldtxt_removed"": 0, ""disposition"": ""PASS""}, {""phrase_class"": ""Masanet still running"", ""all_source_hits"": 4, ""active_after_oldtxt_removed"": 0, ""disposition"": ""PASS""}, {""phrase_class"": ""Frontier QC pending/running"", ""all_source_hits"": 2, ""active_after_oldtxt_removed"": 0, ""disposition"": ""PASS""}, {""phrase_class"": ""conditional Masanet promotion"", ""all_source_hits"": 4, ""active_after_oldtxt_removed"": 0, ""disposition"": ""PASS""}, {""phrase_class"": ""modern AI no result"", ""all_source_hits"": 1, ""active_after_oldtxt_removed"": 0, ""disposition"": ""PASS""}]"
+required_current_language,True,Prineville Public-Data Baseline v2; All-source monthly campus withdrawal; not total Meta campus withdrawal; PARTIAL / closed; quantitative transfer is NOT\_VALIDATED; FROZEN_BOUNDED_WITH_EXPLICIT_NODE_UNCERTAINTY; site-water/source accounting; groundwater response; M_0; M_1
+latex_fatal_free,True,compiled PDF has no fatal/undefined-control error
+latex_crossrefs_resolved,True,two-pass cross-references resolved
+latex_overfull_bounded,True,max=7.46590 pt
+pdf_page_count_parsed,True,pages=40
+pdf_present,True,1616721 bytes
+protected_figures_unchanged,True,"[{""path"": ""Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig02_observed_ground_truth.png"", ""before_sha256"": ""2a6fd479c8140158fba9b80c5c465f6868b636a08b5b0cf6e0256a5eb68d2801"", ""after_sha256"": ""2a6fd479c8140158fba9b80c5c465f6868b636a08b5b0cf6e0256a5eb68d2801"", ""unchanged"": true}, {""path"": ""Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig03_water_model_accuracy.png"", ""before_sha256"": ""77d0f8cc43394ad3bd5e9f7724ec216b39451ee87d46af97632aa3b84e9fc36f"", ""after_sha256"": ""77d0f8cc43394ad3bd5e9f7724ec216b39451ee87d46af97632aa3b84e9fc36f"", ""unchanged"": true}, {""path"": ""Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig_advisor_gwis_estimation_candidates.png"", ""before_sha256"": ""99960ad6a0e466397bbb065c776c0a76117cdb77e0e7b52ada6d00e91f3a97d6"", ""after_sha256"": ""99960ad6a0e466397bbb065c776c0a76117cdb77e0e7b52ada6d00e91f3a97d6"", ""unchanged"": true}]"

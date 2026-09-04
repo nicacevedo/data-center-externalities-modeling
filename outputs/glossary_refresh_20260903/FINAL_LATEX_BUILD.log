@@ -1,0 +1,3971 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.27)  3 SEP 2026 16:06
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**Network_Based_Data_Center_Glossary.tex
+(./Network_Based_Data_Center_Glossary.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-03-20>
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count275
+\c@section=\count276
+\c@subsection=\count277
+\c@subsubsection=\count278
+\c@paragraph=\count279
+\c@subparagraph=\count280
+\c@figure=\count281
+\c@table=\count282
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen150
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2026/03/07 v6.0 Page Geometry
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+))
+\Gm@cnth=\count283
+\Gm@cntv=\count284
+\c@Gm@tempcnt=\count285
+\Gm@bindingoffset=\dimen151
+\Gm@wd@mp=\dimen152
+\Gm@odd@mp=\dimen153
+\Gm@even@mp=\dimen154
+\Gm@layoutwidth=\dimen155
+\Gm@layoutheight=\dimen156
+\Gm@layouthoffset=\dimen157
+\Gm@layoutvoffset=\dimen158
+\Gm@dimlist=\toks18
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2024/02/08 v1.3d Input encoding file
+\inpenc@prehook=\toks19
+\inpenc@posthook=\toks20
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/lm/lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/microtype/microtype.sty
+Package: microtype 2026/03/01 v3.2d Micro-typographical refinements (RS)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count286
+)
+\MT@toks=\toks21
+\MT@tempbox=\box53
+\MT@count=\count287
+LaTeX Info: Redefining \noprotrusionifhmode on input line 1084.
+LaTeX Info: Redefining \leftprotrusion on input line 1085.
+\MT@prot@toks=\toks22
+LaTeX Info: Redefining \rightprotrusion on input line 1104.
+LaTeX Info: Redefining \textls on input line 1449.
+\MT@outer@kern=\dimen159
+LaTeX Info: Redefining \microtypecontext on input line 2053.
+LaTeX Info: Redefining \textmicrotypecontext on input line 2070.
+\MT@listname@count=\count288
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/microtype/microtype-pdftex.def
+File: microtype-pdftex.def 2026/03/01 v3.2d Definitions specific to pdftex (RS)
+LaTeX Info: Redefining \lsstyle on input line 944.
+LaTeX Info: Redefining \lslig on input line 944.
+\MT@outer@space=\skip51
+)
+Package microtype Info: Loading configuration file microtype.cfg.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/microtype/microtype.cfg
+File: microtype.cfg 2026/03/01 v3.2d microtype main configuration file (RS)
+)
+LaTeX Info: Redefining \microtypesetup on input line 3065.
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2025/07/09 v2.17z AMS math features
+\@mathmargin=\skip52
+For additional information on amsmath, use the `?' option.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2024/11/17 v2.01 AMS text
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks23
+\ex@=\dimen160
+)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen161
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count289
+LaTeX Info: Redefining \frac on input line 233.
+\uproot@=\count290
+\leftroot@=\count291
+LaTeX Info: Redefining \overline on input line 398.
+LaTeX Info: Redefining \colon on input line 409.
+\classnum@=\count292
+\DOTSCASE@=\count293
+LaTeX Info: Redefining \ldots on input line 495.
+LaTeX Info: Redefining \dots on input line 498.
+LaTeX Info: Redefining \cdots on input line 619.
+\Mathstrutbox@=\box54
+\strutbox@=\box55
+LaTeX Info: Redefining \big on input line 721.
+LaTeX Info: Redefining \Big on input line 722.
+LaTeX Info: Redefining \bigg on input line 723.
+LaTeX Info: Redefining \Bigg on input line 724.
+\big@size=\dimen162
+LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
+\macc@depth=\count294
+LaTeX Info: Redefining \bmod on input line 904.
+LaTeX Info: Redefining \pmod on input line 909.
+LaTeX Info: Redefining \smash on input line 939.
+LaTeX Info: Redefining \relbar on input line 969.
+LaTeX Info: Redefining \Relbar on input line 970.
+\c@MaxMatrixCols=\count295
+\dotsspace@=\muskip17
+\c@parentequation=\count296
+\dspbrk@lvl=\count297
+\tag@help=\toks24
+\row@=\count298
+\column@=\count299
+\maxfields@=\count300
+\andhelp@=\toks25
+\eqnshift@=\dimen163
+\alignsep@=\dimen164
+\tagshift@=\dimen165
+\tagwidth@=\dimen166
+\totwidth@=\dimen167
+\lineht@=\dimen168
+\@envbody=\toks26
+\multlinegap=\skip53
+\multlinetaggap=\skip54
+\mathdisplay@stack=\toks27
+LaTeX Info: Redefining \[ on input line 2950.
+LaTeX Info: Redefining \] on input line 2951.
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/mathtools/mathtools.sty
+Package: mathtools 2024/10/04 v1.31 mathematical typesetting tools
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2025/03/01 v4.3b Infix arithmetic (KKT,FJ)
+\calc@Acount=\count301
+\calc@Bcount=\count302
+\calc@Adimen=\dimen169
+\calc@Bdimen=\dimen170
+\calc@Askip=\skip55
+\calc@Bskip=\skip56
+LaTeX Info: Redefining \setlength on input line 86.
+LaTeX Info: Redefining \addtolength on input line 87.
+\calc@Ccount=\count303
+\calc@Cskip=\skip57
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/mathtools/mhsetup.sty
+Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
+)
+\g_MT_multlinerow_int=\count304
+\l_MT_multwidth_dim=\dimen171
+\origjot=\skip58
+\l_MT_shortvdotswithinadjustabove_dim=\dimen172
+\l_MT_shortvdotswithinadjustbelow_dim=\dimen173
+\l_MT_above_intertext_sep=\dimen174
+\l_MT_below_intertext_sep=\dimen175
+\l_MT_above_shortintertext_sep=\dimen176
+\l_MT_below_shortintertext_sep=\dimen177
+\xmathstrut@box=\box56
+\xmathstrut@dim=\dimen178
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen179
+\lightrulewidth=\dimen180
+\cmidrulewidth=\dimen181
+\belowrulesep=\dimen182
+\belowbottomsep=\dimen183
+\aboverulesep=\dimen184
+\abovetopsep=\dimen185
+\cmidrulesep=\dimen186
+\cmidrulekern=\dimen187
+\defaultaddspace=\dimen188
+\@cmidla=\count305
+\@cmidlb=\count306
+\@aboverulesep=\dimen189
+\@belowrulesep=\dimen190
+\@thisruleclass=\count307
+\@lastruleclass=\count308
+\@thisrulewidth=\dimen191
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
+\LTleft=\skip59
+\LTright=\skip60
+\LTpre=\skip61
+\LTpost=\skip62
+\LTchunksize=\count309
+\LTcapwidth=\dimen192
+\LT@head=\box57
+\LT@firsthead=\box58
+\LT@foot=\box59
+\LT@lastfoot=\box60
+\LT@gbox=\box61
+\LT@cols=\count310
+\LT@rows=\count311
+\c@LT@tables=\count312
+\c@LT@chunks=\count313
+\LT@p@ftn=\toks28
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/tools/tabularx.sty
+Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/tools/array.sty
+Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
+\col@sep=\dimen193
+\ar@mcellbox=\box62
+\extrarowheight=\dimen194
+\NC@list=\toks29
+\extratabsurround=\skip63
+\backup@length=\skip64
+\ar@cellbox=\box63
+)
+\TX@col@width=\dimen195
+\TX@old@table=\dimen196
+\TX@old@col=\dimen197
+\TX@target=\dimen198
+\TX@delta=\dimen199
+\TX@cols=\count314
+\TX@ftn=\toks30
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen256
+\Gin@req@width=\dimen257
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box64
+\UL@hyphenbox=\box65
+\UL@skip=\skip65
+\UL@hook=\toks31
+\UL@height=\dimen258
+\UL@pe=\count315
+\UL@pixel=\dimen259
+\ULC@box=\box66
+Package: ulem 2019/11/18
+\ULdepth=\dimen260
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/todonotes/todonotes.sty
+Package: todonotes 2024/01/05 v1.1.7 Todonotes source and documentation.
+Package: todonotes 2024/01/05
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2025/11/04 v2.10 package option processing (HA)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/xkeyval/xkeyval.tex (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks32
+\XKV@tempa@toks=\toks33
+\XKV@tempb@toks=\toks34
+)
+\XKV@depth=\count316
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+\pgfutil@everybye=\toks35
+\pgfutil@tempdima=\dimen261
+\pgfutil@tempdimb=\dimen262
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box67
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/pgf.revision.tex)
+Package: pgfrcs 2025-08-29 v3.1.11a (3.1.11a)
+))
+Package: pgf 2025-08-29 v3.1.11a (3.1.11a)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks36
+\pgfkeys@temptoks=\toks37
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex
+\pgfkeys@tmptoks=\toks38
+))
+\pgf@x=\dimen263
+\pgf@y=\dimen264
+\pgf@xa=\dimen265
+\pgf@ya=\dimen266
+\pgf@xb=\dimen267
+\pgf@yb=\dimen268
+\pgf@xc=\dimen269
+\pgf@yc=\dimen270
+\pgf@xd=\dimen271
+\pgf@yd=\dimen272
+\w@pgf@writea=\write3
+\r@pgf@reada=\read2
+\c@pgf@counta=\count317
+\c@pgf@countb=\count318
+\c@pgf@countc=\count319
+\c@pgf@countd=\count320
+\t@pgf@toka=\toks39
+\t@pgf@tokb=\toks40
+\t@pgf@tokc=\toks41
+\pgf@sys@id@count=\count321
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2025-08-29 v3.1.11a (3.1.11a)
+)
+Driver file for pgf: pgfsys-pdftex.def
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.def
+File: pgfsys-pdftex.def 2025-08-29 v3.1.11a (3.1.11a)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2025-08-29 v3.1.11a (3.1.11a)
+))) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfsyssoftpath@smallbuffer@items=\count322
+\pgfsyssoftpath@bigbuffer@items=\count323
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen273
+\pgfmath@count=\count324
+\pgfmath@box=\box68
+\pgfmath@toks=\toks42
+\pgfmath@stack@operand=\toks43
+\pgfmath@stack@operation=\toks44
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count325
+)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfint.code.tex) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@picminx=\dimen274
+\pgf@picmaxx=\dimen275
+\pgf@picminy=\dimen276
+\pgf@picmaxy=\dimen277
+\pgf@pathminx=\dimen278
+\pgf@pathmaxx=\dimen279
+\pgf@pathminy=\dimen280
+\pgf@pathmaxy=\dimen281
+\pgf@xx=\dimen282
+\pgf@xy=\dimen283
+\pgf@yx=\dimen284
+\pgf@yy=\dimen285
+\pgf@zx=\dimen286
+\pgf@zy=\dimen287
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@path@lastx=\dimen288
+\pgf@path@lasty=\dimen289
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@shorten@end@additional=\dimen290
+\pgf@shorten@start@additional=\dimen291
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfpic=\box69
+\pgf@hbox=\box70
+\pgf@layerbox@main=\box71
+\pgf@picture@serial@count=\count326
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgflinewidth=\dimen292
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
+File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@pt@x=\dimen293
+\pgf@pt@y=\dimen294
+\pgf@pt@temp=\dimen295
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfarrowsep=\dimen296
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@max=\dimen297
+\pgf@sys@shading@range@num=\count327
+\pgf@shadingcount=\count328
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfexternal@startupbox=\box72
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
+File: pgfcoretransparency.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+))) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfnodeparttextbox=\box73
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@nodesepstart=\dimen298
+\pgf@nodesepend=\dimen299
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2025-08-29 v3.1.11a (3.1.11a)
+)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/pgf/math/pgfmath.sty (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
+\pgffor@iter=\dimen300
+\pgffor@skip=\dimen301
+\pgffor@stack=\toks45
+\pgffor@toks=\toks46
+)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@plot@mark@count=\count329
+\pgfplotmarksize=\dimen302
+)
+\tikz@lastx=\dimen303
+\tikz@lasty=\dimen304
+\tikz@lastxsaved=\dimen305
+\tikz@lastysaved=\dimen306
+\tikz@lastmovetox=\dimen307
+\tikz@lastmovetoy=\dimen308
+\tikzleveldistance=\dimen309
+\tikzsiblingdistance=\dimen310
+\tikz@figbox=\box74
+\tikz@figbox@bg=\box75
+\tikz@tempbox=\box76
+\tikz@tempbox@bg=\box77
+\tikztreelevel=\count330
+\tikznumberofchildren=\count331
+\tikznumberofcurrentchild=\count332
+\tikz@fig@count=\count333
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfmatrixcurrentrow=\count334
+\pgfmatrixcurrentcolumn=\count335
+\pgf@matrix@numberofcolumns=\count336
+)
+\tikz@expandcount=\count337
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+))) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+\c@@todonotes@numberoftodonotes=\count338
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2026-04-24 v7.01q Hypertext links for LaTeX
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count339
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/stringenc/stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
+)
+\@linkdim=\dimen311
+\Hy@linkcounter=\count340
+\Hy@pagecounter=\count341
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2026-04-24 v7.01q Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count342
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2026-04-24 v7.01q Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Hyper figures OFF on input line 4199.
+Package hyperref Info: Link nesting OFF on input line 4204.
+Package hyperref Info: Hyper index ON on input line 4207.
+Package hyperref Info: Plain pages OFF on input line 4214.
+Package hyperref Info: Backreferencing OFF on input line 4219.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4466.
+\c@Hy@tempcnt=\count343
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip18
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4805.
+\XeTeXLinkMargin=\dimen312
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
+))
+\Fld@menulength=\count344
+\Field@Width=\dimen313
+\Fld@charsize=\dimen314
+Package hyperref Info: Hyper figures OFF on input line 6091.
+Package hyperref Info: Link nesting OFF on input line 6096.
+Package hyperref Info: Hyper index ON on input line 6099.
+Package hyperref Info: backreferencing OFF on input line 6106.
+Package hyperref Info: Link coloring OFF on input line 6111.
+Package hyperref Info: Link coloring with OCG OFF on input line 6116.
+Package hyperref Info: PDF/A mode OFF on input line 6121.
+\Hy@abspage=\count345
+\c@Item=\count346
+\c@Hfootnote=\count347
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2026-04-24 v7.01q Hyperref driver for pdfTeX
+\Fld@listcount=\count348
+\c@bookmark@seq@number=\count349
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 284.
+)
+\Hy@SectionHShift=\skip66
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 32.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 92.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/lm/t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2026-02-18 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count350
+) (./Network_Based_Data_Center_Glossary.aux)
+\openout1 = `Network_Based_Data_Center_Glossary.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 92.
+LaTeX Font Info:    ... okay on input line 92.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 92.
+LaTeX Font Info:    ... okay on input line 92.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 92.
+LaTeX Font Info:    ... okay on input line 92.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 92.
+LaTeX Font Info:    ... okay on input line 92.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 92.
+LaTeX Font Info:    ... okay on input line 92.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 92.
+LaTeX Font Info:    ... okay on input line 92.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 92.
+LaTeX Font Info:    ... okay on input line 92.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 92.
+LaTeX Font Info:    ... okay on input line 92.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 92.
+LaTeX Font Info:    ... okay on input line 92.
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(52.03448pt, 510.22603pt, 52.03448pt)
+* v-part:(T,H,B)=(52.03448pt, 690.90102pt, 52.03448pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=510.22603pt
+* \textheight=690.90102pt
+* \oddsidemargin=-20.2355pt
+* \evensidemargin=-20.2355pt
+* \topmargin=-57.2355pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=11.0pt
+* \footskip=30.0pt
+* \marginparwidth=59.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Info: Redefining \microtypecontext on input line 92.
+Package microtype Info: Applying patch `item' on input line 92.
+Package microtype Info: Applying patch `toc' on input line 92.
+Package microtype Info: Applying patch `eqnum' on input line 92.
+Package microtype Info: Applying patch `footnote' on input line 92.
+Package microtype Info: Applying patch `verbatim' on input line 92.
+LaTeX Info: Redefining \microtypesetup on input line 92.
+Package microtype Info: Generating PDF output.
+Package microtype Info: Character protrusion enabled (level 2).
+Package microtype Info: Using default protrusion set `alltext'.
+Package microtype Info: Automatic font expansion enabled (level 2),
+(microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
+Package microtype Info: Using default expansion set `alltext-nott'.
+Package microtype Info: Patching command `\showhyphens'.
+Package microtype Info: No adjustment of tracking.
+Package microtype Info: No adjustment of interword spacing.
+Package microtype Info: No adjustment of character kerning.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (RS)
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+))
+Package hyperref Info: Link coloring ON on input line 92.
+(./Network_Based_Data_Center_Glossary.out) (./Network_Based_Data_Center_Glossary.out)
+\@outlinefile=\write4
+\openout4 = `Network_Based_Data_Center_Glossary.out'.
+
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 94.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 94.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 94.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 94.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 94.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 94.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 94.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 94.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/microtype/mt-msa.cfg
+File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 94.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) (/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/microtype/mt-msb.cfg
+File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
+)
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 101.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 104.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `lmtt' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 116.
+[1
+
+{/home/nacevedo/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/home/nacevedo/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/home/nacevedo/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/nacevedo/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/home/nacevedo/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 172.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 172.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 172.
+Package microtype Info: Character `029' is missing
+(microtype)             in font `T1/lmr/m/sc/10'.
+(microtype)             Ignoring protrusion settings for this character.
+
+Underfull \hbox (badness 10000) in paragraph at lines 174--175
+[]|[]\T1/lmr/m/n/10 (+20) Controlled CPU/H100 compute-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 174--175
+\T1/lmr/m/n/10 (+20) component en-ergy is work-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 175--175
+[]|[]\T1/lmr/m/n/10 (+20) External fa-cil-ity
+ []
+
+
+Underfull \hbox (badness 1092) in paragraph at lines 175--176
+\T1/lmr/m/n/10 (+20) model struc-ture and bound-aries, not
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--176
+[]|[]|   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--176
+|   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--176
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--177
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--177
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--177
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 7433) in paragraph at lines 176--177
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 177--178
+\T1/lmr/m/n/10 (+20) technology in-ten-sity struc-ture and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
+[]|[]\T1/lmr/m/n/10 (+20) Facility over-head
+ []
+
+
+Underfull \hbox (badness 4266) in paragraph at lines 178--179
+\T1/lmr/m/n/10 (+20) model is in-suf-fi-cient for to-tal aux-
+ []
+
+
+Underfull \hbox (badness 6708) in paragraph at lines 178--179
+\T1/lmr/m/n/10 (+20) il-iary power across a late op-er-at-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 181--181
+[]|\T1/lmr/m/sc/10 (+20) measured\T1/lmr/m/n/10 (+20) / \T1/lmr/m/sc/10 (+20) de-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+[]|[]|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 3623) in paragraph at lines 183--184
+[]|[]|   []   |   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 184--184
+[]|[]\T1/lmr/m/sc/10 (+20) reported \T1/lmr/m/n/10 (+20) (ob-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 184--184
+\T1/lmr/m/n/10 (+20) served me-ter
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 185--185
+[]|[]\T1/lmr/m/n/10 (+20) All-source monthly
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 186--186
+[]|\T1/lmr/m/n/10 (+20) Regional grid de-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 186--187
+[]|\T1/lmr/m/n/10 (+20) EIA-930 when avail-able; FERC-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 188--188
+[]|\T1/lmr/m/n/10 (+20) Generator wa-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 188--188
+[]|\T1/lmr/m/sc/10 (+20) reported\T1/lmr/m/n/10 (+20) / \T1/lmr/m/sc/10 (+20) de-
+ []
+
+
+Underfull \hbox (badness 2680) in paragraph at lines 190--190
+[]|\T1/lmr/m/n/10 (+20) GWIS ground-wa-ter
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--190
+[]|$\OML/lmm/m/it/10 BLS[]$ \T1/lmr/m/n/10 (+20) (and re-ported
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--190
+[]|\T1/lmr/m/sc/10 (+20) measured\T1/lmr/m/n/10 (+20) , QC-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--191
+[]|\T1/lmr/m/n/10 (+20) Individual-well ob-ser-va-tions;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--191
+\T1/lmr/m/n/10 (+20) measurement-condition un-cer-tainty
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 192--192
+[]|\T1/lmr/m/n/10 (+20) Groundwater re-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--193
+[]|\T1/lmr/m/n/10 (+20) workload/siting/source
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [2]
+Underfull \hbox (badness 1735) in paragraph at lines 216--216
+\T1/lmr/m/n/10 (+20) based Scope 2, se-lected
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--217
+\T1/lmr/m/n/10 (+20) com-po-nents/state, node
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--217
+\T1/lmr/m/n/10 (+20) power, liq-uid ther-mal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 218--218
+[]|[]|   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 218--218
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 218--218
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 218--218
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 218--219
+[]|[]|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 218--219
+|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 219--219
+[]|[]\T1/lmr/m/n/10 (+20) Climate/technology
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 219--219
+\T1/lmr/m/n/10 (+20) fa-cil-ity archetype
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 220--220
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 220--221
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 220--221
+|   []   |   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--221
+\T1/lmr/m/n/10 (+20) liquid-cooled HPC
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 222--222
+\T1/lmr/m/n/10 (+20) Fa-cil-ity PUE
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 222--222
+[]|[]\T1/lmr/m/n/10 (+20) Measured IT, cool-ing,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 223--223
+[]|[]\T1/lmr/m/n/10 (+20) External compute-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 223--223
+[]|[]\T1/lmr/m/n/10 (+20) Controlled CPU/H100
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 224--224
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 4013) in paragraph at lines 224--224
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 1701) in paragraph at lines 224--224
+\T1/lmr/m/n/10 (+20) KBDN temperature/dew-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 224--224
+\T1/lmr/m/n/10 (+20) point/pressure with
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 225--225
+\T1/lmr/m/n/10 (+20) util-ity pub-lic
+ []
+
+
+Underfull \hbox (badness 2012) in paragraph at lines 225--225
+\T1/lmr/m/n/10 (+20) me-ter set/swap life-cy-cle,
+ []
+
+
+Underfull \hbox (badness 2103) in paragraph at lines 225--226
+[]|[]\T1/lmr/m/n/10 (+20) Observed customer-service bound-ary.
+ []
+
+
+Underfull \hbox (badness 4832) in paragraph at lines 225--226
+\T1/lmr/m/n/10 (+20) One unit = 100 ft$[]$ = 748 US
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 226--226
+[]|\T1/lmr/m/n/10 (+20) Oregon Wa-ter Re-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--227
+[]|\T1/lmr/m/n/10 (+20) OHA Drink-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--227
+[]|\T1/lmr/m/n/10 (+20) State drinking-water
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--227
+[]|\T1/lmr/m/n/10 (+20) Prineville public-water-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 228--228
+[]|\T1/lmr/m/n/10 (+20) Federal water-science
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 229--229
+[]|\T1/lmr/m/n/10 (+20) PacifiCorp /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 229--229
+[]|\T1/lmr/m/n/10 (+20) Regional util-ity /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 230--230
+[]|\T1/lmr/m/n/10 (+20) Form 714 PacifiCorp-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 230--230
+\T1/lmr/m/n/10 (+20) West monthly de-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 230--230
+\T1/lmr/m/n/10 (+20) mand/operations and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 231--231
+[]|\T1/lmr/m/n/10 (+20) Federal energy-
+ []
+
+
+Underfull \hbox (badness 7576) in paragraph at lines 231--231
+[]|\T1/lmr/m/n/10 (+20) EIA-930 PACW hourly
+ []
+
+
+Underfull \hbox (badness 5908) in paragraph at lines 232--232
+\T1/lmr/m/n/10 (+20) fac-tors; CAMPD plant
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
+[]|\T1/lmr/m/n/10 (+20) State en-vi-ron-men-tal
+ []
+
+
+Underfull \hbox (badness 3907) in paragraph at lines 234--234
+[]|\T1/lmr/m/n/10 (+20) Local per-mit-ting au-
+ []
+
+[3]
+ignored: Infinite glue shrinkage found in box being split [4] [5]
+Underfull \hbox (badness 3364) in paragraph at lines 310--310
+[]|\T1/lmr/m/n/10 (+20) Check dates, units, du-pli-cate
+ []
+
+[6]
+<../../outputs/glossary_refresh_20260903/figures/fig01_data_coverage_provenance.png, id=158, 942.91093pt x 690.39105pt>
+File: ../../outputs/glossary_refresh_20260903/figures/fig01_data_coverage_provenance.png Graphic file (type png)
+<use ../../outputs/glossary_refresh_20260903/figures/fig01_data_coverage_provenance.png>
+Package pdftex.def Info: ../../outputs/glossary_refresh_20260903/figures/fig01_data_coverage_provenance.png  used on input line 343.
+(pdftex.def)             Requested size: 438.7947pt x 321.28136pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|\T1/lmr/m/n/8 (+20) none pub-lic for
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|\T1/lmr/m/n/8 (+20) constrained by
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|[]\T1/lmr/m/n/8 (+20) frozen bounded
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|[]|   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|[]|   []
+ []
+
+
+Overfull \hbox (2.8079pt too wide) in paragraph at lines 408--408
+[]|[]|   [][]| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|[]|   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|[]$\OML/lmm/m/it/8 P[] \OMS/lmsy/m/n/8 !
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|\T1/lmr/m/sc/8 (+20) measured\T1/lmr/m/n/8 (+20) / \T1/lmr/m/sc/8 (+20) de-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|[]\T1/lmr/m/n/8 (+20) City customer-
+ []
+
+
+Underfull \hbox (badness 1142) in paragraph at lines 408--408
+[]|[]\T1/lmr/m/n/8 (+20) City of Prineville
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|[]\T1/lmr/m/n/8 (+20) All-source
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+\T1/lmr/m/n/8 (+20) monthly cam-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|[]\T1/lmr/m/n/8 (+20) no closed
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+\T1/lmr/m/n/8 (+20) source/accounting
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|\T1/lmr/m/n/8 (+20) Municipal/direct
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|\T1/lmr/m/n/8 (+20) Regional wa-ter
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|\T1/lmr/m/sc/8 (+20) measured\T1/lmr/m/n/8 (+20) /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|\T1/lmr/m/sc/8 (+20) reported\T1/lmr/m/n/8 (+20) / \T1/lmr/m/sc/8 (+20) de-
+ []
+
+
+Underfull \hbox (badness 1838) in paragraph at lines 408--408
+[]|\T1/lmr/m/n/8 (+20) Within-well rel-a-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 408--408
+[]|\T1/lmr/m/n/8 (+20) Facility chronol-
+ []
+
+
+Underfull \hbox (badness 4048) in paragraph at lines 408--408
+[]|\T1/lmr/m/n/8 (+20) Groundwater re-
+ []
+
+[7] [8 <../../outputs/glossary_refresh_20260903/figures/fig01_data_coverage_provenance.png>] [9] [10{/home/nacevedo/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}]
+Overfull \hbox (0.10013pt too wide) in paragraph at lines 526--528
+[]\T1/lmr/m/n/10.95 (-20) where the up-stream model's wa-ter to-tal in-cludes cooling-tower evap-o-ra-tion, windage/drift, draw-off/blowdown,
+ []
+
+[11] [12]
+Underfull \hbox (badness 4569) in paragraph at lines 652--652
+[]|\T1/lmr/bx/n/8 (+20) Current Prineville ap-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|[]\T1/lmr/m/n/8 (+20) Measured fa-cil-ity
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|[]\T1/lmr/m/n/8 (+20) Measured
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (-3) IT/facility/cooling/weather
+ []
+
+
+Underfull \hbox (badness 2302) in paragraph at lines 652--652
+[]|[]\T1/lmr/m/n/8 (+20) External struc-tural bench-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|\T1/lmr/m/n/8 (+20) National/accounting:
+ []
+
+
+Underfull \hbox (badness 3417) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) LBNL; Sid-dik et al.
+ []
+
+
+Underfull \hbox (badness 2020) in paragraph at lines 652--652
+[]|\T1/lmr/m/n/8 (+20) Climate- and technology-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) dependent cou-pled en-
+ []
+
+
+Underfull \hbox (badness 2012) in paragraph at lines 652--652
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+|   []   |   []   |   []
+ []
+
+
+Overfull \hbox (4.53914pt too wide) in paragraph at lines 652--652
+|   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) IT-normalized PUE/WUE
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) in-ten-sity back-bone with
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) ex-plicit conditioning-water
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|[]\T1/lmr/m/n/8 (+20) Independent ther-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|[]\T1/lmr/m/n/8 (+20) Measured com-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) pute/accessory power
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) a dif-fer-ent liquid-cooled
+ []
+
+
+Underfull \hbox (badness 7379) in paragraph at lines 652--652
+[]|[]|   []   |   []   |   [][] []\T1/lmr/m/n/8 (+20) First
+ []
+
+
+Underfull \hbox (badness 1490) in paragraph at lines 652--652
+[]|[]\T1/lmr/m/n/8 (+20) Measured IT, com-po-nent
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|[]\T1/lmr/m/n/8 (+20) Electrical over-head layer
+ []
+
+
+Underfull \hbox (badness 5302) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) IT+weather total-aux hy-
+ []
+
+
+Underfull \hbox (badness 3199) in paragraph at lines 652--652
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 5077) in paragraph at lines 652--652
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 1931) in paragraph at lines 652--652
+[]|[]|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) and temporal-profile-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) conditioned compute-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|[]\T1/lmr/m/n/8 (+20) Frozen bounded ex-ter-nal
+ []
+
+
+Underfull \hbox (badness 7522) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) layer with ex-plicit node
+ []
+
+
+Underfull \hbox (badness 1715) in paragraph at lines 652--652
+[]|\T1/lmr/m/n/8 (+20) Direct vs in-di-rect wa-ter;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) tem-po-ral wa-ter sig-nals;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 5133) in paragraph at lines 652--652
+|   []   |   [][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]\T1/lmr/m/n/8 (+20) An-nual Meta with-drawal
+ []
+
+
+Underfull \hbox (badness 2020) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) + ob-served monthly City-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) re-gional generator-water
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|\T1/lmr/m/n/8 (+20) Workload con-ser-va-tion,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) car-bon/water/thermal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|\T1/lmr/m/n/8 (+20) Cost--carbon--water--equity
+ []
+
+
+Underfull \hbox (badness 2119) in paragraph at lines 652--652
+[]|\T1/lmr/m/n/8 (+20) Groundwater: MOD-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) FLOW / hydro-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) economic mod-els
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|\T1/lmr/m/n/8 (+20) Pumping/recharge $\OMS/lmsy/m/n/8 !$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+\T1/lmr/m/n/8 (+20) head/storage dy-nam-ics;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--652
+[]|\T1/lmr/m/n/8 (+20) First em-pir-i-cal well-level
+ []
+
+[13]
+Package microtype Info: Character `029' is missing
+(microtype)             in font `T1/lmr/m/sc/10.95'.
+(microtype)             Ignoring protrusion settings for this character.
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 700--700
+[]|[]\T1/lmr/m/n/8 (+20) No in-de-pen-dently ver-i-fied
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 700--700
+\T1/lmr/m/n/8 (+20) makeup/withdrawal/consumption me-ter was
+ []
+
+(../../outputs/glossary_refresh_20260903/tables/external_validation_synthesis.tex
+Underfull \hbox (badness 10000) in paragraph at lines 10--10
+[]|\T1/lmr/bx/n/8 (+20) Evidence
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 14--14
+[]|\T1/lmr/bx/n/8 (+20) Evidence
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
+[]|\T1/lmr/m/n/8 (+20) CLOSED /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
+\T1/lmr/m/n/8 (+20) FROZEN; lim-i-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
+[]|\T1/lmr/m/n/8 (+20) Measured ac-count-ing and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
+[]|\T1/lmr/m/n/8 (+20) No generic
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
+\T1/lmr/m/n/8 (+20) coefficient/PUE/cooling-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
+\T1/lmr/m/n/8 (+20) fraction/water trans-fer;
+ []
+
+
+Underfull \hbox (badness 6141) in paragraph at lines 22--22
+\T1/lmr/m/n/8 (+20) node/system is not fa-cil-ity
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--23
+[]|\T1/lmr/m/n/8 (+20) Retain ex-plicit IT +
+ []
+
+
+Underfull \hbox (badness 3229) in paragraph at lines 23--23
+\T1/lmr/m/n/8 (+20) IT load im-proves accessory-
+ []
+
+
+Underfull \hbox (badness 3780) in paragraph at lines 23--23
+[]|\T1/lmr/m/n/8 (+20) No WUE, with-drawal, site-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--24
+[]|\T1/lmr/m/n/8 (+20) PARTIAL /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--24
+\T1/lmr/m/n/8 (+20) CLOSED; adapter
+ []
+
+
+Underfull \hbox (badness 1057) in paragraph at lines 24--24
+[]|\T1/lmr/m/n/8 (+20) No quan-ti-ta-tive adapter pro-
+ []
+
+
+Underfull \hbox (badness 2884) in paragraph at lines 24--24
+\T1/lmr/m/n/8 (+20) source/groundwater in-fer-ence,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--25
+[]|\T1/lmr/m/n/8 (+20) PARTIAL /
+ []
+
+
+Underfull \hbox (badness 1430) in paragraph at lines 25--25
+[]|\T1/lmr/m/n/8 (+20) Stationary IT+weather total-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--25
+\T1/lmr/m/n/8 (+20) overhead map-ping fails
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--25
+\T1/lmr/m/n/8 (+20) across the per-sis-tent 2024
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--25
+\T1/lmr/m/n/8 (+20) HVAC/configuration regime
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+[]|\T1/lmr/m/n/8 (+20) Include ar-chi-tec-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+\T1/lmr/m/n/8 (+20) ture/configuration and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--26
+[]|\T1/lmr/m/n/8 (+20) Qualitative PAR-
+ []
+
+
+Underfull \hbox (badness 3271) in paragraph at lines 26--26
+\T1/lmr/m/n/8 (+20) TIAL; quan-ti-ta-tive
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--26
+\T1/lmr/m/n/8 (+20) re-play sup-ports mechanism-
+ []
+
+
+Underfull \hbox (badness 5696) in paragraph at lines 26--26
+\T1/lmr/m/n/8 (+20) specific trans-porta-bil-ity and
+ []
+
+
+Underfull \hbox (badness 6592) in paragraph at lines 26--27
+\T1/lmr/m/n/8 (+20) a-nisms only; en-gi-neer-
+ []
+
+
+Underfull \hbox (badness 2564) in paragraph at lines 26--27
+\T1/lmr/m/n/8 (+20) ing/utility records bind
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--27
+[]|\T1/lmr/m/n/8 (+20) FROZEN /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--27
+\T1/lmr/m/n/8 (+20) BOUNDED; node
+ []
+
+
+Underfull \hbox (badness 6380) in paragraph at lines 27--27
+\T1/lmr/m/n/8 (+20) component en-ergy is work-
+ []
+
+
+Underfull \hbox (badness 3547) in paragraph at lines 27--28
+[]|\T1/lmr/m/n/8 (+20) Use bounded workload-
+ []
+
+[15])
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 743.
+(/home/nacevedo/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [16{/home/nacevedo/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
+<../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig02_observed_ground_truth.png, id=306, 831.105pt x 854.06136pt>
+File: ../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig02_observed_ground_truth.png Graphic file (type png)
+<use ../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig02_observed_ground_truth.png>
+Package pdftex.def Info: ../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig02_observed_ground_truth.png  used on input line 763.
+(pdftex.def)             Requested size: 408.18237pt x 419.45808pt.
+<../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig03_water_model_accuracy.png, id=307, 690.81618pt x 508.0156pt>
+File: ../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig03_water_model_accuracy.png Graphic file (type png)
+<use ../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig03_water_model_accuracy.png>
+Package pdftex.def Info: ../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig03_water_model_accuracy.png  used on input line 781.
+(pdftex.def)             Requested size: 408.18237pt x 300.16846pt.
+[17] [18 <../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig02_observed_ground_truth.png>] [19 <../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig03_water_model_accuracy.png>]
+<../../outputs/glossary_refresh_20260903/figures/fig04_city_service_validation.png, id=329, 947.9415pt x 364.1605pt>
+File: ../../outputs/glossary_refresh_20260903/figures/fig04_city_service_validation.png Graphic file (type png)
+<use ../../outputs/glossary_refresh_20260903/figures/fig04_city_service_validation.png>
+Package pdftex.def Info: ../../outputs/glossary_refresh_20260903/figures/fig04_city_service_validation.png  used on input line 807.
+(pdftex.def)             Requested size: 500.01932pt x 192.0873pt.
+(../../outputs/glossary_refresh_20260903/tables/city_service_validation_metrics.tex
+Underfull \hbox (badness 10000) in paragraph at lines 10--10
+[]|\T1/lmr/bx/n/9 (+20) RMSE
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 14--14
+[]|\T1/lmr/bx/n/9 (+20) RMSE
+ []
+
+) (../../outputs/glossary_refresh_20260903/tables/city_water_boundary_accounting.tex
+Underfull \hbox (badness 10000) in paragraph at lines 10--10
+[]|\T1/lmr/bx/n/8 (+20) Auto-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 14--14
+[]|\T1/lmr/bx/n/8 (+20) Auto-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
+[]|\T1/lmr/m/n/8 (+20) Meta an-nual with-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--23
+[]|\T1/lmr/m/n/8 (+11) OBSERVED/REPORTED;
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 23--23
+\T1/lmr/m/n/8 (+20) 2012-12 to 2026-07 (163
+ []
+
+
+Underfull \hbox (badness 7344) in paragraph at lines 23--23
+\T1/lmr/m/n/8 (+20) ob-served months; 2012,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--24
+[]|\T1/lmr/m/n/8 (+11) OBSERVED/REPORTED;
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 24--24
+\T1/lmr/m/n/8 (+20) 2018-02 to 2026-08 (103
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--25
+[]|\T1/lmr/m/n/8 (+11) OBSERVED/REPORTED;
+ []
+
+
+Underfull \hbox (badness 1314) in paragraph at lines 26--26
+[]|\T1/lmr/m/n/8 (+20) City WELL ME-TER
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--26
+[]|$\T1/lmtt/m/n/8 Q _ CITY _ WELL _ METER _
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--26
+[]|\T1/lmr/m/n/8 (+11) OBSERVED/REPORTED;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
+[]|\T1/lmr/m/n/8 (+20) Weak OWRD-POD cor-re-spon-dence;
+ []
+
+
+Underfull \hbox (badness 1789) in paragraph at lines 26--27
+\T1/lmr/m/n/8 (+20) do not in-fer source, sewer, or mas-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--27
+[]|\T1/lmr/m/n/8 (+20) OWRD di-rect
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--27
+\T1/lmr/m/n/8 (+20) Vitesse/Facebook
+ []
+
+
+Underfull \hbox (badness 2245) in paragraph at lines 27--27
+[]|\T1/lmr/m/n/8 (+20) REPORTED; 2010-10 to
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+[]|\T1/lmr/m/n/8 (+20) All-source monthly
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+\T1/lmr/m/n/8 (+20) Meta/campus with-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+\T1/lmr/m/n/8 (+20) er-age/report con-cept;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+\T1/lmr/m/n/8 (+20) no dis-tinct reg-istry
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--29
+\T1/lmr/m/n/8 (+20) reuse/return/storage, life-cy-cle, and
+ []
+
+[20 <../../outputs/glossary_refresh_20260903/figures/fig04_city_service_validation.png>]) [21]
+<../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig_advisor_gwis_estimation_candidates.png, id=347, 757.93163pt x 511.76193pt>
+File: ../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig_advisor_gwis_estimation_candidates.png Graphic file (type png)
+<use ../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig_advisor_gwis_estimation_candidates.png>
+Package pdftex.def Info: ../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig_advisor_gwis_estimation_candidates.png  used on input line 861.
+(pdftex.def)             Requested size: 408.18237pt x 275.6133pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 885--885
+[]|\T1/lmr/m/n/10 (+20) High-confidence ev-i-
+ []
+
+
+Underfull \hbox (badness 2302) in paragraph at lines 886--886
+[]|[]\T1/lmr/m/n/10 (+20) Observed City-service
+ []
+
+
+Underfull \hbox (badness 2635) in paragraph at lines 886--886
+[]|[]\T1/lmr/m/n/10 (+20) Facebook Data Cen-ter WATER-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 887--887
+[]|[]|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 887--887
+[]|[]|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 887--887
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 887--887
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 1072) in paragraph at lines 887--887
+|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 6608) in paragraph at lines 887--888
+|   []   |   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 888--888
+[]|[]|   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 888--888
+|   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 888--888
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 888--888
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 888--888
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 890--890
+[]|[]\T1/lmr/m/n/10 (+20) Partial / transfer-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 891--891
+[]|[]\T1/lmr/m/n/10 (+20) Bounded compute-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 891--891
+\T1/lmr/m/n/10 (+20) workload/mode/scale-conditioned
+ []
+
+
+Underfull \hbox (badness 5077) in paragraph at lines 892--892
+[]|\T1/lmr/m/n/10 (+20) FERC his-tor-i-cal PACW bridge;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 896--896
+|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 4505) in paragraph at lines 896--896
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 4328) in paragraph at lines 896--896
+|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 896--896
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 897--897
+[]|[]\T1/lmr/m/n/10 (+20) hourly Meta IT; all-source
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 897--897
+\T1/lmr/m/n/10 (+20) monthly cam-pus with-drawal;
+ []
+
+
+Underfull \hbox (badness 3098) in paragraph at lines 897--897
+\T1/lmr/m/n/10 (+20) quan-ti-ta-tive PUE/WUE adapter;
+ []
+
+
+Underfull \hbox (badness 1997) in paragraph at lines 897--897
+\T1/lmr/m/n/10 (+20) pumping-to-head causal re-sponse;
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [22]
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+[]|[]|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 931--931
+[]|[]|   []   |   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 1762) in paragraph at lines 931--931
+\T1/lmr/m/n/8 (+20) work-load mix, net-work/storage/service/idle
+ []
+
+
+Underfull \hbox (badness 1888) in paragraph at lines 931--931
+[]|[]|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 5077) in paragraph at lines 931--931
+|   []   |   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 2846) in paragraph at lines 931--931
+[]|[]\T1/lmr/m/n/8 (+20) IT + weather + ar-chi-tec-
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 931--931
+[]|[]|   []   |   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 7595) in paragraph at lines 931--931
+[]|[]|   []   |   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+|   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+[]|[]$\OML/lmm/m/it/8 W[] \OMS/lmsy/m/n/8 !
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+\OML/lmm/m/it/8 W[]=W[]=$\T1/lmr/m/n/8 (+20) source
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+[]|[]|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+[]|[]\T1/lmr/m/n/8 (+20) Chronological re-sponse val-i-da-tion,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 931--931
+\T1/lmr/m/n/8 (+20) measurement-condition un-cer-tainty,
+ []
+
+
+Underfull \hbox (badness 2326) in paragraph at lines 931--931
+[]|\T1/lmr/m/n/8 (+20) actual sup-ply con-tract/serving at-tri-bu-tion,
+ []
+
+
+Underfull \hbox (badness 1648) in paragraph at lines 931--931
+\T1/lmr/m/n/8 (+20) load flex-i-bil-ity, tar-iffs/costs, ca-pac-ity con-
+ []
+
+[23] [24 <../../Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig_advisor_gwis_estimation_candidates.png>] [25] [26]
+Overfull \hbox (1.18314pt too wide) in paragraph at lines 1032--1037
+|   []   |   []   |   []   |   []   |   []   |   []   |   []   |   [][] []|   []   |   []   |   []   |   []
+ []
+
+
+Overfull \hbox (7.4659pt too wide) in paragraph at lines 1032--1037
+|   []   |   []   |   []   |   []   |   []   |   []   |   []   |   []   |   []   |   []
+ []
+
+[27]
+Underfull \hbox (badness 1436) in paragraph at lines 1074--1074
+[]|[]|   []   |   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 6063) in paragraph at lines 1074--1074
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1074--1074
+[]|[]|   []   |   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1074--1074
+[]|[]|   []   |   []
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1074--1074
+|   []   |   []
+ []
+
+
+Underfull \hbox (badness 7047) in paragraph at lines 1074--1074
+[]|[]\T1/lmr/m/n/8 (+20) NLR/H100 + in-de-pen-dent
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1074--1074
+[]|[]\T1/lmr/m/n/8 (+20) Workload/mode/scale-conditioned compute-
+ []
+
+[28] (../../outputs/glossary_refresh_20260903/appendix/source_inventory_appendix.tex
+Underfull \hbox (badness 1454) in paragraph at lines 23--24
+\T1/lmr/m/n/6 (+20) 2 Bound-ary: Prineville cam-pus (site ta-ble).
+ []
+
+
+Underfull \hbox (badness 2229) in paragraph at lines 26--26
+\T1/lmr/m/n/6 (+20) er-a-tional GHG; an-nual; sta-
+ []
+
+
+Underfull \hbox (badness 5592) in paragraph at lines 27--27
+[]|\T1/lmr/m/n/6 (+20) WUE / with-drawal / con-
+ []
+
+
+Underfull \hbox (badness 3271) in paragraph at lines 27--27
+\T1/lmr/m/n/6 (+20) meth-ods through 2022; sta-
+ []
+
+
+Underfull \hbox (badness 4846) in paragraph at lines 28--28
+\T1/lmr/m/n/6 (+20) air evap-o-ra-tive cool-ing; no
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+\T1/lmr/m/n/6 (+20) 18 ex-pan-sion an-nounce-ment
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+[]|\T1/lmr/m/n/6 (+20) 2010-2024; 11 data-center
+ []
+
+
+Underfull \hbox (badness 6412) in paragraph at lines 30--30
+\T1/lmr/m/n/6 (+20) build-ings con-structed; plan-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+\T1/lmr/m/n/6 (+20) ning/event; sta-tus=reported
+ []
+
+
+Underfull \hbox (badness 1565) in paragraph at lines 33--34
+\T1/lmr/m/n/6 (+20) ary: . Caveat: Meter-level Face-book wa-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--35
+[]|\T1/lmr/m/n/6 (+20) City of Prineville: Face-book
+ []
+
+
+Underfull \hbox (badness 1275) in paragraph at lines 35--35
+[]|\T1/lmr/m/n/6 (+20) 2018-02 through 2026-08 bill
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--35
+\T1/lmr/m/n/6 (+20) ~15th; reads ~10th); sta-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--36
+[]|\T1/lmr/m/n/6 (+20) separate bulk com-po-nent; ex-cluded from
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--36
+\T1/lmr/m/n/6 (+20) city_metered_water_service_m3 Bound-ary:
+ []
+
+
+Underfull \hbox (badness 1342) in paragraph at lines 36--36
+[]|\T1/lmr/m/n/6 (+20) City of Prineville: Face-book me-ter
+ []
+
+
+Underfull \hbox (badness 3250) in paragraph at lines 36--36
+\T1/lmr/m/n/6 (+20) ward; in-com-plete ear-lier by
+ []
+
+
+Underfull \hbox (badness 2443) in paragraph at lines 36--36
+\T1/lmr/m/n/6 (+20) City note; event date; sta-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--37
+[]|$\T1/lmtt/m/n/6 CITY _ UTILITY _ DATA _
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--39
+[]|\T1/lmr/m/n/6 (+20) City en-tity WY2010-2025;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--39
+\T1/lmr/m/n/6 (+20) Vitesse/Facebook WY2011-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--39
+\T1/lmr/m/n/6 (+20) re-ported; sta-tus=reported
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--40
+[]|\T1/lmr/m/n/6 (+20) external mu-nic-i-pal pro-duc-tion and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--40
+\T1/lmr/m/n/6 (+20) Meta/Facebook-associated di-rect POD ev-i-
+ []
+
+
+Underfull \hbox (badness 3189) in paragraph at lines 39--40
+\T1/lmr/m/n/6 (+20) with-drawal. Miss-ing months stay miss-ing.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/m/n/6 (+20) current; meth-ods; sta-
+ []
+
+
+Underfull \hbox (badness 6625) in paragraph at lines 40--41
+[]|\T1/lmr/m/n/6 (+20) reporting-requirement con-text Bound-ary: .
+ []
+
+
+Underfull \hbox (badness 3291) in paragraph at lines 42--42
+[]|\T1/lmr/m/n/6 (+20) states 260 MG/y ad-di-tional
+ []
+
+
+Underfull \hbox (badness 2012) in paragraph at lines 43--43
+\T1/lmr/m/n/6 (+20) con-text; nu-meric heads now
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--44
+\T1/lmr/m/n/6 (+20) Ground-wa-ter In-for-ma-tion Sys-tem
+ []
+
+
+Underfull \hbox (badness 1460) in paragraph at lines 44--44
+[]|\T1/lmr/m/n/6 (+20) local ex-port of eight unique
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 44--44
+\T1/lmr/m/n/6 (+20) re-ported; ir-reg-u-lar mea-sured
+ []
+
+
+Underfull \hbox (badness 2073) in paragraph at lines 44--44
+\T1/lmr/m/n/6 (+20) wa-ter lev-els (date-time); sta-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+[]|\T1/lmr/m/n/6 (+20) NOAA NCEI: In-te-grated Sur-face
+ []
+
+
+Underfull \hbox (badness 2762) in paragraph at lines 45--45
+\T1/lmr/m/n/6 (+20) Database / Global Hourly prod-uct
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+[]|\T1/lmr/m/n/6 (+20) product fam-ily; Prineville
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+\T1/lmr/m/n/6 (+20) uses KRDM files be-low;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+\T1/lmr/m/n/6 (+20) hourly/subhourly; sta-
+ []
+
+
+Underfull \hbox (badness 1383) in paragraph at lines 46--46
+[]|\T1/lmr/m/n/6 (+20) NOAA NCEI: Global Hourly yearly
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--46
+[]|\T1/lmr/m/n/6 (+20) 2011-2024 re-con-struc-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--46
+\T1/lmr/m/n/6 (+20) tion win-dow in pro-cessed
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--46
+\T1/lmr/m/n/6 (+20) sta-tion weather; wet-bulb
+ []
+
+
+Underfull \hbox (badness 1931) in paragraph at lines 46--47
+[]|\T1/lmr/m/n/6 (+20) exogenous weather driver for gray-box cool-
+ []
+
+
+Underfull \hbox (badness 3989) in paragraph at lines 46--47
+\T1/lmr/m/n/6 (+20) Off-campus proxy for cam-pus mi-cro-cli-mate.
+ []
+
+
+Underfull \hbox (badness 2277) in paragraph at lines 48--48
+[]|\T1/lmr/m/n/6 (+20) station iden-tity con-fir-ma-tion;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--50
+[]|\T1/lmr/m/n/6 (+20) model-specific (see prod-uct
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--51
+[]|\T1/lmr/m/n/6 (+20) 2009-10 through 2020-09;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 52--52
+[]|\T1/lmr/m/n/6 (+20) 2009-01 through 2020-12;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
+[]|\T1/lmr/m/n/6 (+20) U.S. Ge-o-log-i-cal Sur-vey: Public-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
+\T1/lmr/m/n/6 (+20) supply with-drawals model (pswd-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
+[]|\T1/lmr/m/n/6 (+20) 2000-01 through 2020-12;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--54
+[]|\T1/lmr/m/n/6 (+20) 2000-01 through 2020-12;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 55--55
+[]|\T1/lmr/m/n/6 (+20) 2000-01 through 2020-12;
+ []
+
+
+Underfull \hbox (badness 1975) in paragraph at lines 56--56
+[]|\T1/lmr/m/n/6 (+20) U.S. Ge-o-log-i-cal Sur-vey: Wa-ter-shed
+ []
+
+
+Underfull \hbox (badness 1102) in paragraph at lines 56--56
+\T1/lmr/m/n/6 (+20) the down-load; sta-tus=official
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--57
+[]|\T1/lmr/m/n/6 (+20) bundled work-book 2015-07-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--57
+\T1/lmr/m/n/6 (+20) 01 through re-con-struc-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--57
+\T1/lmr/m/n/6 (+20) win-dow 2024-12-31; hourly;
+ []
+
+
+Underfull \hbox (badness 3780) in paragraph at lines 58--58
+\T1/lmr/m/n/6 (+20) Paci-fi-Corp West balancing-authority
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 58--58
+[]|\T1/lmr/m/n/6 (+20) 2015-07-01 on-ward in bun-
+ []
+
+
+Underfull \hbox (badness 2027) in paragraph at lines 58--58
+\T1/lmr/m/n/6 (+20) dled work-book; hourly; sta-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--59
+[]|\T1/lmr/m/n/6 (+20) 2011-2018 an-nual fil-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--59
+\T1/lmr/m/n/6 (+20) ings present un-der
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--59
+\T1/lmr/m/n/6 (+20) data/raw/ferc_form_714/;
+ []
+
+
+Underfull \hbox (badness 1259) in paragraph at lines 60--60
+\T1/lmr/m/n/6 (+20) eGRID de-tailed US-customary work-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--60
+[]|\T1/lmr/m/n/6 (+20) eGRID2010-2023 work-books
+ []
+
+
+Underfull \hbox (badness 3179) in paragraph at lines 60--60
+\T1/lmr/m/n/6 (+20) an-nual vin-tage (lagged map
+ []
+
+
+Underfull \hbox (badness 1776) in paragraph at lines 60--60
+\T1/lmr/m/n/6 (+20) for odd years / 2024); sta-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--60
+\T1/lmr/m/n/6 (+20) tus=official mod-eled an-nual
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--60
+\T1/lmr/m/n/6 (+20) generation-weighted out-put
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--63
+[]|\T1/lmr/m/n/6 (+20) 2011-2024 in pro-cessed
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--63
+\T1/lmr/m/n/6 (+20) campd_or_unit_hourly.csv
+ []
+
+
+Underfull \hbox (badness 3302) in paragraph at lines 64--64
+\T1/lmr/m/n/6 (+20) sta-tus=official cross-walk (ex-
+ []
+
+
+Underfull \hbox (badness 1824) in paragraph at lines 64--64
+\T1/lmr/m/n/6 (+20) act / mod-i-fied_fuzzy / of-fi-
+ []
+
+
+Underfull \hbox (badness 1194) in paragraph at lines 65--66
+[]|\T1/lmr/m/n/6 (+20) Oregon gen-er-a-tor char-ac-ter-is-tics / operating-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 65--66
+\T1/lmr/m/n/6 (+20) retirement dates Bound-ary: Ore-gon
+ []
+
+
+Underfull \hbox (badness 1596) in paragraph at lines 65--66
+\T1/lmr/m/n/6 (+20) plants/generators af-ter fil-ter. Caveat: Na-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 66--66
+[]|\T1/lmr/m/n/6 (+20) 2011-2024; monthly where
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 66--66
+\T1/lmr/m/n/6 (+20) re-spon-dent fre-quency=M;
+ []
+
+
+Underfull \hbox (badness 1990) in paragraph at lines 66--66
+\T1/lmr/m/n/6 (+20) sta-tus=reported (monthly re-
+ []
+
+
+Underfull \hbox (badness 3260) in paragraph at lines 68--68
+[]|\T1/lmr/m/n/6 (+20) text-extractable ARs in-clude
+ []
+
+
+Underfull \hbox (badness 1057) in paragraph at lines 68--68
+\T1/lmr/m/n/6 (+20) 2012, 2014-2017, 2020, 2022-
+ []
+
+
+Underfull \hbox (badness 5924) in paragraph at lines 68--68
+\T1/lmr/m/n/6 (+20) monthly hours/emissions/fuel
+ []
+
+
+Underfull \hbox (badness 7540) in paragraph at lines 68--68
+\T1/lmr/m/n/6 (+20) where ex-tractable from an-
+ []
+
+
+Underfull \hbox (badness 2689) in paragraph at lines 69--69
+[]|\T1/lmr/m/n/6 (+20) Oregon De-part-ment of En-vi-ron-men-
+ []
+
+
+Underfull \hbox (badness 1014) in paragraph at lines 69--69
+\T1/lmr/m/n/6 (+20) tain Vitesse 07-0037 ob-ser-va-
+ []
+
+
+Underfull \hbox (badness 4713) in paragraph at lines 70--70
+\T1/lmr/m/n/6 (+20) build-ing per-mit inspection-summary
+ []
+
+
+Underfull \hbox (badness 1248) in paragraph at lines 70--70
+[]|\T1/lmr/m/n/6 (+20) 2010 on-ward in-spec-tion sum-
+ []
+
+
+Underfull \hbox (badness 1708) in paragraph at lines 70--70
+\T1/lmr/m/n/6 (+20) maries in the cu-rated ta-ble;
+ []
+
+
+Underfull \hbox (badness 1331) in paragraph at lines 70--70
+\T1/lmr/m/n/6 (+20) event / opened and final-or-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--71
+[]|\T1/lmr/m/n/6 (+20) capacity-epoch and commissioning-support
+ []
+
+
+Underfull \hbox (badness 1817) in paragraph at lines 70--71
+\T1/lmr/m/n/6 (+20) to MW. Pipe di-am-e-ter is not con-sump-tion.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+[]|$\T1/lmtt/m/n/6 DOCUMENTARY _ EVIDENCE _
+ []
+
+
+Underfull \hbox (badness 4193) in paragraph at lines 71--71
+[]|\T1/lmr/m/n/6 (+20) City of Prineville / Ore-gon PUC
+ []
+
+
+Underfull \hbox (badness 2065) in paragraph at lines 71--71
+\T1/lmr/m/n/6 (+20) / Vitesse LLC: Prineville doc-u-men-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+\T1/lmr/m/n/6 (+20) le-gal chronol-ogy 2009-2026;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+\T1/lmr/m/n/6 (+20) sta-tus=reported doc-u-men-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+\T1/lmr/m/n/6 (+20) tary/regulatory facts; not
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--72
+[]|\T1/lmr/m/n/6 (+20) identity/boundary, interconnection/service-
+ []
+
+
+Underfull \hbox (badness 3449) in paragraph at lines 71--72
+\T1/lmr/m/n/6 (+20) capacity, trans-mis-sion topol-ogy, and water-
+ []
+
+
+Underfull \hbox (badness 4353) in paragraph at lines 71--72
+\T1/lmr/m/n/6 (+20) infrastructure/legal con-text; not cal-i-bra-tion
+ []
+
+
+Underfull \hbox (badness 3281) in paragraph at lines 71--72
+\T1/lmr/m/n/6 (+20) di-am-e-ter/cost/funding is not cam-pus wa-ter.
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [29]
+ignored: Infinite glue shrinkage found in box being split [30]
+ignored: Infinite glue shrinkage found in box being split [31]) (../../outputs/glossary_refresh_20260903/appendix/quantity_registry_appendix.tex
+Underfull \hbox (badness 3942) in paragraph at lines 22--22
+[]|\T1/lmr/m/n/6 (+20) Unit: sce-nario work
+ []
+
+
+Underfull \hbox (badness 3942) in paragraph at lines 23--23
+[]|\T1/lmr/m/n/6 (+20) Unit: sce-nario work
+ []
+
+
+Underfull \hbox (badness 4699) in paragraph at lines 23--23
+\T1/lmr/m/n/6 (+20) units; time: hourly
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--23
+[]|\T1/lmr/m/n/6 (+20) simulated; im-ple-mented as
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--23
+\T1/lmr/m/n/6 (+20) gen-er-a-tive sce-nario only;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
+[]|\T1/lmr/m/n/6 (+20) Work ex-e-cuted in t from a sta-ble ag-gre-
+ []
+
+
+Underfull \hbox (badness 7504) in paragraph at lines 23--24
+\T1/lmr/m/n/6 (+20) gate queue. Stochas-tic only; con-di-tional re-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
+\T1/lmr/m/n/6 (+20) con-struc-tion has no queue. Source/model:
+ []
+
+
+Underfull \hbox (badness 6268) in paragraph at lines 23--24
+\T1/lmr/m/n/6 (+20) src/stochastic_conditional_simulation.py. Lim-i-ta-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--24
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 7256) in paragraph at lines 25--25
+[]|\T1/lmr/m/n/6 (+20) scenario; sce-nario in-dex only;
+ []
+
+
+Underfull \hbox (badness 3942) in paragraph at lines 26--26
+[]|\T1/lmr/m/n/6 (+20) Unit: sce-nario work
+ []
+
+
+Underfull \hbox (badness 4699) in paragraph at lines 26--26
+\T1/lmr/m/n/6 (+20) units; time: hourly
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--26
+[]|\T1/lmr/m/n/6 (+20) simulated; im-ple-mented as
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--26
+\T1/lmr/m/n/6 (+20) gen-er-a-tive sce-nario only;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
+[]|\T1/lmr/m/n/6 (+20) Unfinished work in the stochas-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
+\T1/lmr/m/n/6 (+20) tic ag-gre-gate queue. Source/model:
+ []
+
+
+Underfull \hbox (badness 6268) in paragraph at lines 26--27
+\T1/lmr/m/n/6 (+20) src/stochastic_conditional_simulation.py. Lim-i-ta-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--27
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+[]|\T1/lmr/m/n/6 (+20) Unit: MW; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+\T1/lmr/m/n/6 (+20) hourly (re-con-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+\T1/lmr/m/n/6 (+20) structed/simulated);
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+[]|\T1/lmr/m/n/6 (+20) fitted; im-ple-mented as fit-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+\T1/lmr/m/n/6 (+20) ted la-tent (con-di-tional) /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+[]|\T1/lmr/m/n/6 (+20) Unit: MWh; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+[]|\T1/lmr/m/n/6 (+20) measured; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 7308) in paragraph at lines 31--31
+[]|\T1/lmr/m/n/6 (+20) Unit: MW_th (im-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 31--31
+[]|\T1/lmr/m/n/6 (+20) derived; im-ple-mented as
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 31--31
+\T1/lmr/m/n/6 (+20) physics iden-tity in-side gray-
+ []
+
+
+Underfull \hbox (badness 7308) in paragraph at lines 32--32
+[]|\T1/lmr/m/n/6 (+20) Unit: MW_th (im-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--33
+[]|\T1/lmr/m/n/6 (+20) Unit: degC; time:
+ []
+
+
+Underfull \hbox (badness 3312) in paragraph at lines 34--35
+\T1/lmr/m/n/6 (+20) / par-tial_evap / full_evap from weather vs 25
+ []
+
+
+Underfull \hbox (badness 2012) in paragraph at lines 34--35
+\T1/lmr/m/n/6 (+20) C tar-get. Source/model: gray-box + canon-i-cal
+ []
+
+
+Underfull \hbox (badness 3049) in paragraph at lines 35--35
+[]|\T1/lmr/m/n/6 (+20) scenario; par-tial (fixed pri-ors);
+ []
+
+
+Underfull \hbox (badness 1616) in paragraph at lines 36--36
+[]|\T1/lmr/m/n/6 (+20) derived; im-ple-mented as fan +
+ []
+
+
+Underfull \hbox (badness 2772) in paragraph at lines 36--36
+\T1/lmr/m/n/6 (+20) evaporative-aux frac-tions of IT
+ []
+
+
+Underfull \hbox (badness 3503) in paragraph at lines 37--37
+\T1/lmr/m/n/6 (+20) re-con-structed; an-nual
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--37
+[]|\T1/lmr/m/n/6 (+20) derived; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--38
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--39
+[]|\T1/lmr/m/n/6 (+20) Meta-disclosed Prineville an-nual fa-cil-ity elec-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--39
+\T1/lmr/m/n/6 (+20) tric-ity. Hard ob-ser-va-tion for cal-i-bra-tion.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--39
+\T1/lmr/m/n/6 (+20) Source/model: META_2016_DISCLOSURE /
+ []
+
+
+Underfull \hbox (badness 2073) in paragraph at lines 39--39
+[]|\T1/lmr/m/n/6 (+20) Unit: unit-less; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+\T1/lmr/m/n/6 (+20) with-drawal in-ten-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+\T1/lmr/m/n/6 (+20) sity); de-sign WUE
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+[]|\T1/lmr/m/n/6 (+20) derived; par-tial:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+\T1/lmr/m/n/6 (+20) withdrawal/facility-kWh de-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+\T1/lmr/m/n/6 (+20) rived; ISO WUE un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 42--42
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 1163) in paragraph at lines 43--43
+[]|\T1/lmr/m/n/6 (+20) Unit: m$[]$/h (hourly);
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--43
+[]|\T1/lmr/m/n/6 (+20) derived; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 3547) in paragraph at lines 44--44
+[]|$\T1/lmtt/m/n/6 Q _ MAKEUP _ BLOWDOWN$\T1/lmr/m/n/6 (+20) : Makeup /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--44
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--46
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 1609) in paragraph at lines 47--47
+[]|$\T1/lmtt/m/n/6 Q _ W _ WITH$\T1/lmr/m/n/6 (+20) : Di-rect wa-ter with-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--47
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--48
+[]|\T1/lmr/m/n/6 (+20) Meta-disclosed Prineville an-nual wa-ter with-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--48
+\T1/lmr/m/n/6 (+20) drawal. Hard ob-ser-va-tion. Not monthly.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--48
+\T1/lmr/m/n/6 (+20) Source/model: META_2016_DISCLOSURE /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--48
+[]|$\T1/lmtt/m/n/6 Q _ CITY _ METER _ SERVICE$\T1/lmr/m/n/6 (+20) : City-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--48
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--48
+\T1/lmr/m/n/6 (+20) boundary=$\T1/lmtt/m/n/6 CITY _ UTILITY _ CUSTOMER _
+ []
+
+
+Underfull \hbox (badness 1748) in paragraph at lines 48--49
+\T1/lmr/m/n/6 (+20) in ob-served months. City-metered util-ity/service
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+\T1/lmr/m/n/6 (+20) CITY_FB_METER_CONSUMPTION. Lim-i-ta-tion:
+ []
+
+
+Underfull \hbox (badness 2189) in paragraph at lines 49--49
+[]|$\T1/lmtt/m/n/6 Q _ CITY _ BULK _ WATER$\T1/lmr/m/n/6 (+20) : City Face-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 49--49
+\T1/lmr/m/n/6 (+20) book bulk/hydrant wa-ter
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 49--49
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 49--49
+\T1/lmr/m/n/6 (+20) boundary=$\T1/lmtt/m/n/6 CITY _ UTILITY _ CUSTOMER _
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--50
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented as re-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--50
+\T1/lmr/m/n/6 (+20) boundary=$\T1/lmtt/m/n/6 CITY _ UTILITY _ CUSTOMER _
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--51
+[]|$\T1/lmtt/m/n/6 Q _ CITY _ WELL _ METER _ SEW$\T1/lmr/m/n/6 (+20) : City
+ []
+
+
+Underfull \hbox (badness 6125) in paragraph at lines 51--51
+\T1/lmr/m/n/6 (+20) WELL ME-TER FOR SEW
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--51
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented as re-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--51
+\T1/lmr/m/n/6 (+20) boundary=$\T1/lmtt/m/n/6 CITY _ UTILITY _ CUSTOMER _
+ []
+
+
+Underfull \hbox (badness 5022) in paragraph at lines 51--52
+[]|\T1/lmr/m/n/6 (+20) Volume on me-ters with rate code WELL ME-
+ []
+
+
+Underfull \hbox (badness 7030) in paragraph at lines 51--52
+\T1/lmr/m/n/6 (+20) or as ground-wa-ter with-drawal. Source/model:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+\T1/lmr/m/n/6 (+20) CITY_FB_METER_CONSUMPTION. Lim-i-ta-tion:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 52--52
+\T1/lmr/m/n/6 (+20) boundary=$\T1/lmtt/m/n/6 CITY _ UTILITY _ CUSTOMER _
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
+[]|$\T1/lmtt/m/n/6 Q _ CITY _ WAREHOUSE _ WATER$\T1/lmr/m/n/6 (+20) : Face-
+ []
+
+
+Underfull \hbox (badness 1953) in paragraph at lines 53--53
+\T1/lmr/m/n/6 (+20) book Ware-house water-coded
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
+\T1/lmr/m/n/6 (+20) boundary=$\T1/lmtt/m/n/6 CITY _ UTILITY _ CUSTOMER _
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+[]|\T1/lmr/m/n/6 (+20) Water-coded me-ters on Face-book Ware-house
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+\T1/lmr/m/n/6 (+20) at 542 SW Com-merce Ct. Not iden-ti-fied
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+\T1/lmr/m/n/6 (+20) as main-campus op-er-a-tions. Source/model:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+\T1/lmr/m/n/6 (+20) CITY_FB_METER_CONSUMPTION. Lim-i-ta-
+ []
+
+
+Underfull \hbox (badness 2913) in paragraph at lines 54--54
+[]|$\T1/lmtt/m/n/6 Q _ WATER _ PROXY$\T1/lmr/m/n/6 (+20) : Hourly/annual
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--54
+[]|\T1/lmr/m/n/6 (+20) proxy; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 55--55
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--56
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 5637) in paragraph at lines 57--57
+[]|$\T1/lmtt/m/n/6 Q _ REUSE _ WATER$\T1/lmr/m/n/6 (+20) : On-site wa-ter
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--57
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 5954) in paragraph at lines 58--58
+[]|$\T1/lmtt/m/n/6 Q _ ADD _ MDD$\T1/lmr/m/n/6 (+20) : Average-day and
+ []
+
+
+Underfull \hbox (badness 2591) in paragraph at lines 58--58
+[]|\T1/lmr/m/n/6 (+20) Unit: un-avail-able as
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 58--58
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--59
+[]|\T1/lmr/m/n/6 (+20) Unit: m$[]$; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--59
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--60
+[]|\T1/lmr/m/n/6 (+20) Unit: m$[]$; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--60
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 2050) in paragraph at lines 60--61
+[]|\T1/lmr/m/n/6 (+20) OWRD re-ported use at Meta/Facebook-associated
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--61
+\T1/lmr/m/n/6 (+20) di-rect ground-wa-ter PODs. Source/model:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--61
+\T1/lmr/m/n/6 (+20) OWRD_WUR_QUERY. Lim-i-ta-tion: No of-fi-cial
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 62--62
+[]|\T1/lmr/m/n/6 (+20) Unit: mm/month
+ []
+
+
+Underfull \hbox (badness 1412) in paragraph at lines 62--62
+\T1/lmr/m/n/6 (+20) and m$[]$/month; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 62--62
+[]|\T1/lmr/m/n/6 (+20) proxy; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 62--63
+\T1/lmr/m/n/6 (+20) in mm and m$[]$ per month. Source/model:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 62--63
+\T1/lmr/m/n/6 (+20) USGS_NWAA_IWA. Lim-i-ta-tion: No 2021-2024
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--63
+[]|\T1/lmr/m/n/6 (+20) Unit: mm/month
+ []
+
+
+Underfull \hbox (badness 1412) in paragraph at lines 63--63
+\T1/lmr/m/n/6 (+20) and m$[]$/month; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--63
+[]|\T1/lmr/m/n/6 (+20) proxy; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 64--64
+[]|\T1/lmr/m/n/6 (+20) Unit: mm/month
+ []
+
+
+Underfull \hbox (badness 1412) in paragraph at lines 64--64
+\T1/lmr/m/n/6 (+20) and m$[]$/month; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 64--64
+[]|\T1/lmr/m/n/6 (+20) derived; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 65--65
+[]|\T1/lmr/m/n/6 (+20) proxy; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 3612) in paragraph at lines 66--67
+[]|\T1/lmr/m/n/6 (+20) Modeled HUC12 public-supply wa-ter use. Not
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 66--67
+\T1/lmr/m/n/6 (+20) City OWRD and not Meta. Source/model:
+ []
+
+
+Underfull \hbox (badness 5260) in paragraph at lines 66--67
+\T1/lmr/m/n/6 (+20) USGS_NWAA_PS_WD / USGS_NWAA_PS_CU.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--67
+[]|\T1/lmr/m/n/6 (+20) Unit: MWh; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--67
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 68--68
+[]|$\T1/lmtt/m/n/6 Q _ FERC _ WEST _ MONTHLY$\T1/lmr/m/n/6 (+20) : FERC
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 68--68
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 5924) in paragraph at lines 69--69
+\T1/lmr/m/n/6 (+20) fi-Corp East+West com-bined
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--69
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--69
+\T1/lmr/m/n/6 (+20) boundary=$\T1/lmtt/m/n/6 PACIFICORP _ EAST _ WEST _
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--70
+[]|$\T1/lmtt/m/n/6 Q _ FERC _ PACW _ HOURLY _ PROXY$\T1/lmr/m/n/6 (+20) :
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--70
+\T1/lmr/m/n/6 (+20) FERC-constrained PACW-
+ []
+
+
+Underfull \hbox (badness 1331) in paragraph at lines 70--70
+[]|\T1/lmr/m/n/6 (+20) proxy; im-ple-mented as di-ag-nos-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 70--70
+\T1/lmr/m/n/6 (+20) tic/candidate pre-EIA proxy;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--71
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 1983) in paragraph at lines 72--72
+[]|\T1/lmr/m/n/6 (+20) Unit: MWh; tonnes;
+ []
+
+
+Underfull \hbox (badness 3250) in paragraph at lines 72--73
+\T1/lmr/m/n/6 (+20) EIA-923 net gen-er-a-tion/fuel. Oregon-only pi-lot.
+ []
+
+
+Underfull \hbox (badness 1394) in paragraph at lines 74--74
+\T1/lmr/m/n/6 (+20) an-nual ag-gre-ga-tion of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--74
+\T1/lmr/m/n/6 (+20) coverage re-gional di-ag-nos-tic;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 75--75
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--76
+[]|\T1/lmr/m/n/6 (+20) proxy; im-ple-mented as
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--76
+\T1/lmr/m/n/6 (+20) regional-average proxy only;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 77--77
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 1297) in paragraph at lines 78--78
+[]|$\T1/lmtt/m/n/6 Q _ SCOPE2 _ META$\T1/lmr/m/n/6 (+20) : Meta re-ported
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--78
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--79
+[]|\T1/lmr/m/n/6 (+20) derived; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 80--80
+[]|\T1/lmr/m/n/6 (+20) Unit: in-ten-sity
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 80--80
+\T1/lmr/m/n/6 (+20) units as pre-pared
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 80--80
+\T1/lmr/m/n/6 (+20) in pacw_hourly.csv;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--81
+[]|$\T1/lmtt/m/n/6 Q _ FUEL _ IMPORT _ PROXY$\T1/lmr/m/n/6 (+20) : PACW
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--81
+[]|\T1/lmr/m/n/6 (+20) Unit: in-dex; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 82--82
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+[]|\T1/lmr/m/n/6 (+20) Unit: hours; time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 1789) in paragraph at lines 83--84
+\T1/lmr/m/n/6 (+20) mit-ted en-gines where ex-tractable. Source/model:
+ []
+
+
+Underfull \hbox (badness 1259) in paragraph at lines 84--84
+[]|$\T1/lmtt/m/n/6 Q _ BACKUP _ EMIS$\T1/lmr/m/n/6 (+20) : On-site backup
+ []
+
+
+Underfull \hbox (badness 7081) in paragraph at lines 84--84
+\T1/lmr/m/n/6 (+20) in DEQ ta-bles (see
+ []
+
+
+Underfull \hbox (badness 1275) in paragraph at lines 84--84
+\T1/lmr/m/n/6 (+20) pro-cessed files); time:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--84
+[]|\T1/lmr/m/n/6 (+20) reported; im-ple-mented;
+ []
+
+
+Underfull \hbox (badness 5374) in paragraph at lines 84--85
+[]|\T1/lmr/m/n/6 (+20) DEQ-calculated annual-report emis-sions and sep-
+ []
+
+
+Underfull \hbox (badness 6978) in paragraph at lines 84--85
+\T1/lmr/m/n/6 (+20) a-rate source-test mea-sure-ments. Source/model:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--86
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 87--87
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--88
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 1348) in paragraph at lines 89--90
+[]|\T1/lmr/m/n/6 (+20) Not im-ple-mented. Source/model: . Lim-i-ta-tion:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--90
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 91--91
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 3291) in paragraph at lines 92--93
+[]|\T1/lmr/m/n/6 (+20) Partial: ZIP $\OMS/lmsy/m/n/6 !$ \T1/lmr/m/n/6 (+20) eGRID NWPP and site point
+ []
+
+
+Underfull \hbox (badness 3199) in paragraph at lines 92--93
+\OMS/lmsy/m/n/6 !$ \T1/lmr/m/n/6 (+20) HUC12 ex-ist. Gen-er-a-tor and aquifer maps
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 92--93
+\T1/lmr/m/n/6 (+20) EPA_EGRID_POWER_PROFILER; USGS_WBD.
+ []
+
+
+Underfull \hbox (badness 2452) in paragraph at lines 93--93
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able as the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 94--94
+[]|$\T1/lmtt/m/n/6 Q _ OTHER _ SECTOR$\T1/lmr/m/n/6 (+20) : Other-sector
+ []
+
+
+Underfull \hbox (badness 2591) in paragraph at lines 94--94
+[]|\T1/lmr/m/n/6 (+20) Unit: un-avail-able as
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 94--94
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 95--95
+[]|$\T1/lmtt/m/n/6 Q _ RECHARGE$\T1/lmr/m/n/6 (+20) : Ground-wa-ter
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 95--95
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 6157) in paragraph at lines 95--96
+[]|\T1/lmr/m/n/6 (+20) Not iden-ti-fied. ASR PDFs are con-text only.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 96--96
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 97--97
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 98--98
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 2261) in paragraph at lines 99--99
+[]|\T1/lmr/m/n/6 (+20) Unit: ft be-low land
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--99
+\T1/lmr/m/n/6 (+20) ir-reg-u-lar ob-ser-va-tion
+ []
+
+
+Underfull \hbox (badness 1024) in paragraph at lines 99--99
+[]|\T1/lmr/m/n/6 (+20) measured; im-ple-mented as mea-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--99
+\T1/lmr/m/n/6 (+20) sured GWIS well-level se-ries;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 100--100
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 101--101
+[]|\T1/lmr/m/n/6 (+20) unavailable; un-avail-able;
+ []
+
+
+Underfull \hbox (badness 2951) in paragraph at lines 102--102
+[]|$\T1/lmtt/m/n/6 Q _ XI$\T1/lmr/m/n/6 (+20) : Struc-tural un-cer-tainty
+ []
+
+
+Underfull \hbox (badness 6316) in paragraph at lines 102--102
+[]|\T1/lmr/m/n/6 (+20) scenario; par-tial (sce-nario en-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--102
+\T1/lmr/m/n/6 (+20) sem-ble, not $\OML/lmm/m/it/6 ^^X$ \T1/lmr/m/n/6 (+20) iden-ti-fi-ca-tion);
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 103--103
+\T1/lmr/m/n/6 (+20) heat in-put) where
+ []
+
+
+Underfull \hbox (badness 2020) in paragraph at lines 103--104
+[]|\T1/lmr/m/n/6 (+20) CAMPD heat in-put is stored; a campus-coupled
+ []
+
+[32]
+ignored: Infinite glue shrinkage found in box being split [33]
+ignored: Infinite glue shrinkage found in box being split [34]
+ignored: Infinite glue shrinkage found in box being split [35]
+ignored: Infinite glue shrinkage found in box being split [36]) (../../outputs/glossary_refresh_20260903/appendix/model_registry_appendix.tex
+Underfull \hbox (badness 10000) in paragraph at lines 22--22
+[]|\T1/lmr/m/n/6 (+20) Training: none (not sta-tis-ti-cally
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--23
+[]|$\T1/lmtt/m/n/6 M _ ELEC _ CLOSURE$\T1/lmr/m/n/6 (+20) : An-nual facility-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--24
+[]|\T1/lmr/m/n/6 (+20) estimation; pre-dic-
+ []
+
+
+Underfull \hbox (badness 5607) in paragraph at lines 24--24
+\T1/lmr/m/n/6 (+20) tion=yes for hold-out
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--25
+[]|\T1/lmr/m/n/6 (+20) estimation; pre-dic-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--26
+[]|\T1/lmr/m/n/6 (+20) prediction; pre-dic-
+ []
+
+
+Underfull \hbox (badness 1178) in paragraph at lines 26--26
+\T1/lmr/m/n/6 (+20) window one-step MAPE among pre-
+ []
+
+
+Underfull \hbox (badness 6236) in paragraph at lines 26--27
+[]|\T1/lmr/m/n/6 (+20) Rule/status: expanding-window one-step
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
+\T1/lmr/m/n/6 (+20) MAPE among pre-registered mech-a-nis-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
+\T1/lmr/m/n/6 (+20) among pre-registered en-ergy/evaporation
+ []
+
+
+Underfull \hbox (badness 3078) in paragraph at lines 26--27
+\T1/lmr/m/n/6 (+20) can-di-dates (not a claim of best over-all
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--27
+[]|\T1/lmr/m/n/6 (+20) prediction; pre-dic-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--28
+[]|\T1/lmr/m/n/6 (+20) prediction; pre-dic-
+ []
+
+
+Underfull \hbox (badness 6236) in paragraph at lines 28--29
+[]|\T1/lmr/m/n/6 (+20) Rule/status: expanding-window one-step
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+[]|\T1/lmr/m/n/6 (+20) generative sim-u-la-
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 29--29
+\T1/lmr/m/n/6 (+20) tion; pre-dic-tion=only
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+\T1/lmr/m/n/6 (+20) the se-lected an-nual
+ []
+
+
+Underfull \hbox (badness 6559) in paragraph at lines 29--29
+\T1/lmr/m/n/6 (+20) dic-tion; the rest is
+ []
+
+
+Underfull \hbox (badness 1137) in paragraph at lines 29--29
+\T1/lmr/m/n/6 (+20) over-head pri-ors, ret-ro-spec-tive water-
+ []
+
+
+Underfull \hbox (badness 2644) in paragraph at lines 30--30
+[]|$\T1/lmtt/m/n/6 M _ EGRID _ BENCH$\T1/lmr/m/n/6 (+20) : eGRID NWPP $\OMS/lmsy/m/n/6 ^^B$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+[]|\T1/lmr/m/n/6 (+20) benchmark; pre-dic-
+ []
+
+
+Underfull \hbox (badness 1867) in paragraph at lines 30--31
+[]|\T1/lmr/m/n/6 (+20) Rule/status: ZIP uniquely NWPP. Com-
+ []
+
+
+Underfull \hbox (badness 1584) in paragraph at lines 30--31
+\T1/lmr/m/n/6 (+20) closed. 2011 eGRID tonnes are la-beled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 32--32
+[]|$\T1/lmtt/m/n/6 M _ FERC714 _ BACKCAST$\T1/lmr/m/n/6 (+20) : FERC-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 32--32
+\T1/lmr/m/n/6 (+20) constrained PACW-West hourly
+ []
+
+
+Underfull \hbox (badness 1067) in paragraph at lines 33--33
+[]|$\T1/lmtt/m/n/6 M _ FUEL _ IMPORT$\T1/lmr/m/n/6 (+20) : PACW fuel/import
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--33
+[]|\T1/lmr/m/n/6 (+20) benchmark; pre-dic-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--34
+[]|\T1/lmr/m/n/6 (+20) Rule/status: fall-back only.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--34
+\T1/lmr/m/n/6 (+20) pacw_carbon_shape_compare.csv records
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 34--34
+[]|$\T1/lmtt/m/n/6 M _ CHANGEPOINT$\T1/lmr/m/n/6 (+20) : An-nual piecewise-
+ []
+
+
+Underfull \hbox (badness 3148) in paragraph at lines 36--36
+[]|$\T1/lmtt/m/n/6 M _ OWRD _ EXTERNAL$\T1/lmr/m/n/6 (+20) : OWRD ex-ter-nal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 36--36
+[]|\T1/lmr/m/n/6 (+20) external-consistency
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--37
+[]|\T1/lmr/m/n/6 (+20) external-consistency
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--37
+[]|\T1/lmr/m/n/6 (+20) Training: n/a; hold-out: n/a.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--37
+\T1/lmr/m/n/6 (+20) Join/coverage di-ag-nos-tics be-tween
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--39
+[]|\T1/lmr/m/n/6 (+20) Training: n/a; hold-out: n/a.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--39
+\T1/lmr/m/n/6 (+20) Generation-weighted with-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--39
+\T1/lmr/m/n/6 (+20) drawal/consumption in-ten-sity over
+ []
+
+
+Underfull \hbox (badness 2538) in paragraph at lines 39--39
+\T1/lmr/m/n/6 (+20) with non-missing wa-ter. Op-tional
+ []
+
+
+Underfull \hbox (badness 7558) in paragraph at lines 40--40
+[]|$\T1/lmtt/m/n/6 M _ DOCUMENTARY _ EVIDENCE$\T1/lmr/m/n/6 (+20) : Doc-u-men-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/m/n/6 (+20) external-consistency
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+[]|$\T1/lmtt/m/n/6 M _ CITY _ SERVICE _ CLIMATOLOGY$\T1/lmr/m/n/6 (+20) : City-
+ []
+
+
+Underfull \hbox (badness 2635) in paragraph at lines 41--41
+\T1/lmr/m/n/6 (+20) service month-of-year cli-ma-tol-ogy
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+[]|\T1/lmr/m/n/6 (+20) benchmark; pre-dic-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+[]|\T1/lmr/m/n/6 (+20) Training: ex-pand-ing: com-plete
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+\T1/lmr/m/n/6 (+20) ret-ro-spec-tive/exploratory chrono-log-
+ []
+
+
+Underfull \hbox (badness 3503) in paragraph at lines 41--41
+\T1/lmr/m/n/6 (+20) i-cal; City data were in-spected in
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--41
+\T1/lmr/m/n/6 (+20) de-vel-op-ment. Expanding-window
+ []
+
+
+Underfull \hbox (badness 5908) in paragraph at lines 41--41
+\T1/lmr/m/n/6 (+20) mean of each cal-en-dar month of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 42--42
+[]|$\T1/lmtt/m/n/6 M _ CITY _ SERVICE _ SEASONAL _ PERSIST$\T1/lmr/m/n/6 (+20) :
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 42--42
+\T1/lmr/m/n/6 (+20) City-service sea-sonal per-sis-tence
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 42--42
+[]|\T1/lmr/m/n/6 (+20) benchmark; pre-dic-
+ []
+
+
+Underfull \hbox (badness 6995) in paragraph at lines 42--42
+[]|\T1/lmr/m/n/6 (+20) Training: pre-vi-ous com-plete year
+ []
+
+
+Underfull \hbox (badness 1466) in paragraph at lines 42--43
+[]|\T1/lmr/m/n/6 (+20) Rule/status: pre-de-clared base-line. Fore-
+ []
+
+
+Underfull \hbox (badness 2452) in paragraph at lines 42--43
+\T1/lmr/m/n/6 (+20) castable ex-ante base-line: pre-vi-ous com-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--43
+[]|$\T1/lmtt/m/n/6 M _ CITY _ SERVICE _ ELEC _ SCALE$\T1/lmr/m/n/6 (+20) : City-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--43
+[]|\T1/lmr/m/n/6 (+20) prediction; pre-dic-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--43
+\T1/lmr/m/n/6 (+20) hold-out: ret-ro-spec-tive/exploratory
+ []
+
+
+Underfull \hbox (badness 2922) in paragraph at lines 44--44
+[]|$\T1/lmtt/m/n/6 M _ CITY _ SERVICE _ GRAYBOX _ LEVEL$\T1/lmr/m/n/6 (+20) : City-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--44
+[]|\T1/lmr/m/n/6 (+20) prediction; pre-dic-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--44
+\T1/lmr/m/n/6 (+20) hold-out: ret-ro-spec-tive/exploratory
+ []
+
+
+Underfull \hbox (badness 5667) in paragraph at lines 44--44
+\T1/lmr/m/n/6 (+20) chrono-log-i-cal. Sin-gle non-neg-a-tive
+ []
+
+
+Underfull \hbox (badness 7576) in paragraph at lines 44--44
+\T1/lmr/m/n/6 (+20) monthly scale from gray-box raw
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+[]|$\T1/lmtt/m/n/6 M _ CITY _ SERVICE _ SCALE _ EVAP$\T1/lmr/m/n/6 (+20) : City-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+[]|\T1/lmr/m/n/6 (+20) prediction; pre-dic-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+\T1/lmr/m/n/6 (+20) hold-out: ret-ro-spec-tive/exploratory
+ []
+
+
+Underfull \hbox (badness 2409) in paragraph at lines 45--45
+\T1/lmr/m/n/6 (+20) monthly model: a$\OMS/lmsy/m/n/6 ^^B$\T1/lmr/m/n/6 (+20) (E_fac,y/12) +
+ []
+
+
+Underfull \hbox (badness 1087) in paragraph at lines 46--46
+[]|$\T1/lmtt/m/n/6 M _ CITY _ SERVICE _ GRAYBOX _ SHAPE$\T1/lmr/m/n/6 (+20) : Gray-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--46
+\T1/lmr/m/n/6 (+20) box vs City-service within-year
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 46--46
+[]|\T1/lmr/m/n/6 (+20) external-consistency
+ []
+
+
+Underfull \hbox (badness 2409) in paragraph at lines 46--46
+[]|\T1/lmr/m/n/6 (+20) Training: n/a (within-year nor-mal-
+ []
+
+
+Underfull \hbox (badness 1320) in paragraph at lines 46--46
+\T1/lmr/m/n/6 (+20) iza-tion); hold-out: n/a. Com-pares
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--47
+[]|\T1/lmr/m/n/6 (+20) external-consistency
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [37]
+ignored: Infinite glue shrinkage found in box being split [38]) (../../outputs/glossary_refresh_20260903/tables/city_water_boundary_reconciliation_diagnostic.tex) [39] [40] (./Network_Based_Data_Center_Glossary.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-03-20>
+ ***********
+Package rerunfilecheck Info: File `Network_Based_Data_Center_Glossary.out' has not changed.
+(rerunfilecheck)             Checksum: 578A3E1B6FA9AD6D8137102B258B0730;6203.
+ ) 
+Here is how much of TeX's memory you used:
+ 25224 strings out of 469296
+ 465943 string characters out of 5465051
+ 1057958 words of memory out of 5000000
+ 52955 multiletter control sequences out of 15000+600000
+ 782786 words of font info for 371 fonts, out of 8000000 for 9000
+ 36 hyphenation exceptions out of 8191
+ 99i,12n,108p,1156b,916s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx6.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr5.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri7.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt8.pfb></home/nacevedo/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
+Output written on Network_Based_Data_Center_Glossary.pdf (40 pages, 1616721 bytes).
+PDF statistics:
+ 639 PDF objects out of 1000 (max. 8388607)
+ 464 compressed objects within 5 object streams
+ 126 named destinations out of 1000 (max. 500000)
+ 84702 words of extra memory for PDF output out of 89155 (max. 10000000)
+

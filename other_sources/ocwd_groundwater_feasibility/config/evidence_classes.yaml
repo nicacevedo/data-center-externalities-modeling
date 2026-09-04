@@ -1,0 +1,21 @@
+schema_version: 1
+allowed_evidence_classes:
+  - OBSERVED
+  - REPORTED_MEASURED
+  - DERIVED_FROM_MEASUREMENTS
+  - ESTIMATED
+  - MODELED
+  - REFERENCE_MODEL
+definitions:
+  OBSERVED: Direct instrument or field observation with its original QA metadata retained.
+  REPORTED_MEASURED: A measured quantity reported by the responsible producer or agency, including metered pumping.
+  DERIVED_FROM_MEASUREMENTS: A quantity calculated from measured or reported components, such as reported accounting storage change or recharge-basin percolation.
+  ESTIMATED: A quantity estimated using an empirical relationship, allocation, or assumption, such as rainfall-derived natural recharge.
+  MODELED: Output from a fitted or simulated model that is not itself an observation.
+  REFERENCE_MODEL: An external physics/model package used only as a reference benchmark, such as OCWD MODFLOW output.
+prohibited_collapses:
+  - Do not relabel reported pumping as OBSERVED.
+  - Do not relabel calculated percolation or storage change as OBSERVED.
+  - Do not relabel estimated natural recharge as OBSERVED.
+  - Do not treat REFERENCE_MODEL output as empirical ground truth.
+

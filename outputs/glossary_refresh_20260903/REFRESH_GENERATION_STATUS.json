@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "reporting_only": true,
+  "scientific_models_refit": false,
+  "source_count": 50,
+  "quantity_count": 82,
+  "method_model_count": 26,
+  "coverage_rows": 368,
+  "city_validation": {
+    "status": "RAN",
+    "gate": "PASS",
+    "primary_support": "common",
+    "n": 120,
+    "evaluation_start": "2014-01",
+    "evaluation_end": "2024-12",
+    "best_model": "seasonal_persistence",
+    "best_mae_m3": 7473.075529290018,
+    "best_rmse_m3": 11164.769944572256,
+    "graybox_mae_m3": 11728.128345685942,
+    "graybox_shape_share_corr": 0.7513998166662088,
+    "graybox_shape_share_mae": 0.0764245648362777,
+    "observed_summer_share_range": [
+      0.3646659116647792,
+      0.5435302150904745
+    ],
+    "graybox_summer_share_range": [
+      0.7508450515976792,
+      0.9388127899607285
+    ],
+    "conclusion": "Seasonal persistence has lower common-support error than the frozen gray-box evaporation candidate; gray-box seasonal signal is positive but too summer-concentrated."
+  },
+  "well_meter_vs_owrd_check": {
+    "all_overlap_n": 141,
+    "all_overlap_pearson_r": 0.09289175343021779,
+    "both_nonzero_n": 128,
+    "both_nonzero_pearson_r": 0.13967488435222208,
+    "identity_status": "UNRESOLVED",
+    "inference_prohibited": "Numerical closeness/correlation does not identify source attribution or a master/submeter relationship."
+  },
+  "protected_figure_hashes_before": {
+    "Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig02_observed_ground_truth.png": "2a6fd479c8140158fba9b80c5c465f6868b636a08b5b0cf6e0256a5eb68d2801",
+    "Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig03_water_model_accuracy.png": "77d0f8cc43394ad3bd5e9f7724ec216b39451ee87d46af97632aa3b84e9fc36f",
+    "Meta_Prineville_Oregon_v3/outputs/pipeline_report/figures/fig_advisor_gwis_estimation_candidates.png": "99960ad6a0e466397bbb065c776c0a76117cdb77e0e7b52ada6d00e91f3a97d6"
+  }
+}

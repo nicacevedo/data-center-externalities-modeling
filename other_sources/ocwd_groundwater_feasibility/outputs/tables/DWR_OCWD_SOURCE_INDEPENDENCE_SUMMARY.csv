@@ -1,0 +1,5 @@
+collector,n_observations,n_wells,dominant_independence_class
+Orange County Water District,50717,489,OCWD_ORIGIN_REPUBLISHED_BY_DWR
+Orange County Water District - 8-001,5505,83,OCWD_ORIGIN_REPUBLISHED_BY_DWR
+United States Geological Survey,4528,101,INDEPENDENT_AGENCY_OBSERVATION
+Department of Water Resources,1,1,INDEPENDENT_AGENCY_OBSERVATION

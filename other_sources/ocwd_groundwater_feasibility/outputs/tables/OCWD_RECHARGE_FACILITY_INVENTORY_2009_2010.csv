@@ -1,0 +1,26 @@
+facility,maximum_wetted_area_acres,maximum_storage_capacity_af,source_file,pdf_page,pdf_table,measurement_class,note
+Anaheim Lake,72.0,2260.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Burris Basin,120.0,2670.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Conrock Basin,25.0,1070.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Five Coves Basin: Lower,16.0,182.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Five Coves Basin: Upper,15.0,164.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Foster-Huckleberry Basin,21.0,630.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Kraemer Basin,31.0,1170.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+La Jolla Basin,6.5,26.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Lincoln Basin,10.0,60.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Little Warner Basin,11.0,225.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Miller Basin,25.0,300.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Mini-Anaheim Lake,5.0,13.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Off-River Channel,89.0,,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Olive Basin,5.8,122.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Placentia Basin,9.0,350.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Raymond Basin,19.0,370.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+River View Basin,3.6,11.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Santa Ana River: Imperial Highway to Orangewood Avenue,291.0,,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Santiago Basins,187.0,13720.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Santiago Creek: Santiago Basins to Hart Park,2.6,,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Warner Basin,70.0,2620.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Weir Pond 1,6.0,28.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Weir Pond 2,9.0,42.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Weir Pond 3,14.0,160.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.
+Weir Pond 4,4.0,22.0,data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf,25,Table 4-1,REPORTED_MEASURED,Facility design/reference attributes; not monthly forcing.

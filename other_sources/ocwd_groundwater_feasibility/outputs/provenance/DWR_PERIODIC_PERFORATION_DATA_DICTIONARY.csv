@@ -1,0 +1,5 @@
+,column,type,description,label
+0,_id,int,,
+1,site_code,text,Location based 18 character alphanumeric code assigned to each well.  Links the perforation interval back to the stations table (foreign key).,Site Code
+2,top_prf_int,numeric,Depth in feet below ground surface to the top of this perforation interval.,Depth To Top of Perforation Interval
+3,bot_prf_int,numeric,Depth in feet below ground surface to the bottom of this perforation interval.,Depth To Bottom of Perforation Interval

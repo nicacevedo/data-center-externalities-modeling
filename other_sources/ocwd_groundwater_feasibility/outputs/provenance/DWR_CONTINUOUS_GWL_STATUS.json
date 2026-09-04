@@ -1,0 +1,25 @@
+{
+  "DWR_CONTINUOUS_GWL": {
+    "large_data_tables_downloaded": false,
+    "metadata_modified": "2026-08-30T16:09:47.130265",
+    "metadata_sha256": "304225d44ad02212f484900f4c57d3325d0c47aae40850915680ba9bf8c981f6",
+    "official_covered_counties": [
+      "Butte",
+      "Colusa",
+      "Glenn",
+      "Mendocino",
+      "Modoc",
+      "Sacramento",
+      "San Joaquin",
+      "Shasta",
+      "Siskiyou",
+      "Solano",
+      "Sutter",
+      "Tehama",
+      "Yolo",
+      "Yuba"
+    ],
+    "reason": "no Orange County stations in current dataset",
+    "status": "EXCLUDED_GEOGRAPHICALLY"
+  }
+}

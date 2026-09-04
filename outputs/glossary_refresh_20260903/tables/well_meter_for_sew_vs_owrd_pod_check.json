@@ -1,0 +1,8 @@
+{
+  "all_overlap_n": 141,
+  "all_overlap_pearson_r": 0.09289175343021779,
+  "both_nonzero_n": 128,
+  "both_nonzero_pearson_r": 0.13967488435222208,
+  "identity_status": "UNRESOLVED",
+  "inference_prohibited": "Numerical closeness/correlation does not identify source attribution or a master/submeter relationship."
+}

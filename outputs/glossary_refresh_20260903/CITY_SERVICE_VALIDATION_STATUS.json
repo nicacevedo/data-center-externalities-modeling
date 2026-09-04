@@ -1,0 +1,23 @@
+{
+  "status": "RAN",
+  "gate": "PASS",
+  "primary_support": "common",
+  "n": 120,
+  "evaluation_start": "2014-01",
+  "evaluation_end": "2024-12",
+  "best_model": "seasonal_persistence",
+  "best_mae_m3": 7473.075529290018,
+  "best_rmse_m3": 11164.769944572256,
+  "graybox_mae_m3": 11728.128345685942,
+  "graybox_shape_share_corr": 0.7513998166662088,
+  "graybox_shape_share_mae": 0.0764245648362777,
+  "observed_summer_share_range": [
+    0.3646659116647792,
+    0.5435302150904745
+  ],
+  "graybox_summer_share_range": [
+    0.7508450515976792,
+    0.9388127899607285
+  ],
+  "conclusion": "Seasonal persistence has lower common-support error than the frozen gray-box evaporation candidate; gray-box seasonal signal is positive but too summer-concentrated."
+}

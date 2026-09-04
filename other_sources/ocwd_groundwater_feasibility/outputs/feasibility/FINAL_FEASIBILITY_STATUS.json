@@ -1,0 +1,69 @@
+{
+  "EXPECTED_STATUS_CAVEAT": "Tier A remains conditional on common support, authoritative well/screen/layer identity, QA, and sufficient locations reserved for untouched spatial validation.",
+  "EXPECTED_STATUS_WITH_OCWD_WRMS": "TIER_A_CANDIDATE",
+  "PUBLIC_DATA_ONLY_INTERPRETATION": "Public data support an aggregate water-budget benchmark and useful state/propagation audits, but not a well/facility dynamic benchmark because per-well pumping and complete geocoded recharge/injection forcing are missing.",
+  "PUBLIC_DATA_ONLY_STATUS": "PARTIAL",
+  "PUBLIC_DATA_ONLY_TIER": "TIER_C",
+  "gate_results": [
+    {
+      "evidence": "552 public DWR wells have usable head observations; threshold is 50.",
+      "gate": "G1",
+      "name": "STATE",
+      "status": "PASS"
+    },
+    {
+      "evidence": "Best annual intersection: 179 wells in every year of a 5-year window and 146 in every year of a 10-year window. Longest consecutive monthly run with at least 50 observed wells is 86 months (1991-10 to 1998-11); individual cadence remains heterogeneous.",
+      "gate": "G2",
+      "name": "TEMPORAL",
+      "status": "PASS"
+    },
+    {
+      "evidence": "OCWD documents monthly large-well WRMS reporting covering about 97% of extraction, but geocoded per-well raw pumping is not public in this package.",
+      "gate": "G3",
+      "name": "PUMPING",
+      "status": "PENDING_REQUEST"
+    },
+    {
+      "evidence": "Named-facility 2009-10 recharge and 2023 combined MBI monthly injection are reproducibly extractable, but complete geocoded monthly facility/well forcing is not public.",
+      "gate": "G4",
+      "name": "RECHARGE",
+      "status": "PARTIAL"
+    },
+    {
+      "evidence": "DWR perforations cover 121 basin stations and MBI screens/layers are authoritative for that project; basinwide authoritative aquifer/model-layer mapping is missing.",
+      "gate": "G5",
+      "name": "VERTICAL",
+      "status": "PARTIAL"
+    },
+    {
+      "evidence": "The audit distinguishes OBSERVED, REPORTED_MEASURED, DERIVED_FROM_MEASUREMENTS, ESTIMATED, MODELED, and REFERENCE_MODEL quantities.",
+      "gate": "G6",
+      "name": "PROVENANCE",
+      "status": "PASS"
+    },
+    {
+      "evidence": "Public heads cannot yet be aligned with absent per-well WRMS pumping and complete facility/well recharge histories.",
+      "gate": "G7",
+      "name": "COMMON SUPPORT",
+      "status": "PENDING_REQUEST"
+    },
+    {
+      "evidence": "Public state locations are counted without performance-based selection; final held-out-well design remains conditional on cadence, vertical identity, and forcing overlap.",
+      "gate": "G8",
+      "name": "SPATIAL VALIDATION",
+      "status": "PASS"
+    },
+    {
+      "evidence": "Registry contains 35 published tracer experiment-well records and 5 MBI operational-start events; independence from future model fitting is explicit.",
+      "gate": "G9",
+      "name": "INDEPENDENT PROPAGATION VALIDATION",
+      "status": "PASS"
+    },
+    {
+      "evidence": "Public DWR/USGS data are machine-readable and report extracts are page-traceable, but required WRMS pumping/recharge tables are not public.",
+      "gate": "G10",
+      "name": "REPRODUCIBILITY",
+      "status": "PENDING_REQUEST"
+    }
+  ]
+}

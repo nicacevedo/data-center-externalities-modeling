@@ -1,0 +1,26 @@
+,column,type,label,description
+0,_id,int,,
+1,site_code,text,Site Code,Location based 18 character alphanumeric code assigned to each well.
+2,msmt_date,timestamp,Water Level Measurement Date (PST),"Date and time water level measurement was taken, in Pacific Standard Time."
+3,wlm_rpe,numeric,RPE for a specific water level measurement record,Reference Point Elevation (RPE) used to collect the groundwater level measurement in feet referenced to the North American Vertical Datum of 1988 (NAVD88).
+4,wlm_gse,numeric,GSE for a specific water level measurement record,Ground Surface Elevation (GSE) at the well site  in feet referenced to the North American Vertical Datum of 1988 (NAVD88).
+5,gwe,numeric,Groundwater Elevation (ft),"Groundwater elevation in feet above mean sea level, referenced to the North American Vertical Datum of 1988 (NAVD88)."
+6,gse_gwe,numeric,Ground Surface Elevation to Groundwater Elevation,Depth to groundwater surface in feet below ground surface.
+7,wlm_qa_desc,text,Measurement quality description,"Genearalized quality description of the water level measurement.  Possible values:
+Good:  For discrete measurements, if there is no quality flag on the record, it is assumed to be good quality.  For continuous (automated) measurements, quality values are assigned for each point.
+Questionable:  Quality of the water level measurement is in question.  
+Provisional:  The quality of the water level measurement has not yet been assessed and is unknown.
+Missing:  the water level measurement does not exist for this datetime at this site."
+8,wlm_qa_detail,text,Measurement quality detail,This field provides additional information on the wlm_qa_desc field; in particular this field may provide more context for why a quality of 'questionable' or 'missing' was assigned.    
+9,wlm_mthd_desc,text,Water Level Measurement Method Description,Description of water level measurement method.
+10,wlm_acc_desc,text,Water Level Measurement Accuracy Description,Description for accuracy of water level (elevation) measurement.
+11,wlm_org_name,text,Reporting Organization,Organization which reported the water level measurement to DWR.
+12,coop_org_name,text,Collecting Organization,Organization which collected the water level measurement.
+13,monitoring_program,text,DWR Monitoring Program,"DWR Monitoring Program this well is primarily monitored under, e.g. SGMA (Sustainable Groundwater Management Act), CASGEM (California Statewide Groundwater Elevation Monitoring program), or Voluntary."
+14,basin_code,text,,
+15,county_name,text,,
+16,well_use,text,,
+17,source,text,Data source,"The DWR data source the measurement.  Options are DWR_DISCRETE and DWR_CONTINUOUS
+DWR_DISCRETE means the wlm came from the database of generally manual measurements, collected by local, state or federal entities under a variety of programs including CASGEM and SGMA.
+DWR_CONTINUOUS means the measurement was collected by an automated measurement station operated and maintained by DWR."
+18,msmt_cmt,text,Water Level Measurement Comments,Comment recorded for this water level measurement.
