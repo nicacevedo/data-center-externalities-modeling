@@ -1,0 +1,55 @@
+{
+  "B0": {
+    "fitted": false,
+    "formula": "h_hat_target = h_prev"
+  },
+  "B1": {
+    "features": [
+      "delta_days",
+      "season_sin",
+      "season_cos",
+      "time_trend_years"
+    ],
+    "fitting": "pooled OLS; training only",
+    "target": "delta_h"
+  },
+  "B2": {
+    "features": [
+      "h_prev",
+      "delta_days",
+      "season_sin",
+      "season_cos",
+      "time_trend_years"
+    ],
+    "fitting": "pooled OLS; training only",
+    "target": "h_target"
+  },
+  "B3": {
+    "features": [
+      "h_prev",
+      "delta_days",
+      "season_sin",
+      "season_cos",
+      "time_trend_years",
+      "log1p_interval_mean_discharge_cfs",
+      "log1p_antecedent_30d_mean_discharge_cfs"
+    ],
+    "fitting": "pooled OLS; training only",
+    "forcing_role": "PUBLIC_BACKGROUND_HYDROLOGY_NOT_MANAGED_RECHARGE",
+    "target": "h_target"
+  },
+  "forbidden_features": [
+    "pumping",
+    "WRMS managed recharge",
+    "tracer",
+    "MBI response",
+    "future-after-target discharge",
+    "network connectivity"
+  ],
+  "outcomes": [
+    "h_target",
+    "delta_h"
+  ],
+  "prediction_task": "one-step groundwater-response prediction conditional on observed origin state and realized public hydrologic forcing over/preceding the interval; not an operational forecast",
+  "scope": "NO_PUMPING_NO_WRMS"
+}

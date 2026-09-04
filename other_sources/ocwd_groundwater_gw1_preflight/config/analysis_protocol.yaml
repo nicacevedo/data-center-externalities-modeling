@@ -1,0 +1,83 @@
+protocol_id: OCWD_GW1A_20260904
+frozen_feasibility_commit: f5d2cedb3c5ba8f75aabe06801a42d274eafe692
+scientific_scope: NO_PUMPING_NULL_PREDICTIVE_BENCHMARK
+historical_search_period:
+  start: 1990-11-01
+  end: 1999-11-30
+primary_window_rule:
+  unit: calendar_month
+  minimum_distinct_wells_per_month: 50
+  selection: longest_contiguous_interval
+  tie_break: earliest_start
+monthly_representation:
+  within_well_month_aggregation: median
+  missing_rule: retain_missing
+  interpolation: prohibited
+transition_representation:
+  same_well_same_timestamp_aggregation: median
+  reason: exact-timestamp duplicates have no identifiable within-time ordering
+  primary_max_gap_days: 120
+  gap_flags_days: [45, 90, 120, 180]
+population:
+  development_origin: OCWD_ORIGIN_REPUBLISHED_BY_DWR
+  independent_origin: INDEPENDENT_AGENCY_OBSERVATION
+  independent_origin_role: evaluation_only
+temporal_split:
+  ordering: chronological_calendar_month
+  train_fraction: 0.70
+  validation_fraction: 0.15
+  test_fraction: 0.15
+  boundary_rule: floor_70_percent_then_floor_85_percent
+spatial_folds:
+  algorithm: sklearn.cluster.KMeans
+  k: 5
+  random_state: 20260904
+  n_init: 50
+  inputs: [easting_m, northing_m]
+  input_crs: EPSG:4269
+  projected_crs: EPSG:26911
+  label_rule: west_to_east_centroid_order
+models:
+  B0: persistence
+  B1: delta_days_plus_seasonal_sine_cosine_plus_linear_time_trend
+  B2: B1_features_plus_h_prev_predicting_h_target
+  B3: B2_plus_public_USGS_11074000_interval_and_30_day_antecedent_discharge
+  fitting: ordinary_least_squares
+  feature_scaling: training_only_mean_and_standard_deviation
+  hyperparameter_search: none
+hydrologic_features:
+  station: USGS_11074000
+  role: PUBLIC_BACKGROUND_HYDROLOGY_NOT_MANAGED_RECHARGE
+  interval_days: calendar dates on_or_after_origin_date and before_target_date
+  antecedent_days: 30 calendar days before target_date excluding target_date
+  transform: log1p_mean_discharge_cfs
+  missing_rule: feature_missing_if_any_required_daily_discharge_is_missing
+evaluation:
+  primary_gap_days: 120
+  regimes: [T1_TEMPORAL_OOS, T2_SPATIOTEMPORAL_OOS, T3_INDEPENDENT_AGENCY_CHECK]
+  primary_ranking: mean_RMSE_skill_across_T1_and_T2
+  ranking_tie_break: mean_MAE_skill_across_T1_and_T2
+  in_sample_ranking: prohibited
+uncertainty:
+  resampling_unit: well
+  bootstrap_resamples: 1000
+  seed: 20260904
+status_rules:
+  public_hydrologic_incremental_skill:
+    strong: B3_vs_B2_MAE_and_RMSE_improvement_95pct_CIs_above_zero_and_median_well_improvement_positive_and_fraction_wells_improved_above_0.5_in_both_T1_and_T2
+    partial: positive_aggregate_improvement_with_mixed_uncertainty_or_heterogeneous_well_support
+    none: no_positive_aggregate_RMSE_and_MAE_improvement_or_no_consistent_well_level_support
+  prediction_difficulty:
+    metric: strongest_model_RMSE_delta_divided_by_test_delta_IQR
+    low: ratio_le_0.5
+    moderate: ratio_gt_0.5_and_le_1.0
+    high: ratio_gt_1.0
+prohibitions:
+  - groundwater_head_interpolation
+  - pumping_features_without_WRMS
+  - tracer_or_MBI_inputs_to_fitting_or_tuning
+  - groundwater_network_or_A_matrix_estimation
+  - GNN_fitting
+  - MODFLOW_calibration
+  - future_after_target_hydrologic_features
+

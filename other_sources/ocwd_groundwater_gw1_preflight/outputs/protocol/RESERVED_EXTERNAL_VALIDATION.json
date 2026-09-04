@@ -1,0 +1,28 @@
+{
+  "assets": [
+    {
+      "name": "LLNL_KRAEMER_TRACER_RESULTS",
+      "path": "other_sources/ocwd_groundwater_feasibility/outputs/tables/TRACER_VALIDATION_REGISTRY.csv",
+      "records": 35,
+      "sha256": "46821ade16c946d0e719b87058fe2dae6b8c264f28fb14dd775d1d29eded381d"
+    },
+    {
+      "name": "MBI_1_2015_RESPONSE_EVENT",
+      "path": "other_sources/ocwd_groundwater_feasibility/outputs/tables/EVENT_REGISTRY.csv",
+      "records": 1,
+      "sha256": "9d54bd00674c692aedebae9031eb4897b82bdd204be67ee1ac7fd80e01a001ce"
+    },
+    {
+      "name": "MBI_2_THROUGH_MBI_5_2020_RESPONSE_EVENTS",
+      "path": "other_sources/ocwd_groundwater_feasibility/outputs/tables/EVENT_REGISTRY.csv",
+      "records": 4,
+      "sha256": "9d54bd00674c692aedebae9031eb4897b82bdd204be67ee1ac7fd80e01a001ce"
+    }
+  ],
+  "future_role": "validation only after groundwater model is frozen",
+  "status": "RESERVED_UNTOUCHED_OUTSIDE_FITTING_TUNING_AND_STRUCTURE_SELECTION",
+  "used_for_features": false,
+  "used_for_fitting": false,
+  "used_for_model_selection": false,
+  "used_for_tuning": false
+}

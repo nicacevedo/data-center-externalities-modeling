@@ -1,0 +1,8 @@
+{
+  "hyperparameter_search": "NONE",
+  "model_ranking_source": "T1 and T2 TEST RMSE skill, tie-broken by TEST MAE skill; never in-sample",
+  "regularization": "NONE",
+  "test_used_for_final_OOS_metrics_and_reporting_only": true,
+  "test_used_for_fitting_scaling_or_tuning": false,
+  "validation_used_for_fitting_scaling_or_ranking": false
+}

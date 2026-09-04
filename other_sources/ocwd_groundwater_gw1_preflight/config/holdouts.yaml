@@ -1,0 +1,33 @@
+protocol_id: OCWD_GW1A_20260904
+primary_window:
+  start_month: 1991-10
+  end_month: 1998-11
+  n_months: 86
+temporal:
+  rule: chronological months; [0,floor(0.70*n)) TRAIN, [floor(0.70*n),floor(0.85*n))
+    VALIDATION, remainder TEST
+  n_months: 86
+  TRAIN:
+    start: '1991-10-01'
+    end: '1996-09-01'
+    n_months: 60
+  VALIDATION:
+    start: '1996-10-01'
+    end: '1997-10-01'
+    n_months: 13
+  TEST:
+    start: '1997-11-01'
+    end: '1998-11-01'
+    n_months: 13
+  random_row_split: false
+  immutable_for_GW1B: true
+spatial:
+  membership_file: config/SPATIAL_FOLDS.csv
+  k: 5
+  random_state: 20260904
+  inputs:
+  - NAD83 longitude
+  - NAD83 latitude projected to EPSG:26911
+independent_agency:
+  role: evaluation_only
+  class: INDEPENDENT_AGENCY_OBSERVATION

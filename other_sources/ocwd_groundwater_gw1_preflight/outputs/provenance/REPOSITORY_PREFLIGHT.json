@@ -1,0 +1,37 @@
+{
+  "HEAD": "f5d2cedb3c5ba8f75aabe06801a42d274eafe692",
+  "branch": "main",
+  "captured_at_utc": "2026-09-04T13:45:41.350539+00:00",
+  "current_status_short": [
+    " m Data-center-PUE-prediction-tool",
+    "?? other_sources/ocwd_groundwater_gw1_preflight/"
+  ],
+  "frozen_feasibility_integrity": {
+    "current_total_files": 130,
+    "current_tree_sha256": "cdd444e83df809aa1415e605c97b3eda3598ccdeec9f411624650fbdfc225187",
+    "frozen_commit": "f5d2cedb3c5ba8f75aabe06801a42d274eafe692",
+    "manifest_entries_verified": 119,
+    "note": "Gitignored raw/derived artifacts are pinned by the committed PACKAGE_FILE_HASHES.csv; tracked files are additionally matched to frozen Git blobs.",
+    "package_manifest_git_blob": "3e889d820ff9bcaba020bf5b9fef16f386a3a319",
+    "package_manifest_sha256": "a9700eac61447b4dbdd0bbeb80294aa68f76648eb2c7084c62e34a46f5681311",
+    "status": "PASS",
+    "tracked_files_verified": 74
+  },
+  "package_versions": {
+    "matplotlib": "3.11.1",
+    "numpy": "2.4.6",
+    "pandas": "3.0.5",
+    "pyarrow": "25.0.1",
+    "sklearn": "1.6.1"
+  },
+  "platform": "Linux-5.14.0-687.39.1.el9_8.x86_64-x86_64-with-glibc2.28",
+  "python_executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+  "python_version": "3.11.15 | packaged by conda-forge | (main, Aug 11 2026, 10:26:29) [GCC 14.4.0]",
+  "repo_root": "/home/nacevedo/RA/data-center-externalities-modeling",
+  "submodule_status_exit_code": 128,
+  "submodule_status_stderr": "fatal: no submodule mapping found in .gitmodules for path 'Data-center-PUE-prediction-tool'",
+  "submodule_status_stdout": [],
+  "task_start_status_before_new_module": [
+    " m Data-center-PUE-prediction-tool"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "command": "env MPLCONFIGDIR=/tmp/ocwd-gw1a-mpl PYTHONDONTWRITEBYTECODE=1 /home/nacevedo/.conda/envs/dc_externalities/bin/python -m unittest discover -s tests -v",
+  "duration_seconds": 47.407,
+  "failed": 0,
+  "passed": 16,
+  "status": "PASS",
+  "tests_run": 16
+}

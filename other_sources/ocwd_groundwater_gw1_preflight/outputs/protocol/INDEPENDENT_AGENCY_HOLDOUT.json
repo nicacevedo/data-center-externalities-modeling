@@ -1,0 +1,9 @@
+{
+  "T3_feasible_within_frozen_primary_window": false,
+  "class": "INDEPENDENT_AGENCY_OBSERVATION",
+  "decision": "Report unavailable rather than expand the coverage-selected cohort or mix provenance classes.",
+  "primary_le_120_transition_count": 0,
+  "primary_window_transition_count": 0,
+  "primary_window_well_count": 0,
+  "role": "EVALUATION_ONLY_NEVER_TUNING"
+}

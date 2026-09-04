@@ -1,0 +1,21 @@
+{
+  "TEST": {
+    "end": "1998-11-01",
+    "n_months": 13,
+    "start": "1997-11-01"
+  },
+  "TRAIN": {
+    "end": "1996-09-01",
+    "n_months": 60,
+    "start": "1991-10-01"
+  },
+  "VALIDATION": {
+    "end": "1997-10-01",
+    "n_months": 13,
+    "start": "1996-10-01"
+  },
+  "immutable_for_GW1B": true,
+  "n_months": 86,
+  "random_row_split": false,
+  "rule": "chronological months; [0,floor(0.70*n)) TRAIN, [floor(0.70*n),floor(0.85*n)) VALIDATION, remainder TEST"
+}

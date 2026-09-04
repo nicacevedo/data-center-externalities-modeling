@@ -1,0 +1,109 @@
+{
+  "files_compared": 17,
+  "method": "rerun frozen B0-B3 pipeline and compare canonical file SHA-256 values",
+  "records": [
+    {
+      "byte_identical": true,
+      "path": "data/derived/PRIMARY_TEST_PREDICTIONS.parquet",
+      "sha256_after": "4245ba3cb753573b716e91ed18e1f01c30311dd76faf1bdd04580f78106e1401",
+      "sha256_before": "4245ba3cb753573b716e91ed18e1f01c30311dd76faf1bdd04580f78106e1401"
+    },
+    {
+      "byte_identical": true,
+      "path": "data/derived/ALL_SENSITIVITY_TEST_PREDICTIONS.parquet",
+      "sha256_after": "b77cfac8d3561189357d016746413012c49304f946c54b97c8fae67fbc0ec90f",
+      "sha256_before": "b77cfac8d3561189357d016746413012c49304f946c54b97c8fae67fbc0ec90f"
+    },
+    {
+      "byte_identical": true,
+      "path": "data/derived/FIT_SAMPLE_LEDGER.parquet",
+      "sha256_after": "f8512663e223cf3aa99877f8fb82a1fe687276c30108e8d3d7f69f4b00fa6c7f",
+      "sha256_before": "f8512663e223cf3aa99877f8fb82a1fe687276c30108e8d3d7f69f4b00fa6c7f"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/tables/PRIMARY_METRICS.csv",
+      "sha256_after": "0215e3709a731be186704673cb51d99cbd80f39a27c4e274c0a0aca7830d9691",
+      "sha256_before": "0215e3709a731be186704673cb51d99cbd80f39a27c4e274c0a0aca7830d9691"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/tables/SENSITIVITY_METRICS.csv",
+      "sha256_after": "3c1ff28ddc9014a7f5dd1d8649e063af4335aca71459794c5c09e665f53b5f89",
+      "sha256_before": "3c1ff28ddc9014a7f5dd1d8649e063af4335aca71459794c5c09e665f53b5f89"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/tables/CADENCE_ROBUSTNESS_METRICS.csv",
+      "sha256_after": "5e9941c85ca3b97a8a78c0d6888de3ec9a082f880c8e2d96e2cfa3aaa6b4ed68",
+      "sha256_before": "5e9941c85ca3b97a8a78c0d6888de3ec9a082f880c8e2d96e2cfa3aaa6b4ed68"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/tables/BOOTSTRAP_DIFFERENCES_VS_PERSISTENCE.csv",
+      "sha256_after": "e87505a0198fef3ab0d9dd433a03a1e54056c4969896c4be85cd1bc20d494115",
+      "sha256_before": "e87505a0198fef3ab0d9dd433a03a1e54056c4969896c4be85cd1bc20d494115"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/tables/BOOTSTRAP_B3_VS_B2.csv",
+      "sha256_after": "e1476c8ad637ffd7da205443e2f64b707ef61f78d6d4205a1ffe7bb4c9a40c6d",
+      "sha256_before": "e1476c8ad637ffd7da205443e2f64b707ef61f78d6d4205a1ffe7bb4c9a40c6d"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/tables/OOS_MODEL_RANKING.csv",
+      "sha256_after": "16cc68e95f06e8b9348634b62469ddc259728807c58149eba96078858ec0d684",
+      "sha256_before": "16cc68e95f06e8b9348634b62469ddc259728807c58149eba96078858ec0d684"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/figures/fig03_oos_baseline_comparison.png",
+      "sha256_after": "dadd35845b9642c5dda9879e0dad89e193ef3137658b1c2e48ddf3445dc3b77e",
+      "sha256_before": "dadd35845b9642c5dda9879e0dad89e193ef3137658b1c2e48ddf3445dc3b77e"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/figures/fig03_oos_baseline_comparison.pdf",
+      "sha256_after": "0c63d8d087214aa0e1e2db09180054a748b155cde00a5d33f37819b913198406",
+      "sha256_before": "0c63d8d087214aa0e1e2db09180054a748b155cde00a5d33f37819b913198406"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/figures/fig04_per_well_skill_distribution.png",
+      "sha256_after": "3fff053113ae7b19dda7afb139a3895c85b6121aedd067f2f3598f2f56b8245e",
+      "sha256_before": "3fff053113ae7b19dda7afb139a3895c85b6121aedd067f2f3598f2f56b8245e"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/figures/fig04_per_well_skill_distribution.pdf",
+      "sha256_after": "b1740cba29267fcbcff871ae41ec1f68e4340a7c20fe46062d688e0a7294a54b",
+      "sha256_before": "b1740cba29267fcbcff871ae41ec1f68e4340a7c20fe46062d688e0a7294a54b"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/figures/fig05_skill_by_observation_gap.png",
+      "sha256_after": "3c9ae9ab2cbfaa21c947958b99d01128b815b9115c936d5b5877cfefa8cf181f",
+      "sha256_before": "3c9ae9ab2cbfaa21c947958b99d01128b815b9115c936d5b5877cfefa8cf181f"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/figures/fig05_skill_by_observation_gap.pdf",
+      "sha256_after": "a8337b562c5583468794f962af23e43d5a9e68a73a4031002da02f69c8ccefb9",
+      "sha256_before": "a8337b562c5583468794f962af23e43d5a9e68a73a4031002da02f69c8ccefb9"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/FINAL_GW1A_REPORT.md",
+      "sha256_after": "667eacfe4237ab6c0de76576b7a74d7c3c44647051df6037e87d8979a33a1811",
+      "sha256_before": "667eacfe4237ab6c0de76576b7a74d7c3c44647051df6037e87d8979a33a1811"
+    },
+    {
+      "byte_identical": true,
+      "path": "outputs/FINAL_GW1A_STATUS.json",
+      "sha256_after": "bcc7864a991a00f4b6a7106d89e7db66dba11dbdf33835cffea5ca3ebb4d2f5b",
+      "sha256_before": "bcc7864a991a00f4b6a7106d89e7db66dba11dbdf33835cffea5ca3ebb4d2f5b"
+    }
+  ],
+  "status": "PASS"
+}

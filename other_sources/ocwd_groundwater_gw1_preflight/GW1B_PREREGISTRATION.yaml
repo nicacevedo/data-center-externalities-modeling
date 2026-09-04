@@ -1,0 +1,51 @@
+preregistration_id: OCWD_GW1B_FROZEN_20260904
+status: FROZEN_BEFORE_WRMS_RECEIPT
+reuse_without_change:
+  - config/holdouts.yaml
+  - config/SPATIAL_FOLDS.csv
+ladder:
+  B0: persistence
+  B1: season_and_trend
+  B2: head_history
+  B3: public_background_hydrology
+  B4: observed_managed_recharge_and_injection_from_WRMS
+  B5: observed_pumping
+  B6: spatially_structured_pumping_and_recharge
+  B7: smallest_physically_constrained_groundwater_network
+primary_comparisons:
+  pumping_predictive_information: B5_minus_B4
+  network_added_value: B7_minus_B5
+placebos:
+  temporal_pumping:
+    method: permute_across_years_within_calendar_month
+    purpose: preserve_approximate_seasonality_destroy_true_temporal_relation
+    required_claim_check: real_pumping_outperforms_placebo
+  spatial_pumping:
+    method: permute_pumping_well_identity_within_authoritative_aquifer_layer_strata
+    prerequisite: authoritative_WRMS_well_screen_layer_crosswalk
+    required_claim_check: real_spatial_model_outperforms_placebo
+claim_categories:
+  PUMPING_PREDICTIVE_VALUE:
+    STRONG_SUPPORT:
+      - robust_held_out_improvement
+      - model_difference_uncertainty_excludes_zero
+      - positive_median_well_level_improvement
+      - improvement_not_confined_to_tiny_subset
+      - real_pumping_beats_temporal_placebo
+    PARTIAL:
+      - improvement_small_heterogeneous_or_sensitivity_dependent
+    NO_SUPPORT:
+      - no_robust_OOS_improvement_or_placebo_comparable
+  NETWORK_ADDED_VALUE:
+    adjudication: separate_after_B7_exists
+    prohibited_inference: pumping_value_does_not_imply_network_value
+reserved_external_validation:
+  - LLNL_Kraemer_tracer_results
+  - MBI_1_2015_response
+  - MBI_2_through_MBI_5_2020_response
+prohibited_before_WRMS:
+  - invented_spatial_pumping_mapping
+  - invented_aquifer_or_layer_crosswalk
+  - pumping_placebo_execution
+  - network_estimation
+

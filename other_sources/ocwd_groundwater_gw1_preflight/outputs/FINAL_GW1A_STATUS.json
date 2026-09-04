@@ -1,0 +1,118 @@
+{
+  "GW1A_STATUS": "PASS",
+  "GW1B_evidence_rules": {
+    "network_structure_matters": "B7 separately beats B5 and spatial pumping placebo after authoritative well/layer crosswalks; pumping value alone is insufficient.",
+    "pumping_matters": "B5 beats B4 robustly OOS; uncertainty excludes zero; median well improvement positive; broad support; real pumping beats season-preserving temporal placebo."
+  },
+  "PUBLIC_HYDROLOGIC_INCREMENTAL_SKILL": "NONE",
+  "READY_FOR_GW1B": "NO_UNTIL_WRMS",
+  "SPATIAL_GENERALIZATION_DIFFICULTY": "HIGH",
+  "STRONGEST_NO_PUMPING_BASELINE": "B1",
+  "TEMPORAL_PREDICTION_DIFFICULTY": "HIGH",
+  "difficulty_details": {
+    "SPATIAL_GENERALIZATION_DIFFICULTY": {
+      "RMSE_to_delta_IQR_ratio": 2.1421881809073904,
+      "classification": "HIGH",
+      "model": "B1"
+    },
+    "TEMPORAL_PREDICTION_DIFFICULTY": {
+      "RMSE_to_delta_IQR_ratio": 1.871536411511396,
+      "classification": "HIGH",
+      "model": "B1"
+    }
+  },
+  "evaluation": {
+    "T1": "TEMPORAL_OOS",
+    "T2": "SPATIOTEMPORAL_OOS",
+    "T3": "NOT_FEASIBLE_ZERO_WITHIN_WINDOW_INDEPENDENT_TRANSITIONS",
+    "all_main_metrics_split": "TEST",
+    "bootstrap_resamples": 1000,
+    "bootstrap_seed_base": 20260904,
+    "bootstrap_unit": "well"
+  },
+  "frozen_feasibility": {
+    "commit": "f5d2cedb3c5ba8f75aabe06801a42d274eafe692",
+    "package_manifest_sha256": "a9700eac61447b4dbdd0bbeb80294aa68f76648eb2c7084c62e34a46f5681311",
+    "source_package_byte_identical_before_after": true,
+    "tree_sha256": "cdd444e83df809aa1415e605c97b3eda3598ccdeec9f411624650fbdfc225187"
+  },
+  "next_action": "When WRMS arrives, hash/schema-audit it, build only authoritative well/facility/layer crosswalks, reuse frozen GW1A holdouts, and execute preregistered B4-B7 and placebo comparisons while tracer/MBI remain reserved.",
+  "primary_window": {
+    "end": "1998-11",
+    "minimum_monthly_wells": 50,
+    "n_months": 86,
+    "start": "1991-10"
+  },
+  "protocol_freeze_sha256": "7973892e04ba39f2510963787d7a4ed7a5e9f014a8d785f10ce484c8e0c99676",
+  "public_hydrology_details": [
+    {
+      "fraction_wells_RMSE_improved": 0.3680555555555556,
+      "median_well_RMSE_improvement_ft": -0.12170151339827173,
+      "regime": "T1_TEMPORAL_OOS",
+      "strong_rule_met": false
+    },
+    {
+      "fraction_wells_RMSE_improved": 0.46308724832214765,
+      "median_well_RMSE_improvement_ft": -0.058339100259169996,
+      "regime": "T2_SPATIOTEMPORAL_OOS",
+      "strong_rule_met": false
+    }
+  ],
+  "repository": {
+    "HEAD": "f5d2cedb3c5ba8f75aabe06801a42d274eafe692",
+    "branch": "main",
+    "python_executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+    "python_version_short": "3.11.15"
+  },
+  "samples": {
+    "all_transitions": 9406,
+    "hydrologic_feature_complete_le_120": 8686,
+    "hydrologic_feature_incomplete_by_split": {
+      "TRAIN": 55,
+      "VALIDATION": 3
+    },
+    "hydrologic_feature_incomplete_le_120": 58,
+    "independent_agency_primary_transitions": 0,
+    "monthly_missing_cells": 14904,
+    "monthly_months": 86,
+    "monthly_observed_cells": 8144,
+    "monthly_wells": 268,
+    "primary_test_T1": 1217,
+    "primary_test_T2": 1241,
+    "transitions_le_120": 8744,
+    "transitions_le_180": 8837,
+    "transitions_le_45": 6726,
+    "transitions_le_90": 8533,
+    "usable_head_observations": 9723
+  },
+  "scientific_identification": {
+    "B3_role": "PUBLIC_BACKGROUND_HYDROLOGY_NOT_MANAGED_RECHARGE",
+    "managed_recharge_increment": "UNIDENTIFIED_WRMS_RECHARGE_ABSENT",
+    "network_added_value": "UNIDENTIFIED_NO_NETWORK_ESTIMATED",
+    "operational_forecast": false,
+    "predictable_without_pumping": "Measured by OOS B0-B3; strongest is B1.",
+    "pumping_response": "UNIDENTIFIED_WRMS_PUMPING_ABSENT"
+  },
+  "scope": "PRE_REGISTERED_NO_PUMPING_NULL_PREDICTIVE_BENCHMARK",
+  "temporal_split": {
+    "TEST": {
+      "end": "1998-11-01",
+      "n_months": 13,
+      "start": "1997-11-01"
+    },
+    "TRAIN": {
+      "end": "1996-09-01",
+      "n_months": 60,
+      "start": "1991-10-01"
+    },
+    "VALIDATION": {
+      "end": "1997-10-01",
+      "n_months": 13,
+      "start": "1996-10-01"
+    },
+    "immutable_for_GW1B": true,
+    "n_months": 86,
+    "random_row_split": false,
+    "rule": "chronological months; [0,floor(0.70*n)) TRAIN, [floor(0.70*n),floor(0.85*n)) VALIDATION, remainder TEST"
+  }
+}

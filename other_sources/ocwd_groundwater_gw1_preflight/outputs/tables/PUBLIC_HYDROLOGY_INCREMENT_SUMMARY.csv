@@ -1,0 +1,3 @@
+regime,median_well_RMSE_improvement_ft,fraction_wells_RMSE_improved,strong_rule_met
+T1_TEMPORAL_OOS,-0.1217015134,0.3680555556,False
+T2_SPATIOTEMPORAL_OOS,-0.05833910026,0.4630872483,False

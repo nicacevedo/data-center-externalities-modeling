@@ -1,0 +1,34 @@
+{
+  "monthly_matrix": {
+    "aggregation": "median within well-month",
+    "interpolated_cells": 0,
+    "n_cells": 23048,
+    "n_input_usable_observations": 9723,
+    "n_missing_cells_retained": 14904,
+    "n_months": 86,
+    "n_observed_cells": 8144,
+    "n_wells": 268
+  },
+  "primary_window": {
+    "end_month": "1998-11-01",
+    "n_months": 86,
+    "start": "1991-10-01"
+  },
+  "same_timestamp_handling": {
+    "aggregation": "median; no within-time order inferred",
+    "n_groups_with_multiple_records": 41,
+    "n_unique_well_timestamps": 9674
+  },
+  "transitions": {
+    "n_all_consecutive_unique_timestamp_transitions": 9406,
+    "n_hydrologic_feature_complete_le_120": 8686,
+    "n_independent_le_120": 0,
+    "n_le_120": 8744,
+    "n_le_180": 8837,
+    "n_le_45": 6726,
+    "n_le_90": 8533,
+    "n_primary_ocwd_le_120": 8744,
+    "n_wells": 258,
+    "target_interpolation": "NONE"
+  }
+}

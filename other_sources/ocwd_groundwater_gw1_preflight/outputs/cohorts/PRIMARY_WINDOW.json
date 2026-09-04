@@ -1,0 +1,12 @@
+{
+  "date_selection_used_prediction_accuracy": false,
+  "median_monthly_wells": 85.0,
+  "minimum_monthly_wells": 50,
+  "n_consecutive_months": 86,
+  "primary_end_month": "1998-11-01",
+  "primary_start_month": "1991-10-01",
+  "search_end": "1999-11-30",
+  "search_start": "1990-11-01",
+  "selection_basis": "HEAD_OBSERVATION_AVAILABILITY_ONLY",
+  "threshold_distinct_wells_each_calendar_month": 50
+}
