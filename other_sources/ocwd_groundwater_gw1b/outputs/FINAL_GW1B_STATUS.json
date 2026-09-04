@@ -1,0 +1,33 @@
+{
+  "GW1B_STATUS": "NOT_RUN_WAITING_FOR_DATA",
+  "GW1B_DATA_STATUS": "WAITING_FOR_WRMS",
+  "GW1B_DATA_GATE": "PENDING_REQUEST",
+  "scientific_baseline_commit": "9e7ff6c43f28fcc66760681695459445283f6396",
+  "protocol_amendment": "config/GW1B_PROTOCOL_AMENDMENT_20260904.yaml",
+  "primary_response": "delta_h",
+  "background_model": "B1C",
+  "background_definition": "B1 season/trend plus six fixed gridMET precipitation/ET0 features",
+  "Prado_role": "SENSITIVITY_ONLY_NO_POSITIVE_HELD_OUT_SUPPORT_AFTER_CLIMATE",
+  "WRMS_availability": {
+    "checked_once": true,
+    "delivery_present": false,
+    "email_or_external_system_polled": false,
+    "synthetic_pumping_created": false,
+    "public_aggregate_pumping_substituted": false
+  },
+  "decision_ladder": {
+    "CLIMATE_INCREMENTAL_SKILL": "PARTIAL",
+    "MANAGED_RECHARGE_VALUE": "NOT_RUN_WAITING_FOR_WRMS",
+    "PUMPING_PREDICTIVE_VALUE": "NOT_RUN_WAITING_FOR_WRMS",
+    "SPATIAL_FORCING_VALUE": "NOT_RUN_WAITING_FOR_WRMS",
+    "NETWORK_MODEL_JUSTIFICATION": "NOT_EVALUATED_WAITING_FOR_B6",
+    "NETWORK_ADDED_VALUE": "NOT_RUN",
+    "TRACER_VALIDATION_STATUS": "RESERVED_NOT_RUN",
+    "MBI_VALIDATION_STATUS": "RESERVED_NOT_RUN"
+  },
+  "models_fit_in_GW1B": [],
+  "placebos_run": [],
+  "network_estimated": false,
+  "next_action": "On WRMS receipt, preserve and hash raw delivery; audit schema, units, QA, evidence classes, IDs, vertical metadata, and common support before fitting B4."
+}
+

@@ -1,0 +1,973 @@
+{
+  "baseline_commit": "9e7ff6c43f28fcc66760681695459445283f6396",
+  "parents": {
+    "feasibility": {
+      "current_total_files": 130,
+      "current_tree_sha256": "cdd444e83df809aa1415e605c97b3eda3598ccdeec9f411624650fbdfc225187",
+      "files": [
+        {
+          "bytes": 1984,
+          "path": "OCSAN_EPA_DATA_INVENTORY.md",
+          "sha256": "8d2d23792a0ee06e54987bd3714c2d4b333126b18619f0b8d15fcf73c326c35a"
+        },
+        {
+          "bytes": 2220,
+          "path": "README.md",
+          "sha256": "fe149bb2bfc11135a9195c2047e046d1ce405b1a7d12f37ede097716224e246e"
+        },
+        {
+          "bytes": 1520,
+          "path": "config/data_contract.yaml",
+          "sha256": "896fc9eecfa30050f9e9caa18a7992bf90cee94e991474791825ca5bb0c47ba3"
+        },
+        {
+          "bytes": 1150,
+          "path": "config/evidence_classes.yaml",
+          "sha256": "0d701e502025d844c04b2be9a56c3be14dbb95eb3624856cfffe06b8e20e79d5"
+        },
+        {
+          "bytes": 2011,
+          "path": "config/feasibility_gates.yaml",
+          "sha256": "d2e96115954287177815c028ee987d7041c4e4f73b64d3c1ee2a2fe2e6c91e92"
+        },
+        {
+          "bytes": 1,
+          "path": "data/derived/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 1193737,
+          "path": "data/derived/DWR_BASIN_8_001.geojson",
+          "sha256": "e78e967ae9038236b456445a3f4bac21b2c13628a3914019112c8f736a43ec03"
+        },
+        {
+          "bytes": 1935719,
+          "path": "data/derived/DWR_OCWD_HEAD_OBSERVATIONS.parquet",
+          "sha256": "b190d0525b927821acbba4f864a61f715333a040884a21327639bcbbb5e13101"
+        },
+        {
+          "bytes": 7681,
+          "path": "data/derived/DWR_OCWD_PERFORATIONS.parquet",
+          "sha256": "254a663d16f35349fc3c2d31a382e6b604bc793cf1a6600db7fb57ddb2c65687"
+        },
+        {
+          "bytes": 111335,
+          "path": "data/derived/DWR_OCWD_WELL_MASTER.parquet",
+          "sha256": "f1c3acdb5e8a7ee45eefa6a833f9d0ceedf2f429fba15d8c7b16735098d1aebc"
+        },
+        {
+          "bytes": 78197,
+          "path": "data/derived/DWR_WCR_ORANGE_BOREHOLE.parquet",
+          "sha256": "35751b42bd2d50a514a3c784ec9e15c3eb447f1b275490d0097cdce5ddd7bfcf"
+        },
+        {
+          "bytes": 248966,
+          "path": "data/derived/DWR_WCR_ORANGE_CASING.parquet",
+          "sha256": "ab285cce58f9fe6d374c473369d39d9b9d5287e7103ba6cedaa68800049514c0"
+        },
+        {
+          "bytes": 795266,
+          "path": "data/derived/DWR_WCR_ORANGE_GEOLOGIC_LOGS.parquet",
+          "sha256": "af99b73d6ae1bd24cf6195bd9332944b8b784c1a9f227439b0aa9a0f80eaa064"
+        },
+        {
+          "bytes": 1046049,
+          "path": "data/derived/DWR_WCR_ORANGE_REPORT_LINKS.parquet",
+          "sha256": "a16403dcae9c974959716b07a48dc58fff9dd3740f8d7f685aff141c9f7bd32e"
+        },
+        {
+          "bytes": 4477804,
+          "path": "data/derived/DWR_WCR_ORANGE_WELL_MASTER.parquet",
+          "sha256": "94ac22ba1bd79916660ed9178ee3c10656a277919a3f2c29ced197d645d5270a"
+        },
+        {
+          "bytes": 106180,
+          "path": "data/derived/DWR_WCR_ORANGE_WELL_NUMBERS.parquet",
+          "sha256": "579c6b444fc24eba6dbfe9f0ff1449d2960f21e65b216277496ef94418d6b7a9"
+        },
+        {
+          "bytes": 334348,
+          "path": "data/derived/USGS_11074000_SANTA_ANA_RIVER_DAILY.parquet",
+          "sha256": "a23cf9f155566ce72eb53faef87c76bd503e35b5c4f637e6c5bc791a7b93b3b7"
+        },
+        {
+          "bytes": 30649,
+          "path": "data/derived/USGS_11074000_SANTA_ANA_RIVER_IV_RECENT.parquet",
+          "sha256": "7e19bbc7d86ef3aa5863edd02180b15f3b8d897376b8573b76be79e9ec45275f"
+        },
+        {
+          "bytes": 1,
+          "path": "data/interim/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 1,
+          "path": "data/raw/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 32705948,
+          "path": "data/raw/dwr/bulletin118_groundwater_basins.geojson",
+          "sha256": "6ef98b660f7c81a900122fd3773c5d03fea70604161aded2d5b06e7c315dc097"
+        },
+        {
+          "bytes": 69539067,
+          "path": "data/raw/dwr/periodic_gwl_bulkdatadownload.zip",
+          "sha256": "48b197bd5a600ce2847ed2469e656306ca2daad7c86962ba6e88eed0020ab817"
+        },
+        {
+          "bytes": 472784,
+          "path": "data/raw/dwr/wcr_orange_borehole.json",
+          "sha256": "63b383ee3ed498b7def21b82493775f0517c0c7e1a8a56c15dff4ee039339f69"
+        },
+        {
+          "bytes": 3093869,
+          "path": "data/raw/dwr/wcr_orange_casing.json",
+          "sha256": "277c56d822d195260388ef57af16bb920027bc1248ef13bd046341b5e8e40132"
+        },
+        {
+          "bytes": 3830018,
+          "path": "data/raw/dwr/wcr_orange_geologic_freeform.json",
+          "sha256": "2b14cba03f8ffb29149c9ec1f4eb51297d43ec510a5922a6629f84e529dace6c"
+        },
+        {
+          "bytes": 251303,
+          "path": "data/raw/dwr/wcr_orange_geologic_quickpick.json",
+          "sha256": "4efa64768f2b8868b7d1356f7f1cfd035b187539460ab809918117323a440048"
+        },
+        {
+          "bytes": 408925,
+          "path": "data/raw/dwr/wcr_orange_geologic_uscs.json",
+          "sha256": "37f5f64da6decbf0040efce9d1f6aca11b4c727ea480002bb7209fe8b5223f3f"
+        },
+        {
+          "bytes": 6708829,
+          "path": "data/raw/dwr/wcr_orange_pdf_links.json",
+          "sha256": "eaee52f820581a6974b1be4cd871b6e7a8a706035af52717c6f12c33fc8fa75e"
+        },
+        {
+          "bytes": 56415277,
+          "path": "data/raw/dwr/wcr_orange_wcr.json",
+          "sha256": "39a599b25132a01f7a0c92b658728a518aa4fad0345b716daf94265c956340f8"
+        },
+        {
+          "bytes": 692430,
+          "path": "data/raw/dwr/wcr_orange_well_numbers.json",
+          "sha256": "bddcd08b5d2b7f106c0bbe61892469551d6ef0fe1b20dd95638aa2a7cd72655f"
+        },
+        {
+          "bytes": 11407,
+          "path": "data/raw/dwr_bulletin118_basins_package.json",
+          "sha256": "e76684fde144cd4f3127013437776d895befe63eb051115fd69655ff5ffa0e25"
+        },
+        {
+          "bytes": 12790,
+          "path": "data/raw/dwr_continuous_groundwater_levels_package.json",
+          "sha256": "304225d44ad02212f484900f4c57d3325d0c47aae40850915680ba9bf8c981f6"
+        },
+        {
+          "bytes": 17778,
+          "path": "data/raw/dwr_periodic_groundwater_levels_package.json",
+          "sha256": "4a81c0593a215528e644266df91abb01a93823512b3d6beca1c89972dccb8e25"
+        },
+        {
+          "bytes": 21334,
+          "path": "data/raw/dwr_well_completion_reports_package.json",
+          "sha256": "18a5a251db4966f4422c37dfe8f3fbf78b99efaef5517b4d08b4e2609f13a1d5"
+        },
+        {
+          "bytes": 1293196,
+          "path": "data/raw/journal/repeat_kraemer_basin_tracer_study_2014.pdf",
+          "sha256": "224fb4cb60db92c98f18de18760ea60e50b1b54fb69aa4c957d971a3d32c9541"
+        },
+        {
+          "bytes": 2873961,
+          "path": "data/raw/llnl/llnl_forebay_isotope_tracer_final_report.pdf",
+          "sha256": "c6725fb3e2020aff9a92f16b970312a9fee525e3ea7a7cf27877227fe6223ffe"
+        },
+        {
+          "bytes": 55264,
+          "path": "data/raw/llnl/osti_15013774_page.html",
+          "sha256": "79b413c8329b81786cce2309b6a622921c3277006da1898004af8cb2ee70d947"
+        },
+        {
+          "bytes": 5617963,
+          "path": "data/raw/ocsan_epa/CA0110604_R8_2021_0010_permit.pdf",
+          "sha256": "98ae694a226dad1a6d01043849bac72d04b9aa2d14d75b68b7e2f3816062e31c"
+        },
+        {
+          "bytes": 55672,
+          "path": "data/raw/ocsan_epa/epa_CA0110604_page.html",
+          "sha256": "146214462a7a42671318be03042fa9c6941bd2be131f836304d75ae4e5dc4870"
+        },
+        {
+          "bytes": 85728,
+          "path": "data/raw/ocsan_epa/epa_icis_npdes_dmr_download_page.html",
+          "sha256": "997b1a48f721cca17f71d8fc1dea86c039c7789d6d112960b05ae32fe5fd4a0a"
+        },
+        {
+          "bytes": 84573,
+          "path": "data/raw/ocsan_epa/epa_icis_npdes_search_guide.html",
+          "sha256": "5ede6cad0539b3c6fc20a69603cafa2ea0d1111671fa31dc0a5b56705d45e1f2"
+        },
+        {
+          "bytes": 548335,
+          "path": "data/raw/ocsan_epa/ocsan_annual_reports_page.html",
+          "sha256": "60a09dc5693a4f55c488daccf57b9ad50c49bd62bf1daf60f6c67095425b8302"
+        },
+        {
+          "bytes": 10159515,
+          "path": "data/raw/ocsan_epa/ocsan_pretreatment_annual_report_fy2024_2025.pdf",
+          "sha256": "e192f27a4309b4d2aa55725487e4bb7cda683dbc0a0635a45270cdb273c1b3df"
+        },
+        {
+          "bytes": 20037652,
+          "path": "data/raw/ocwd/basin_8_001_alternative_2022_update.pdf",
+          "sha256": "9d6b3654b294f8c0f11cb813b74203611c052e642aa64ed1f15e2746eb75c0c3"
+        },
+        {
+          "bytes": 22916555,
+          "path": "data/raw/ocwd/basin_model_appendix_b.pdf",
+          "sha256": "62e4c7a246672b19a734287ba7c27db17d3152fed75b3ebf15ffe66711f01977"
+        },
+        {
+          "bytes": 160240,
+          "path": "data/raw/ocwd/groundwater_location_maps_page.html",
+          "sha256": "6493a303e5e549ac9037e8f3ffbcf295693f737112af639ee837b7f38a7f205d"
+        },
+        {
+          "bytes": 6625596,
+          "path": "data/raw/ocwd/groundwater_management_plan_2004.pdf",
+          "sha256": "403eeb771da8c24466d8929e3872c9d4decde4029313edf94d2ec8a895eba824"
+        },
+        {
+          "bytes": 2029277,
+          "path": "data/raw/ocwd/groundwater_recharge_report_2009_2010.pdf",
+          "sha256": "b541d9f81f00d5cca3cc8ef70709647b05dcbb8907ae4fddf0f1d515b85dfe3a"
+        },
+        {
+          "bytes": 110265,
+          "path": "data/raw/ocwd/groundwater_supplies_page.html",
+          "sha256": "92b77d82551e57f9ca8bb6e102b57f9d3f8325c6218d6546f3a15aaed3025089"
+        },
+        {
+          "bytes": 30309766,
+          "path": "data/raw/ocwd/gwrs_annual_report_2023.pdf",
+          "sha256": "310e948f02de0786b6d5814d2b990a4df21751cc19f2390f8f2c6fe58777607d"
+        },
+        {
+          "bytes": 107408,
+          "path": "data/raw/ocwd/mbi_centennial_park_2020.html",
+          "sha256": "2ca83cd43e9017ec20d968fe3fa40a07908d6a61085f0e577bea07f4f8b02bd0"
+        },
+        {
+          "bytes": 14658539,
+          "path": "data/raw/ocwd/water_issues_committee_20260311.pdf",
+          "sha256": "b7a4fb6c2eca86f2ae74853f1b2011ac4232e0b8b0af6e2884149dc0e631d93a"
+        },
+        {
+          "bytes": 2018465,
+          "path": "data/raw/ocwd/water_resources_report_2025_07.pdf",
+          "sha256": "911f53b654f9f9f95c4f79ac8600ecec6dd6be4f260b939eed0a48b42486de43"
+        },
+        {
+          "bytes": 1219265,
+          "path": "data/raw/ocwd/water_resources_report_2026_01.pdf",
+          "sha256": "2a7344959c074d085c3b7db044d6ab07b26f27245cc051d3fc27b91f4a6d6f36"
+        },
+        {
+          "bytes": 1184104,
+          "path": "data/raw/ocwd/water_resources_report_2026_07.pdf",
+          "sha256": "d9f8f8166f7f031e11235d29a7ab26ad80877de8e2c706577c2fd8410e8fa734"
+        },
+        {
+          "bytes": 74110,
+          "path": "data/raw/sgma/basin_8_001_alternative_periodic_evaluation_page.html",
+          "sha256": "389645b347000ccc607714569936b08f2d26f2e78467d9a48535c7fa2c819d30"
+        },
+        {
+          "bytes": 593394,
+          "path": "data/raw/sgma/coastal_plain_staff_report.pdf",
+          "sha256": "ebfe6c87c8426e76580b210a5b3ceaaf77bebacb18f84cd2b968761559d3740e"
+        },
+        {
+          "bytes": 38550,
+          "path": "data/raw/sgma/coastal_plain_statement_of_findings.pdf",
+          "sha256": "2903d49b59801b229ee623f4718746849e886f50b1b1774dd88c11722c9c4cc2"
+        },
+        {
+          "bytes": 987383,
+          "path": "data/raw/usgs/USGS_11074000_discharge_daily.rdb",
+          "sha256": "5f7d90dce443b9a8f17a6cf7fa77200cbb1688b7fe5e1e739a0a0814cbc4ee9c"
+        },
+        {
+          "bytes": 137498,
+          "path": "data/raw/usgs/USGS_11074000_discharge_instantaneous_recent.rdb",
+          "sha256": "9f09bd67f756e95a10918f2c801c62eab01ff1fb94b0a869679a0de183175188"
+        },
+        {
+          "bytes": 3187,
+          "path": "data/raw/usgs/USGS_11074000_site.rdb",
+          "sha256": "ea43641e990a032c035fc107b269e99704378c75f9e2c95d8ca69e0011372684"
+        },
+        {
+          "bytes": 1,
+          "path": "outputs/feasibility/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 3696,
+          "path": "outputs/feasibility/DATA_REQUIREMENT_GAP_MATRIX.csv",
+          "sha256": "1b82f0817aa6e4bd96be0ceba8a92a6aa2f3a685e93a9f88d212c3987962868c"
+        },
+        {
+          "bytes": 4303,
+          "path": "outputs/feasibility/DATA_REQUIREMENT_GAP_MATRIX.md",
+          "sha256": "79428e03279e97d757a77ddfda2efd2bd96da49f006f96dbeb66944bcb0265fa"
+        },
+        {
+          "bytes": 1806,
+          "path": "outputs/feasibility/FEASIBILITY_GATES.csv",
+          "sha256": "2f5ca8e2e6be67bb58c3610e7c05cc6a7fc2c64fbca3e82058f654e3de2986c3"
+        },
+        {
+          "bytes": 2072,
+          "path": "outputs/feasibility/FEASIBILITY_GATES.md",
+          "sha256": "371d0f4a9ff6685f4e166c2cc5fe586fa6cdaa31d7a3d418d5f1eb95ab8cdc35"
+        },
+        {
+          "bytes": 6274,
+          "path": "outputs/feasibility/FINAL_FEASIBILITY_REPORT.md",
+          "sha256": "7ba8492a385e0e2e54fdd9653334fa6fad3e69c0f14976c1bc5d63fe2052d750"
+        },
+        {
+          "bytes": 3243,
+          "path": "outputs/feasibility/FINAL_FEASIBILITY_STATUS.json",
+          "sha256": "f4bec6959d8e7cf4df01a88d3eb0c107cecaf0a57c8a2c41d8041e867ebe6f15"
+        },
+        {
+          "bytes": 1,
+          "path": "outputs/figures/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 97573,
+          "path": "outputs/figures/fig01_dwr_basin_head_station_coverage.pdf",
+          "sha256": "18c60e569228f9ec470514e142cda1e79bf2bc4572e121a5a8def7723f70f5d7"
+        },
+        {
+          "bytes": 480178,
+          "path": "outputs/figures/fig01_dwr_basin_head_station_coverage.png",
+          "sha256": "a5df834947bbb6d47c5e125a5017aff88c12b3592dc91b3dc21e16c470770514"
+        },
+        {
+          "bytes": 21452,
+          "path": "outputs/figures/fig02_dwr_head_observation_frequency.pdf",
+          "sha256": "05fe013d0264667210a73b604c562ff23476ed8deae3810eaaf107ca4822cc7e"
+        },
+        {
+          "bytes": 115644,
+          "path": "outputs/figures/fig02_dwr_head_observation_frequency.png",
+          "sha256": "5184aa0455cbb476d98e253ead3b70eb2a77d068912cc5ec9724377fa97a3078"
+        },
+        {
+          "bytes": 21585,
+          "path": "outputs/figures/fig03_dwr_head_temporal_coverage.pdf",
+          "sha256": "edeb0d110931f41a5538a65befdd39b547abfccf3e650689e8d5d8b43fc0dbd2"
+        },
+        {
+          "bytes": 187052,
+          "path": "outputs/figures/fig03_dwr_head_temporal_coverage.png",
+          "sha256": "4acca0191a9909ffef0e08b5d4070c09d20ea508fe9b859006029e390c44076e"
+        },
+        {
+          "bytes": 1,
+          "path": "outputs/provenance/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 12003,
+          "path": "outputs/provenance/ACQUISITION_LEDGER.md",
+          "sha256": "227d80e31cda3b74034f4b2cf31b8d078cf7300f7b378240611e47f7fbe01c63"
+        },
+        {
+          "bytes": 705,
+          "path": "outputs/provenance/BASIN_GEOMETRY_PROVENANCE.json",
+          "sha256": "c6c75dc6eb6f0bd744b935185f05511a551cddbfcb454200166bac3dfd370a2b"
+        },
+        {
+          "bytes": 597,
+          "path": "outputs/provenance/DWR_CONTINUOUS_GWL_STATUS.json",
+          "sha256": "3eec1394b6f03c4d7f9fd241f3db8766bf33263bfe958c998424a72b20c8224b"
+        },
+        {
+          "bytes": 3110,
+          "path": "outputs/provenance/DWR_PERIODIC_MEASUREMENT_DATA_DICTIONARY.csv",
+          "sha256": "9b5b1a662f7b50028749a65a37f4a8a21a56cd298727be2df5bac74975555ef3"
+        },
+        {
+          "bytes": 3034,
+          "path": "outputs/provenance/DWR_PERIODIC_METADATA.txt",
+          "sha256": "9506502ee106e7c3de42e41b8c460aee3781637ae74430b19992d979facda921"
+        },
+        {
+          "bytes": 494,
+          "path": "outputs/provenance/DWR_PERIODIC_PERFORATION_DATA_DICTIONARY.csv",
+          "sha256": "00b4898bf61829035c6fe19e9b18a9b603f479ae2301cb51f7a262f0e69f8001"
+        },
+        {
+          "bytes": 1356,
+          "path": "outputs/provenance/DWR_PERIODIC_STATION_DATA_DICTIONARY.csv",
+          "sha256": "c698825f6671910b05dc311258902e6157210fb34e77b11e3b416c0c3d8bc323"
+        },
+        {
+          "bytes": 8138,
+          "path": "outputs/provenance/OUTPUT_HASHES.csv",
+          "sha256": "3006ed4f3a7d51bb9e746912e3ff09ecaabacf3c3918ea68589fc43946977f19"
+        },
+        {
+          "bytes": 14145,
+          "path": "outputs/provenance/PACKAGE_FILE_HASHES.csv",
+          "sha256": "a9700eac61447b4dbdd0bbeb80294aa68f76648eb2c7084c62e34a46f5681311"
+        },
+        {
+          "bytes": 613,
+          "path": "outputs/provenance/PDF_EXTRACTION_SPOT_CHECK.md",
+          "sha256": "3af6d6354162bf2fecc3e8d93ad8b6e8b18891d0ade7e76d13dd4aab865fd9d7"
+        },
+        {
+          "bytes": 576,
+          "path": "outputs/provenance/PYTHON_ENVIRONMENT.json",
+          "sha256": "1e7d848c7ca6f5f86350db4f6e59ba46456a2d4c3d6e471acf2c4d14536915f5"
+        },
+        {
+          "bytes": 12125,
+          "path": "outputs/provenance/RAW_DOWNLOAD_HASH_MANIFEST.csv",
+          "sha256": "bff89f2fc7d788fe38490c8e549b7ddc8cd84127acda4304c92d617e175a2e00"
+        },
+        {
+          "bytes": 17194,
+          "path": "outputs/provenance/RAW_DOWNLOAD_HASH_MANIFEST.json",
+          "sha256": "5f6e00de084dcfa64879e200aa6f64ba3be69b3b05ceb11f2a9796525600b6bc"
+        },
+        {
+          "bytes": 1136,
+          "path": "outputs/provenance/REPOSITORY_PREFLIGHT.md",
+          "sha256": "ff1d136c7562e2ca28d9dcf6d0facc5fff59032fffcf94433ee6916104cf66e3"
+        },
+        {
+          "bytes": 1,
+          "path": "outputs/tables/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 2712,
+          "path": "outputs/tables/CORE_DOCUMENT_FACTS_LEDGER.csv",
+          "sha256": "8c90b3282e300456c1c69a30bb878a746a3944c4bb82985ab2d034bb21652069"
+        },
+        {
+          "bytes": 1255,
+          "path": "outputs/tables/DWR_OCWD_ANNUAL_HEAD_COVERAGE.csv",
+          "sha256": "e1b87a93f8bd90054eae6497ed97012c756ec9901d10f9783cdd1d102dbaa416"
+        },
+        {
+          "bytes": 732,
+          "path": "outputs/tables/DWR_OCWD_COVERAGE_BY_COLLECTING_ENTITY.csv",
+          "sha256": "48e369b84fd6a4851d9d18bed4ff81cf80ea36c4bbeb871944993809d3d5dbf4"
+        },
+        {
+          "bytes": 24146,
+          "path": "outputs/tables/DWR_OCWD_IMPORTANT_TEMPORAL_GAPS.csv",
+          "sha256": "9adcd7eea6ca5a8d0568c48dcec8af74b3ecce29fb0daf87af4d52b06027692d"
+        },
+        {
+          "bytes": 2702,
+          "path": "outputs/tables/DWR_OCWD_MONTHLY_COMMON_SUPPORT_RUNS.csv",
+          "sha256": "5de8c6314dd283d415d09897a8e2ab9a42c4f15e1113854564233f374bcefd91"
+        },
+        {
+          "bytes": 16180,
+          "path": "outputs/tables/DWR_OCWD_MONTHLY_HEAD_COVERAGE.csv",
+          "sha256": "1806c825c937eb80ca0e41f568602893b382e412fd4776ed87944831ea6a4965"
+        },
+        {
+          "bytes": 255,
+          "path": "outputs/tables/DWR_OCWD_OBSERVATION_COUNT_DISTRIBUTION.csv",
+          "sha256": "9066183160371bf5991bbb9bcebcc4a4a8f0b598c2b6b92fccc78db7635f8ebc"
+        },
+        {
+          "bytes": 237,
+          "path": "outputs/tables/DWR_OCWD_OBSERVATION_FREQUENCY_DISTRIBUTION.csv",
+          "sha256": "b3adca320a014bd70d6b6260ab91feb9064de102b7a5fdcc522155df4b9d2fb8"
+        },
+        {
+          "bytes": 1742,
+          "path": "outputs/tables/DWR_OCWD_PUBLIC_COVERAGE_SUMMARY.json",
+          "sha256": "3bcccf5d15aab6e2b570bed8a1bf56a79c1d7545d40dbdc160c7bdd1b59f35a5"
+        },
+        {
+          "bytes": 1869,
+          "path": "outputs/tables/DWR_OCWD_PUBLIC_COVERAGE_SUMMARY.md",
+          "sha256": "09989eca23fb11baa0c8bb938ea473bf7c1e54299ea505c1d7177a48d76c91d7"
+        },
+        {
+          "bytes": 1876,
+          "path": "outputs/tables/DWR_OCWD_ROLLING_10Y_COMMON_SUPPORT.csv",
+          "sha256": "731c27779fdf3687306d120fff22d041a6d09d517898333c98431ad72604bc2a"
+        },
+        {
+          "bytes": 1841,
+          "path": "outputs/tables/DWR_OCWD_ROLLING_5Y_COMMON_SUPPORT.csv",
+          "sha256": "2b1bc71fa66eb6f461d0b78ab3b4334517081837d97ce967cc3d4e109380862b"
+        },
+        {
+          "bytes": 344,
+          "path": "outputs/tables/DWR_OCWD_SOURCE_INDEPENDENCE_SUMMARY.csv",
+          "sha256": "9d693ee93fa6da7df36eef54a4e94c6d9f479b87968832f9eaa6a1ab184c7687"
+        },
+        {
+          "bytes": 2888,
+          "path": "outputs/tables/EVENT_REGISTRY.csv",
+          "sha256": "9d54bd00674c692aedebae9031eb4897b82bdd204be67ee1ac7fd80e01a001ce"
+        },
+        {
+          "bytes": 4095,
+          "path": "outputs/tables/MBI_MONITORING_WELL_SCREEN_REGISTRY.csv",
+          "sha256": "c59ccd7ed8aa0100c7fc2048ccbd5f1910e1eed90a54647b57069e5e6d986259"
+        },
+        {
+          "bytes": 15433146,
+          "path": "outputs/tables/OBSERVATION_INDEPENDENCE_LEDGER.csv",
+          "sha256": "f4349b06cebe2f93c4cf245d1ab0bff3ce569f556e0a3c93720137bec7022c00"
+        },
+        {
+          "bytes": 1332,
+          "path": "outputs/tables/OCWD_HISTORICAL_RECHARGE_ACCOUNTING_DIAGNOSTIC.csv",
+          "sha256": "dcb7f4cf7bc9d5318a1dddb235a0d5f6ef77695476c5a90622cb1d7872c83d20"
+        },
+        {
+          "bytes": 3952,
+          "path": "outputs/tables/OCWD_HISTORICAL_RECHARGE_JULY_2009_PERCOLATION.csv",
+          "sha256": "e7a084e5d731f50e10cc7dd05155e26904abaa34e8cb8d3a9e6ddde31cb6bf32"
+        },
+        {
+          "bytes": 849,
+          "path": "outputs/tables/OCWD_HISTORICAL_RECHARGE_METHODS.csv",
+          "sha256": "a20505bc0d17fb416be1b4c925700392f7767b02eedd4a2ef9f3c069f2ccab59"
+        },
+        {
+          "bytes": 2837,
+          "path": "outputs/tables/OCWD_MBI_2023_MONTHLY_INJECTION.csv",
+          "sha256": "11b7dd978c590bb9bb1911b6896b89cd79358c47847fbc95c96e60a6d62a5dec"
+        },
+        {
+          "bytes": 1172,
+          "path": "outputs/tables/OCWD_MBI_2023_REPORTED_TOTALS.csv",
+          "sha256": "a3e0c3f54957bb278a936dcee016baa5a27e1a4ab6f59c9bcea81e02bb15c213"
+        },
+        {
+          "bytes": 15921,
+          "path": "outputs/tables/OCWD_RECENT_WATER_RESOURCES_REPORT_FIELDS.csv",
+          "sha256": "65a5afd0315d3e598306ce74d4117609eb83ff125699766b3a41236984ba4014"
+        },
+        {
+          "bytes": 17201,
+          "path": "outputs/tables/OCWD_RECENT_WATER_RESOURCES_REPORT_FIELDS.md",
+          "sha256": "1f41f77b9696607d37cd207d60d7565ed1bb631c2878f9fafe96b0b1b8463405"
+        },
+        {
+          "bytes": 4482,
+          "path": "outputs/tables/OCWD_RECHARGE_FACILITY_INVENTORY_2009_2010.csv",
+          "sha256": "dfe6a9f21f4c76d187630a3b3b34acf339d13506734231a9c8654323c32bd3f9"
+        },
+        {
+          "bytes": 19481,
+          "path": "outputs/tables/TRACER_VALIDATION_REGISTRY.csv",
+          "sha256": "46821ade16c946d0e719b87058fe2dae6b8c264f28fb14dd775d1d29eded381d"
+        },
+        {
+          "bytes": 557,
+          "path": "outputs/tables/USGS_11074000_COVERAGE.json",
+          "sha256": "d0b34c7af59a703a06dbaaa8054d9f3d8cc5815943fa9270c11329eaeb66251f"
+        },
+        {
+          "bytes": 196908,
+          "path": "outputs/tables/WCR_MATCH_LEDGER.csv",
+          "sha256": "e9f6d875708ba701d1295b18839aebfbff107f66da57e5d36f45de6539264b49"
+        },
+        {
+          "bytes": 317,
+          "path": "outputs/tables/WCR_SUPPLEMENT_COVERAGE.json",
+          "sha256": "72dcb5f365ba416a2f1a1eed384f3dded22f643fcddfe28744728e442f36e861"
+        },
+        {
+          "bytes": 1,
+          "path": "requests/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 1935,
+          "path": "requests/OCWD_BASIN_MODEL_REQUEST.md",
+          "sha256": "33707bd9a7d910ed180fc435ca28cd5cc8e2ae5d7f5d23970258cc2e3face0c6"
+        },
+        {
+          "bytes": 5790,
+          "path": "requests/OCWD_WRMS_DATA_REQUEST.md",
+          "sha256": "765708400c8101b4a8652ce65b6d38e0fbf7038eff3b76a55722a152e5745ff4"
+        },
+        {
+          "bytes": 1,
+          "path": "scripts/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 95671,
+          "path": "scripts/build_feasibility_audit.py",
+          "sha256": "d9b089ab3342c4c25826a6422a16759edece38112d1123095cef568b32b72e87"
+        },
+        {
+          "bytes": 23330,
+          "path": "sources/source_registry.csv",
+          "sha256": "b6e6e6860d8d03fe4636c6564d574c2b90bcc58ad4ccc3d46c9d6acacc32d51c"
+        },
+        {
+          "bytes": 33580,
+          "path": "sources/source_registry.yaml",
+          "sha256": "684ee564e1fc97c261a7fefb5efe072251ebd5bb5a92a6222b6f43e0b3830519"
+        },
+        {
+          "bytes": 76,
+          "path": "src/__init__.py",
+          "sha256": "02574ce945381565ffd48c9aee5c990f0470cee722a5d6a1824a511111e418dd"
+        },
+        {
+          "bytes": 3901,
+          "path": "src/audit_utils.py",
+          "sha256": "8f8c3b796eb2caaf0df163c8e43f4759f161c73349c4037d0ba4ce0bf79c4c95"
+        },
+        {
+          "bytes": 1,
+          "path": "tests/.gitkeep",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        },
+        {
+          "bytes": 9495,
+          "path": "tests/test_guards.py",
+          "sha256": "dc56cd70928573c94a028ef928703961d471daabc6807203dfa2b68a8301a671"
+        }
+      ],
+      "git_diff_from_baseline": "CLEAN",
+      "manifest_entries_verified": 119,
+      "manifest_git_blob_sha1": "3e889d820ff9bcaba020bf5b9fef16f386a3a319",
+      "path": "other_sources/ocwd_groundwater_feasibility",
+      "tracked_files_verified": 74
+    },
+    "gw1a": {
+      "current_total_files": 59,
+      "current_tree_sha256": "f12ff835950d65c526abf2d451dcc72859f3d87637a5a7b95bd9346b9b710520",
+      "files": [
+        {
+          "bytes": 2449,
+          "path": "GW1B_PREREGISTRATION.md",
+          "sha256": "bb02e877a452e13e9e9d8abcfae8c34d0c20b9432db02759dddf6bdc7a0d6649"
+        },
+        {
+          "bytes": 1856,
+          "path": "GW1B_PREREGISTRATION.yaml",
+          "sha256": "2856fc54b1bc744519dbfbdafe4f151a4d0bf8a34b96fd2fad8e9988acbe1e54"
+        },
+        {
+          "bytes": 1614,
+          "path": "README.md",
+          "sha256": "5cc119f1bc483fa7eae18730d427082d4430fac94f0895c70dbcf70bfa5079b1"
+        },
+        {
+          "bytes": 57775,
+          "path": "config/SPATIAL_FOLDS.csv",
+          "sha256": "e18ba3a637146e53a4dcfe84fea684ed2b84d40bf488bfcbfea4a5e866621eea"
+        },
+        {
+          "bytes": 3170,
+          "path": "config/analysis_protocol.yaml",
+          "sha256": "9de4b4f99f47d816a6b78870caf9c9466f538f93c64a4a68b21cc16cb64438cd"
+        },
+        {
+          "bytes": 763,
+          "path": "config/holdouts.yaml",
+          "sha256": "c9b8ec9648bdf02b1a7021e12b1907379a15980df8a66b1fc8bcb1300335c51d"
+        },
+        {
+          "bytes": 743884,
+          "path": "data/derived/ALL_SENSITIVITY_TEST_PREDICTIONS.parquet",
+          "sha256": "b77cfac8d3561189357d016746413012c49304f946c54b97c8fae67fbc0ec90f"
+        },
+        {
+          "bytes": 568614,
+          "path": "data/derived/FIT_SAMPLE_LEDGER.parquet",
+          "sha256": "f8512663e223cf3aa99877f8fb82a1fe687276c30108e8d3d7f69f4b00fa6c7f"
+        },
+        {
+          "bytes": 685802,
+          "path": "data/derived/HEAD_TRANSITIONS.parquet",
+          "sha256": "fbfcee85654bbf3b0115b9ef33617ae189b4ba7635f5a6a9ed91f3d6245f690e"
+        },
+        {
+          "bytes": 116460,
+          "path": "data/derived/MONTHLY_HEAD_MATRIX.parquet",
+          "sha256": "f31c1508d6763bef75bb4f9812dcc8174c16a4287730763133eda24b842376ec"
+        },
+        {
+          "bytes": 45417,
+          "path": "data/derived/MONTHLY_OBSERVATION_MASK.parquet",
+          "sha256": "260e99b757d5c1ca1e0e58d053475ed22aaaba45c12f832498aa1ee65271a636"
+        },
+        {
+          "bytes": 280370,
+          "path": "data/derived/PRIMARY_TEST_PREDICTIONS.parquet",
+          "sha256": "4245ba3cb753573b716e91ed18e1f01c30311dd76faf1bdd04580f78106e1401"
+        },
+        {
+          "bytes": 18095,
+          "path": "outputs/FINAL_GW1A_REPORT.md",
+          "sha256": "667eacfe4237ab6c0de76576b7a74d7c3c44647051df6037e87d8979a33a1811"
+        },
+        {
+          "bytes": 4345,
+          "path": "outputs/FINAL_GW1A_STATUS.json",
+          "sha256": "bcc7864a991a00f4b6a7106d89e7db66dba11dbdf33835cffea5ca3ebb4d2f5b"
+        },
+        {
+          "bytes": 2997,
+          "path": "outputs/cohorts/MONTHLY_COVERAGE.csv",
+          "sha256": "23219966d9c187acc3454d22c76f8857c05cf98c31fd6f06770ca14d210df5a6"
+        },
+        {
+          "bytes": 399,
+          "path": "outputs/cohorts/PRIMARY_WINDOW.json",
+          "sha256": "b197ed6e134aca6c26c6831d80841c435e64f7ebd749133f3cc6c5196c553f2a"
+        },
+        {
+          "bytes": 897,
+          "path": "outputs/cohorts/REPRESENTATION_SUMMARY.json",
+          "sha256": "e1ed15cec6b885e36560e2b755c430044a3374c0d9ed9ccd8e9e1f2b2b7d6609"
+        },
+        {
+          "bytes": 25055,
+          "path": "outputs/figures/fig01_primary_observation_mask.pdf",
+          "sha256": "24d6346f6649fba86f100ed568b0968195a659add81faba45efd97dfa69da6a0"
+        },
+        {
+          "bytes": 127606,
+          "path": "outputs/figures/fig01_primary_observation_mask.png",
+          "sha256": "27e9462772c4995551c466f386976dba8e8178395227695213d91d53391eb90d"
+        },
+        {
+          "bytes": 81672,
+          "path": "outputs/figures/fig02_frozen_temporal_spatial_holdouts.pdf",
+          "sha256": "2f8c1733db4ebc557df1587babb7e2a817d41a306523bb0f44ecefeeab92285e"
+        },
+        {
+          "bytes": 378142,
+          "path": "outputs/figures/fig02_frozen_temporal_spatial_holdouts.png",
+          "sha256": "26adce14855124fd46ab602811a9d59845a754f73cfcb8fa7173fa1ef7ce30e0"
+        },
+        {
+          "bytes": 19876,
+          "path": "outputs/figures/fig03_oos_baseline_comparison.pdf",
+          "sha256": "0c63d8d087214aa0e1e2db09180054a748b155cde00a5d33f37819b913198406"
+        },
+        {
+          "bytes": 103940,
+          "path": "outputs/figures/fig03_oos_baseline_comparison.png",
+          "sha256": "dadd35845b9642c5dda9879e0dad89e193ef3137658b1c2e48ddf3445dc3b77e"
+        },
+        {
+          "bytes": 21225,
+          "path": "outputs/figures/fig04_per_well_skill_distribution.pdf",
+          "sha256": "b1740cba29267fcbcff871ae41ec1f68e4340a7c20fe46062d688e0a7294a54b"
+        },
+        {
+          "bytes": 107151,
+          "path": "outputs/figures/fig04_per_well_skill_distribution.png",
+          "sha256": "3fff053113ae7b19dda7afb139a3895c85b6121aedd067f2f3598f2f56b8245e"
+        },
+        {
+          "bytes": 22445,
+          "path": "outputs/figures/fig05_skill_by_observation_gap.pdf",
+          "sha256": "a8337b562c5583468794f962af23e43d5a9e68a73a4031002da02f69c8ccefb9"
+        },
+        {
+          "bytes": 209677,
+          "path": "outputs/figures/fig05_skill_by_observation_gap.png",
+          "sha256": "3c9ae9ab2cbfaa21c947958b99d01128b815b9115c936d5b5877cfefa8cf181f"
+        },
+        {
+          "bytes": 1310,
+          "path": "outputs/protocol/B0_B3_MODEL_SPECIFICATIONS.json",
+          "sha256": "acbfe76683a53c08420eb4507626ef2bdada28b9557c3d68a79f30e9bec75a76"
+        },
+        {
+          "bytes": 368,
+          "path": "outputs/protocol/INDEPENDENT_AGENCY_HOLDOUT.json",
+          "sha256": "cd65d9af85fb062cab7214e8586b2e5dc11b6f3ab83f95564b725b48d4d8c1c2"
+        },
+        {
+          "bytes": 3840,
+          "path": "outputs/protocol/PROTOCOL_FREEZE.json",
+          "sha256": "7973892e04ba39f2510963787d7a4ed7a5e9f014a8d785f10ce484c8e0c99676"
+        },
+        {
+          "bytes": 1085,
+          "path": "outputs/protocol/RESERVED_EXTERNAL_VALIDATION.json",
+          "sha256": "e5954311d1b5786739b74c344f4631dca9ae501e4ac719d5588b45fdb80eca21"
+        },
+        {
+          "bytes": 733,
+          "path": "outputs/protocol/SPATIAL_FOLD_SUMMARY.csv",
+          "sha256": "c7d76dab194f6bb40b7ee99af2b28833f4aa2c80f580235ae524d351f708904b"
+        },
+        {
+          "bytes": 1535,
+          "path": "outputs/protocol/TEMPORAL_MONTH_ASSIGNMENTS.csv",
+          "sha256": "ff72e0b696d10e0b3e4c16594d2be50d887e5572dbbd44b130f1852e0dbf8953"
+        },
+        {
+          "bytes": 468,
+          "path": "outputs/protocol/TEMPORAL_SPLIT.json",
+          "sha256": "8c727c919323b74930a34092e3c8776c3de743d628c80c423491ce9ceb95f5b0"
+        },
+        {
+          "bytes": 341,
+          "path": "outputs/protocol/VALIDATION_AND_TEST_NONUSE_AUDIT.json",
+          "sha256": "460b4df63762b85b9d72491f9cde5a1fd3115866d009652d5264624fa129070e"
+        },
+        {
+          "bytes": 4991,
+          "path": "outputs/provenance/DETERMINISTIC_REPLAY_STATUS.json",
+          "sha256": "3d50db346f4494db0b03be862dd00bb0f792d2af02ed5980792e4e0fac46d75d"
+        },
+        {
+          "bytes": 10079,
+          "path": "outputs/provenance/GW1A_DEPENDENCY_MANIFEST.csv",
+          "sha256": "a4dd85fa8a99df85a16deb7c3c3f290b4638586011a1dccb0aa635d79f071e06"
+        },
+        {
+          "bytes": 16924,
+          "path": "outputs/provenance/GW1A_DEPENDENCY_MANIFEST.json",
+          "sha256": "597e8b8492bb04b6389458404a701c46f4614763da28645459fe382739c3ee64"
+        },
+        {
+          "bytes": 6349,
+          "path": "outputs/provenance/GW1A_OUTPUT_HASHES.csv",
+          "sha256": "c86c5741c012657b70cdfc17fc9cbac9705d2a47798c0e0992d4936a18b10dc6"
+        },
+        {
+          "bytes": 9412,
+          "path": "outputs/provenance/GW1A_OUTPUT_HASHES.json",
+          "sha256": "4f1c12b40f934ba503672e454c289497d5e48c8cd11708e89df01b2d09fd0ca5"
+        },
+        {
+          "bytes": 1688,
+          "path": "outputs/provenance/REPOSITORY_PREFLIGHT.json",
+          "sha256": "f87320aed6ec91b83b07822b7ee856b5b55312d4f38b534f995e5171f1145bbd"
+        },
+        {
+          "bytes": 24074,
+          "path": "outputs/provenance/SOURCE_FEASIBILITY_PACKAGE_INTEGRITY.json",
+          "sha256": "440506d063901fbcf6f8bba8aa4aa92185b91328e45c0dbba3dac08ce9824c3b"
+        },
+        {
+          "bytes": 269,
+          "path": "outputs/provenance/TEST_RESULTS.json",
+          "sha256": "cb5c8a69d24473c105ef24038849bb11c664c59f176f3bdce5fd724277208f8c"
+        },
+        {
+          "bytes": 968,
+          "path": "outputs/tables/BOOTSTRAP_B3_VS_B2.csv",
+          "sha256": "e1476c8ad637ffd7da205443e2f64b707ef61f78d6d4205a1ffe7bb4c9a40c6d"
+        },
+        {
+          "bytes": 2001,
+          "path": "outputs/tables/BOOTSTRAP_DIFFERENCES_VS_PERSISTENCE.csv",
+          "sha256": "e87505a0198fef3ab0d9dd433a03a1e54056c4969896c4be85cd1bc20d494115"
+        },
+        {
+          "bytes": 5677,
+          "path": "outputs/tables/CADENCE_ROBUSTNESS_METRICS.csv",
+          "sha256": "5e9941c85ca3b97a8a78c0d6888de3ec9a082f880c8e2d96e2cfa3aaa6b4ed68"
+        },
+        {
+          "bytes": 76250,
+          "path": "outputs/tables/FITTED_MODEL_AUDIT.csv",
+          "sha256": "9717c7b6ce2e78eceebd2e18c7af4bd6ef165b240aee4869bf3cc28a38596c07"
+        },
+        {
+          "bytes": 209,
+          "path": "outputs/tables/OOS_MODEL_RANKING.csv",
+          "sha256": "16cc68e95f06e8b9348634b62469ddc259728807c58149eba96078858ec0d684"
+        },
+        {
+          "bytes": 2757,
+          "path": "outputs/tables/PRIMARY_METRICS.csv",
+          "sha256": "0215e3709a731be186704673cb51d99cbd80f39a27c4e274c0a0aca7830d9691"
+        },
+        {
+          "bytes": 189,
+          "path": "outputs/tables/PUBLIC_HYDROLOGY_INCREMENT_SUMMARY.csv",
+          "sha256": "314a2018f3f0430a9ef93cf9d24b774667294c0655a027d7addeb05c3c479366"
+        },
+        {
+          "bytes": 5599,
+          "path": "outputs/tables/SENSITIVITY_METRICS.csv",
+          "sha256": "3c1ff28ddc9014a7f5dd1d8649e063af4335aca71459794c5c09e665f53b5f89"
+        },
+        {
+          "bytes": 4691,
+          "path": "outputs/tables/SPATIAL_FOLD_METRICS.csv",
+          "sha256": "9c9e4fc12fbe59a35aabdbcdfcd723a771ab2a4a7f6c31cc90729f1a70b38e0d"
+        },
+        {
+          "bytes": 251921,
+          "path": "outputs/tables/WELL_LEVEL_METRICS.csv",
+          "sha256": "8c00b6eb78190b9a143ec2f0a3f679fa6895d4a21affe7e9d8163357ec0dc082"
+        },
+        {
+          "bytes": 2142,
+          "path": "scripts/check_determinism.py",
+          "sha256": "4d78073e60e4fdb65a652f459c303e1545074f4ef71a606a54530d21a9ba9fd2"
+        },
+        {
+          "bytes": 546,
+          "path": "scripts/freeze_protocol.py",
+          "sha256": "6e0fbacf7773c7528b12a7693fdca995b7eb9cf7cb0bd17c256c5a4b8a40a680"
+        },
+        {
+          "bytes": 561,
+          "path": "scripts/run_benchmarks.py",
+          "sha256": "9e7501db1772593d5f1560a3e3e44a07a004c76c4f8b03b3171256cde1a765e1"
+        },
+        {
+          "bytes": 48,
+          "path": "src/__init__.py",
+          "sha256": "6f2aa952bd5f24ede9ba1c1109ea6d3a6458fb6d780d1ae94fc6ca301b80c860"
+        },
+        {
+          "bytes": 82795,
+          "path": "src/gw1a.py",
+          "sha256": "4835bb53d162214ff95201055eefaf1b480606b48c4a058c694c19ed024fecce"
+        },
+        {
+          "bytes": 14862,
+          "path": "tests/test_guards.py",
+          "sha256": "9b0eb99e59479a33ec80099b40cde23117a156843d4bf27a1e9d2bf9efee9d06"
+        }
+      ],
+      "git_diff_from_baseline": "CLEAN",
+      "manifest_entries_verified": 57,
+      "manifest_git_blob_sha1": "b3e9cc10d10ea514fc8ece9ad7f1b2f86e47d9ea",
+      "path": "other_sources/ocwd_groundwater_gw1_preflight",
+      "tracked_files_verified": 53
+    }
+  },
+  "status": "PASS"
+}

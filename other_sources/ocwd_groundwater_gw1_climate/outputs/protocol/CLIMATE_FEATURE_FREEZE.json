@@ -1,0 +1,23 @@
+{
+  "alternative_lag_search": false,
+  "evidence_role": "natural climate/background controls; not managed recharge",
+  "fixed_features": [
+    "P_interval_mm",
+    "ET0_interval_mm",
+    "P_pre30_mm",
+    "P_pre90_mm",
+    "ET0_pre30_mm",
+    "ET0_pre90_mm"
+  ],
+  "head_interpolation": false,
+  "interval_rule": "daily sum over calendar dates (date(t0), date(t1)]",
+  "mapping_uses_coordinates_only": true,
+  "n_complete": 9348,
+  "n_complete_candidate_grid_cells": 189,
+  "n_grid_cells_used": 50,
+  "n_incomplete": 58,
+  "n_transitions": 9406,
+  "n_wells": 258,
+  "preorigin_rule": "daily sum over 30 and 90 complete calendar dates strictly before date(t0)",
+  "status": "PASS"
+}

@@ -1,0 +1,112 @@
+{
+  "B1_reproduction": {
+    "maximum_prediction_difference_ft": 0.0,
+    "status": "PASS",
+    "tolerance": 1e-08
+  },
+  "CLIMATE_INCREMENTAL_SKILL": "PARTIAL",
+  "GW1B_BACKGROUND_DEFINITION": "B1 + fixed gridMET climate; Prado retained only as sensitivity control",
+  "GW1B_BACKGROUND_MODEL": "B1C",
+  "GW1B_DATA_STATUS": "WAITING_FOR_WRMS",
+  "GW1C_STATUS": "PASS",
+  "PRADO_AFTER_CLIMATE_SKILL": "NONE",
+  "claims_rule": {
+    "NONE": "no consistent positive aggregate RMSE and MAE support across T1/T2",
+    "PARTIAL": "positive RMSE and MAE aggregate improvement in both T1/T2 with mixed uncertainty or well support",
+    "STRONG": "positive RMSE/MAE improvements with well-bootstrap 95% lower bounds above zero, positive median well improvement, and >50% wells improved in both T1/T2"
+  },
+  "climate": {
+    "date_end": "1998-11-30",
+    "date_start": "1991-07-01",
+    "features": [
+      "P_interval_mm",
+      "ET0_interval_mm",
+      "P_pre30_mm",
+      "P_pre90_mm",
+      "ET0_pre30_mm",
+      "ET0_pre90_mm"
+    ],
+    "mapping_uses_coordinates_only": true,
+    "missing_values": 102980,
+    "n_days": 2710,
+    "n_grid_cells": 208,
+    "n_grid_cells_used": 50,
+    "source": "official University of Idaho / Northwest Knowledge Network gridMET THREDDS OPeNDAP"
+  },
+  "frozen_dependencies": {
+    "baseline_commit": "9e7ff6c43f28fcc66760681695459445283f6396",
+    "material_dependencies": 18,
+    "status": "PASS"
+  },
+  "identification": {
+    "Prado_after_climate_predictive_value": "NONE",
+    "causal_effects": "NOT_IDENTIFIED_BY_PREDICTIVE_BENCHMARK",
+    "managed_recharge_value": "UNIDENTIFIED_WRMS_ABSENT",
+    "natural_climate_predictive_value": "PARTIAL",
+    "network_added_value": "UNIDENTIFIED_NO_NETWORK_FIT",
+    "pumping_predictive_value": "UNIDENTIFIED_WRMS_ABSENT",
+    "spatial_forcing_value": "UNIDENTIFIED_WRMS_ABSENT"
+  },
+  "independent_agency_check": "NOT_FEASIBLE_IN_FROZEN_WINDOW_ZERO_ELIGIBLE_TRANSITIONS",
+  "modeling_not_run": [
+    "WRMS audit",
+    "B4",
+    "B5",
+    "B6",
+    "placebos",
+    "network gate",
+    "B7",
+    "tracer validation",
+    "MBI validation",
+    "MODFLOW calibration",
+    "GNN",
+    "data-center optimization"
+  ],
+  "protocol": {
+    "head_interpolation": false,
+    "primary_gap_days": 120,
+    "primary_window": [
+      "1991-10",
+      "1998-11"
+    ],
+    "sensitivity_gap_days": [
+      90,
+      180
+    ],
+    "spatial_folds": "exact frozen GW1A SPATIAL_FOLDS.csv",
+    "target": "delta_h",
+    "temporal_split": {
+      "TEST": [
+        "1997-11",
+        "1998-11"
+      ],
+      "TRAIN": [
+        "1991-10",
+        "1996-09"
+      ],
+      "VALIDATION": [
+        "1996-10",
+        "1997-10"
+      ]
+    }
+  },
+  "repository": {
+    "HEAD": "9e7ff6c43f28fcc66760681695459445283f6396",
+    "branch": "main",
+    "python_executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+    "python_version": "3.11.15",
+    "repo_root": "/home/nacevedo/RA/data-center-externalities-modeling"
+  },
+  "reserved_external_validation": {
+    "MBI_1_2015": "RESERVED_NOT_USED",
+    "MBI_2_TO_5_2020": "RESERVED_NOT_USED",
+    "tracer": "RESERVED_NOT_USED"
+  },
+  "samples": {
+    "T1_test_transitions": 1217,
+    "T2_test_transitions": 1241,
+    "all_transitions": 9406,
+    "climate_complete_transitions": 9348,
+    "primary_eligible_transitions_all_splits": 8686
+  }
+}

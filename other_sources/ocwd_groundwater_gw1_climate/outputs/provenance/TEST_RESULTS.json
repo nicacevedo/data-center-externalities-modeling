@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "command": "PYTHONDONTWRITEBYTECODE=1 MPLCONFIGDIR=/tmp/ocwd-gw1c-mpl /home/nacevedo/.conda/envs/dc_externalities/bin/python -m unittest discover -s other_sources/ocwd_groundwater_gw1_climate/tests -v",
+  "tests_run": 13,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "deterministic_replay": {
+    "status": "PASS",
+    "files_compared": 61,
+    "mismatches": []
+  }
+}

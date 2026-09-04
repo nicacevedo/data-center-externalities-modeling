@@ -1,0 +1,79 @@
+{
+  "accessed_at_utc": "2026-09-04T15:47:10.786337+00:00",
+  "actual_grid_bbox_degrees": {
+    "east": -117.55833330000002,
+    "north": 34.025000000000006,
+    "south": 33.525000000000006,
+    "west": -118.18333330000002
+  },
+  "actual_period": [
+    "1991-07-01",
+    "1998-11-30"
+  ],
+  "authority": "University of Idaho / Northwest Knowledge Network",
+  "basin_bbox_degrees": {
+    "east": -117.63423677187049,
+    "north": 33.94610845373072,
+    "south": 33.6122485254681,
+    "west": -118.11576762255993
+  },
+  "buffer_degrees": 0.1,
+  "crs": "WGS84 geographic latitude/longitude (EPSG:4326)",
+  "derived_daily_table": {
+    "bytes": 674052,
+    "path": "data/derived/GRIDMET_OCWD_DAILY.parquet",
+    "sha256": "9191e349195956b740c9fe3bf52629f03f7b8792ac0eedc73eb8fcfabb635090"
+  },
+  "fixed_grid_indices": {
+    "lat_inclusive": [
+      369,
+      381
+    ],
+    "lon_inclusive": [
+      158,
+      173
+    ]
+  },
+  "grid_resolution_degrees": 0.041666666666666664,
+  "missing_pet_values": 51490,
+  "missing_pr_values": 51490,
+  "n_complete_land_grid_cells": 189,
+  "n_days": 2710,
+  "n_fully_masked_or_incomplete_grid_cells": 19,
+  "n_grid_cells": 208,
+  "n_rows": 563680,
+  "ncss_note": "Catalog NCSS links returned HTTP 404 at access; official OPeNDAP was used successfully instead.",
+  "official_catalog": "https://tds-proxy.nkn.uidaho.edu/thredds/reacch_climate_MET_catalog.html",
+  "product": "gridMET",
+  "raw_file_count": 20,
+  "raw_total_bytes": 4569707,
+  "requested_buffered_bbox_degrees": {
+    "east": -117.5342367718705,
+    "north": 34.046108453730724,
+    "south": 33.512248525468095,
+    "west": -118.21576762255992
+  },
+  "requested_period": [
+    "1991-07-01",
+    "1998-11-30"
+  ],
+  "service": "official THREDDS OPeNDAP",
+  "status": "PASS",
+  "temporal_resolution": "daily; source days approximately end at midnight Mountain Standard Time",
+  "units": {
+    "pet_mm": "millimetres daily short-grass reference ET0",
+    "pr_mm": "millimetres daily precipitation"
+  },
+  "variables": {
+    "pet": {
+      "description": "Daily reference evapotranspiration (short grass)",
+      "units": "mm",
+      "variable": "potential_evapotranspiration"
+    },
+    "pr": {
+      "description": "Daily accumulated precipitation",
+      "units": "mm",
+      "variable": "precipitation_amount"
+    }
+  }
+}

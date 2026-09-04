@@ -1,0 +1,101 @@
+protocol_id: OCWD_GW1C_20260904
+scientific_baseline_commit: 9e7ff6c43f28fcc66760681695459445283f6396
+frozen_parent_modules:
+  - other_sources/ocwd_groundwater_feasibility
+  - other_sources/ocwd_groundwater_gw1_preflight
+scope: NATURAL_BACKGROUND_NULL_NO_PUMPING_NO_NETWORK
+primary_window:
+  start: 1991-10
+  end: 1998-11
+temporal_split:
+  TRAIN: [1991-10, 1996-09]
+  VALIDATION: [1996-10, 1997-10]
+  TEST: [1997-11, 1998-11]
+spatial_folds:
+  source: ../ocwd_groundwater_gw1_preflight/config/SPATIAL_FOLDS.csv
+  modification: prohibited
+population:
+  development_origin: OCWD_ORIGIN_REPUBLISHED_BY_DWR
+  independent_origin: INDEPENDENT_AGENCY_OBSERVATION
+  independent_origin_role: evaluation_only
+transition_gaps_days:
+  primary: 120
+  sensitivities: [90, 180]
+groundwater_head_interpolation: prohibited
+climate_source:
+  product: gridMET
+  authority: University of Idaho / Northwest Knowledge Network
+  service: official_THREDDS_OPeNDAP
+  variables:
+    precipitation_amount:
+      shorthand: pr
+      units: mm
+      temporal_operation: daily_accumulation
+    potential_evapotranspiration:
+      shorthand: pet
+      units: mm
+      reference: short_grass
+      temporal_operation: daily_accumulation
+  temporal_subset: [1991-07-01, 1998-11-30]
+  basin_buffer_degrees: 0.1
+  mapping: nearest_grid_cell_from_frozen_well_coordinates_only
+  missing_rule: feature_missing_if_any_required_daily_value_is_missing
+climate_features:
+  fixed_order:
+    - P_interval_mm
+    - ET0_interval_mm
+    - P_pre30_mm
+    - P_pre90_mm
+    - ET0_pre30_mm
+    - ET0_pre90_mm
+  interval_calendar_rule: dates_strictly_after_origin_date_through_target_date_inclusive
+  pre30_calendar_rule: 30_complete_dates_before_origin_date
+  pre90_calendar_rule: 90_complete_dates_before_origin_date
+  alternative_lag_search: prohibited
+prado_features:
+  source: frozen_GW1A
+  fixed_order:
+    - log1p_interval_mean_discharge_cfs
+    - log1p_antecedent_30d_mean_discharge_cfs
+  role: PUBLIC_BACKGROUND_HYDROLOGY_NOT_MANAGED_RECHARGE
+models:
+  B1:
+    target: delta_h
+    features: [delta_days, season_sin, season_cos, time_trend_years]
+  B1C:
+    target: delta_h
+    definition: B1_plus_fixed_climate_features
+  B1CH:
+    target: delta_h
+    definition: B1C_plus_frozen_Prado_features
+  fitting: pooled_ordinary_least_squares
+  scaling: training_only_mean_and_population_standard_deviation
+  hyperparameter_search: none
+evaluation:
+  primary_outcome: RMSE_delta_h_ft
+  regimes: [T1_TEMPORAL_OOS, T2_SPATIOTEMPORAL_OOS]
+  test_only_claims: true
+  head_and_delta_residuals_independent_findings: false
+uncertainty:
+  resampling_unit: well
+  bootstrap_resamples: 1000
+  seed: 20260904
+claims:
+  comparisons:
+    climate_incremental_skill: B1C_minus_B1
+    prado_after_climate_skill: B1CH_minus_B1C
+  strong_rule: positive_RMSE_and_MAE_improvement_with_well_bootstrap_95pct_intervals_above_zero_positive_median_well_RMSE_improvement_and_majority_of_wells_improved_in_both_T1_and_T2
+  partial_rule: positive_aggregate_OOS_support_but_mixed_uncertainty_or_heterogeneous_well_support
+  none_rule: no_consistent_positive_OOS_RMSE_and_MAE_support
+prohibitions:
+  - TEST_in_fitting_scaling_or_selection
+  - outcome_based_spatial_folds
+  - head_interpolation
+  - pumping_or_WRMS_features
+  - managed_recharge_features
+  - tracer_or_MBI_model_inputs
+  - groundwater_network_or_A_matrix
+  - GNN
+  - MODFLOW_calibration
+  - in_sample_claims
+

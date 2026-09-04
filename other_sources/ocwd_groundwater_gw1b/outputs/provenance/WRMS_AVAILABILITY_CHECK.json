@@ -1,0 +1,24 @@
+{
+  "checked_once_at_utc": "2026-09-04T15:50:03Z",
+  "method": "repository-local filename scan only; no email or external system polled",
+  "excluded_paths": [
+    ".git",
+    "other_sources/ocwd_groundwater_feasibility/data/raw"
+  ],
+  "patterns": [
+    "wrms",
+    "ocwd plus deliver",
+    "ocwd plus production",
+    "ocwd plus pumping",
+    "ocwd plus extraction"
+  ],
+  "candidate_hits": [
+    "other_sources/ocwd_groundwater_feasibility/outputs/provenance/PDF_EXTRACTION_SPOT_CHECK.md"
+  ],
+  "candidate_review": "false positive: provenance note about existing public documents, not a WRMS delivery",
+  "WRMS_delivery_present": false,
+  "GW1B_DATA_STATUS": "WAITING_FOR_WRMS",
+  "synthetic_pumping_created": false,
+  "public_aggregate_pumping_substituted": false
+}
+

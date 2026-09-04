@@ -1,0 +1,7 @@
+{
+  "comparison": "two complete deterministic model/report replays without re-downloading raw gridMET",
+  "files_compared": 61,
+  "manifest_sha256_after": "6445e3930cd0ebac4409a85645bc844eff3c2a18036e0cec6f2343b481948d83",
+  "mismatches": [],
+  "status": "PASS"
+}

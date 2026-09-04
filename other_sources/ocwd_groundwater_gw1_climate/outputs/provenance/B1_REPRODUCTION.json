@@ -1,0 +1,116 @@
+{
+  "baseline_commit": "9e7ff6c43f28fcc66760681695459445283f6396",
+  "comparisons": [
+    {
+      "actual": 1217.0,
+      "difference": 0.0,
+      "frozen": 1217.0,
+      "metric": "n_transitions",
+      "regime": "T1_TEMPORAL_OOS"
+    },
+    {
+      "actual": 144.0,
+      "difference": 0.0,
+      "frozen": 144.0,
+      "metric": "n_wells",
+      "regime": "T1_TEMPORAL_OOS"
+    },
+    {
+      "actual": 7.0247199335330155,
+      "difference": -4.669846731530924e-10,
+      "frozen": 7.024719934,
+      "metric": "MAE_delta_h_ft",
+      "regime": "T1_TEMPORAL_OOS"
+    },
+    {
+      "actual": 13.15690097292511,
+      "difference": 2.9251090438719984e-09,
+      "frozen": 13.15690097,
+      "metric": "RMSE_delta_h_ft",
+      "regime": "T1_TEMPORAL_OOS"
+    },
+    {
+      "actual": -2.4182555382165485,
+      "difference": -2.1654855686392693e-10,
+      "frozen": -2.418255538,
+      "metric": "bias_delta_h_ft",
+      "regime": "T1_TEMPORAL_OOS"
+    },
+    {
+      "actual": 0.7285714285714285,
+      "difference": -2.857147851642594e-11,
+      "frozen": 0.7285714286,
+      "metric": "sign_accuracy_delta_h",
+      "regime": "T1_TEMPORAL_OOS"
+    },
+    {
+      "actual": 0.0,
+      "difference": 0.0,
+      "frozen": 0.0,
+      "metric": "prediction_max_abs_difference_ft",
+      "regime": "T1_TEMPORAL_OOS"
+    },
+    {
+      "actual": 1241.0,
+      "difference": 0.0,
+      "frozen": 1241.0,
+      "metric": "n_transitions",
+      "regime": "T2_SPATIOTEMPORAL_OOS"
+    },
+    {
+      "actual": 149.0,
+      "difference": 0.0,
+      "frozen": 149.0,
+      "metric": "n_wells",
+      "regime": "T2_SPATIOTEMPORAL_OOS"
+    },
+    {
+      "actual": 7.580561286292775,
+      "difference": 2.927746933778508e-10,
+      "frozen": 7.580561286,
+      "metric": "MAE_delta_h_ft",
+      "regime": "T2_SPATIOTEMPORAL_OOS"
+    },
+    {
+      "actual": 14.97389538454266,
+      "difference": 4.5426595818298665e-09,
+      "frozen": 14.97389538,
+      "metric": "RMSE_delta_h_ft",
+      "regime": "T2_SPATIOTEMPORAL_OOS"
+    },
+    {
+      "actual": -2.470281438282635,
+      "difference": -2.826348044493443e-10,
+      "frozen": -2.470281438,
+      "metric": "bias_delta_h_ft",
+      "regime": "T2_SPATIOTEMPORAL_OOS"
+    },
+    {
+      "actual": 0.7116968698517299,
+      "difference": -4.8270165642350094e-11,
+      "frozen": 0.7116968699,
+      "metric": "sign_accuracy_delta_h",
+      "regime": "T2_SPATIOTEMPORAL_OOS"
+    },
+    {
+      "actual": 0.0,
+      "difference": 0.0,
+      "frozen": 0.0,
+      "metric": "prediction_max_abs_difference_ft",
+      "regime": "T2_SPATIOTEMPORAL_OOS"
+    }
+  ],
+  "failures": [],
+  "model": "B1",
+  "model_features": [
+    "delta_days",
+    "season_sin",
+    "season_cos",
+    "time_trend_years"
+  ],
+  "must_pass_before_climate_modeling": true,
+  "primary_gap_days": 120,
+  "status": "PASS",
+  "target": "delta_h",
+  "tolerance": 1e-08
+}

@@ -1,0 +1,85 @@
+protocol_id: OCWD_GW1B_AMENDMENT_20260904
+status: FROZEN_BEFORE_WRMS_RESPONSE_INSPECTION
+scientific_baseline_commit: 9e7ff6c43f28fcc66760681695459445283f6396
+frozen_evidence_basis:
+  GW1A:
+    strongest_no_pumping_baseline: B1
+    source: ../ocwd_groundwater_gw1_preflight/outputs/FINAL_GW1A_STATUS.json
+  GW1C:
+    climate_incremental_skill: PARTIAL
+    prado_after_climate_skill: NONE
+    source: ../ocwd_groundwater_gw1_climate/outputs/FINAL_GW1C_STATUS.json
+primary_response: delta_h
+background_model:
+  name: BC
+  frozen_definition: B1C
+  components:
+    - B1_season_trend
+    - P_interval_mm
+    - ET0_interval_mm
+    - P_pre30_mm
+    - P_pre90_mm
+    - ET0_pre30_mm
+    - ET0_pre90_mm
+  Prado_primary_role: EXCLUDED_NO_POSITIVE_HELD_OUT_SUPPORT_AFTER_CLIMATE
+  Prado_sensitivity_role: RETAINED_PUBLIC_BACKGROUND_HYDROLOGY_NOT_MANAGED_RECHARGE
+ladder:
+  BC: B1_plus_fixed_climate_background
+  B4: BC_plus_managed_recharge_and_injection
+  B5: B4_plus_basin_wide_pumping
+  B6: B4_plus_spatially_resolved_pumping_recharge_and_injection
+  B7: B6_plus_minimal_potential_driven_groundwater_coupling_if_network_gate_passes
+primary_contrasts:
+  managed_recharge_value: B4_minus_BC
+  pumping_predictive_value: B5_minus_B4
+  spatial_forcing_value: B6_minus_B5
+  network_added_value: B7_minus_B6
+forcing_alignment:
+  monthly_volume_role: REPORTED_MONTHLY_NOT_DAILY_MEASURED
+  daily_rate_derivation: monthly_volume_divided_by_days_in_calendar_month
+  transition_interval: sum_daily_rate_over_t0_exclusive_t1_inclusive
+  evidence_label: DERIVED_FROM_MONTHLY_REPORTED_VOLUME
+  fixed_windows: [interval, pre30, pre90]
+  alternative_window_search: prohibited
+crosswalk:
+  statuses: [EXACT, HIGH_CONFIDENCE, AMBIGUOUS, NO_MATCH]
+  primary_eligible: [EXACT, HIGH_CONFIDENCE]
+  ambiguous_primary_use: prohibited
+  silent_fuzzy_matching: prohibited
+  guessed_layers: prohibited
+B6:
+  distance_kernel: exp_minus_distance_over_length
+  candidate_lengths_km: [2, 5, 10]
+  selection_split: VALIDATION_ONLY
+  layer_rule: use_only_authoritative_layer_identity
+placebos:
+  temporal_pumping:
+    rule: permute_each_production_well_across_years_within_calendar_month
+    purpose: preserve_seasonality_break_year_specific_alignment
+  spatial_pumping:
+    rule: permute_spatial_identities_only_within_authoritative_layer_or_management_strata
+    unconstrained_permutation: prohibited
+network_gate:
+  required:
+    - meaningful_B6_OOS_support_or_spatial_placebo_outperformance
+    - adequate_authoritative_vertical_and_identity_metadata
+    - adequate_common_support
+  on_failure: NETWORK_MODEL_JUSTIFICATION_FAIL_AND_DO_NOT_FIT_B7
+B7:
+  free_A_matrix: prohibited
+  GNN: prohibited
+  graph_basis: small_coordinate_neighbor_graph_plus_authoritative_aquifer_information
+  head_interpolation: prohibited
+  potential_term: sum_neighbor_weight_times_neighbor_head_minus_origin_head
+  coupling_constraint: kappa_nonnegative
+  geometry_only_status_if_vertical_identity_inadequate: DIAGNOSTIC_NOT_PROMOTABLE
+reserved_external_validation:
+  assets: [LLNL_Kraemer_tracer, MBI_1_2015, MBI_2_through_MBI_5_2020]
+  excluded_from: [training, feature_selection, scale_selection, spatial_kernel_selection, network_construction, hyperparameter_tuning]
+  use: only_after_eligible_B7_is_frozen
+claim_categories:
+  pumping_predictive_value: [STRONG_SUPPORT, PARTIAL, NO_SUPPORT]
+  spatial_forcing_value: [STRONG_SUPPORT, PARTIAL, NO_SUPPORT]
+  network_added_value: [STRONG_SUPPORT, PARTIAL, NO_SUPPORT, NOT_RUN_GATE_FAIL]
+current_data_status: WAITING_FOR_WRMS
+

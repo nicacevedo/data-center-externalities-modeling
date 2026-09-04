@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "command": "PYTHONDONTWRITEBYTECODE=1 /home/nacevedo/.conda/envs/dc_externalities/bin/python -m unittest discover -s other_sources/ocwd_groundwater_gw1b/tests -v",
+  "tests_run": 5,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0
+}
+

@@ -1,0 +1,47 @@
+[
+  {
+    "bytes": 845,
+    "path": "README.md",
+    "sha256": "3d48e649f34cc53064ec89937edea9edab19cf40a11161bfb0b3c02d99a35205"
+  },
+  {
+    "bytes": 3515,
+    "path": "config/GW1B_PROTOCOL_AMENDMENT_20260904.yaml",
+    "sha256": "6bf11f959dfea07fc334349a793f43839f4d5cba1ce88468a297fbaaad4ed1ff"
+  },
+  {
+    "bytes": 1372,
+    "path": "outputs/FINAL_GW1B_REPORT.md",
+    "sha256": "f5d892aae611a7e1ad950764e3c5984064eafe28c7da76c4da2511e3cf79d41a"
+  },
+  {
+    "bytes": 1444,
+    "path": "outputs/FINAL_GW1B_STATUS.json",
+    "sha256": "667c3eb376266ec2ede5d28c9e09fb1c10af70fdb111521141d25ff88793b08f"
+  },
+  {
+    "bytes": 3269,
+    "path": "outputs/protocol/GW1B_PROTOCOL_AMENDMENT_20260904.md",
+    "sha256": "44793fbe4d6544b8181f82bb7ea0bb36420f8358651ab828c62066288e0c6215"
+  },
+  {
+    "bytes": 256,
+    "path": "outputs/provenance/TEST_RESULTS.json",
+    "sha256": "6e8b5637300deea2616d5acd5a4f2ac7585d5614bb90483631df045e5a8d531a"
+  },
+  {
+    "bytes": 772,
+    "path": "outputs/provenance/WRMS_AVAILABILITY_CHECK.json",
+    "sha256": "14e0594586fc07c97a57a4bda51ddbc4f897ffac83cfdc0b261514af5383cb05"
+  },
+  {
+    "bytes": 1460,
+    "path": "scripts/finalize_waiting.py",
+    "sha256": "8cabeb8ccb03923434c5a6b857224cd6e5da4e792fa8d624e6e23e6fe25911fa"
+  },
+  {
+    "bytes": 2519,
+    "path": "tests/test_waiting_guards.py",
+    "sha256": "8e032fb41c05fbd2efb0552d2d1ff12305d63691cdab0d37d84039213203203e"
+  }
+]
