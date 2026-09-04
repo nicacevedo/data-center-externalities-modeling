@@ -1,0 +1,212 @@
+version: 1
+status: PREFLIGHT_ONLY
+scope: Andhra Pradesh local estimation and later planning
+prohibited:
+  - transfer_OCWD_physical_coefficients
+  - fabricate_dynamic_impacts
+  - optimize_M1_without_local_groundwater_model
+  - treat_missing_forcing_as_zero
+  - silently_resolve_crosswalks
+evidence_classes_file: EVIDENCE_CLASSES.yaml
+field_metadata_rule: >-
+  Every field inherits the table metadata below unless explicitly overridden;
+  units and intended_model_role are stated per field. Thus the resolved schema
+  identifies units, temporal/spatial resolution, evidence class, source,
+  period, QA, uncertainty, and role for every field.
+tables:
+  candidate_regions:
+    metadata: &candidate_meta
+      temporal_resolution: static/versioned
+      spatial_resolution: candidate region or parcel
+      evidence_class: REFERENCE_MODEL
+      authoritative_source: AP ITE&C plus official project/planning authority records
+      period: current planning vintage
+      qa: require legal geometry, effective dates, and source citation
+      uncertainty: boundary and development status explicit
+    fields:
+      candidate_region_id: {dtype: string, units: identifier, intended_model_role: canonical candidate key}
+      name: {dtype: string, units: text, intended_model_role: display label}
+      geometry: {dtype: geometry, units: declared CRS, intended_model_role: spatial crosswalk origin}
+      status: {dtype: category, units: DOCUMENTED/PROPOSED/ELIGIBLE, intended_model_role: candidate eligibility}
+      primary_eligible: {dtype: boolean, units: boolean, intended_model_role: guards unresolved candidates}
+  power_regions:
+    metadata:
+      temporal_resolution: static network vintage plus dated capacity series
+      spatial_resolution: substation/control/service region
+      evidence_class: REPORTED_MEASURED
+      authoritative_source: CEA/APTRANSCO
+      period: model horizon vintage
+      qa: reconcile IDs, voltage, capacity, and effective dates
+      uncertainty: interconnection headroom may require request
+    fields:
+      power_region_id: {dtype: string, units: identifier, intended_model_role: power crosswalk key}
+      geometry: {dtype: geometry, units: declared CRS, intended_model_role: spatial overlay}
+      capacity_mw: {dtype: float, units: MW, intended_model_role: static power constraint}
+      renewable_mwh: {dtype: float, units: MWh per time step, intended_model_role: renewable supply}
+      grid_emissions: {dtype: float, units: kgCO2e per MWh, intended_model_role: emissions objective}
+  groundwater_nodes:
+    metadata: &gw_node_meta
+      temporal_resolution: versioned static identity
+      spatial_resolution: authoritative assessment/aquifer unit
+      evidence_class: REFERENCE_MODEL
+      authoritative_source: CGWB/AP Ground Water Department
+      period: assessment/model vintage
+      qa: canonical polygon, ID, aquifer and vertical definition required
+      uncertainty: boundary/model-layer uncertainty explicit
+    fields:
+      groundwater_node_id: {dtype: string, units: identifier, intended_model_role: local state/forcing node}
+      geometry: {dtype: geometry, units: declared CRS, intended_model_role: spatial support}
+      aquifer_id: {dtype: string, units: identifier, intended_model_role: authoritative vertical identity}
+      assessment_vintage: {dtype: date, units: ISO date, intended_model_role: version control}
+  groundwater_heads:
+    metadata:
+      temporal_resolution: observation timestamp
+      spatial_resolution: monitoring well
+      evidence_class: OBSERVED
+      authoritative_source: CGWB/NWIC/AP Ground Water Department
+      period: full locally supported period
+      qa: preserve method, datum, pumping status, source flags, and duplicates
+      uncertainty: measurement and datum uncertainty explicit; no interpolation
+    fields:
+      station_id: {dtype: string, units: identifier, intended_model_role: state-series key}
+      timestamp: {dtype: datetime, units: ISO-8601 with timezone, intended_model_role: state time}
+      head: {dtype: float, units: m relative to declared datum, intended_model_role: local response}
+      depth_to_water: {dtype: float, units: m below measuring point, intended_model_role: alternate raw observation}
+      qa_flag: {dtype: string, units: code, intended_model_role: eligibility}
+      datum: {dtype: string, units: vertical datum, intended_model_role: head comparability}
+  groundwater_recharge:
+    metadata: &forcing_meta
+      temporal_resolution: monthly or finer for dynamics; annual only for static baseline
+      spatial_resolution: groundwater node/facility
+      evidence_class: ESTIMATED
+      authoritative_source: CGWB/AP Ground Water Department/India-WRIS
+      period: common planning and groundwater-estimation horizon
+      qa: preserve method, revisions, missingness, and measured/calculated components
+      uncertainty: method and allocation uncertainty explicit
+    fields:
+      groundwater_node_id: {dtype: string, units: identifier, intended_model_role: forcing destination}
+      period_start: {dtype: date, units: ISO date, intended_model_role: forcing time}
+      recharge_volume: {dtype: float, units: m3 per period, intended_model_role: groundwater input}
+      recharge_type: {dtype: category, units: natural/managed/injection, intended_model_role: source separation}
+      evidence_class: {dtype: category, units: allowed evidence class, intended_model_role: provenance guard}
+  groundwater_extraction:
+    metadata:
+      temporal_resolution: monthly or finer for dynamics; annual assessment for static context
+      spatial_resolution: production well or groundwater node
+      evidence_class: ESTIMATED
+      authoritative_source: CGWB/AP Ground Water Department
+      period: common planning and groundwater-estimation horizon
+      qa: preserve metered/reported/allocated/estimated class and revisions
+      uncertainty: missing extraction is unknown, never zero
+    fields:
+      production_id: {dtype: string, units: identifier, intended_model_role: forcing source}
+      groundwater_node_id: {dtype: string, units: identifier, intended_model_role: forcing destination}
+      period_start: {dtype: date, units: ISO date, intended_model_role: forcing time}
+      extraction_volume: {dtype: float, units: m3 per period, intended_model_role: groundwater withdrawal}
+      evidence_class: {dtype: category, units: allowed evidence class, intended_model_role: provenance guard}
+  agriculture_demand:
+    metadata:
+      temporal_resolution: monthly/seasonal
+      spatial_resolution: agricultural exposure region mapped to groundwater node
+      evidence_class: ESTIMATED
+      authoritative_source: DES/NRSC/state agriculture and irrigation agencies
+      period: planning baseline and model horizon
+      qa: reconcile crop, season, irrigated area, ET, and source dependence
+      uncertainty: ET and groundwater-share uncertainty retained separately
+    fields:
+      agriculture_region_id: {dtype: string, units: identifier, intended_model_role: consequence region}
+      crop_id: {dtype: string, units: identifier, intended_model_role: crop grouping}
+      period_start: {dtype: date, units: ISO date, intended_model_role: demand time}
+      irrigated_area: {dtype: float, units: ha, intended_model_role: exposure scale}
+      water_demand: {dtype: float, units: m3 per period, intended_model_role: "q_ag[n,t] input"}
+      groundwater_share: {dtype: float, units: fraction 0-1, intended_model_role: source dependence}
+  municipal_demand:
+    metadata:
+      temporal_resolution: monthly/annual with dated population baseline
+      spatial_resolution: ULB/service area
+      evidence_class: ESTIMATED
+      authoritative_source: Census/AP municipal and water utilities
+      period: planning baseline and model horizon
+      qa: service-area, abstraction, supply, loss and population vintages reconciled
+      uncertainty: population projections and unmetered demand explicit
+    fields:
+      municipal_region_id: {dtype: string, units: identifier, intended_model_role: consequence region}
+      period_start: {dtype: date, units: ISO date, intended_model_role: demand time}
+      population: {dtype: float, units: persons, intended_model_role: exposure scale}
+      water_demand: {dtype: float, units: m3 per period, intended_model_role: "q_mun[n,t] input"}
+      groundwater_abstraction: {dtype: float, units: m3 per period, intended_model_role: municipal groundwater dependence}
+      alternate_supply: {dtype: float, units: m3 per period, intended_model_role: substitution capacity}
+  water_sources:
+    metadata:
+      temporal_resolution: capacity vintage and operational time series
+      spatial_resolution: named source/facility/service boundary
+      evidence_class: REPORTED_MEASURED
+      authoritative_source: source-owning state/local authority
+      period: current and planning horizon
+      qa: legal entitlement, conveyance, usable capacity, quality and operating status required
+      uncertainty: capacity and deliverability uncertainty explicit
+    fields:
+      water_source_id: {dtype: string, units: identifier, intended_model_role: source key}
+      source_type: {dtype: category, units: groundwater/reuse/desalination/surface-municipal, intended_model_role: physical source separation}
+      geometry: {dtype: geometry, units: declared CRS, intended_model_role: source crosswalk}
+      capacity: {dtype: float, units: m3 per period, intended_model_role: source constraint}
+      availability_status: {dtype: category, units: FEASIBLE/INFEASIBLE/UNCERTAIN, intended_model_role: "F[l,s] evidence"}
+  wastewater_reuse:
+    metadata:
+      temporal_resolution: monthly/current facility vintage
+      spatial_resolution: STP/ULB and conveyance service area
+      evidence_class: REPORTED_MEASURED
+      authoritative_source: CPCB/AP municipal authority/plant operator
+      period: current and planning horizon
+      qa: installed, operational, utilized, quality and committed capacity separated
+      uncertainty: treatment capacity is not automatically available reuse supply
+    fields:
+      facility_id: {dtype: string, units: identifier, intended_model_role: reuse source}
+      treated_volume: {dtype: float, units: m3 per period, intended_model_role: observed production}
+      uncommitted_reuse_capacity: {dtype: float, units: m3 per period, intended_model_role: feasible DC supply ceiling}
+      conveyance_geometry: {dtype: geometry, units: declared CRS, intended_model_role: deliverability}
+  desalination:
+    metadata:
+      temporal_resolution: project/capacity vintage
+      spatial_resolution: plant/intake/outfall and service area
+      evidence_class: REPORTED_MEASURED
+      authoritative_source: state/local water authority and regulator
+      period: current and planning horizon
+      qa: operational/proposed status, usable capacity, energy and conveyance separated
+      uncertainty: proposed capacity is not available supply
+    fields:
+      facility_id: {dtype: string, units: identifier, intended_model_role: desalination source}
+      usable_capacity: {dtype: float, units: m3 per period, intended_model_role: source ceiling}
+      status: {dtype: category, units: operational/contracted/proposed, intended_model_role: eligibility}
+      geometry: {dtype: geometry, units: declared CRS, intended_model_role: site-source crosswalk}
+  dc_source_options:
+    metadata:
+      temporal_resolution: planning-vintage option
+      spatial_resolution: candidate region x cooling technology x source
+      evidence_class: REFERENCE_MODEL
+      authoritative_source: reconciled project engineering and source authority records
+      period: planning horizon
+      qa: source feasibility, water intensity, PUE, capacity and chronology required
+      uncertainty: technology/source shares remain uncertain until documented
+    fields:
+      candidate_region_id: {dtype: string, units: identifier, intended_model_role: site index l}
+      cooling_technology_id: {dtype: string, units: identifier, intended_model_role: technology index k}
+      water_source_id: {dtype: string, units: identifier, intended_model_role: source index s}
+      theta_gw: {dtype: float, units: fraction 0-1, intended_model_role: documented groundwater source share}
+      rho: {dtype: float, units: m3 per MWh, intended_model_role: source-resolved water intensity}
+      feasible: {dtype: category, units: FEASIBLE/INFEASIBLE/UNCERTAIN, intended_model_role: option guard}
+  site_groundwater_crosswalk:
+    metadata:
+      temporal_resolution: versioned static crosswalk
+      spatial_resolution: candidate region to groundwater node
+      evidence_class: DERIVED_FROM_MEASUREMENTS
+      authoritative_source: authoritative candidate geometry plus CGWB/AP groundwater geometry
+      period: shared geometry vintage
+      qa: exact overlay preferred; confidence and weights must sum/document boundary cases
+      uncertainty: APPROXIMATE/UNRESOLVED excluded from primary mapping
+    fields:
+      candidate_region_id: {dtype: string, units: identifier, intended_model_role: site index l}
+      groundwater_node_id: {dtype: string, units: identifier, intended_model_role: node index n}
+      mapping_weight: {dtype: float, units: fraction 0-1, intended_model_role: "M_GW[n,l]"}
+      crosswalk_confidence: {dtype: category, units: EXACT/HIGH_CONFIDENCE/APPROXIMATE/UNRESOLVED, intended_model_role: eligibility guard}
+      primary_eligible: {dtype: boolean, units: boolean, intended_model_role: prevents silent nearest-neighbor assignment}

@@ -1,0 +1,17 @@
+{
+  "build_1_exit_code": 0,
+  "build_2_exit_code": 0,
+  "commands": [
+    "MPLCONFIGDIR=/tmp/ap-preflight-mpl PYTHONDONTWRITEBYTECODE=1 /home/nacevedo/.conda/envs/dc_externalities/bin/python scripts/run_preflight.py",
+    "MPLCONFIGDIR=/tmp/ap-preflight-mpl PYTHONDONTWRITEBYTECODE=1 /home/nacevedo/.conda/envs/dc_externalities/bin/python scripts/run_preflight.py"
+  ],
+  "hashes_identical_between_runs": true,
+  "status": "PASS",
+  "tests": "15 passed in 2.65s",
+  "verified_hashes": {
+    "outputs/figures/fig01_ap_groundwater_public_coverage.pdf": "a22dda36f19caf57a374b0998d55d5ccad5367da3a81c6dd9c60d534d79a136f",
+    "outputs/figures/fig01_ap_groundwater_public_coverage.png": "935730619bf1ea35cb9956c179fca98e49b72e215bb19855e6e7c1850e8babea",
+    "outputs/provenance/MODULE_SHA256_MANIFEST.csv": "498ed40fc28f19af55fef61fd857d910fcd36dec62615c5f25b01ab527addce0",
+    "outputs/provenance/MODULE_SHA256_MANIFEST.json": "e79dd22bc7cd8321d33aafbcd02f885938e9ee30d1466c4fdb67ce06e41ff480"
+  }
+}

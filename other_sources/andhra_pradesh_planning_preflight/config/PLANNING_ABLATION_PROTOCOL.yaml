@@ -1,0 +1,45 @@
+version: 1
+status: PREREGISTERED_NOT_RUN
+shared_inputs:
+  candidate_set_id: AP_CANONICAL_CANDIDATES_V1_PENDING
+  demand_id: AP_COMMON_DEMAND_V1_PENDING
+  cost_assumptions_id: AP_COMMON_COSTS_V1_PENDING
+  power_options_id: AP_COMMON_POWER_OPTIONS_V1_PENDING
+  source_feasible_set_id: AP_SOURCE_FEASIBILITY_V1_PENDING
+  capacity_and_reliability_constraints_id: AP_COMMON_CAPACITY_CONSTRAINTS_V1_PENDING
+models:
+  M0:
+    name: PSCC-style static WSF model
+    water_representation: static aggregate water-scarcity factor
+    run_status: NOT_RUN
+  M0S:
+    name: source-resolved static water model
+    water_representation: physically distinct groundwater, reclaimed wastewater, desalinated seawater, and other surface/municipal sources
+    run_status: NOT_RUN
+  M1L:
+    name: source-resolved plus local groundwater dynamics
+    water_representation: frozen locally estimated non-network groundwater response
+    run_status: BLOCKED_ON_AP9
+  M1N:
+    name: source-resolved plus network groundwater dynamics
+    water_representation: frozen locally estimated and validated network groundwater response
+    run_status: BLOCKED_ON_AP9_AND_NETWORK_VALIDATION
+controlled_mechanism: water representation only
+required_equal_across_models:
+  - demand
+  - cost assumptions
+  - power options
+  - candidate locations
+  - source feasible set
+  - non-water capacity and reliability constraints
+decision_value_metrics:
+  capacity_relocation: 0.5 * sum_l abs(x_M1[l] - x_M0[l]) / total_capacity
+  source_switching: fraction of capacity or water shifted among groundwater, reuse, desalination, and other sources
+  cost_premium: (C_M1 - C_M0) / C_M0
+  static_plan_replay:
+    - groundwater-head threshold violations
+    - violation duration
+    - affected groundwater nodes
+    - agriculture exposure
+    - municipal exposure
+guard: no solution may be generated until shared inputs and required local groundwater model gates pass

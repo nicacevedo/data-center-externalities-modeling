@@ -1,0 +1,281 @@
+{
+  "file_count": 55,
+  "files": [
+    {
+      "bytes": 38,
+      "path": ".gitignore",
+      "sha256": "f76e0cc89e965a3ff67ee028d7273b29255ddfba1a6b5efebd180a26d6c19e8c"
+    },
+    {
+      "bytes": 1456,
+      "path": "OCWD_METHOD_TRANSFER_CONTRACT.md",
+      "sha256": "d3d454915a6b0385aed7bf93e36ebc8a582d672070b1a4e4739aff94439cae1b"
+    },
+    {
+      "bytes": 2183,
+      "path": "README.md",
+      "sha256": "078810799c0cabcfe4aadba9cb68a8920341d16e4a314395ca340222f05dd3e9"
+    },
+    {
+      "bytes": 13511,
+      "path": "config/AP_PLANNING_DATA_CONTRACT.yaml",
+      "sha256": "009da67becec9e63654657e1cb7b4208db3c683d6898943db768937bea5d6ade"
+    },
+    {
+      "bytes": 781,
+      "path": "config/EVIDENCE_CLASSES.yaml",
+      "sha256": "d7ccdee12e74bfddae36e0d1b098efb8b90db14b922e7d0c540fd73c9933666e"
+    },
+    {
+      "bytes": 1911,
+      "path": "config/PLANNING_ABLATION_PROTOCOL.yaml",
+      "sha256": "85addd587826286d33ecac5d781596452d7219014c2b92b2e09c4f150bc0ad07"
+    },
+    {
+      "bytes": 1836,
+      "path": "config/STATIC_DYNAMIC_RANKING_PROTOCOL.yaml",
+      "sha256": "f56ad5097d67945f85cbc26fa1176b7a7cd1b6c2d5945a4c21b6f55e1d2cd934"
+    },
+    {
+      "bytes": 1292180,
+      "path": "data/derived/AP_CGWB_GROUNDWATER_HEAD_OBSERVATIONS.parquet",
+      "sha256": "4b3f1e96a9725b1bbc35ad22c3faf091e1e59dfe79b2b374f16af832f30e1aab"
+    },
+    {
+      "bytes": 167892,
+      "path": "data/derived/AP_CGWB_GROUNDWATER_STATION_SUMMARY.parquet",
+      "sha256": "db8fa325f09c678673e88a864f1e067a5bf38e0c293a591cad0c86eb9d837c6d"
+    },
+    {
+      "bytes": 421027,
+      "path": "data/raw/andhra_pradesh_data_center_policy_4_0_2024_29.pdf",
+      "sha256": "63d5fdafcc5fc7aa4e7e90bcd000a57ffcd9a0202f74d30b7a969971c0dd7ae0"
+    },
+    {
+      "bytes": 7273182,
+      "path": "data/raw/cgwb_andhra_pradesh_groundwater_yearbook_2024_25.pdf",
+      "sha256": "37353014cb7eccb457940fc70db78b2d2b46777b0efcdcbeb6cb3e6dc441d55c"
+    },
+    {
+      "bytes": 8363672,
+      "path": "data/raw/cgwb_dynamic_groundwater_resources_andhra_pradesh_2024.pdf",
+      "sha256": "d2e3c9d86665f250228c71045ea120709076c72d14b19cb9608a68a9a3b52bbf"
+    },
+    {
+      "bytes": 10980474,
+      "path": "data/raw/gwl_manual_quarterly_cgwb_ap_1991_2020.csv",
+      "sha256": "9f8f48406abd579b10b6379d0177df743f1d427833eae80688576a4d1c9be017"
+    },
+    {
+      "bytes": 1481218,
+      "path": "data/raw/gwl_manual_quarterly_cgwb_ap_2021_2025.csv",
+      "sha256": "1bb1399deb6391566ca6ac4bfe1e255fd2a99eb19e32feca0de587839c504dbb"
+    },
+    {
+      "bytes": 11419,
+      "path": "outputs/FINAL_AP_PLANNING_PREFLIGHT_REPORT.md",
+      "sha256": "3cfe56e724a6a48828076b7ea19bcd857cf033a29d7da37f7a714db2c679196e"
+    },
+    {
+      "bytes": 2315,
+      "path": "outputs/FINAL_AP_PLANNING_PREFLIGHT_STATUS.json",
+      "sha256": "afaac8423bd0e5be84adbfc6b05f5d8d2699b0e6bdf855cade3cf113fb17fa0c"
+    },
+    {
+      "bytes": 59951,
+      "path": "outputs/figures/fig01_ap_groundwater_public_coverage.pdf",
+      "sha256": "a22dda36f19caf57a374b0998d55d5ccad5367da3a81c6dd9c60d534d79a136f"
+    },
+    {
+      "bytes": 481498,
+      "path": "outputs/figures/fig01_ap_groundwater_public_coverage.png",
+      "sha256": "935730619bf1ea35cb9956c179fca98e49b72e215bb19855e6e7c1850e8babea"
+    },
+    {
+      "bytes": 2141,
+      "path": "outputs/protocol/M0_STATIC_BASELINE_SPEC.md",
+      "sha256": "d1540c2e8d27746fbbf856ff4611e0985e8c7166dd090e4391d077122f498aa9"
+    },
+    {
+      "bytes": 966,
+      "path": "outputs/protocol/PLANNING_ABLATION_PROTOCOL.md",
+      "sha256": "e195245e10ea2ee8533bfc98cf6885261202b59fec6d77dbb97427ef16aae09b"
+    },
+    {
+      "bytes": 879,
+      "path": "outputs/protocol/SPATIAL_UNIT_DECISION.md",
+      "sha256": "c973f18247348133599adc7e6d484e1cc1441d497859d54ea1b5a68976810480"
+    },
+    {
+      "bytes": 1056,
+      "path": "outputs/protocol/STATIC_DYNAMIC_RANKING_PROTOCOL.md",
+      "sha256": "97b76fdad56a88e99708293654a1cc09d2dabb210dce8266645809c24c53e408"
+    },
+    {
+      "bytes": 873,
+      "path": "outputs/protocol/WATER_COUPLING_INTERFACE.md",
+      "sha256": "78ed8e93886eddb2aae6bc1f5400e66a97c55d8b40b533a720565ad2f0f9aeac"
+    },
+    {
+      "bytes": 62777,
+      "path": "outputs/provenance/FROZEN_PARENT_DEPENDENCY_MANIFEST.csv",
+      "sha256": "47f5669c3564abc575802e71c9a4e194b9eeebba3bebbd97fa65104ddcbd6aae"
+    },
+    {
+      "bytes": 470,
+      "path": "outputs/provenance/FROZEN_PARENT_DEPENDENCY_MANIFEST.json",
+      "sha256": "55516e7a85d1a295520ddf24ca1c68afab74619663281fc4c0630c256b1b2c19"
+    },
+    {
+      "bytes": 2582,
+      "path": "outputs/provenance/RAW_DOWNLOAD_MANIFEST.csv",
+      "sha256": "199f7827bb094270a45749ae484a34bb44e921ca26227ee06f00812735f05ea9"
+    },
+    {
+      "bytes": 3755,
+      "path": "outputs/provenance/RAW_DOWNLOAD_MANIFEST.json",
+      "sha256": "b567d1197b34d3dc890872dc7c5b78d30781450aa09a7b5fe29dd7912f17bf2d"
+    },
+    {
+      "bytes": 630,
+      "path": "outputs/provenance/REPOSITORY_PREFLIGHT.json",
+      "sha256": "ba9e47eb3858237ad7c88029230cde081ba90a12764ad85f0ada0cc7da55f3ad"
+    },
+    {
+      "bytes": 1046,
+      "path": "outputs/provenance/REPOSITORY_SOURCE_AUDIT.md",
+      "sha256": "f51a2a8563f8d5978b7dbe09db8dd76c326af9a3c740d5ce8877bd269846bb45"
+    },
+    {
+      "bytes": 2078,
+      "path": "outputs/readiness/AP_GROUNDWATER_COVERAGE_STATUS.json",
+      "sha256": "6741b38fd212e27b64619afd26bc83a2c42a632f75420b1b1b0eae3516e55040"
+    },
+    {
+      "bytes": 2829,
+      "path": "outputs/readiness/AP_PLANNING_READINESS.json",
+      "sha256": "30c5d11cf740171fc3deebdec4d2836484cca02b0ca0ba9ea7b7aa14162581d1"
+    },
+    {
+      "bytes": 1030,
+      "path": "outputs/readiness/M0_REPRODUCTION_STATUS.json",
+      "sha256": "d541d85bdf473a7f12470552e741d1b0a0cdc1b5b9c8f9a53aaeae6110848bf7"
+    },
+    {
+      "bytes": 618,
+      "path": "outputs/readiness/TRACK_A_WRMS_STATUS.json",
+      "sha256": "2ae2dab116a014aec1454c21523fb98e16ad070327d1173963d6c0fe33e63b4b"
+    },
+    {
+      "bytes": 349,
+      "path": "outputs/tables/AP_CANDIDATE_REGION_CROSSWALK.csv",
+      "sha256": "a677503b2c0b514cf77ea7e57239c54f81671603125213bfbb44b042ff16bf51"
+    },
+    {
+      "bytes": 400,
+      "path": "outputs/tables/AP_CANDIDATE_REGION_EVIDENCE.csv",
+      "sha256": "cb7c41a1af1278d682a479b7258bdef806df1e1d714d765accda608099418959"
+    },
+    {
+      "bytes": 1814,
+      "path": "outputs/tables/AP_EXACT_MISSING_DATA.csv",
+      "sha256": "550e93c64c478f05fb2f6325c35b5d7b365c7e4581953b2f47241e01c2f31dda"
+    },
+    {
+      "bytes": 1870,
+      "path": "outputs/tables/AP_GROUNDWATER_COVERAGE_SUMMARY.csv",
+      "sha256": "4024f848ecb0f248e1683122f876f0fd54e7f34f58d979a9d62aa30f148ec378"
+    },
+    {
+      "bytes": 3567,
+      "path": "outputs/tables/AP_GROUNDWATER_COVERAGE_SUMMARY.md",
+      "sha256": "fea5e974497c25fbfe121d4b36a28bb88f241c29f9ab9f7de060e90c1451272d"
+    },
+    {
+      "bytes": 1093,
+      "path": "outputs/tables/AP_GROUNDWATER_DISTRICT_COVERAGE.csv",
+      "sha256": "874a389c72ba46218156c9b700345275c445d758cfdc8aafe098ae5012d6bb18"
+    },
+    {
+      "bytes": 2500,
+      "path": "outputs/tables/AP_GROUNDWATER_MONTHLY_COVERAGE.csv",
+      "sha256": "f8fdacb03b592a3bd29f699bbeb2d9ceb6e1faa36f213a5f340db561eb3042e6"
+    },
+    {
+      "bytes": 672,
+      "path": "outputs/tables/AP_GROUNDWATER_YEAR_COVERAGE.csv",
+      "sha256": "b341bc839229e127c2d4528cb0401648a7e54e70731b344352e33d491962aef3"
+    },
+    {
+      "bytes": 2478,
+      "path": "outputs/tables/AP_GWRA_2024_STATIC_BASELINE.csv",
+      "sha256": "62c0ca8046226a7f6ae3cab83c661f9fe84e930f54f8af22cd74aa105f3f6f27"
+    },
+    {
+      "bytes": 1385,
+      "path": "outputs/tables/AP_SECTOR_BASELINE_COVERAGE.csv",
+      "sha256": "f8e54e09a29313a72ac37539d620981cd003a847b033064bee02e2f0e3a3ed0a"
+    },
+    {
+      "bytes": 931,
+      "path": "outputs/tables/AP_SPATIAL_UNIT_SCORECARD.csv",
+      "sha256": "0a137ccad3d773d7078bb62e516fcfca294d9e713d4b84aab9e5826e8e0e7284"
+    },
+    {
+      "bytes": 1305,
+      "path": "outputs/tables/AP_WATER_SOURCE_FEASIBILITY.csv",
+      "sha256": "ea3cc5761796d192e62b686be2b438c137cf317009da1cf382491281ababf2ba"
+    },
+    {
+      "bytes": 539,
+      "path": "outputs/tables/F.csv",
+      "sha256": "da8ed67e00f817b028aecee11f01c12b86a9272901c8502617050ccd4d71f49c"
+    },
+    {
+      "bytes": 102,
+      "path": "outputs/tables/M_AG.csv",
+      "sha256": "c8a1c07aaeb54cdc28b2ce01d6109d4c38a26019f9769f8924e046821a885e72"
+    },
+    {
+      "bytes": 100,
+      "path": "outputs/tables/M_GW.csv",
+      "sha256": "1323e61b35fc36403e6fc5e3d2b647552df9023b2e5b28bec73d6a03282922b6"
+    },
+    {
+      "bytes": 100,
+      "path": "outputs/tables/M_MUN.csv",
+      "sha256": "dacc7c1d6d0d3e82f8b44961ef694a39de0446aaa07505405d673181dde9a7d1"
+    },
+    {
+      "bytes": 4749,
+      "path": "requests/AP_PLANNING_DATA_ACCESS_REQUEST.md",
+      "sha256": "00b1743eeb8fb3abc6d4a3db2bcbddba8f815921638190fc9ffcfefe94f2dc2a"
+    },
+    {
+      "bytes": 414,
+      "path": "scripts/run_preflight.py",
+      "sha256": "1ac1ed9ce738bf5602b2ce04f2734ca9f348d2edae2039af9bdbadb98a28994d"
+    },
+    {
+      "bytes": 11374,
+      "path": "sources/AP_AUTHORITATIVE_SOURCE_REGISTRY.csv",
+      "sha256": "2fc9e396fd4bf38fd5c985248920371f2fbd7757f30fa770fb2f8a8a962e078a"
+    },
+    {
+      "bytes": 16305,
+      "path": "sources/AP_AUTHORITATIVE_SOURCE_REGISTRY.yaml",
+      "sha256": "28a330ffce51643fefc593e3c084d73aa0528beb822b89bb6b050493bc31d118"
+    },
+    {
+      "bytes": 48556,
+      "path": "src/build_preflight.py",
+      "sha256": "6f4d8f25c9e51115e631222a422be376c36d70958b68cbb44c129d8e657bced3"
+    },
+    {
+      "bytes": 8457,
+      "path": "tests/test_preflight_guards.py",
+      "sha256": "2d6e5e0ae0c83da6b515a28addd3e8da3e214a00c17dfd61aa76be1b883a37bc"
+    }
+  ],
+  "generated_at": "2026-09-04T17:45:16Z"
+}

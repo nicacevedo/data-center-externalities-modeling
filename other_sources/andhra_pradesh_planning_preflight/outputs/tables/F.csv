@@ -1,0 +1,5 @@
+candidate_region_id,water_source_id,source_type,feasibility,capacity_m3_per_period,capacity_period,source,crosswalk_confidence,primary_eligible
+VISAKHAPATNAM_PROJECT_REGION,UNRESOLVED_GROUNDWATER,groundwater,UNCERTAIN,,,,UNRESOLVED,false
+VISAKHAPATNAM_PROJECT_REGION,UNRESOLVED_REUSE,reclaimed wastewater,UNCERTAIN,,,,UNRESOLVED,false
+VISAKHAPATNAM_PROJECT_REGION,UNRESOLVED_DESAL,desalinated seawater,UNCERTAIN,,,,UNRESOLVED,false
+VISAKHAPATNAM_PROJECT_REGION,UNRESOLVED_OTHER,other surface/municipal source,UNCERTAIN,,,,UNRESOLVED,false

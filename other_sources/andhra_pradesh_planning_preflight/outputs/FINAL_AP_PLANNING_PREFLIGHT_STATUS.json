@@ -1,0 +1,65 @@
+{
+  "baseline_commit": "975821ae679713cc6b2bcd984f2d16d4328289a8",
+  "generated_at": "2026-09-04T17:45:16Z",
+  "frozen_parent_integrity": {
+    "files_checked": 203,
+    "status": "PASS"
+  },
+  "track_a": {
+    "B4": "NOT_RUN",
+    "B5": "NOT_RUN",
+    "B6": "NOT_RUN",
+    "B7": "NOT_RUN",
+    "NETWORK_MODEL_JUSTIFICATION": "UNRESOLVED",
+    "S_star": "NOT_CONSTRUCTED_WITHOUT_WRMS",
+    "TRACK_A_DATA_GATE": "PENDING_DELIVERY",
+    "TRACK_A_STATUS": "WAITING_FOR_WRMS",
+    "WRMS_PRESENT": false,
+    "placebos": "NOT_RUN",
+    "reserved_tracer_MBI": "NOT_TOUCHED",
+    "transfer_contract": "OCWD_METHOD_TRANSFER_CONTRACT.md"
+  },
+  "track_b": {
+    "AP_SPATIAL_UNIT_STATUS": "UNRESOLVED",
+    "M0_REPRODUCTION_STATUS": "PARTIAL",
+    "M0S_M1L_M1N": "PREREGISTERED_NOT_RUN",
+    "dynamic_groundwater_model_fit": false,
+    "groundwater_public_coverage": {
+      "downloaded_raw_rows": 87239,
+      "numeric_rows": 87217,
+      "spatial_QA_usable_rows": 71384,
+      "spatial_QA_retention_percent": 81.960136,
+      "station_location_series_upper_bound": 2746,
+      "distinct_name_keys_lower_bound": 2584,
+      "series_at_least_24_observations": 1011,
+      "series_at_least_60_observations": 384,
+      "series_at_least_5_years": 1304,
+      "series_at_least_10_years": 701,
+      "first_spatial_QA_usable_observation": "1996-01-05T06:00:00",
+      "last_spatial_QA_usable_observation": "2023-08-20T06:00:00",
+      "stable_station_id_present": false,
+      "QA_flags_present": false,
+      "screen_layer_fields_present": false,
+      "interpolation_performed": false
+    },
+    "optimization_run": false,
+    "primary_multilayer_map_generated": false,
+    "raw_files_downloaded": 5,
+    "source_registry_count": 19,
+    "static_dynamic_ranking": "PREREGISTERED_NOT_RUN"
+  },
+  "readiness": {
+    "AP1": "PARTIAL",
+    "AP2": "ACCESS_REQUIRED",
+    "AP3": "PARTIAL",
+    "AP4": "ACCESS_REQUIRED",
+    "AP5": "PARTIAL",
+    "AP6": "ACCESS_REQUIRED",
+    "AP7": "ACCESS_REQUIRED",
+    "AP8": "PARTIAL",
+    "AP9": "FAIL",
+    "AP10": "FAIL"
+  },
+  "status": "PASS_AS_PREFLIGHT",
+  "next_experiment": "Acquire and reconcile the authoritative AP groundwater geography/state/forcing and candidate-grid-source-sector bundle; estimate and freeze a local groundwater model before any static-versus-dynamic ranking."
+}

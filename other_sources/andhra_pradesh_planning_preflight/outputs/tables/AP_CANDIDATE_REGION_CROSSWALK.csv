@@ -1,0 +1,2 @@
+candidate_region_id,power_region_id,water_source_id,groundwater_node_id,agriculture_region_id,municipal_region_id,crosswalk_confidence,primary_eligible,reason
+VISAKHAPATNAM_PROJECT_REGION,,,,,,UNRESOLVED,false,"Only regional project evidence exists; authoritative parcel, power, source, groundwater, agriculture and municipal boundaries are absent"

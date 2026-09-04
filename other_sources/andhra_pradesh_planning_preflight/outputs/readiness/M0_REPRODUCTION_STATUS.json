@@ -1,0 +1,26 @@
+{
+  "code_path": null,
+  "exact_constraints_available": false,
+  "exact_cost_inputs_available": false,
+  "exact_decision_variables_available": false,
+  "exact_demand_definition_available": false,
+  "exact_equity_term_available": false,
+  "exact_objective_available": false,
+  "exact_power_inputs_available": false,
+  "exact_spatial_units_available": false,
+  "exact_time_horizon_available": false,
+  "exact_wsf_inputs_available": false,
+  "frozen_numerical_result_reproduced": false,
+  "narrative_evidence": [
+    {
+      "path": "main_documents/master.tex",
+      "sha256": "83231ddc5cbf3b2682eab972da1254490b3e3178f588da027f92c89c4f830a06"
+    },
+    {
+      "path": "Meta_Prineville_Oregon_v3/modeling/glossary_mapping.tex",
+      "sha256": "8179ae861810fbee853c4da1c5da29e14f896a93d6068d4bcfec8e0da515ca43"
+    }
+  ],
+  "reason": "Static PSCC-style semantics are documented, but the canonical implementation, data bundle, exact algebra, and frozen numerical result are not present in the repository.",
+  "status": "PARTIAL"
+}

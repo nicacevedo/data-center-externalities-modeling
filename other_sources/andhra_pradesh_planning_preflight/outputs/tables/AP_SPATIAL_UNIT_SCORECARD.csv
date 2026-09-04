@@ -1,0 +1,5 @@
+candidate_unit,hydrological_meaning,groundwater_data_support,recharge_extraction_support,agriculture_municipal_compatibility,dc_grid_mapping,computational_tractability,current_decision,blocking_evidence
+Groundwater assessment unit/mandal,HIGH,PARTIAL,HIGH,PARTIAL,PARTIAL,HIGH,PRELIMINARY_PREFERRED_NOT_SELECTED,"Canonical 679-unit polygons, stable IDs, vintage, and crosswalks are missing"
+Microbasin,HIGH,PARTIAL,HIGH,PARTIAL,PARTIAL,MEDIUM,KEEP_AS_HYDROLOGIC_CROSSWALK,"Canonical 748-microbasin geometry and mapping to 679 assessment units are missing"
+Hydrological basin/subbasin,MEDIUM,PARTIAL,LOW,LOW,LOW,HIGH,TOO_COARSE_FOR_PRIMARY,"Reported 74 subbasins and 40 basins do not directly carry planning-demand/source records"
+Revenue mandal/district,LOW,PARTIAL,PARTIAL,HIGH,HIGH,HIGH,SECONDARY_REPORTING_CROSSWALK,"Administrative vintage conflict: yearbook reports 667 revenue mandals while GWRA reports 679 assessment units"

@@ -1,0 +1,55 @@
+{
+  "AP1": {
+    "gate": "candidate planning regions",
+    "status": "PARTIAL",
+    "evidence": "AP Data Center Policy 4.0 and a company announcement establish statewide policy and a Visakhapatnam project-region reference, not a canonical eligible candidate set."
+  },
+  "AP2": {
+    "gate": "site-to-groundwater crosswalk",
+    "status": "ACCESS_REQUIRED",
+    "evidence": "Candidate parcels and canonical assessment-unit polygons/IDs are absent; the primary M_GW table is intentionally empty."
+  },
+  "AP3": {
+    "gate": "groundwater state observations",
+    "status": "PARTIAL",
+    "evidence": "71,384 coordinate-plausible observed rows and 2,746 station-location series are public, but stable IDs, QA, screens/layers, coordinate corrections, and post-August-2023 data are absent."
+  },
+  "AP4": {
+    "gate": "recharge/extraction baseline",
+    "status": "ACCESS_REQUIRED",
+    "evidence": "The 2024 GWRA provides annual estimated assessment totals, but no canonical unit polygons or monthly geocoded local dynamic forcing."
+  },
+  "AP5": {
+    "gate": "agriculture baseline",
+    "status": "PARTIAL",
+    "evidence": "Official area/land-use and remote-sensing product families are identified; planning-ready crop-season demand, groundwater dependence, and node crosswalk are not built."
+  },
+  "AP6": {
+    "gate": "municipal baseline",
+    "status": "ACCESS_REQUIRED",
+    "evidence": "Official population and wastewater inventories provide context, but current service-area demand, abstraction, alternate-supply, reuse, and spatial crosswalk data require access."
+  },
+  "AP7": {
+    "gate": "water-source feasibility",
+    "status": "ACCESS_REQUIRED",
+    "evidence": "Groundwater, reuse, desalination, and other supply pathways remain distinct but location-specific entitlement, capacity, commitment, quality, and conveyance are unverified."
+  },
+  "AP8": {
+    "gate": "static M0/power inputs",
+    "status": "PARTIAL",
+    "evidence": "PSCC-style semantics and official power-source families are identified; canonical model code/data, candidate set, interconnection, exact WSF, costs, demand, weights, and frozen result are absent."
+  },
+  "AP9": {
+    "gate": "locally estimable groundwater model",
+    "status": "FAIL",
+    "evidence": "No Andhra Pradesh groundwater model was estimated in this preflight, and time-resolved local forcing, vertical identity, and corrected state data are not yet sufficient. OCWD validates methodology only."
+  },
+  "AP10": {
+    "gate": "common spatial/temporal support",
+    "status": "FAIL",
+    "evidence": "There is no common versioned site, grid, source, groundwater, agriculture, municipality, head, recharge, and extraction support panel."
+  },
+  "generated_at": "2026-09-04T17:45:16Z",
+  "optimization_run": false,
+  "overall_status": "PREFLIGHT_PARTIAL_ACCESS_REQUIRED"
+}

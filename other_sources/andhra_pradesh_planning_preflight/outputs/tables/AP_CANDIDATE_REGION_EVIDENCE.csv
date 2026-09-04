@@ -1,0 +1,2 @@
+candidate_region_id,name,evidence_status,source_id,spatial_precision,primary_candidate_status,notes
+VISAKHAPATNAM_PROJECT_REGION,Visakhapatnam AI data-center project region,DOCUMENTED_REGIONAL_REFERENCE,ADANI_GOOGLE_VIZAG,city/region only,NOT_ELIGIBLE,"Official company announcement supports a project-region reference but not parcel, grid node, source entitlement, cooling option or operating date"

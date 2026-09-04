@@ -1,0 +1,14 @@
+{
+  "all_tracked_files_match": true,
+  "baseline_commit": "975821ae679713cc6b2bcd984f2d16d4328289a8",
+  "generated_at": "2026-09-04T17:45:16Z",
+  "parent_modules": [
+    "other_sources/ocwd_groundwater_feasibility",
+    "other_sources/ocwd_groundwater_gw1_preflight",
+    "other_sources/ocwd_groundwater_gw1_climate",
+    "other_sources/ocwd_groundwater_gw1b"
+  ],
+  "parent_modules_byte_integrity": "PASS",
+  "parent_status_lines": [],
+  "tracked_files_checked": 203
+}

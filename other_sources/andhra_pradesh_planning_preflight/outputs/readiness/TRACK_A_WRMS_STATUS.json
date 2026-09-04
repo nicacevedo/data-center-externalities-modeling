@@ -1,0 +1,16 @@
+{
+  "B4_B5_B6_B7": "NOT_RUN",
+  "NETWORK_MODEL_JUSTIFICATION": "UNRESOLVED",
+  "S_STAR": "NOT_CONSTRUCTED_WITHOUT_WRMS",
+  "TRACK_A_DATA_GATE": "PENDING_DELIVERY",
+  "TRACK_A_STATUS": "WAITING_FOR_WRMS",
+  "WRMS_PRESENT": false,
+  "all_matches_were_baseline_scientific_artifacts": true,
+  "check_scope": "repository-local project/user-provided paths only; no email or external account polling",
+  "checked_once_at": "2026-09-04T17:37:06.846589+00:00",
+  "files_scanned": 5910,
+  "new_delivery_candidates": [],
+  "ocwd_wrms_term_matches_reviewed": 7,
+  "placebos": "NOT_RUN",
+  "tracer_mbi_validation": "NOT_TOUCHED"
+}

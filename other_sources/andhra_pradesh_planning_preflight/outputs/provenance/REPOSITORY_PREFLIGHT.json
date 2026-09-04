@@ -1,0 +1,16 @@
+{
+  "branch": "main",
+  "existing_dirty_paths": [
+    "Data-center-PUE-prediction-tool"
+  ],
+  "git_status_short_before": [
+    " m Data-center-PUE-prediction-tool"
+  ],
+  "head": "975821ae679713cc6b2bcd984f2d16d4328289a8",
+  "merge_rebase_reset_performed": false,
+  "python_executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+  "python_version": "3.11.15",
+  "repo_root": "/home/nacevedo/RA/data-center-externalities-modeling",
+  "submodule_status": "UNAVAILABLE: git reports no .gitmodules mapping for Data-center-PUE-prediction-tool",
+  "task_scope": "other_sources/andhra_pradesh_planning_preflight only"
+}

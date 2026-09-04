@@ -1,0 +1,9 @@
+priority,requirement,exact_missing_fields,authoritative_target,blocked_gate_or_experiment
+1,Groundwater assessment geography,"679 assessment-unit polygons and IDs; 748 microbasin polygons; unit-to-microbasin-to-village/mandal crosswalk; vintage",CGWB/AP Ground Water Department,AP2 AP4 AP10
+1,Corrected groundwater station panel,"stable station ID; verified coordinates/datum; well type; method; QA; active dates; screens; aquifer/layer; correction for mislabeled/out-of-state rows",CGWB/NWIC/AP Ground Water Department,AP2 AP3 AP9 AP10
+1,Dynamic groundwater forcing,"monthly or finer extraction by well/node and recharge by facility/node; observed/reported/allocated/estimated class; QA and revisions",AP Ground Water Department/CGWB,AP4 AP9 AP10
+1,Canonical data-center candidates,"parcel/region geometry; project status; capacity; schedule; cooling; water-service/source agreements; source shares; grid interconnection",AP ITE&C/project authorities/APTRANSCO/source utilities,AP1 AP2 AP7 AP8 AP10
+2,Agriculture baseline,"crop-season irrigated/cropped area; crop ET/demand; groundwater dependence; node crosswalk; uncertainty",DES/NRSC/state agriculture and irrigation agencies,AP5 AP10
+2,Municipal baseline,"ULB/service geometry; population vintage; monthly demand; groundwater abstraction; alternate supplies; losses; wastewater generation/treatment/reuse",AP municipal/water authorities/Census/CPCB,AP6 AP7 AP10
+2,Power and M0 bundle,"PSCC implementation; exact objective/weights; demand; cost/WSF/equity inputs; candidate set; grid/renewable constraints; frozen result",Project owner/MITEI/CEA/APTRANSCO,AP8
+3,Reuse/desalination deliverability,"operating/contracted status; uncommitted capacity; quality; permits; commitments; conveyance; energy requirement",Plant/source authorities and regulators,AP7 AP10

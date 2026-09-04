@@ -1,0 +1,35 @@
+version: 1
+status: PREREGISTERED_NOT_RUN
+preregistered_at: 2026-09-04
+local_model_requirement: >-
+  Rankings may be computed only after an Andhra Pradesh groundwater model is
+  estimated and frozen using local states, recharge, extraction, and
+  hydrogeology. No OCWD physical coefficient is transferable.
+candidate_set_id: AP_CANONICAL_CANDIDATES_V1_PENDING
+standardized_pulse:
+  definition: equal incremental groundwater-withdrawal volume applied independently at each eligible candidate region
+  magnitude_m3: PENDING_BEFORE_MODEL_ESTIMATION
+  duration: PENDING_BEFORE_MODEL_ESTIMATION
+  horizons_H: PENDING_BEFORE_MODEL_ESTIMATION
+  guard: magnitude, duration, horizons, weights, and thresholds must be frozen before ranking outcomes are inspected
+dynamic_responses:
+  delta_h: delta_h[n,tau|l] from the frozen locally estimated Andhra Pradesh groundwater model
+  cumulative_dynamic_drawdown: D_cum[l,H] = sum_tau sum_n omega[n] * max(-delta_h[n,tau|l], 0)
+  worst_node_drawdown: D_max[l,H] = max_n,tau max(-delta_h[n,tau|l], 0)
+  threshold_exposure: D_thr[l,H] = sum_n,tau indicator(h[n,tau|l] < h_min[n])
+  weight_policy: omega and h_min must be independently sourced and frozen before results
+comparators:
+  primary: PSCC-style static water-scarcity metric
+  secondary: local CGWB static groundwater extraction-stage metric where spatially compatible
+rank_metrics:
+  - Spearman rank correlation
+  - Kendall rank correlation
+  - top-k overlap for predeclared k
+  - maximum rank displacement
+  - number of pairwise ranking reversals
+  - share of pairwise ranking reversals
+prohibited:
+  - calculate rankings before local groundwater model freeze
+  - use OCWD coefficients or California physical parameters
+  - select pulse/horizon/weights/thresholds from favorable rankings
+  - label coarse GRACE storage as local groundwater head

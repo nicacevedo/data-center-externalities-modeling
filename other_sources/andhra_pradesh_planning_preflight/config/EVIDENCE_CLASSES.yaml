@@ -1,0 +1,13 @@
+version: 1
+allowed_classes:
+  OBSERVED: Direct instrument or field observation retained with source QA.
+  REPORTED_MEASURED: Agency or regulated-party quantity reported as measured.
+  DERIVED_FROM_MEASUREMENTS: Arithmetic or remote-sensing product derived from measurements.
+  ESTIMATED: Agency or scientific estimate requiring assumptions or allocation.
+  MODELED: Algorithm or fitted-model output.
+  REFERENCE_MODEL: Policy, engineering, or physical model used as a reference rather than ground truth.
+guards:
+  - Evidence classes may not be collapsed.
+  - GRACE total terrestrial water storage is not a well-level observation.
+  - Assessment recharge and extraction are not monthly metered forcing.
+  - Source-policy eligibility is not proof of source availability or capacity.

@@ -1,0 +1,316 @@
+generated_at: '2026-09-04T17:45:16Z'
+sources:
+- source_id: REPO_MASTER_NARRATIVE
+  agency: Project repository
+  title: Canonical project scientific narrative (read-only)
+  official_url: repository:main_documents/master.tex
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: current at baseline commit
+  spatial_resolution: project-wide
+  temporal_resolution: not applicable
+  raw_download_availability: repository blob
+  license_access_restriction: repository access
+  intended_use: M0 semantic audit only
+  evidence_class: REFERENCE_MODEL
+  limitations: Narrative is not the PSCC implementation, manuscript, inputs, or frozen
+    result.
+  local_path: external read-only dependency
+  sha256: 83231ddc5cbf3b2682eab972da1254490b3e3178f588da027f92c89c4f830a06
+- source_id: NWDP_CGWB_GWL_QUARTERLY
+  agency: National Water Informatics Centre / Central Ground Water Board
+  title: Ground Water Level (Manual - Quarterly), CGWB
+  official_url: https://www.nwdp.nwic.gov.in/dataset/gwl-manual-quarterly-central-ground-water-board-department
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: 'downloaded AP resources: 1994-01-05 to 2023-08-20; advertised
+    resource bands 1991-2020 and 2021-2025'
+  spatial_resolution: station records; state resource
+  temporal_resolution: nominal quarterly manual; some records more frequent
+  raw_download_availability: CSV and API; two AP CSVs downloaded
+  license_access_restriction: public portal; portal terms apply
+  intended_use: groundwater-state coverage and future local estimation feasibility
+  evidence_class: OBSERVED
+  limitations: No stable station ID, screen/layer, measurement method, or QA flag
+    in downloaded files; substantial coordinate contamination and missing coordinates
+    require source correction.
+  local_path: data/raw/gwl_manual_quarterly_cgwb_ap_1991_2020.csv; data/raw/gwl_manual_quarterly_cgwb_ap_2021_2025.csv
+  sha256: 9f8f48406abd579b10b6379d0177df743f1d427833eae80688576a4d1c9be017;1bb1399deb6391566ca6ac4bfe1e255fd2a99eb19e32feca0de587839c504dbb
+- source_id: CGWB_AP_YEARBOOK_2024_25
+  agency: Central Ground Water Board
+  title: Ground Water Year Book 2024-25, Andhra Pradesh
+  official_url: https://cgwb.gov.in/cgwbpnm/publication-detail/2003
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: long-term monitoring since 1969; 2024-25 reporting year
+  spatial_resolution: state, district, station-network aggregates
+  temporal_resolution: four manual rounds/year; 105 participatory wells described
+    as weekly
+  raw_download_availability: PDF downloaded
+  license_access_restriction: public agency publication
+  intended_use: network counts, cadence, hydrogeology, source-method provenance
+  evidence_class: REPORTED_MEASURED
+  limitations: The text says 1,473 stations as of March 2025 while table/figure labels
+    say March 2024; no machine-readable station master is included.
+  local_path: data/raw/cgwb_andhra_pradesh_groundwater_yearbook_2024_25.pdf
+  sha256: 37353014cb7eccb457940fc70db78b2d2b46777b0efcdcbeb6cb3e6dc441d55c
+- source_id: CGWB_AP_GWRA_2024
+  agency: Central Ground Water Board and Andhra Pradesh Ground Water Department
+  title: Dynamic Ground Water Resources of Andhra Pradesh State 2024
+  official_url: https://cgwb.gov.in/cgwbpnm/public/uploads/documents/1748236616187388804file.pdf
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: base year 2023-24; historical assessments summarized
+  spatial_resolution: 679 assessment units/mandals; 748 micro-basins; district/state
+    aggregates
+  temporal_resolution: annual assessment
+  raw_download_availability: PDF downloaded; no canonical tabular export located in
+    this pass
+  license_access_restriction: public agency publication
+  intended_use: static extraction/recharge baseline and spatial-unit audit
+  evidence_class: ESTIMATED
+  limitations: GEC-2015/INGRES estimates are not metered monthly pumping or recharge
+    forcing; assessment-unit boundary files and IDs still require acquisition/crosswalk.
+  local_path: data/raw/cgwb_dynamic_groundwater_resources_andhra_pradesh_2024.pdf
+  sha256: d2e3c9d86665f250228c71045ea120709076c72d14b19cb9608a68a9a3b52bbf
+- source_id: NWDP_CGWB_GWL_TELEMETRY
+  agency: National Water Informatics Centre / Central Ground Water Board
+  title: Ground Water Level (Telemetry - Hourly/Six Hourly), CGWB
+  official_url: https://www.nwdp.nwic.gov.in/en/dataset/ground-water-level-telemetry-hourly-central-ground-water-board-cgwb
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: resource-dependent
+  spatial_resolution: telemetry station
+  temporal_resolution: hourly/six-hourly
+  raw_download_availability: CSV/API generally; no Andhra Pradesh resource was listed
+    in the audited dataset page
+  license_access_restriction: public portal; AP access unresolved
+  intended_use: potential high-frequency state observations
+  evidence_class: OBSERVED
+  limitations: Do not infer AP telemetry availability from other-state resources.
+    AP resource requires confirmation or agency access.
+  local_path: ''
+  sha256: ''
+- source_id: AP_GW_WATER_AUDIT_TELEMETRY
+  agency: Andhra Pradesh Ground Water and Water Audit Department
+  title: District departmental descriptions of piezometer/AWLR telemetry
+  official_url: https://nandyal.ap.gov.in/ground-water/
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: current description; exact data period not published
+  spatial_resolution: departmental network; district/state scope ambiguous
+  temporal_resolution: hourly telemetry claimed; monthly manual monitoring also described
+  raw_download_availability: not located; dashboard access required
+  license_access_restriction: access required
+  intended_use: high-frequency data request target
+  evidence_class: REPORTED_MEASURED
+  limitations: Documentation of telemetry existence is not raw data and does not establish
+    downloadable station coverage.
+  local_path: ''
+  sha256: ''
+- source_id: CGWB_NAQUIM_AP
+  agency: Central Ground Water Board
+  title: National Aquifer Mapping and Management reports for Andhra Pradesh
+  official_url: https://cgwb.gov.in/en/aquifer-mapping
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: program initiated 2012; district/urban reports vary
+  spatial_resolution: typically 1:50,000; selected areas 1:10,000
+  temporal_resolution: reference characterization
+  raw_download_availability: PDF reports; machine-readable aquifer polygons/attributes
+    not confirmed
+  license_access_restriction: public reports; GIS may require request
+  intended_use: authoritative aquifer/layer definitions and hydrogeologic constraints
+  evidence_class: REFERENCE_MODEL
+  limitations: Report coverage is heterogeneous; never infer well layers from depth
+    thresholds.
+  local_path: ''
+  sha256: ''
+- source_id: INDIA_WRIS_NWIC
+  agency: National Water Informatics Centre / Central Water Commission
+  title: India-WRIS / National Water Data Portal
+  official_url: https://nwdp.nwic.gov.in/
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: dataset-dependent
+  spatial_resolution: stations, watersheds, sub-basins, administrative units
+  temporal_resolution: dataset-dependent
+  raw_download_availability: CSV/API for listed datasets
+  license_access_restriction: public portal; dataset terms apply
+  intended_use: hydrologic boundaries, observations, and canonical identifiers
+  evidence_class: OBSERVED
+  limitations: Dataset-specific provenance and QA must be retained; portal labels
+    alone do not certify current-state geography.
+  local_path: ''
+  sha256: ''
+- source_id: NRSC_BHUVAN
+  agency: ISRO National Remote Sensing Centre
+  title: Bhuvan thematic, LULC, AET, groundwater-prospect and hydrologic services
+  official_url: https://www.nrsc.gov.in/nrscnew/Services_Bhuvan_NaturalResourcesCensus.php
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: product-dependent; LULC 2018-23 and daily AET advertised
+  spatial_resolution: product-dependent (10K/50K/250K themes; AET 750 m)
+  temporal_resolution: product-dependent
+  raw_download_availability: portal/request/OGC service depending product
+  license_access_restriction: some downloads require login/request/MOU
+  intended_use: land, irrigation, ET, hydrologic-boundary support
+  evidence_class: MODELED
+  limitations: Remote-sensing products are not well-level groundwater observations
+    or measured abstraction.
+  local_path: ''
+  sha256: ''
+- source_id: NASA_GRACE_JPL
+  agency: NASA Jet Propulsion Laboratory / PO.DAAC
+  title: GRACE and GRACE-FO JPL Mascon RL06.3Mv04
+  official_url: https://doi.org/10.5067/TEMSC-3JC634
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: 2002-present subject to release latency/gaps
+  spatial_resolution: 3-degree mascons; gridded presentation approximately 55.66 km
+  temporal_resolution: monthly
+  raw_download_availability: NetCDF via PO.DAAC
+  license_access_restriction: public NASA data; acknowledgment requested
+  intended_use: coarse complementary total-water-storage validation
+  evidence_class: DERIVED_FROM_MEASUREMENTS
+  limitations: Total terrestrial storage is coarse and cannot be labeled or used as
+    local well-scale groundwater head.
+  local_path: ''
+  sha256: ''
+- source_id: NASA_MODIS_ET
+  agency: NASA LP DAAC / USGS
+  title: MOD16A2/A2GF Collection 6.1 evapotranspiration
+  official_url: https://lpdaac.usgs.gov/documents/931/MOD16_User_Guide_V61.pdf
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: 2000-present, product-dependent
+  spatial_resolution: 500 m
+  temporal_resolution: 8-day
+  raw_download_availability: HDF/LP DAAC services
+  license_access_restriction: public NASA data; Earthdata access may be required
+  intended_use: agricultural ET baseline candidate
+  evidence_class: MODELED
+  limitations: ET algorithm output is not metered irrigation demand or groundwater
+    pumping.
+  local_path: ''
+  sha256: ''
+- source_id: DES_AGRICULTURE
+  agency: Directorate of Economics and Statistics, Ministry of Agriculture and Farmers
+    Welfare
+  title: 'Area Production Statistics: APY and Land Use Statistics'
+  official_url: https://aps.dac.gov.in/
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: query-dependent historical annual series
+  spatial_resolution: state/district; crop/season
+  temporal_resolution: annual/seasonal
+  raw_download_availability: query/download portal
+  license_access_restriction: public portal
+  intended_use: irrigated/cropped area and crop baseline
+  evidence_class: REPORTED_MEASURED
+  limitations: Does not by itself identify groundwater withdrawal, crop ET, or groundwater
+    dependence at a groundwater node.
+  local_path: ''
+  sha256: ''
+- source_id: CENSUS_INDIA
+  agency: Office of the Registrar General & Census Commissioner, India
+  title: Census of India population and administrative tables
+  official_url: https://censusindia.gov.in/census.website/data/census-tables
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: 2011 census; newer official census tables not available in this
+    audit
+  spatial_resolution: village/town/district depending table
+  temporal_resolution: decennial
+  raw_download_availability: XLS/CSV/table-dependent
+  license_access_restriction: public official tables
+  intended_use: municipal population/service baseline
+  evidence_class: REPORTED_MEASURED
+  limitations: Outdated for present demand and not a municipal abstraction or service-boundary
+    dataset.
+  local_path: ''
+  sha256: ''
+- source_id: CPCB_STP_2020
+  agency: Central Pollution Control Board
+  title: National Inventory of Sewage Treatment Plants (2020 inventory)
+  official_url: https://cpcb.nic.in/openpdffile.php?id=UmVwb3J0RmlsZXMvMTIyOF8xNjE1MTk2MzIyX21lZGlhcGhvdG85NTY0LnBkZg%3D%3D
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: 2020 inventory
+  spatial_resolution: state and facility listings
+  temporal_resolution: inventory snapshot
+  raw_download_availability: PDF
+  license_access_restriction: public agency publication
+  intended_use: wastewater generation/treatment/reuse feasibility screening
+  evidence_class: REPORTED_MEASURED
+  limitations: Statewide and aging; treatment capacity does not equal reusable water
+    available to a candidate site.
+  local_path: ''
+  sha256: ''
+- source_id: AP_CDMA_SANITATION
+  agency: Andhra Pradesh Commissioner & Director of Municipal Administration
+  title: Andhra Pradesh State Sanitation Strategy
+  official_url: https://cdma.ap.gov.in/sites/default/files/State%20Sanitation%20Policy%20-%20Andhra%20.pdf
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: policy baseline; current facility status requires update
+  spatial_resolution: state/ULB
+  temporal_resolution: policy document
+  raw_download_availability: PDF
+  license_access_restriction: public agency publication
+  intended_use: municipal wastewater/reuse policy and request routing
+  evidence_class: REFERENCE_MODEL
+  limitations: Policy intent is not evidence of current conveyable reuse capacity.
+  local_path: ''
+  sha256: ''
+- source_id: AP_DATA_CENTER_POLICY_4_0
+  agency: Andhra Pradesh ITE&C Department
+  title: Andhra Pradesh Data Center Policy 4.0, 2024-29
+  official_url: https://apit.ap.gov.in/assets/files/Data%20Center%20Policy%20%284.0%29%202024-29.PDF
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: 2024-29 policy period
+  spatial_resolution: statewide policy
+  temporal_resolution: policy
+  raw_download_availability: PDF downloaded
+  license_access_restriction: public official policy
+  intended_use: candidate-region policy context and infrastructure requirements
+  evidence_class: REFERENCE_MODEL
+  limitations: The policy target (up to 1 GW) is not a site list, source-water entitlement,
+    or feasible optimization candidate set.
+  local_path: data/raw/andhra_pradesh_data_center_policy_4_0_2024_29.pdf
+  sha256: 63d5fdafcc5fc7aa4e7e90bcd000a57ffcd9a0202f74d30b7a969971c0dd7ae0
+- source_id: ADANI_GOOGLE_VIZAG
+  agency: Adani Enterprises / Google project announcement
+  title: AI data-center campus in Visakhapatnam
+  official_url: https://www.adani.com/newsroom/media-releases/adani-and-google-partner-to-build-indias-largest-data-centre-campus-in-visakhapatnam
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: announced 2025; planned 2026-30 investment period
+  spatial_resolution: Visakhapatnam; exact parcel/source boundary not supplied in
+    announcement
+  temporal_resolution: project announcement
+  raw_download_availability: HTML
+  license_access_restriction: public company source
+  intended_use: documented project-region reference, not full planning candidate set
+  evidence_class: REFERENCE_MODEL
+  limitations: Company announcement is not an authoritative water-source, grid-interconnection,
+    or groundwater-node crosswalk.
+  local_path: ''
+  sha256: ''
+- source_id: CEA_POWER_API
+  agency: Central Electricity Authority
+  title: CEA data API and power statistics
+  official_url: https://cea.nic.in/api-for-central-electricity-authority-data/?lang=en
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: dataset-dependent/current
+  spatial_resolution: state/region/plant/transmission, dataset-dependent
+  temporal_resolution: monthly/annual, dataset-dependent
+  raw_download_availability: API and reports
+  license_access_restriction: public official source
+  intended_use: power-region, generation, renewable and adequacy baseline
+  evidence_class: REPORTED_MEASURED
+  limitations: Does not provide the project-specific interconnection queue, deliverability,
+    or PSCC input bundle.
+  local_path: ''
+  sha256: ''
+- source_id: APTRANSCO
+  agency: Transmission Corporation of Andhra Pradesh
+  title: State transmission system information
+  official_url: https://aptransco.co.in/
+  accessed_at: '2026-09-04T17:45:16Z'
+  temporal_coverage: current/annual reports, dataset-dependent
+  spatial_resolution: substation/transmission network where published
+  temporal_resolution: snapshot/annual
+  raw_download_availability: reports/maps; canonical machine-readable network not
+    located
+  license_access_restriction: public reports; detailed data may require request
+  intended_use: candidate-to-power-region/interconnection crosswalk
+  evidence_class: REPORTED_MEASURED
+  limitations: A service/network map is not proof of feasible data-center interconnection
+    capacity.
+  local_path: ''
+  sha256: ''
