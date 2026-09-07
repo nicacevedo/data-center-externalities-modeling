@@ -97,8 +97,16 @@ def load_records(path: Path) -> list[dict]:
             if value is None or value == "":
                 parsed[key] = np.nan
                 continue
+            if value in ("True", "False"):
+                parsed[key] = value == "True"
+                continue
+            # Integer strings (including uint64 seeds) must not pass through float:
+            # IEEE-754 cannot represent all 64-bit identifiers exactly.
+            if value.lstrip("+-").isdigit():
+                parsed[key] = int(value)
+                continue
             try:
-                parsed[key] = float(value) if value not in ("True", "False") else (value == "True")
+                parsed[key] = float(value)
             except (TypeError, ValueError):
                 parsed[key] = value
         records.append(parsed)

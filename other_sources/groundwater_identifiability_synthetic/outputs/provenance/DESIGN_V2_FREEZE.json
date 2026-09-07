@@ -1,6 +1,6 @@
 {
   "cell_count": 129,
-  "code_hash": "539f62070785883761004d815947c5401c159b13a8b0ebc956e3ef53a59eccab",
+  "code_hash": "7cc64809bf240d7afea164c9a24a737c75de88a0b5e8d38f4e85b704f00d863c",
   "design_artifacts": [
     "config/design_v2.yaml",
     "DESIGN_FREEZE_V2.md"
@@ -15,10 +15,10 @@
     "n_cells_checked": 129,
     "n_seeds_per_cell": 8
   },
-  "frozen_at_utc": "2026-09-07T04:42:37.013770+00:00",
+  "frozen_at_utc": "2026-09-07T05:01:24.508494+00:00",
   "full_sweep_launched": false,
   "git_branch": "testing/synthetic-groundwater-identifiability",
-  "git_head": "68aa16544375509fa50e29742d276cb36824b6da",
+  "git_head": "6a1a68ee6cfccd45b22ff46077e2fc653e2e62b1",
   "n_code_files": 30,
   "n_frozen_systems": 17,
   "numpy_version": "2.4.6",

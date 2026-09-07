@@ -250,6 +250,15 @@ def test_design_hash_unchanged_by_orchestration_code():
     assert code_hash() != "5429a6378005b4152130f6b9707cc1fc61abdf3a81a83e3849530d1ea8f856fd"
 
 
+def test_load_records_preserves_uint64_seeds(tmp_path):
+    seed = 15067561602938931160
+    path = tmp_path / "seeds.csv"
+    path.write_text(f"cell_id,seed\nG1R1,{seed}\n", encoding="utf-8")
+    rows = sr.load_records(path)
+    assert rows[0]["seed"] == seed
+    assert isinstance(rows[0]["seed"], int)
+
+
 def test_prediction_vs_intervention_uses_frozen_g3_rule():
     records = [
         _row(
