@@ -35,6 +35,7 @@ from groundwater_identifiability_synthetic.src.design import (  # noqa: E402
     resolve_regime,
     rng_for,
     seed_list,
+    seed_pool_hash,
     sha256_file,
 )
 
@@ -396,7 +397,7 @@ def main() -> int:
         "n_frozen_systems": len(system_rows),
         "seed_pool_sizes": {name: len(values) for name, values in pools.items()},
         "seed_pool_hashes": {
-            name: sha256_of_ints(values) for name, values in pools.items()
+            name: seed_pool_hash(design, name) for name in pools
         },
         "s6_variance_characterization": characterization,
         "forcing_clipping": clipping,

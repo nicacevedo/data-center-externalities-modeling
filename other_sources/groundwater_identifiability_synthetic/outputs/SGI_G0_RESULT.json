@@ -1,8 +1,8 @@
 {
   "cadence_over_tau_relax": 0.05,
   "clip_fraction_max": 0.0,
-  "code_hash_at_freeze": "5429a6378005b4152130f6b9707cc1fc61abdf3a81a83e3849530d1ea8f856fd",
-  "code_hash_at_run": "5429a6378005b4152130f6b9707cc1fc61abdf3a81a83e3849530d1ea8f856fd",
+  "code_hash_at_freeze": "539f62070785883761004d815947c5401c159b13a8b0ebc956e3ef53a59eccab",
+  "code_hash_at_run": "539f62070785883761004d815947c5401c159b13a8b0ebc956e3ef53a59eccab",
   "criteria": {
     "G0_coefficient_exact": {
       "pass": true,

@@ -155,6 +155,8 @@ def run_replicate(
         "cadence": regime.cadence,
         "pumping_quality": regime.pumping_quality,
         "recharge_quality": regime.recharge_quality,
+        "recharge_lag": regime.recharge_lag,
+        "recharge_sigma": regime.recharge_sigma,
         "confounding_rho": regime.confounding_rho,
         "mcar_fraction": regime.mcar_fraction,
         "blocks_per_node": regime.blocks_per_node,
@@ -312,6 +314,7 @@ def run_replicate(
         true_strong = metrics.strong_true_edges(A_true_k, threshold)
         predicted = metrics.detected_edges(kappa_hat, threshold)
         record.update(metrics.edge_metrics(true_strong, predicted, all_pairs))
+        record["strong_edge_undirected_f1"] = record.get("edge_f1", np.nan)
         record["n_true_strong_edges"] = float(len(true_strong))
         record["false_edge_count"] = float(len(predicted - true_strong))
         record["false_edge_any"] = float(len(predicted - true_strong) >= 1)

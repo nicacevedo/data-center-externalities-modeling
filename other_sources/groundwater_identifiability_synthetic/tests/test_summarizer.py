@@ -35,6 +35,7 @@ def _row(**kwargs):
         "rmse_test_S": 0.12,
         "beta_q_hat_mean_L": -0.20,
         "edge_f1": 0.90,
+        "strong_edge_undirected_f1": 0.90,
         "masked_node_nmpe_N": 0.20,
         "observed_node_nmpe_N": 0.20,
         "false_edge_count": 0.0,

@@ -164,6 +164,8 @@ def edge_metrics(
         "edge_precision": float(precision),
         "edge_recall": float(recall),
         "edge_f1": float(f1),
+        # Canonical G2 name (design statistic: strong_edge_undirected_f1). Alias of edge_f1.
+        "strong_edge_undirected_f1": float(f1),
         "edge_false_positive_rate": float(fp / (fp + tn)) if (fp + tn) else float("nan"),
         "edge_false_negative_rate": float(fn / (fn + tp)) if (fn + tp) else float("nan"),
     }

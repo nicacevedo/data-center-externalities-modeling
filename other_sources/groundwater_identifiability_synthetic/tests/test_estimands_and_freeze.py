@@ -237,7 +237,7 @@ def test_phase_two_artifacts_absent(module_root):
         "data_adequacy_map.csv",
         "sweep_replicates.csv",
     ):
-        assert not (module_root / "outputs" / name).exists(), f"{name} must not exist in phase 1"
+        assert not (module_root / "outputs" / name).exists(), f"{name} must not exist in outputs/ root"
 
 
 # -------------------------------------------------------------------------------------

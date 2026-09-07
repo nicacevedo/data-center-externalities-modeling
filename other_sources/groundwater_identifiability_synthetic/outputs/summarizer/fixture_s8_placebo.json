@@ -1,157 +1,345 @@
 {
+  "LOCAL_RESPONSE_STATUS": "LOCAL_RESPONSE_NOT_IDENTIFIED",
+  "NETWORK_SUPPORT_FINAL": {
+    "SGI_G2_RAW_pass": false,
+    "SGI_G3_hard_fail": true,
+    "status": "NOT_EARNED"
+  },
+  "SGI_G2_RAW": {
+    "all_required_cells_pass": false,
+    "cells": {
+      "G2R1": {
+        "metrics_pass": false,
+        "pass": false,
+        "reason": "no_records",
+        "state": "NOT_ESTIMABLE",
+        "support_status": "NOT_ESTIMABLE"
+      },
+      "G2R2": {
+        "metrics_pass": false,
+        "pass": false,
+        "reason": "no_records",
+        "state": "NOT_ESTIMABLE",
+        "support_status": "NOT_ESTIMABLE"
+      },
+      "G2R3": {
+        "metrics_pass": false,
+        "pass": false,
+        "reason": "no_records",
+        "state": "NOT_ESTIMABLE",
+        "support_status": "NOT_ESTIMABLE"
+      },
+      "G2R4": {
+        "metrics_pass": false,
+        "pass": false,
+        "reason": "no_records",
+        "state": "NOT_ESTIMABLE",
+        "support_status": "NOT_ESTIMABLE"
+      }
+    },
+    "evaluated_model": "N",
+    "oracle_compensated": false,
+    "realistic_failures": [
+      "G2R3",
+      "G2R4"
+    ],
+    "robustly_estimable": false
+  },
   "analysis_seeds_used": false,
   "banner": "NON-INFERENTIAL. This summary was produced from fixtures or SMOKE seeds. It must not be used to set thresholds, choose regimes, or make scientific claims.",
   "data_adequacy": [
     {
-      "cadence": 4.0,
+      "SNR": NaN,
+      "absolute_scale_status": "absolute_intervention_scale_unsupported",
+      "cadence_k": 4.0,
+      "cadence_over_tau_relax": NaN,
+      "candidate_support_status": "nested_or_na",
       "cell_id": "G3R3",
       "complexity_unsupported": false,
+      "conditional_intervention_error_L": 0.1,
+      "conditional_intervention_error_N": 0.08,
+      "conditional_prediction_error_L": 0.1,
+      "conditional_prediction_error_N": 0.08,
+      "cumulative_drawdown_error": NaN,
+      "edge_f1": 0.9,
+      "estimability_rate_L": 1.0,
       "estimability_rate_N": 1.0,
-      "mcar_fraction": 0.1,
-      "not_estimable_rate_N": 0.0,
-      "scenario": "S8"
+      "estimability_rate_S": 0.0,
+      "false_edge_rate": 0.0,
+      "fit_failure_rate_L": 0.0,
+      "fit_failure_rate_N": 0.0,
+      "forcing_confounding": NaN,
+      "head_missing_fraction": 0.1,
+      "hydraulic_memory_regime": "",
+      "local_response_status": "local_response_supported",
+      "model": "ladder_B0_L_S_N",
+      "network_dynamics_status": "network_dynamics_supported_in_this_cell_only",
+      "network_strength": "",
+      "observed_node_fraction": NaN,
+      "placebo_false_effect_rate": 1.0,
+      "pumping_quality": "",
+      "pumping_scale_known": NaN,
+      "recharge_lag": NaN,
+      "recharge_quality": "",
+      "scenario": "S8",
+      "spatial_forcing_useful": 0.0,
+      "strong_edge_undirected_f1": 0.9,
+      "supported_complexity_status": "network_dynamics_supported_in_this_cell_only",
+      "vulnerability_rank_metric": 0.1
     }
   ],
   "fixture": "s8_placebo.csv",
   "gates": {
+    "NETWORK_SUPPORT_FINAL": {
+      "SGI_G2_RAW_pass": false,
+      "SGI_G3_hard_fail": true,
+      "status": "NOT_EARNED"
+    },
     "SGI_G0": {
       "all_required_cells_pass": false,
       "cells": {
         "C_G0": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         }
       },
+      "evaluated_model": "L",
       "oracle_compensated": false,
       "realistic_failures": [
         "C_G0"
-      ]
+      ],
+      "robustly_estimable": false
     },
     "SGI_G1": {
       "all_required_cells_pass": false,
       "cells": {
         "G1R1": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G1R2": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G1R3": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G1R4": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G1R5": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G1R6": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         }
       },
+      "evaluated_model": "L",
       "oracle_compensated": false,
       "realistic_failures": [
-        "G1R4",
         "G1R5",
-        "G1R2",
         "G1R3",
-        "G1R6",
-        "G1R1"
-      ]
+        "G1R1",
+        "G1R4",
+        "G1R2",
+        "G1R6"
+      ],
+      "robustly_estimable": false
     },
     "SGI_G2": {
       "all_required_cells_pass": false,
       "cells": {
         "G2R1": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G2R2": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G2R3": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G2R4": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         }
       },
+      "evaluated_model": "N",
       "oracle_compensated": false,
       "realistic_failures": [
         "G2R3",
         "G2R4"
-      ]
+      ],
+      "robustly_estimable": false
+    },
+    "SGI_G2_RAW": {
+      "all_required_cells_pass": false,
+      "cells": {
+        "G2R1": {
+          "metrics_pass": false,
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
+        },
+        "G2R2": {
+          "metrics_pass": false,
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
+        },
+        "G2R3": {
+          "metrics_pass": false,
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
+        },
+        "G2R4": {
+          "metrics_pass": false,
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
+        }
+      },
+      "evaluated_model": "N",
+      "oracle_compensated": false,
+      "realistic_failures": [
+        "G2R3",
+        "G2R4"
+      ],
+      "robustly_estimable": false
     },
     "SGI_G3": {
       "all_required_cells_pass": false,
       "cells": {
         "G3R1": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G3R1b": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G3R2": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G3R2b": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         },
         "G3R3": {
+          "estimability_rate": 1.0,
           "failed_criteria": [],
+          "metrics_pass": true,
+          "n_estimated": 1,
+          "n_fit_failed": 0,
+          "n_not_estimable": 0,
           "pass": true,
-          "state": "ESTIMATED_PASSED_GATE"
+          "state": "ESTIMATED_PASSED_GATE",
+          "support_status": "SUPPORTED"
         },
         "G3R4": {
+          "metrics_pass": false,
           "pass": false,
           "reason": "no_records",
-          "state": "NOT_ESTIMABLE"
+          "state": "NOT_ESTIMABLE",
+          "support_status": "NOT_ESTIMABLE"
         }
       },
+      "evaluated_model_by_cell": {
+        "G3R1": "N",
+        "G3R1b": "N",
+        "G3R2": "N",
+        "G3R2b": "N",
+        "G3R3": "L",
+        "G3R4": "L"
+      },
+      "hard_failure": true,
       "oracle_compensated": false,
       "realistic_failures": [
-        "G3R2",
         "G3R4",
-        "G3R2b",
         "G3R1b",
         "G3R1"
       ],
+      "robustness_only": false,
       "triggers": {
         "G3_null_s6a_false_edges_any": {
           "cells": [
             "G3R1",
             "G3R2"
           ],
+          "oracle_cannot_compensate": true,
+          "per_cell": {
+            "G3R1": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            },
+            "G3R2": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            }
+          },
+          "realistic_triggered_cells": [],
           "severity": "HARD_FAILURE",
           "triggered": false,
+          "triggered_cells": [],
           "value": NaN
         },
         "G3_null_s6a_false_edges_median": {
@@ -159,8 +347,23 @@
             "G3R1",
             "G3R2"
           ],
+          "oracle_cannot_compensate": true,
+          "per_cell": {
+            "G3R1": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            },
+            "G3R2": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            }
+          },
+          "realistic_triggered_cells": [],
           "severity": "HARD_FAILURE",
           "triggered": false,
+          "triggered_cells": [],
           "value": NaN
         },
         "G3_null_s6b_false_edges_any": {
@@ -168,8 +371,23 @@
             "G3R1b",
             "G3R2b"
           ],
+          "oracle_cannot_compensate": true,
+          "per_cell": {
+            "G3R1b": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            },
+            "G3R2b": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            }
+          },
+          "realistic_triggered_cells": [],
           "severity": "ROBUSTNESS_EVIDENCE",
           "triggered": false,
+          "triggered_cells": [],
           "value": NaN
         },
         "G3_null_s6b_false_edges_median": {
@@ -177,8 +395,23 @@
             "G3R1b",
             "G3R2b"
           ],
+          "oracle_cannot_compensate": true,
+          "per_cell": {
+            "G3R1b": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            },
+            "G3R2b": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            }
+          },
+          "realistic_triggered_cells": [],
           "severity": "ROBUSTNESS_EVIDENCE",
           "triggered": false,
+          "triggered_cells": [],
           "value": NaN
         },
         "G3_placebo_effect": {
@@ -186,8 +419,27 @@
             "G3R3",
             "G3R4"
           ],
+          "oracle_cannot_compensate": true,
+          "per_cell": {
+            "G3R3": {
+              "evaluated_model": "L",
+              "triggered": true,
+              "value": 1.0
+            },
+            "G3R4": {
+              "evaluated_model": "L",
+              "triggered": false,
+              "value": NaN
+            }
+          },
+          "realistic_triggered_cells": [
+            "G3R3"
+          ],
           "severity": "HARD_FAILURE",
           "triggered": true,
+          "triggered_cells": [
+            "G3R3"
+          ],
           "value": 1.0
         },
         "G3_prediction_intervention_inversion": {
@@ -197,8 +449,33 @@
             "G2R3",
             "G2R4"
           ],
+          "oracle_cannot_compensate": true,
+          "per_cell": {
+            "G2R1": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            },
+            "G2R2": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            },
+            "G2R3": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            },
+            "G2R4": {
+              "evaluated_model": "N",
+              "triggered": false,
+              "value": NaN
+            }
+          },
+          "realistic_triggered_cells": [],
           "severity": "HARD_FAILURE",
           "triggered": false,
+          "triggered_cells": [],
           "value": NaN
         },
         "_hard_failure": true,
@@ -210,10 +487,19 @@
   "prediction_vs_intervention": [
     {
       "cell_id": "G3R3",
+      "g3_prediction_intervention_inversion": false,
+      "good_prediction_poor_intervention": false,
       "intervention_gain_N_vs_L": 0.20000000000000004,
+      "nire_persistent_step_h26_L_median": 0.1,
+      "nire_persistent_step_h26_N_median": 0.08,
       "prediction_gain_N_vs_L": 0.20000000000000004,
-      "prediction_vs_intervention_inversion": false
+      "prediction_vs_intervention_inversion": false,
+      "rmse_test_L_median": 0.1,
+      "rmse_test_N_median": 0.08,
+      "scenario": "S8"
     }
   ],
-  "source": "FIXTURE"
+  "source": "FIXTURE",
+  "strongest_supported_claim": "LOCAL_RESPONSE_NOT_IDENTIFIED",
+  "strongest_unsupported_claim": "groundwater-response adequacy for planning is not claimed"
 }

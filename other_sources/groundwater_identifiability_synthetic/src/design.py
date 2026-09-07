@@ -77,6 +77,12 @@ def code_hash(root: Path | None = None) -> str:
 # -------------------------------------------------------------------------------------
 
 
+def seed_pool_hash(design: dict[str, Any], pool: str) -> str:
+    """SHA-256 of the materialized integer seed list for a named pool."""
+    values = seed_list(design, pool)
+    return hashlib.sha256(",".join(str(v) for v in values).encode("utf-8")).hexdigest()
+
+
 def seed_list(design: dict[str, Any], pool: str) -> list[int]:
     """Materialize a pool's seeds as plain integers, reproducibly.
 
