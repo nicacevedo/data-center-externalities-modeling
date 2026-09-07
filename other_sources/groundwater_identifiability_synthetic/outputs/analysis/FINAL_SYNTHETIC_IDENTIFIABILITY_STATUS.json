@@ -1,0 +1,391 @@
+{
+  "LOCAL_RESPONSE_STATUS": "LOCAL_RESPONSE_NOT_IDENTIFIED",
+  "NETWORK_SUPPORT_FINAL": {
+    "SGI_G2_RAW_pass": false,
+    "SGI_G3_hard_fail": true,
+    "status": "NOT_EARNED"
+  },
+  "SGI_G0": {
+    "criteria": {
+      "G0_coefficient_exact": {
+        "pass": true,
+        "threshold": 1e-08,
+        "value": 6.453650059672555e-14
+      },
+      "G0_design_full_rank": {
+        "pass": true,
+        "threshold": 0.0,
+        "value": 0.0
+      },
+      "G0_storage_exact": {
+        "pass": true,
+        "threshold": 1e-08,
+        "value": 4.804265686258081e-15
+      },
+      "G0_transition_exact": {
+        "pass": true,
+        "threshold": 1e-09,
+        "value": 1.4210854715202004e-14
+      }
+    },
+    "pass": true
+  },
+  "SGI_G1": {
+    "all_required_cells_pass": false,
+    "cells": {
+      "G1R1": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "metrics_pass": false,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": false,
+        "state": "ESTIMATED_FAILED_GATE",
+        "support_status": "NOT_SUPPORTED"
+      },
+      "G1R2": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "metrics_pass": false,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": false,
+        "state": "ESTIMATED_FAILED_GATE",
+        "support_status": "NOT_SUPPORTED"
+      },
+      "G1R3": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "metrics_pass": false,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": false,
+        "state": "ESTIMATED_FAILED_GATE",
+        "support_status": "NOT_SUPPORTED"
+      },
+      "G1R4": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "metrics_pass": false,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": false,
+        "state": "ESTIMATED_FAILED_GATE",
+        "support_status": "NOT_SUPPORTED"
+      },
+      "G1R5": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "metrics_pass": false,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": false,
+        "state": "ESTIMATED_FAILED_GATE",
+        "support_status": "NOT_SUPPORTED"
+      },
+      "G1R6": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "metrics_pass": false,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": false,
+        "state": "ESTIMATED_FAILED_GATE",
+        "support_status": "NOT_SUPPORTED"
+      }
+    },
+    "robustly_estimable": false
+  },
+  "SGI_G2_RAW": {
+    "all_required_cells_pass": false,
+    "cells": {
+      "G2R1": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [],
+        "metrics_pass": true,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": true,
+        "state": "ESTIMATED_PASSED_GATE",
+        "support_status": "SUPPORTED"
+      },
+      "G2R2": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [],
+        "metrics_pass": true,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": true,
+        "state": "ESTIMATED_PASSED_GATE",
+        "support_status": "SUPPORTED"
+      },
+      "G2R3": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [
+          "G2_strong_edge_f1"
+        ],
+        "metrics_pass": false,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": false,
+        "state": "ESTIMATED_FAILED_GATE",
+        "support_status": "NOT_SUPPORTED"
+      },
+      "G2R4": {
+        "estimability_rate": 1.0,
+        "failed_criteria": [
+          "G2_strong_edge_f1"
+        ],
+        "metrics_pass": false,
+        "n_estimated": 60,
+        "n_fit_failed": 0,
+        "n_not_estimable": 0,
+        "pass": false,
+        "state": "ESTIMATED_FAILED_GATE",
+        "support_status": "NOT_SUPPORTED"
+      }
+    },
+    "robustly_estimable": false
+  },
+  "SGI_G3": {
+    "evaluated_model_by_cell": {
+      "G3R1": "N",
+      "G3R1b": "N",
+      "G3R2": "N",
+      "G3R2b": "N",
+      "G3R3": "L",
+      "G3R4": "L"
+    },
+    "hard_failure": true,
+    "robustness_only": false,
+    "triggers": {
+      "G3_null_s6a_false_edges_any": {
+        "cells": [
+          "G3R1",
+          "G3R2"
+        ],
+        "oracle_cannot_compensate": true,
+        "per_cell": {
+          "G3R1": {
+            "evaluated_model": "N",
+            "triggered": true,
+            "value": 0.9666666666666667
+          },
+          "G3R2": {
+            "evaluated_model": "N",
+            "triggered": true,
+            "value": 0.48333333333333334
+          }
+        },
+        "realistic_triggered_cells": [
+          "G3R1"
+        ],
+        "severity": "HARD_FAILURE",
+        "triggered": true,
+        "triggered_cells": [
+          "G3R1",
+          "G3R2"
+        ],
+        "value": 0.725
+      },
+      "G3_null_s6a_false_edges_median": {
+        "cells": [
+          "G3R1",
+          "G3R2"
+        ],
+        "oracle_cannot_compensate": true,
+        "per_cell": {
+          "G3R1": {
+            "evaluated_model": "N",
+            "triggered": true,
+            "value": 3.0
+          },
+          "G3R2": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0
+          }
+        },
+        "realistic_triggered_cells": [
+          "G3R1"
+        ],
+        "severity": "HARD_FAILURE",
+        "triggered": true,
+        "triggered_cells": [
+          "G3R1"
+        ],
+        "value": 3.0
+      },
+      "G3_null_s6b_false_edges_any": {
+        "cells": [
+          "G3R1b",
+          "G3R2b"
+        ],
+        "oracle_cannot_compensate": true,
+        "per_cell": {
+          "G3R1b": {
+            "evaluated_model": "N",
+            "triggered": true,
+            "value": 0.9666666666666667
+          },
+          "G3R2b": {
+            "evaluated_model": "N",
+            "triggered": true,
+            "value": 0.26666666666666666
+          }
+        },
+        "realistic_triggered_cells": [
+          "G3R1b"
+        ],
+        "severity": "ROBUSTNESS_EVIDENCE",
+        "triggered": true,
+        "triggered_cells": [
+          "G3R1b",
+          "G3R2b"
+        ],
+        "value": 0.6166666666666667
+      },
+      "G3_null_s6b_false_edges_median": {
+        "cells": [
+          "G3R1b",
+          "G3R2b"
+        ],
+        "oracle_cannot_compensate": true,
+        "per_cell": {
+          "G3R1b": {
+            "evaluated_model": "N",
+            "triggered": true,
+            "value": 2.0
+          },
+          "G3R2b": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0
+          }
+        },
+        "realistic_triggered_cells": [
+          "G3R1b"
+        ],
+        "severity": "ROBUSTNESS_EVIDENCE",
+        "triggered": true,
+        "triggered_cells": [
+          "G3R1b"
+        ],
+        "value": 2.0
+      },
+      "G3_placebo_effect": {
+        "cells": [
+          "G3R3",
+          "G3R4"
+        ],
+        "oracle_cannot_compensate": true,
+        "per_cell": {
+          "G3R3": {
+            "evaluated_model": "L",
+            "triggered": true,
+            "value": 0.6
+          },
+          "G3R4": {
+            "evaluated_model": "L",
+            "triggered": true,
+            "value": 0.6
+          }
+        },
+        "realistic_triggered_cells": [
+          "G3R3",
+          "G3R4"
+        ],
+        "severity": "HARD_FAILURE",
+        "triggered": true,
+        "triggered_cells": [
+          "G3R3",
+          "G3R4"
+        ],
+        "value": 0.6
+      },
+      "G3_prediction_intervention_inversion": {
+        "cells": [
+          "G2R1",
+          "G2R2",
+          "G2R3",
+          "G2R4"
+        ],
+        "oracle_cannot_compensate": true,
+        "per_cell": {
+          "G2R1": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0
+          },
+          "G2R2": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0
+          },
+          "G2R3": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0
+          },
+          "G2R4": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0
+          }
+        },
+        "realistic_triggered_cells": [],
+        "severity": "HARD_FAILURE",
+        "triggered": false,
+        "triggered_cells": [],
+        "value": 0.0
+      },
+      "_hard_failure": true,
+      "_robustness_only": false
+    }
+  },
+  "analysis_seed_hash": "bd6db2aac7743cc83d5d5ecd8b5f07fefe18747649e3489a5b89e7e0cb689015",
+  "analysis_seeds_used": true,
+  "code_hash": "7cc64809bf240d7afea164c9a24a737c75de88a0b5e8d38f4e85b704f00d863c",
+  "design_hash": "b53f5594a444ae4826adfe2c47818080508a4c4b00a38fa25b4ffc483e20a8a5",
+  "estimability_statuses": {
+    "states": [
+      "NOT_ESTIMABLE",
+      "FIT_FAILED",
+      "ESTIMATED_FAILED_GATE",
+      "ESTIMATED_PASSED_GATE"
+    ],
+    "support_categories": [
+      "SUPPORTED",
+      "CONDITIONALLY_SUPPORTED_BUT_NOT_ROBUSTLY_ESTIMABLE",
+      "NOT_SUPPORTED",
+      "NOT_ESTIMABLE",
+      "FIT_FAILED"
+    ]
+  },
+  "replicate_count_expected": 7740,
+  "replicate_count_observed": 7740,
+  "source": "ANALYSIS",
+  "strongest_supported_claim": "LOCAL_RESPONSE_NOT_IDENTIFIED",
+  "strongest_unsupported_claim": "groundwater-response adequacy for planning is not claimed"
+}
