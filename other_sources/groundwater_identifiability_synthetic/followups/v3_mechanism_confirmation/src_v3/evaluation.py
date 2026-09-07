@@ -457,6 +457,12 @@ def _v3_diagnostics_block(design, system, trajectory, bundle, ladder, regime, re
         dQ = np.stack([dQ_fine[t * k : (t + 1) * k].sum(axis=0) for t in range(n_steps)], axis=0)
         a_true = np.diag(A_true_k)
         a_hat = np.diag(np.where(np.isfinite(A_hat_L), A_hat_L, 0.0))
+        # Algebraic recombination diagnostics for the RETAINED LOCAL TERMS only
+        # (own-lag diagonal and own-node pumping amplitude). Strong persistence-versus-
+        # pumping-response diagnostics on single-node / uncoupled systems. NOT an exact
+        # decomposition and NOT a complete partition of intervention error on coupled
+        # systems: omitted neighbour-state propagation lies outside the local family and
+        # is quantified separately by neighbor_unmodeled_floor.
         hat_trueA_hatB = v3diag.l_family_paired_response(a_true, beta_hat, dQ)
         if k == 1:
             beta_true = -system.B_Q

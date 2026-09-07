@@ -4,8 +4,43 @@
   "V3_ANALYSIS_OUTCOMES_INSPECTED": false,
   "V3_ANALYSIS_POOL_FROZEN": true,
   "V3_ANALYSIS_REPLICATES_RUN": 0,
-  "V3_CODE_HASH": "cb8c3377f143bf80a7612a95ff2dae049c3be70910f2f8180365a651bb494ac7",
-  "V3_DESIGN_HASH": "b2ab28a240a29ec2268dc46be8d850a8f1dcac1017e94fbdf8dfe133beb6e0e3",
+  "V3_CODE_HASH": "04630e6ac17aa075cabb3fcc6c6466ddeb45267286f67c384073b865bca3aa8c",
+  "V3_DESIGN_HASH": "ac15674161c1483011af1ddf9d4019493e36dbc7195c635f076b99de8735cade",
+  "analysis_launcher": {
+    "executes_frozen_plan_with_token": true,
+    "expected_replicates": 4200,
+    "preflight_only_flag": "--preflight-only",
+    "requires_token": true,
+    "script": "scripts_v3/run_v3.py"
+  },
+  "benchmark_layers": {
+    "companions": [
+      "F_intervention_pumped",
+      "neighbor_unmodeled_floor"
+    ],
+    "decomposition_is_additive": false,
+    "f_intervention_domain": "a in R (own-lag, unconstrained), kappa in R (own-node pumping amplitude, unconstrained); the frozen L fit imposes neither a sign constraint nor a stability box",
+    "ordering": [
+      "F_intervention_all",
+      "F_train_true",
+      "F_train_obs",
+      "fitted_nire_L"
+    ]
+  },
+  "benchmark_pool": {
+    "convergence_prefixes": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "n_seeds": 128,
+    "name": "V3_BENCHMARK",
+    "prefix_nesting_verified": true,
+    "previous_n_seeds_pass1": 16,
+    "role": "F_train_true / F_train_obs pseudo-true Monte Carlo approximation only"
+  },
+  "checkpoint": "PASS_1_1_FINAL_PRE_ANALYSIS_FREEZE",
   "code_globs": [
     "src_v3/*.py",
     "scripts_v3/*.py",
@@ -17,7 +52,7 @@
     "BENCHMARK_DEFINITIONS.md"
   ],
   "design_version": "design_v3",
-  "frozen_at_utc": "2026-09-07T08:29:55.283876+00:00",
+  "frozen_at_utc": "2026-09-07T17:11:45.668978+00:00",
   "gates": {},
   "legal_mode_pairs": [
     [
@@ -31,18 +66,36 @@
   ],
   "n_seeds": {
     "V3_ANALYSIS": 200,
-    "V3_BENCHMARK": 16,
+    "V3_BENCHMARK": 128,
     "V3_DETERMINISM": 5,
     "V3_SMOKE": 3
+  },
+  "pass_1_1_change_summary": {
+    "ANALYSIS_seed_count_changed": 0,
+    "ANALYSIS_seeds_per_cell": 200,
+    "BENCHMARK_pool_count_change": "16 -> 128",
+    "benchmark_definitions_changed": true,
+    "cells_changed": 0,
+    "launcher_now_executes_frozen_full_run": true,
+    "resolved_cell_count": 21,
+    "source_changes_required_for_pass_2": 0
   },
   "platform": "Linux-5.14.0-687.39.1.el9_8.x86_64-x86_64-with-glibc2.28",
   "resolved_cell_count": 21,
   "resolved_cell_manifest_hash": "d5836258e55e672f023840b016d97eca61365b0f44d05b08cc8451b27aeb5e72",
   "seed_pool_hashes": {
     "V3_ANALYSIS": "fff5ff4f3ab7b0e4947540eec815545f82723b4111dab761a55aa44f4d095b3f",
-    "V3_BENCHMARK": "cb49b45b33c0f6246f343af06caab2d3d43492a5589c6568bfd69a0b2ee55fc0",
+    "V3_BENCHMARK": "78e944faa625b8cb6639c43fcb4f78bbafd2ebacc57dd99d5b88885acb41010c",
     "V3_DETERMINISM": "044a7b69d72ec79924fbe843a54de3208c1033c5f23eb614839eca0792667677",
     "V3_SMOKE": "dcbdc424a2d30fa4425e4fca95e580a57570f95dbb97f3e56f5c19a7ca2632ea"
+  },
+  "summarizer": {
+    "across_seed_bootstrap_resamples": 10000,
+    "emits_gates": false,
+    "emits_support_status": false,
+    "entrypoint": "summarize_analysis",
+    "module": "src_v3/summarize_v3.py",
+    "reinterprets_v2": false
   },
   "v2_seed_pool_hashes": {
     "ANALYSIS": "bd6db2aac7743cc83d5d5ecd8b5f07fefe18747649e3489a5b89e7e0cb689015",

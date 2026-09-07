@@ -56,3 +56,25 @@ collinearity, pairing metadata. No V3 SESOI gates.
 - `src_v3/metrics.py`
 - `src_v3/models.py`
 - `src_v3/summarize.py`
+
+## Pass 1.1 additions and changes (no new vendored divergence)
+
+New files with no V2 parent, added or rewritten in Pass 1.1:
+
+- `src_v3/benchmarks.py` — rewritten: four-layer benchmark decomposition,
+  `F_intervention_all` / `F_intervention_pumped`, exact global optimisation over the frozen L
+  response family, `F_train_true` / `F_train_obs`, nested-prefix convergence.
+- `src_v3/diagnostics.py` — added `neighbor_unmodeled_floor` and the frozen
+  recombination-diagnostic wording.
+- `src_v3/summarize_v3.py` — rewritten as the complete frozen ANALYSIS summarizer.
+- `scripts_v3/run_v3.py` — rewritten as the executable frozen 21 × 200 ANALYSIS launcher.
+- `scripts_v3/compute_benchmarks.py` — rewritten for the four-layer benchmarks and
+  convergence output.
+- `scripts_v3/freeze_protocol_v3.py` — extended provenance (benchmark pool, Pass-1.1 change
+  summary, launcher and summarizer descriptors, prefix-nesting verification).
+- `tests_v3/test_benchmark_layers.py`, `tests_v3/test_intervention_benchmarks.py`,
+  `tests_v3/test_launcher_v3.py`, `tests_v3/test_analysis_summarizer.py` — new.
+
+**No vendored V2 file changed its classification in Pass 1.1.** The set of changed vendored
+files is exactly the set listed above under "Intentional changes to vendored files", and every
+other vendored file still matches its V2 parent byte-for-byte.

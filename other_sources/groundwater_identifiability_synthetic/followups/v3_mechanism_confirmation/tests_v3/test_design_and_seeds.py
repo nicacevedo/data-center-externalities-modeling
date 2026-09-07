@@ -76,9 +76,42 @@ def test_seed_pool_disjointness(design):
             assert not overlap, f"{names[i]} overlaps {names[j]}"
     assert len(v3_pools["V3_ANALYSIS"]) == 200
     _ = seed_pool_hash(design, "V3_ANALYSIS")  # materialize-for-hash only
+    assert seed_pool_hash(design, "V3_ANALYSIS") == (
+        "fff5ff4f3ab7b0e4947540eec815545f82723b4111dab761a55aa44f4d095b3f"
+    )
+    assert seed_pool_hash(design, "V3_DETERMINISM") == (
+        "044a7b69d72ec79924fbe843a54de3208c1033c5f23eb614839eca0792667677"
+    )
+    assert seed_pool_hash(design, "V3_SMOKE") == (
+        "dcbdc424a2d30fa4425e4fca95e580a57570f95dbb97f3e56f5c19a7ca2632ea"
+    )
 
 
-def test_analysis_outcomes_not_present(v3_root):
+def test_analysis_n_200_and_benchmark_n_128(design):
+    assert int(design["v3"]["n_analysis_seeds_per_cell"]) == 200
+    assert int(design["seeds"]["pools"]["V3_ANALYSIS"]["n_seeds"]) == 200
+    assert int(design["seeds"]["pools"]["V3_BENCHMARK"]["n_seeds"]) == 128
+    assert int(design["seeds"]["pools"]["V3_SMOKE"]["n_seeds"]) == 3
+
+
+def test_live_hashes_match_frozen_provenance(v3_root):
+    import json
+
+    from src_v3.design import code_hash, design_hash, seed_pool_hash, load_design
+
+    freeze_path = v3_root / "outputs" / "provenance" / "DESIGN_V3_FREEZE.json"
+    freeze = json.loads(freeze_path.read_text(encoding="utf-8"))
+    assert freeze["resolved_cell_count"] == 21
+    assert freeze["n_seeds"]["V3_ANALYSIS"] == 200
+    assert freeze["n_seeds"]["V3_BENCHMARK"] == 128
+    assert freeze.get("checkpoint") == "PASS_1_1_FINAL_PRE_ANALYSIS_FREEZE"
+    assert freeze["V3_ANALYSIS_REPLICATES_RUN"] == 0
+    assert freeze["V3_ANALYSIS_OUTCOMES_INSPECTED"] is False
+    assert design_hash() == freeze["V3_DESIGN_HASH"]
+    assert code_hash() == freeze["V3_CODE_HASH"]
+    design = load_design()
+    assert seed_pool_hash(design, "V3_ANALYSIS") == freeze["seed_pool_hashes"]["V3_ANALYSIS"]
+    assert seed_pool_hash(design, "V3_BENCHMARK") == freeze["seed_pool_hashes"]["V3_BENCHMARK"]
     analysis_dir = v3_root / "outputs" / "analysis"
     if analysis_dir.exists():
         assert not list(analysis_dir.glob("*replicates*"))

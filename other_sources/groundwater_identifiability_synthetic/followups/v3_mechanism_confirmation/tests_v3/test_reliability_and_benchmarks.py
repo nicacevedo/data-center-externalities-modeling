@@ -133,8 +133,9 @@ def test_f_intervention_zero_on_uncoupled_single_node(design):
     traj = dgp.simulate(design, system, regime, rng, {}, streams=streams)
     bundle = make_observations(design, system, traj, regime, rng, streams=streams)
     result = f_intervention_for_system(design, system, traj, bundle)
-    assert result["F_intervention"] < 1e-3
-    assert result["F_intervention_certified"]
+    assert result["F_intervention_all"] < 1e-3
+    assert result["F_intervention_pumped"] < 1e-3
+    assert result["F_intervention_global_certified"]
 
 
 def test_no_truth_leakage_into_fitting():

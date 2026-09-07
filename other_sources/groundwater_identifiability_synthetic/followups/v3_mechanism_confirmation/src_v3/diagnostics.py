@@ -1,6 +1,20 @@
 """V3-only diagnostics: coupling materiality, signed persistence error, recombinations.
 
 These operate in the evaluation layer. They never feed coefficients back into fitting.
+
+Recombination-diagnostic language (frozen wording, Pass 1.1)
+------------------------------------------------------------
+`nire_recomb_trueA_hatB` and `nire_recomb_hatA_trueB` are **algebraic recombination
+diagnostics for the retained local terms** of the frozen model-L response family: the
+own-lag diagonal and the own-node pumping amplitude.
+
+* For single-node and uncoupled systems they are strong algebraic diagnostics that
+  separate persistence error from pumping-response error, because those two terms are
+  the whole family.
+* For coupled systems they are **not** an exact decomposition and **not** a complete
+  partition of intervention error. The omitted neighbour-state propagation lies outside
+  the local family altogether and is not decomposed by these two quantities; it is
+  quantified separately and exactly by `neighbor_unmodeled_floor`.
 """
 
 from __future__ import annotations
@@ -8,6 +22,16 @@ from __future__ import annotations
 import numpy as np
 
 from . import metrics
+
+
+RECOMBINATION_SEMANTICS = (
+    "Algebraic recombination diagnostics for the retained local terms (own-lag diagonal and "
+    "own-node pumping amplitude) of the frozen model-L response family. Strong algebraic "
+    "diagnostics of persistence-versus-pumping-response error for single-node / uncoupled "
+    "systems. NOT an exact decomposition and NOT a complete partition of intervention error "
+    "for coupled systems: omitted neighbour-state propagation lies outside the local family "
+    "and is quantified separately by neighbor_unmodeled_floor."
+)
 
 
 def neighbour_flux_share(system, trajectory) -> float:
@@ -89,3 +113,42 @@ def inclusion_mask(delta_true: np.ndarray, threshold: float) -> np.ndarray:
     if not np.isfinite(norms).any() or float(np.nanmax(norms)) <= 0:
         return np.zeros(delta_true.shape[1], dtype=bool)
     return norms >= threshold * float(np.nanmax(norms))
+
+
+def neighbor_unmodeled_floor(
+    delta_true: np.ndarray,
+    include: np.ndarray,
+    steps: int,
+    pumped: int = 0,
+) -> float:
+    """Exact known-truth representational floor of the own-pumping-only local family.
+
+    Under a single-node intervention the frozen L recursion drives a non-pumped node `j`
+    only through `beta_q[j] * delta_Q_interval[t, j]`, and `delta_Q_interval[:, j] == 0`
+    for every non-pumped node. With `A` diagonal the state therefore stays identically
+    zero at `j` for every admissible `(a_j, beta_q_j)`: L structurally cannot propagate a
+    withdrawal to a hydraulically affected non-pumped unit.
+
+    This function evaluates that structural zero through the SAME frozen NIRE routine,
+    norm, scoring instants and node weighting used by `F_intervention_all`, while giving
+    the pumped node its ideal (zero-error) contribution. The result is the irreducible
+    normalized error contributed solely by unmodelled neighbour propagation.
+
+    Because frozen NIRE averages *per-node* ratios of L2 norms, and a structurally-zero
+    prediction has per-node normalized error exactly ``||0 - true_j|| / ||true_j|| = 1``,
+    this evaluates in closed form to
+
+        n_included_nonpumped / n_included
+
+    which is why realized values land on 1/2, 2/3, 4/5, ... as the number of materially
+    affected neighbours grows. That is a consequence of the frozen metric's node
+    weighting, **not** a hydraulic-coupling threshold.
+    """
+    delta_true = np.asarray(delta_true, float)
+    include = np.asarray(include, bool)
+    if not include.any():
+        return float("nan")
+    hat = np.zeros_like(delta_true)
+    if 0 <= pumped < delta_true.shape[1]:
+        hat[:, pumped] = delta_true[:, pumped]
+    return persistent_nire(delta_true, hat, include, steps)

@@ -8,7 +8,7 @@
 # Hypotheses are post-hoc relative to V2 and prospective relative to V3.
 #
 design_version: design_v3
-design_status: FROZEN_PASS1
+design_status: FROZEN_PASS1_1
 parent_design: design_v2
 parent_checkpoint_commit: 1b95209b1a2f0e20ae8bfac3910bd5359a420c82
 scope_token: V3_MECHANISM_CONFIRMATION_ONLY
@@ -284,7 +284,7 @@ observation:
       description: exact absolute pumping in model flux units
       absolute_scale_known: true
     P-MULTNOISE:
-      description: multiplicative measurement noise, median-corrected to be mean-unbiased
+      description: multiplicative measurement noise, mean-corrected unit-mean (E[m]=1; median exp(-s^2/2))
       form: Q_obs = Q_true_interval * exp(N(0, s^2) - s^2/2)
       s_default: 0.1
       absolute_scale_known: true
@@ -761,11 +761,41 @@ seeds:
     V3_ANALYSIS:
       entropy: 20260907030003
       n_seeds: 200
-      role: substantive inference; outcomes unused in Pass 1
+      role: substantive inference; outcomes unused in Pass 1 / Pass 1.1
     V3_BENCHMARK:
       entropy: 20260907030004
-      n_seeds: 16
-      role: F_train Monte Carlo approximation only
+      n_seeds: 128
+      previous_n_seeds_pass1: 16
+      n_seeds_change_rationale: 'Pass-1.1 pre-ANALYSIS correction. At n=16 several single-node /
+        cadence-4 cells showed split-half benchmark-NIRE instability of order 0.07-0.10, which is
+        too large relative to the preregistered 0.05 NIRE SESOI for a benchmark carrying major
+        interpretive weight. Fixed prospectively at 128 before any V3 ANALYSIS replicate exists.
+        Benchmark n is NOT adapted after inspecting convergence.
+
+        '
+      role: F_train_true / F_train_obs pseudo-true Monte Carlo approximation only
+      convergence_prefixes:
+      - 16
+      - 32
+      - 64
+      - 128
+      prefix_nesting: 'SeedSequence(entropy).spawn(n) is sequential, so spawn(128)[:m] == spawn(m)
+        for m in {16, 32, 64}. The convergence prefixes are therefore strictly nested subsets of
+        one deterministic frozen pool, not four separate pools.
+
+        '
+      convergence_reported_quantities:
+      - F_train_true_nire
+      - F_train_obs_nire
+      - pseudo_true_own_level_coefficient_a
+      - pseudo_true_pumping_coefficient_beta_q
+      - pseudo_true_recharge_coefficient
+      convergence_use: 'Reported as pre-defined benchmark diagnostics only. They may not be used to
+        select n, to alter cells, sigma, gamma, n_ANALYSIS, hypotheses or SESOI. If the benchmark is
+        still grossly unstable at 128 the protocol STOPS for external review rather than expanding
+        the pool post hoc.
+
+        '
   disjointness_required: true
   analysis_pool_may_be_materialized_for_hashing: true
   analysis_outcomes_inspected_pass1: false
@@ -1038,6 +1068,26 @@ v3:
   V3_ANALYSIS_POOL_FROZEN: true
   V3_ANALYSIS_REPLICATES_RUN: 0
   V3_ANALYSIS_OUTCOMES_INSPECTED: false
+  summarizer:
+    across_seed_bootstrap_resamples: 10000
+    across_seed_bootstrap_unit: seed
+    across_seed_bootstrap_kind: percentile
+    interval_nominal: 0.95
+    interval_kind: pointwise_percentile_bootstrap_over_seeds
+    interval_semantics: 'Pointwise Monte Carlo uncertainty intervals for individual estimands.
+      NOT simultaneous family-wise confidence bands over all V3 contrasts.
+
+      '
+    rate_interval_kind: wilson
+    bootstrap_stream_derivation: 'SHA-256 of the contrast label; independent of the V3_ANALYSIS
+      seed values, so resampling is deterministic and reproducible without touching the analysis
+      seed stream.
+
+      '
+    emits_gates: false
+    emits_support_status: false
+    emits_p_values: false
+    reinterprets_v2: false
   cell_ids:
   - A_PEXACT
   - A_S025
@@ -1497,3 +1547,102 @@ block_d_factorial:
   outcomes:
   - placebo_false_effect_L
   - placebo_relative_to_true_L
+benchmark_layers:
+  role: 'Frozen four-layer benchmark decomposition for the V3 mechanism-confirmation study. NESTED BENCHMARK
+    COMPARISONS, not an exact additive decomposition: frozen NIRE is a mean over included nodes of per-node
+    ratios of L2 norms, and that algebra does not license writing the fitted error as a sum of the benchmark
+    levels plus differences.'
+  ordering:
+  - F_intervention_all
+  - F_train_true
+  - F_train_obs
+  - fitted_nire_L
+  layers:
+    F_intervention_all:
+      layer: 1
+      definition: 'Minimum frozen persistent-step NIRE attainable by the ACTUAL frozen model-L response
+        family (diagonal own-lag A, own-node pumping drive only), scored on the exact planning-relevant
+        frozen NIRE scoring set: all materially affected included nodes at all frozen cadence-sampled
+        scoring instants, primary horizon h=26.'
+      deterministic: true
+      licensed: minimum intervention-response error attainable by the frozen local response family
+      not_licensed: no local groundwater model can represent cross-node dynamics
+    F_train_true:
+      layer: 2
+      definition: Intervention NIRE of the pseudo-true one-step model-L target obtained when the one-step
+        fitting objective is evaluated on the LATENT TRUE variables (true head state h_t, true next head
+        h_{t+k}, true pumping Q, true recharge R) under the exact frozen cadence transformation, on the
+        same cadence-specific TRAIN time support and the same admissible-row structure as the observed-data
+        target.
+      deterministic: false
+      monte_carlo_pool: V3_BENCHMARK
+      licensed: training-target / functional-approximation gap of the one-step objective relative to the
+        intervention-optimal member of the same frozen family
+      not_licensed: 'pure objective mismatch: other unavoidable functional restrictions of the frozen
+        family remain in force on both sides of the comparison'
+    F_train_obs:
+      layer: 3
+      definition: 'Intervention NIRE of the pseudo-true one-step target of the ACTUAL observed-data estimator
+        under the frozen observation regime: observed/noisy lagged head, observed pumping, recharge proxy,
+        actual confounding regime, actual missingness and admissible rows, actual cadence, pooled over
+        the frozen V3_BENCHMARK distribution. This is the asymptotic target of the estimator actually
+        being tested.'
+      deterministic: false
+      monte_carlo_pool: V3_BENCHMARK
+      licensed: asymptotic cost of measurement / proxy / forcing corruption under the frozen estimator
+      not_licensed: isolation of any single individual measurement channel
+    fitted_nire_L:
+      layer: 4
+      definition: actual finite-sample V3 model-L estimator NIRE over the V3_ANALYSIS pool
+      deterministic: false
+      evaluated_in: PASS_2
+  gaps:
+    F_intervention_all__to__F_train_true: training-target / functional-approximation cost
+    F_train_true__to__F_train_obs: asymptotic observation / proxy / forcing-data bias
+    F_train_obs__to__fitted_nire_L: finite-sample estimation cost
+  common_support_note: F_train_true and F_train_obs share the admissible-row support and the confounded
+    true forcing distribution by construction. The layer-2 to layer-3 gap is therefore a statement about
+    VALUE corruption (measurement, proxy, lag, forcing) and not about row attrition or about confounding
+    per se.
+  companions:
+    F_intervention_pumped:
+      definition: The same layer-1 minimisation scored ONLY on the directly pumped intervention node,
+        using the exact same normalized response geometry restricted to that node.
+      role: diagnostic companion; distinguishes 'can L represent the DIRECT local response?' from 'can
+        L represent CROSS-UNIT propagated groundwater externalities?'. Never replaces the planning-relevant
+        all-node metric.
+    neighbor_unmodeled_floor:
+      definition: 'Exact known-truth representational floor: the frozen all-node NIRE of the structurally-zero
+        model-L prediction at materially affected non-pumped nodes, with the pumped node given its ideal
+        zero-error contribution, using the same norm, scoring instants and node weighting as the frozen
+        all-node NIRE. Under that node-averaged per-node-normalized algebra it equals n_included_nonpumped
+        / n_included exactly, which is why realized values land on 1/2, 2/3, 4/5 as the number of materially
+        affected neighbours grows.'
+      role: known-truth representational floor induced by the own-pumping-only local structure. NOT a
+        hydraulic-coupling threshold.
+      invariant: F_intervention_all >= neighbor_unmodeled_floor
+  f_intervention_global_validity:
+    parameter_domain: a in R (own-lag, unconstrained), kappa in R (own-node pumping amplitude, unconstrained);
+      the frozen L fit imposes neither a sign constraint nor a stability box
+    strategy: Amplitude profiled analytically, leaving NIRE_pumped(a)^2 = 1 - c(a)^2 / Q(a), an explicit
+      rational function of one parameter with Q(a) >= d_0^2 > 0 for all real a, hence no real poles, continuous
+      on the two-point compactification R union {+-inf} with limit exactly yhat_last^2. A global optimum
+      therefore exists and is attained at a real stationary point or in that limit. All stationary points
+      are enumerated exactly as the real roots of the polynomial c * (2 dc Q - c dQ) (dc, dQ the derivatives
+      of c, Q) via companion-matrix eigenvalues, and cross-checked against an independent dense scan over
+      the compactified coordinate u = a/(1+|a|) on the CLOSED interval [-1, 1] with the analytic endpoint
+      limits. This is a global argument over the complete algebraic response family, not a finite search
+      window.
+    value_reporting: The rational form LOCATES the optimum; the value there is REPORTED from the direct
+      residual norm, because sqrt(1 - rho^2) has absolute resolution only sqrt(machine eps) when the true
+      minimum is zero.
+    fallback_name_if_not_global: F_intervention_verified_domain
+  recombination_diagnostics:
+    quantities:
+    - nire_recomb_trueA_hatB
+    - nire_recomb_hatA_trueB
+    semantics: 'Algebraic recombination diagnostics for the RETAINED LOCAL TERMS (own-lag diagonal and
+      own-node pumping amplitude). For single-node / uncoupled systems they are strong algebraic diagnostics
+      of persistence-versus-pumping-response error. For coupled systems they are NOT an exact decomposition
+      and NOT a complete partition of intervention error: the omitted neighbour-state propagation lies
+      outside the local family and is quantified separately and exactly by neighbor_unmodeled_floor.'

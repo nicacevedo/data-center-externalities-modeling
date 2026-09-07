@@ -1,13 +1,14 @@
 ---
 
-# V3 Prospective Mechanism-Confirmation Study — **Canonical Protocol (Pass 1 freeze)**
+# V3 Prospective Mechanism-Confirmation Study — **Canonical Protocol (Pass 1.1 freeze)**
 
-**Status:** canonical V3 protocol after final external-review corrections. 21 cells and n=200 unchanged. This file is the implementation source of truth.
+**Status:** canonical V3 protocol after the Pass 1.1 final pre-analysis freeze. 21 cells and n=200 unchanged. This file is the implementation source of truth.
 
 **Revision log.**
 
 - *Prior revision:* nine mandatory scientific corrections (benchmarks split; `IDENTIFICATION_REGIME`; dual RNG/system-seed modes; SESOI not gates; CRN SD bound; pairing tiers; γ=NONE; synthetic `neighbour_flux_share`; preserved 21-cell design).
-- *This revision (final external-review corrections, pre-implementation):* (4.1) `gamma=NONE` uses the existing validated V2 zero-coupling branch, not a new S6a-like formula; (4.2) pumping error is **mean-corrected unit-mean multiplicative lognormal**, not median-corrected; (4.3) `F_train` is the cadence-specific TRAIN-distribution one-step target, with `V3_BENCHMARK` if MC is required — not a claim of stationarity; (4.4–4.5) `F_intervention` is over the **actual unconstrained own-pumping L family**, no invented sign/`a∈[0,a_max]` constraints; (4.6) ANALYSIS pool may be materialized for hashing (`V3_ANALYSIS_POOL_FROZEN=true`) but outcomes remain uninspected; (4.7) Block D reports the three-way interaction as secondary; (4.8) `D_PM_RN_R3` is an external-consistency anchor, not a numeric reproduction gate; (4.9) zero-edge F1/precision/recall follow actual V2 NaN semantics; (4.10) 95% intervals are pointwise Monte Carlo intervals, not family-wise bands.
+- *Pass 1 implementation freeze:* (4.1) `gamma=NONE` uses the existing validated V2 zero-coupling branch, not a new S6a-like formula; (4.2) pumping error is **mean-corrected unit-mean multiplicative lognormal**, not median-corrected; (4.3) `F_train` is the cadence-specific TRAIN-distribution one-step target, with `V3_BENCHMARK` if MC is required — not a claim of stationarity; (4.4–4.5) `F_intervention` is over the **actual unconstrained own-pumping L family**, no invented sign/`a∈[0,a_max]` constraints; (4.6) ANALYSIS pool may be materialized for hashing (`V3_ANALYSIS_POOL_FROZEN=true`) but outcomes remain uninspected; (4.7) Block D reports the three-way interaction as secondary; (4.8) `D_PM_RN_R3` is an external-consistency anchor, not a numeric reproduction gate; (4.9) zero-edge F1/precision/recall follow actual V2 NaN semantics; (4.10) 95% intervals are pointwise Monte Carlo intervals, not family-wise bands.
+- *This revision (Pass 1.1 final pre-analysis freeze):* (5.1) the single `F_train` is replaced by `F_train_true` and `F_train_obs`; (5.2) the paper-safe decomposition is the nested four-layer comparison `F_intervention_all -> F_train_true -> F_train_obs -> fitted NIRE`, not an additive error split; (5.3) `V3_BENCHMARK` n = 16 → 128, frozen prospectively, with nested-prefix diagnostics at 16/32/64/128; (5.4) `F_intervention` global validity is an exact rational-profile argument over `a ∈ ℝ ∪ {±∞}`, not a finite `[-2.5, 2.5]` search; (5.5) intervention representability is stored as `F_intervention_all` and `F_intervention_pumped` plus the exact `neighbor_unmodeled_floor`; (5.6) recombination diagnostics are algebraic diagnostics of the retained local terms, not a complete partition on coupled systems; (5.7) `run_v3.py` executes the frozen 21 × 200 plan under authorization, so Pass 2 requires zero source-code changes. Cells, n=200, Blocks A/A′/B/C/D, CRN, `orthogonal_v3`, S8 factorial, no V3 gates, and V2 immutability are unchanged.
 
 ---
 
@@ -337,7 +338,7 @@ Frozen before execution; **post-hoc relative to v2 and prospective relative to v
 |---|---|---|---|---|
 | P1 | `nire_persistent_step_h26_L` | `A_PEXACT` vs `A_S100` (Tier 1) | paired median difference + 95% bootstrap interval | does exact metering fix uncoupled local intervention recovery at k=4 |
 | P2 | `beta_q_ratio_vs_exact` (derived), `partial_reliability_q` | `A_*` ladder (Tier 1) | paired median of ratio, and of ratio − $\hat\lambda^{\text{partial}}$ | is the attenuation the size measurement-error theory predicts |
-| P3 | `nire_persistent_step_h26_L` + the §J benchmark triple | `B_GNONE`→`B_GHIGH` (Tier 3) | paired median differences; deterministic benchmark profiles | does coupling break the local model when data are excellent, and at which stage |
+| P3 | `nire_persistent_step_h26_L` + the §J four-layer benchmarks | `B_GNONE`→`B_GHIGH` (Tier 3) | paired median differences; deterministic benchmark profiles | does coupling break the local model when data are excellent, and at which stage |
 | P4 | `strong_edge_undirected_f1`, `edge_precision`, `false_edge_count` | `C_REAL_Gγ` vs `B_Gγ`; `B_GMED` vs `B_GHIGH` (Tier 3) | paired median differences | separating the identification bundle from edge strength |
 | P5 | `placebo_false_effect_L` rate; `placebo_relative_to_true_L` | Block D 2×2×2 | Wilson intervals; three marginal contrasts; paired continuous medians | which forcing channel causes false attribution |
 
@@ -348,9 +349,9 @@ Frozen before execution; **post-hoc relative to v2 and prospective relative to v
 | `relative_shape_error_persistent_step_L` | shape-versus-amplitude discriminator. v2 median 0.037 against NIRE 0.849 ⇒ amplitude failure. Suggestive only: v2 shows shape stays below 0.20 in 124/128 cells including coupled ones. |
 | `nire_persistent_step_h{4,13,52}_L` | error growth with horizon: "wrong from step one" versus "accumulated" |
 | `A_diag_signed_relative_error_L` (**new, signed**) | v2 stored only the unsigned value, which is why the audit could not determine the direction of persistence bias |
-| `nire_recomb_trueA_hatB`, `nire_recomb_hatA_trueB` (**new**) | exact partition of intervention error between persistence and response-magnitude terms, replacing v2's analytic-sensitivity fallback |
-| `nire_pop_one_step_pseudotrue_L` = $F_{\text{train}}$ (**new**) | §J.4 — the one-step-trained estimator target |
-| `nire_intervention_optimal_local_family` = $F_{\text{intervention}}$ (**new**) | §J.5 — representational benchmark of the frozen local response family |
+| `nire_recomb_trueA_hatB`, `nire_recomb_hatA_trueB` (**new**) | algebraic recombination diagnostics for the retained local terms (own-lag diagonal and own-node pumping amplitude). Strong persistence-versus-pumping-response diagnostics on single-node / uncoupled systems. **Not** an exact decomposition or complete partition of intervention error on coupled systems: omitted neighbour-state propagation lies outside the local family and is quantified separately by `neighbor_unmodeled_floor`. |
+| `F_train_true`, `F_train_obs` (**new, Pass 1.1**) | §J.4 — latent-true vs observed-data one-step pseudo-true targets |
+| `F_intervention_all`, `F_intervention_pumped`, `neighbor_unmodeled_floor` (**new, Pass 1.1**) | §J.5 — representational benchmark of the frozen local response family, plus the pumped-node companion and the exact own-pumping-only neighbour floor |
 | `partial_reliability_q`, `uncond_reliability_q`, `theory_reliability_q` (**new**) | §I; reporting the unconditional form alongside demonstrates why it is the wrong diagnostic |
 | `neighbour_flux_share` (**new**) | **synthetic dimensionless physical-materiality diagnostic** (correction 8): the share of the true one-step head increment carried by cross-node conductance terms, averaged over the analysis window. It expresses coupling materiality on a scale internal to the simulation, in place of the uninterpretable γ label. It is **not** a directly observable field quantity: estimating it in Andhra Pradesh would itself require a calibrated hydrogeological model, which is out of v3's scope and is not assumed available. |
 | `pumping_excitation_fraction_L`, `condition_number_L`, `max_vif_L` | conditioning controls; confirm the σ ladder is not silently changing design conditioning |
@@ -417,30 +418,40 @@ Block B holds pumping at `P-EXACT` and every observation factor at the favorable
 
 **J.2 Shape versus amplitude.** `relative_shape_error_persistent_step_L` across γ. Suggestive only, for the reason noted in §H.
 
-**J.3 Exact error decomposition.** `nire_recomb_trueA_hatB` (true $A^k$ diagonal with the estimated pumping response) and `nire_recomb_hatA_trueB` (estimated transition with the pseudo-true coarse pumping response), each pushed through the *same* frozen intervention/NIRE routine. This is the decomposition the audit wanted and could not compute, without refitting.
+**J.3 Algebraic recombination diagnostics.** `nire_recomb_trueA_hatB` (true $A^k$ diagonal with the estimated pumping response) and `nire_recomb_hatA_trueB` (estimated transition with the pseudo-true coarse pumping response), each pushed through the *same* frozen intervention/NIRE routine. These are **algebraic recombination diagnostics for the retained local terms**. For single-node / uncoupled systems they are strong diagnostics of persistence-versus-pumping-response error. For coupled systems they are **not** an exact decomposition and **not** a complete partition of intervention error: omitted neighbour-state propagation lies outside the local family and is quantified separately by `neighbor_unmodeled_floor`.
 
-### J.4 `population_one_step_pseudotrue_benchmark` — $F_{\text{train}}(\gamma)$
+### J.4 Two training-target benchmarks — $F_{\text{train\_true}}$ and $F_{\text{train\_obs}}$
 
-**Definition.** Population / pseudo-true one-step model-L parameters under the V3 cell's **exact data-generating process, cadence, deterministic seasonal structure, intervention-independent forcing distribution, and TRAIN-transition support** — not a claim that the DGP is strictly stationary. The frozen truth has finite-horizon seasonal structure; `F_train` is the one-step L2 projection of next-head onto the actual L regressors as they appear in TRAIN rows of that process.
+The Pass-1 single quantity `F_train` mixed the one-step training objective with measurement/proxy/forcing corruption. Pass 1.1 splits it.
 
-If an analytic expectation is unavailable, approximate it by Monte Carlo using the dedicated pool:
+#### $F_{\text{train\_true}}$
+
+Intervention NIRE of the pseudo-true one-step L target when the one-step fitting objective is evaluated on the **latent true variables** (`h_t`, `h_{t+k}`, true $Q$, true $R$) under the exact frozen cadence transformation, on the **same TRAIN time support and admissible-row structure** as the observed-data target. Cadence, truth physics, topology, γ and the TRAIN horizon are unaltered. This removes measurement/proxy corruption while retaining the current one-step objective and the current local functional family.
+
+**Licensed reading of $F_{\text{intervention\_all}}\to F_{\text{train\_true}}$:** training-target / functional-approximation gap relative to the intervention-optimal member of the same frozen family. **Not** licensed as pure "objective mismatch": unavoidable functional restrictions of the frozen family remain in force on both sides.
+
+#### $F_{\text{train\_obs}}$
+
+Intervention NIRE of the pseudo-true one-step target of the **actual observed-data estimator** under the frozen observation regime: observed/noisy lagged head, observed pumping, recharge proxy, actual confounding, actual missingness/admissible rows, actual cadence, pooled over the frozen `V3_BENCHMARK` distribution. This is the asymptotic target of the estimator actually being tested.
+
+**Licensed reading of $F_{\text{train\_true}}\to F_{\text{train\_obs}}$:** asymptotic cost of measurement / proxy / forcing-data corruption under the frozen estimator. Does **not** isolate one individual measurement channel unless another experimental contrast does so.
+
+If an analytic expectation is unavailable, approximate both by Monte Carlo using the dedicated pool:
 
 ```text
 V3_BENCHMARK
 entropy 20260907030004
+n = 128   (Pass 1.1; was 16 at Pass 1)
+convergence prefixes 16 / 32 / 64 / 128, strictly nested
 ```
 
-This pool is deterministic, disjoint from V3 ANALYSIS / SMOKE / DETERMINISM and from all V2 pools, fixed before V3 ANALYSIS, and used **only** to approximate deterministic pseudo-true benchmark quantities. Store convergence diagnostics (coefficient MC SE, NIRE MC SE vs pooled fit). Do not use `V3_ANALYSIS` seeds.
+This pool is deterministic, disjoint from V3 ANALYSIS / SMOKE / DETERMINISM and from all V2 pools, fixed before V3 ANALYSIS, and used **only** to approximate deterministic pseudo-true benchmark quantities. Nested-prefix coefficient and NIRE diagnostics are stored. They may not be used to select n or to alter cells, sigma, gamma, n_ANALYSIS, hypotheses or SESOI. Do not use `V3_ANALYSIS` seeds. If the benchmark is still grossly unstable at 128, STOP for external review; do not expand the pool post hoc.
 
-Then push those coefficients through the frozen NIRE routine.
+**What $F_{\text{train\_obs}}$ licenses.** High $F_{\text{train\_obs}}$ supports: *better finite samples cannot repair the intervention behavior of the current one-step-trained observed-data population target.*
 
-**What it is.** The intervention behaviour of the current one-step-trained population target.
+**What neither licenses.** Neither is a lower bound over the local model class. Any statement of the form "no member of the local model class can do better" is **not** supported by these quantities.
 
-**What it licenses.** $F_{\text{train}}(\gamma)$ high supports exactly one claim: *better finite data cannot repair the intervention behavior of the current one-step-trained population target at this coupling level.*
-
-**What it does not license.** It is **not** a lower bound on 26-step intervention error over the local model class. Any statement of the form "no member of the local model class can do better" is **not** supported by $F_{\text{train}}$.
-
-### J.5 `intervention_optimal_local_response_benchmark` — $F_{\text{intervention}}(\gamma)$
+### J.5 `intervention_optimal_local_response_benchmark` — $F_{\text{intervention\_all}}$ and companions
 
 **Verified frozen model-L family (from V2 code, not preference).**
 
@@ -451,15 +462,15 @@ Then push those coefficients through the frozen NIRE routine.
 - NIRE averages `normalized_error` over nodes whose true-response L2 norm is at least `nire_node_inclusion_threshold` times the max node norm, at the frozen cadence-sampled scoring instants (primary horizon h=26).
 - Multi-step evaluation is the recursion `out[t+1] = A_hat @ out[t] + beta_q * delta_Q_interval[t]` with non-finite `A_hat` entries replaced by 0. There is **no** `a ∈ [0, a_max]` clamp in fitting or evaluation.
 
-Therefore `F_intervention` minimizes frozen persistent-step NIRE over the **actual algebraic L response family**: diagonal own-lag plus own-node pumping drive, with no invented physical sign constraint and no invented stability box.
+Therefore `F_intervention_all` minimizes frozen persistent-step NIRE over the **actual algebraic L response family**: diagonal own-lag plus own-node pumping drive, with no invented physical sign constraint and no invented stability box.
 
-**Own-pumping structure (mandatory).** Node 0 may have a direct local pumping response. Non-pumped nodes do **not** receive an artificial direct Q coefficient. Any true response at non-pumped nodes induced through hydraulic coupling is therefore potentially unrepresentable by L — that is part of the structural claim, not a bug to paper over. The objective scores the same nodes and times as frozen NIRE.
+**Own-pumping structure (mandatory).** Node 0 may have a direct local pumping response. Non-pumped nodes do **not** receive an artificial direct Q coefficient. Any true response at non-pumped nodes induced through hydraulic coupling is therefore potentially unrepresentable by L — that is part of the structural claim, not a bug to paper over. The all-node objective scores the same nodes and times as frozen NIRE.
 
-**Admissible domain.** A parameter vector is admissible iff the frozen evaluation recursion produces a finite predicted response at all scored instants. Parameters that overflow are excluded because the frozen NIRE is then undefined, not because L constrains them. Practically, for each node the own-lag $a_i$ is searched over a dense grid of finite values (including negative and $|a|>1$ where the finite-horizon response remains finite); for each $a$, the own-pumping amplitude $\kappa_i$ is optimized in closed form (linear in the residual). Only node 0's $\kappa$ can be nonzero under a node-0 persistent step; other nodes' $\kappa$ stay 0 because L cannot see neighbour Q.
+**Two stored views.** `F_intervention_all` is the planning-relevant metric (all materially affected included nodes). `F_intervention_pumped` is a diagnostic companion scored only on the directly pumped node, using the same normalized response geometry restricted to that node. It never replaces the all-node metric. Together they distinguish "can L represent the DIRECT local response?" from "can L represent CROSS-UNIT propagated groundwater externalities?"
 
-**Certified minimum.** Exploit analytic $\kappa\mid a$; globally search $a$ by dense-grid bracketing plus deterministic local refinement; independently verify with a second denser grid. Report the minimum NIRE value (unique to numerical tolerance); disclose a non-unique argmin if it occurs.
+**Exact neighbour floor.** Where L's intervention prediction is structurally zero for non-pumped nodes, `neighbor_unmodeled_floor` is the known-truth representational floor induced by the own-pumping-only local structure, using the same NIRE weighting. Under that node-averaged per-node-normalized algebra it equals `n_included_nonpumped / n_included`. It is **not** a hydraulic-coupling threshold. Invariant: `F_intervention_all >= neighbor_unmodeled_floor`.
 
-**If after inspection this problem is not cleanly unique, omit `F_intervention` rather than inventing a domain.**
+**Global validity.** Amplitude is profiled analytically, leaving a pole-free rational function of the own-lag $a$ on $\mathbb{R}\cup\{\pm\infty\}$. All real stationary points are enumerated as polynomial roots; the limit at infinity is explicit; an independent compactified scan $u=a/(1+|a|)$ on $[-1,1]$ cross-checks. This is a global argument over the complete algebraic response family, not a finite `[-2.5, 2.5]` window. If a cell cannot be so certified, the quantity is labelled `F_intervention_verified_domain` and the paper claim is weakened rather than falsely certified.
 
 Tests required:
 
@@ -467,24 +478,37 @@ Tests required:
 uncoupled truth -> non-pumped nodes have zero true induced response
 coupled truth -> non-pumped nodes may have nonzero true induced response
 local-family benchmark -> cannot fake neighbor response with an unphysical direct Q coefficient
+coupled fixture -> strictly positive neighbor_unmodeled_floor; L predicts zero at the non-pumped neighbour
 ```
 
-### J.6 The three-term decomposition, and its four readings
+### J.6 The four-layer nested comparison, and its readings
 
-By construction $F_{\text{intervention}}(\gamma)\le F_{\text{train}}(\gamma)$, since $F_{\text{train}}$ evaluates a *particular* point of the family and $F_{\text{intervention}}$ minimizes over it. Reported alongside the median estimated NIRE:
+```text
+F_intervention_all  ->  F_train_true  ->  F_train_obs  ->  finite-sample fitted NIRE
+```
 
-$$\underbrace{F_{\text{intervention}}}_{\text{representational limit of the frozen family}} \ \le\ \underbrace{F_{\text{train}}}_{+\ \text{one-step-objective mismatch}} \ \lesssim\ \underbrace{\operatorname{med}_s \text{NIRE}_L}_{+\ \text{estimation and data cost}}$$
+These are **nested benchmark comparisons, not an exact additive decomposition.** Frozen NIRE is a mean over included nodes of per-node ratios of L2 norms; that algebra does not license writing fitted error as a sum of the benchmark levels plus differences.
 
-(the last relation is a median-level expectation, not an inequality: finite-sample noise can occasionally land a fitted model closer to the truth than the population one-step point.)
+Licensed gap readings:
+
+| gap | licensed reading |
+|---|---|
+| $F_{\text{intervention\_all}}\to F_{\text{train\_true}}$ | training-target / functional-approximation cost |
+| $F_{\text{train\_true}}\to F_{\text{train\_obs}}$ | asymptotic observation / proxy / forcing-data bias |
+| $F_{\text{train\_obs}}\to$ fitted NIRE | finite-sample estimation cost |
+
+`F_intervention_all ≤ F_train_true` holds by construction *at the same scoring set* (a particular family member cannot beat the family minimum) and is verified numerically per cell rather than assumed as an identity of the Monte Carlo approximation.
 
 | pattern across γ | reading |
 |---|---|
-| $F_{\text{intervention}}$ near 0 at NONE and rising at MED/HIGH, with $F_{\text{train}}$ tracking it | **Representational limit within the frozen family.** Supports: *local response is adequate only where hydraulic coupling is sufficiently weak, and neither better data nor a better fitting objective repairs it within this family.* |
-| $F_{\text{intervention}}$ stays low at all γ while $F_{\text{train}}$ rises | **Objective mismatch, not representational failure.** The family *can* represent the coupled response; one-step training does not target it. Implication is an intervention-aware fitting criterion — scoped as future work, not built here. |
-| Both low while median estimated NIRE is high | **Estimation/data cost dominates.** Consistent with Block A's mechanism rather than a coupling mechanism. |
-| $F_{\text{intervention}}$ high even at γ=NONE | The frozen one-mode family is inadequate for reasons unrelated to coupling — at k>1 this is expected to some degree, since interval aggregation of a linear system produces a distributed forcing lag the family cannot represent. Quantifying it is directly useful: it bounds how much of Block A's residual at `P-EXACT` is irreducible cadence-aggregation misspecification rather than measurement error. |
+| $F_{\text{intervention\_all}}$ near 0 at NONE and rising at MED/HIGH, tracking `neighbor_unmodeled_floor`, with $F_{\text{train\_true}}$ tracking it | **Representational limit within the frozen family**, substantially the unmodelled neighbour propagation. Supports: *the frozen own-pumping one-mode local response family cannot represent the coupled intervention, and neither better data nor a better fitting objective repairs that within this family.* |
+| $F_{\text{intervention\_all}}$ stays low at all γ while $F_{\text{train\_true}}$ rises | **Training-target / functional-approximation gap, not representational failure.** The family *can* represent the coupled response; one-step training on true variables does not target it. |
+| $F_{\text{train\_true}}$ low while $F_{\text{train\_obs}}$ rises | **Asymptotic observation / proxy / forcing corruption**, not a coupling-specific structural cost. |
+| Both training benchmarks low while median estimated NIRE is high | **Finite-sample estimation/data cost dominates.** Consistent with Block A's mechanism rather than a coupling mechanism. |
+| $F_{\text{intervention\_pumped}}$ low while $F_{\text{intervention\_all}}$ is high | Direct local response is representable; **cross-unit propagation is not**, by the own-pumping-only structure. |
+| $F_{\text{intervention\_all}}$ high even at γ=NONE | The frozen one-mode family is inadequate for reasons unrelated to coupling — at k>1 this is expected to some degree, since interval aggregation of a linear system produces a distributed forcing lag the family cannot represent. |
 
-Both benchmarks are computed for **every** v3 cell, not just Block B, precisely because of that last row. Neither is a gate; neither has a threshold; and if the intervention-optimal problem turns out not to be uniquely or cleanly definable in the frozen NIRE geometry during Build, **$F_{\text{intervention}}$ is omitted and the structural claim is weakened accordingly** — reduced to $F_{\text{train}}$'s licensed statement plus the empirical floor (the minimum estimated NIRE observed at each γ under the favourable bundle) — rather than forced.
+All layers are computed for **every** v3 cell, not just Block B. None is a gate; none has a threshold.
 
 ---
 
@@ -653,7 +677,7 @@ Required sentence, appearing in `PROTOCOL.md`, `DESIGN_FREEZE_V3.md`, and any pa
 | `V3_DETERMINISM` | 20260907030001 | 5 | deterministic sanity only |
 | `V3_SMOKE` | 20260907030002 | 3 | engineering only, never inferential |
 | `V3_ANALYSIS` | 20260907030003 | 200 | substantive; outcomes unused until Pass 2 |
-| `V3_BENCHMARK` | 20260907030004 | 16 | `F_train` Monte Carlo approximation only |
+| `V3_BENCHMARK` | 20260907030004 | 128 | `F_train_true` / `F_train_obs` Monte Carlo approximation only (was 16 at Pass 1) |
 
 Same materialization as v2 (`SeedSequence(entropy).spawn(n)`, `uint64` per child, `PCG64`).
 
@@ -685,9 +709,13 @@ Two Build passes with a hard stop between them. Pass 1 may freeze the ANALYSIS p
 4. Tests green: v2 hashes unchanged; vendored parity; **mode pairing** (mixed `rng_mode`/`system_seed_mode` combinations rejected, scripts pinned to the legal pairs, both modes recorded per row, summarizer refuses non-uniform inputs); **CRN parity** (for every planned Tier-1 pair, every shared component array bit-identical; for Tier-3 pairs, the *base innovation* arrays bit-identical and the realized truth confirmed to differ); **`gamma=NONE` construction** (§D.1, all seven assertions); reliability math on fixtures with known answers; benchmark math on fixtures with analytically known minima; no gates in v3; seed disjointness; no truth leakage; cell matrix matches the freeze document exactly.
 5. Deterministic sanity: v3's analogue of `SGI_G0` — noise-free, `P-EXACT`, `R-EXACT`, ρ=0, `snr=inf`, single node — recovers coefficients to ≤1e-8 on `V3_DETERMINISM` seeds.
 6. **v2 bit-for-bit parity check, expanded.** With `rng_mode=legacy_sequential` **and** `system_seed_mode=legacy_v2`, v3 must reproduce v2's `sweep_replicates.csv` rows exactly for **`G1R1` (local), `G2R3` (network), and `G3R3` (S8/placebo)** at **three frozen v2 ANALYSIS seeds each** — nine replicates covering the local, network, and placebo evaluation paths. This is the strongest available evidence that vendoring plus the two refactors did not perturb the physics, the estimator, or the placebo construction. Written to `V2_PARITY_REPORT.json`. **Gate on Pass 2.**
-7. Compute per-cell benchmarks $F_{\text{train}}$ (V3_BENCHMARK Monte Carlo if needed) and $F_{\text{intervention}}$ (deterministic given the system) for all 21 cells; publish `BENCHMARKS_V3.csv`. No `V3_ANALYSIS` outcomes are involved.
+7. Compute per-cell four-layer benchmarks $F_{\text{intervention\_all}}$, $F_{\text{train\_true}}$, $F_{\text{train\_obs}}$ (V3_BENCHMARK Monte Carlo) for all 21 cells; publish `BENCHMARKS_V3.csv`. No `V3_ANALYSIS` outcomes are involved.
 8. Engineering smoke: 21 cells × 3 `V3_SMOKE` seeds. Schema completeness, estimability distribution, runtime and storage projection, `CRN_PARITY_REPORT.json`. **Non-inferential**: no smoke value may alter any design choice, threshold, hypothesis, SESOI, or cell.
 9. **STOP.** Publish `V3_DESIGN_HASH`, `V3_CODE_HASH`, both mode flags, seed-pool hashes and disjointness, and the benchmark/parity/determinism/smoke reports for external review.
+
+**Pass 1.1 — final pre-analysis freeze. Ends at a stop.**
+
+Apply the remaining scientific corrections (split `F_train`; four-layer decomposition; `V3_BENCHMARK` n=128; global `F_intervention`; all-node / pumped-node / neighbour floor; recombination language; executable ANALYSIS launcher; complete summarizer). Re-run V2+V3 tests, 9-replicate parity, determinism, benchmarks, and 63-replicate smoke. Do not run ANALYSIS. Pass 2 must require zero source-code changes.
 
 ```text
 V3_ANALYSIS_POOL_FROZEN = true
@@ -713,9 +741,9 @@ Reference magnitudes are the preregistered SESOI (0.05 NIRE, 0.10 rate) and, for
 |---|---|---|
 | **A** | `A_PEXACT` NIRE near or below the legacy 0.20 marker with a large paired improvement over `A_S100`, **and** `A1_PEXACT_K1` also materially improved | **Outcome A.** Withdrawal-measurement identification is the immediate empirical priority; forcing-data acquisition (metering resolution, absolute scale, sub-annual reporting) becomes the top-ranked data investment, and the audit's Option C moves from MODERATE-HIGH to HIGH. |
 | **B** | `A_PEXACT` improves materially but stays well above the marker; `nire_recomb_*` attributes the residual to the persistence term; `A1_PEXACT_K1` shows persistence compounding at k=1 | **Outcome B.** Metering is necessary but insufficient; a second limitation remains, on the state side at long horizons. This does not authorize building a state-space estimator (out of scope); it authorizes *scoping* one as future work, with the measurement-error term correctly placed on Q first. |
-| **C** | Block B: NIRE_L low at γ NONE/LOW and materially degraded at MED/HIGH under `P-EXACT` + favourable observations, with **both** $F_{\text{train}}(\gamma)$ and $F_{\text{intervention}}(\gamma)$ rising | **Outcome C.** No member of the *frozen one-mode local response family* can represent the coupled intervention, so `M1L` is defensible only where weak coupling holds. Because `neighbour_flux_share` is a **synthetic** materiality diagnostic and not a field-observable quantity, this outcome implies a prior hydrogeological assessment step — itself a calibrated-modeling task, not a data lookup — before `M1L` could be justified in Andhra Pradesh. Richer local families (higher-order own-lags, distributed forcing lags) are not excluded by this result. |
-| **C′** | Block B: NIRE_L degrades with γ and $F_{\text{train}}$ rises, but $F_{\text{intervention}}$ stays low | **Objective mismatch, not representational failure.** The frozen family can represent the coupled response; one-step training does not target it. More optimistic than C: scope an intervention-aware fitting criterion as future work. Do not conclude structural invalidity. |
-| **C″** | Block B: both benchmarks low while median estimated NIRE is high | The coupling penalty is an **estimation/data** cost, not a coupling-specific structural cost. Folds back into Outcomes A/B. |
+| **C** | Block B: NIRE_L low at γ NONE/LOW and materially degraded at MED/HIGH under `P-EXACT` + favourable observations, with **both** $F_{\text{train\_true}}(\gamma)$ and $F_{\text{intervention\_all}}(\gamma)$ rising | **Outcome C.** No member of the *frozen one-mode local response family* can represent the coupled intervention, so `M1L` is defensible only where weak coupling holds. Because `neighbour_flux_share` is a **synthetic** materiality diagnostic and not a field-observable quantity, this outcome implies a prior hydrogeological assessment step — itself a calibrated-modeling task, not a data lookup — before `M1L` could be justified in Andhra Pradesh. Richer local families (higher-order own-lags, distributed forcing lags) are not excluded by this result. |
+| **C′** | Block B: NIRE_L degrades with γ and $F_{\text{train\_true}}$ rises, but $F_{\text{intervention\_all}}$ stays low | **Training-target / functional-approximation gap, not representational failure.** The frozen family can represent the coupled response; one-step training does not target it. More optimistic than C: scope an intervention-aware fitting criterion as future work. Do not conclude structural invalidity. |
+| **C″** | Block B: both training benchmarks low while median estimated NIRE is high | The coupling penalty is an **estimation/data** cost, not a coupling-specific structural cost. Folds back into Outcomes A/B. |
 | **D** | Block D: false-effect rate materially lower at `R-EXACT` and/or ρ=0, with a clear marginal effect | **Outcome D.** Recharge/climate identification becomes a required empirical qualification for `M1L`, reversing the audit's rank-7 low-priority reading — which rested on the recharge curve's inertness for NIRE and which the audit itself flagged as in tension with S8. |
 | **D′** | Block D: the dominant marginal effect is **pumping quality** | A new finding that inverts the prescription: false causal attribution to a pumping-like regressor is driven by noise in the *real* withdrawal channel, so the fix is metering rather than climate covariates. This is the specific reason Block D includes the pumping factor. |
 | **E** | Block D: `D_PE_RE_R0` within the 0.10 rate SESOI of the `D_PM_RN_R3` external-consistency anchor, with no evidence that cleaning forcing channels reduces false attribution | **Outcome E.** The estimator has a more fundamental attribution problem that clean forcing does not fix. Strengthens deferral and becomes a first-order methodological finding. |

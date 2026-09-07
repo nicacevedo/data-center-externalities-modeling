@@ -19,6 +19,7 @@ from src_v3.summarize_v3 import summarize_records
 
 OUT = MODULE_ROOT / "outputs" / "smoke"
 BANNER = "ENGINEERING SMOKE OUTPUT -- NOT A SCIENTIFIC RESULT."
+BENCHMARK_JSON = MODULE_ROOT / "outputs" / "benchmarks" / "BENCHMARKS_V3.json"
 
 
 def main() -> int:
@@ -66,6 +67,23 @@ def main() -> int:
             writer.writeheader()
             for row in records:
                 writer.writerow(row)
+
+    benchmarks = None
+    convergence = None
+    if BENCHMARK_JSON.exists():
+        with open(BENCHMARK_JSON, "r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+        benchmarks = {str(r["cell_id"]): r for r in payload.get("rows", [])}
+        convergence = payload.get("convergence") or None
+
+    n_bytes = (OUT / "SMOKE_V3_REPLICATES.csv").stat().st_size if records else 0
+    bytes_per_replicate = n_bytes / max(len(records), 1)
+    storage_projection = {
+        "smoke_csv_bytes": n_bytes,
+        "bytes_per_replicate_approx": bytes_per_replicate,
+        "projected_analysis_4200_bytes": bytes_per_replicate * 4200,
+        "note": "NON-INFERENTIAL engineering projection only",
+    }
     summary = {
         "banner": BANNER,
         "non_inferential": True,
@@ -82,7 +100,11 @@ def main() -> int:
         "FIT_FAILED": sum(
             1 for r in records if r.get("estimability_status_L") == "FIT_FAILED"
         ),
-        "summarizer": summarize_records(records),
+        "summarizer": summarize_records(
+            records, benchmarks=benchmarks, convergence=convergence
+        ),
+        "benchmarks_merged": bool(benchmarks),
+        "storage_projection": storage_projection,
         "V3_ANALYSIS_REPLICATES_RUN": 0,
     }
     with open(OUT / "SMOKE_V3_SUMMARY.json", "w", encoding="utf-8") as handle:

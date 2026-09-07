@@ -46,9 +46,14 @@ def test_v2_seed_hashes_unchanged():
     from groundwater_identifiability_synthetic.src.design import load_design, seed_pool_hash
 
     v2 = load_design(V2_PARENT_ROOT / "config" / "design_v2.yaml")
-    assert seed_pool_hash(v2, "ANALYSIS") == (
-        "bd6db2aac7743cc83d5d5ecd8b5f07fefe18747649e3489a5b89e7e0cb689015"
-    )
+    expected = {
+        "G0": "3bbd798d908bdf08d888efb5756236757f2b9bd5fdc19bc7cbe5fe7d7725c489",
+        "CALIBRATION": "7aedf1a97f413d4642668e5741b17c7418db60593c0246df64faaea8c8b00228",
+        "SMOKE": "d4e3c7dcd48e6f1f24713ca3113252be1642392abef9afa25db5d6b66ccac633",
+        "ANALYSIS": "bd6db2aac7743cc83d5d5ecd8b5f07fefe18747649e3489a5b89e7e0cb689015",
+    }
+    for pool, digest in expected.items():
+        assert seed_pool_hash(v2, pool) == digest, pool
 
 
 def test_unchanged_vendored_files_match_parents():
