@@ -1,0 +1,59 @@
+{
+  "cadence_over_tau_relax": 0.05,
+  "clip_fraction_max": 0.0,
+  "code_hash_at_freeze": "94ce983d26c715ecf431e5f35f8256deadd2c6ebe48a4a276d8fd3233c8aa8ca",
+  "code_hash_at_run": "94ce983d26c715ecf431e5f35f8256deadd2c6ebe48a4a276d8fd3233c8aa8ca",
+  "criteria": {
+    "G0_coefficient_exact": {
+      "pass": true,
+      "threshold": 1e-08,
+      "value": 6.453650059672555e-14
+    },
+    "G0_design_full_rank": {
+      "pass": true,
+      "threshold": 0.0,
+      "value": 0.0
+    },
+    "G0_storage_exact": {
+      "pass": true,
+      "threshold": 1e-08,
+      "value": 4.804265686258081e-15
+    },
+    "G0_transition_exact": {
+      "pass": true,
+      "threshold": 1e-09,
+      "value": 1.4210854715202004e-14
+    }
+  },
+  "design_hash": "6e70d37874f9895a3fc089b1f3a982cd8033a1bb2201153b418492bbba41bdcc",
+  "gate": "SGI_G0",
+  "identifiability": {
+    "condition_number_L_mean": 9.875759837582773,
+    "max_vif_L_mean": 17.780534773044984,
+    "n_rows_L_mean": 363.0,
+    "pumping_excitation_fraction_L_mean": 0.2586986283846357,
+    "rank_L_mean": 6.0,
+    "rank_deficiency_max": 0.0,
+    "singular_values_note": "per-node singular spectra are in SGI_G0_REPLICATES.csv",
+    "smallest_singular_value_L_mean": 3.200535987543278
+  },
+  "n_seeds": 5,
+  "pass": true,
+  "regime": {
+    "cadence": 1,
+    "memory": "MED",
+    "process_noise_sd": 0.0,
+    "pumping_quality": "P-EXACT",
+    "recharge_quality": "R-EXACT",
+    "snr_head": Infinity,
+    "topology": "single"
+  },
+  "seeds": [
+    15067561602938931160,
+    7593642285429274178,
+    3711593030236189955,
+    11014296470459455235,
+    6626082945490037511
+  ],
+  "tau_relax_realized": 20.0
+}

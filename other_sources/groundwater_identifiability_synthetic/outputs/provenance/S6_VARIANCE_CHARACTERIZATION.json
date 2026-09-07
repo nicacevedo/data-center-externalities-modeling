@@ -1,0 +1,13 @@
+{
+  "calibration_seed_pool": "CALIBRATION",
+  "interpretation": "Process noise contributes a negligible share of head variance at the reference level, so it cannot be used to equalize marginal variance in either direction. snr_head already equalizes head signal-to-noise across scenarios; the residual variance difference is a structural consequence of coupling and is reported rather than suppressed.",
+  "match_enforced": false,
+  "n_calibration_seeds": 8,
+  "null_over_reference_variance_ratio": 2.1300890974289235,
+  "process_noise_variance_share_null": 0.001252184796139895,
+  "process_noise_variance_share_reference": 0.003523994935084504,
+  "variance_coupled_reference": 7.798572588593116,
+  "variance_coupled_reference_zero_process_noise": 7.771090458290025,
+  "variance_null": 16.611654446470254,
+  "variance_null_zero_process_noise": 16.590853585333655
+}

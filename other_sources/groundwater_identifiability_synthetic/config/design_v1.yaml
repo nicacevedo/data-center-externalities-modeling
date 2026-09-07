@@ -1,0 +1,1046 @@
+# =====================================================================================
+# design_v1 -- Synthetic known-truth groundwater identifiability experiment
+#
+# This file is a CANONICAL SCIENTIFIC DESIGN ARTIFACT. Together with DESIGN_FREEZE.md it
+# determines DESIGN_HASH. Any change to scientific content here requires design_v2 and a
+# full rerun of affected experiments. A pure implementation bugfix does not require
+# design_v2 but MUST change CODE_HASH and invalidate/rerun affected outputs.
+#
+# Units are normalized/dimensionless. The "week" label on the fine timestep is an
+# interpretation convention that makes cadence and hydraulic memory legible; it does not
+# import any physical constant from any real aquifer.
+# =====================================================================================
+
+design_version: design_v1
+design_status: FROZEN_PENDING_FREEZE_SCRIPT
+scope_token: REDUCED_ORDER_HEAD_PUMPING_RECHARGE_CORE_ONLY
+
+# -------------------------------------------------------------------------------------
+# 1. Time base. All durations are in FINE STEPS unless the key says weeks.
+#    One fine step == one week (interpretation convention).
+# -------------------------------------------------------------------------------------
+time:
+  dt_fine: 1.0
+  fine_step_interpretation: one_week
+  seasonal_period_fine_steps: 52
+
+  # Burn-in is discarded BEFORE the analysis horizon begins. The 520-step analysis
+  # horizon is strictly AFTER burn-in. Burn-in is adaptive to the REALIZED relaxation
+  # time so that high-memory systems are actually stationary when analysis starts;
+  # the frozen floor is 104 steps.
+  burn_in_floor_fine_steps: 104
+  burn_in_rule: max(burn_in_floor_fine_steps, ceil(burn_in_tau_multiple * tau_relax_realized))
+  burn_in_tau_multiple: 8.0
+
+  analysis_horizon_fine_steps: 520          # AFTER burn-in
+  analysis_horizon_seasonal_cycles: 10
+
+  # Observation cadence in fine steps. 13 divides 52 exactly (quarterly).
+  cadences_fine_steps: [1, 2, 4, 13]
+  cadence_labels:
+    1: weekly
+    2: biweekly
+    4: monthly_approx
+    13: quarterly
+
+  # floor(analysis_horizon / k) - 1. Frozen and asserted at freeze time.
+  usable_transitions_by_cadence:
+    1: 519
+    2: 259
+    4: 129
+    13: 39
+
+  # Chronological split of usable transitions, applied as
+  #   train  = [0, floor(0.70*N))
+  #   val    = [floor(0.70*N), floor(0.85*N))
+  #   test   = [floor(0.85*N), N)
+  split_counts_by_cadence:
+    1:  {train: 363, validation: 78, test: 78}
+    2:  {train: 181, validation: 39, test: 39}
+    4:  {train: 90,  validation: 19, test: 20}
+    13: {train: 27,  validation: 6,  test: 6}
+
+  # k = 13 is preregistered as a DELIBERATELY DATA-POOR regime (39 transitions), not an
+  # accident of the horizon choice.
+  data_poor_cadences: [13]
+
+# -------------------------------------------------------------------------------------
+# 2. Hydraulic memory. Targets are labels; the REALIZED value is computed from the
+#    generated transition matrix eigensystem and is what gets reported.
+# -------------------------------------------------------------------------------------
+memory_regimes:
+  definition_realized: tau_relax_realized = -1.0 / log(spectral_radius(A))
+  realized_is_authoritative: true
+  nominal_labels_are_targets_only: true
+  targets_fine_steps:
+    LOW: 4.0
+    MED: 20.0
+    HIGH: 80.0
+  # Freeze-time assertion: |tau_realized - tau_target| / tau_target <= tolerance
+  target_match_tolerance: 0.02
+  # Every cadence result is reported against this dimensionless ratio.
+  reported_ratio: cadence_over_tau_relax_realized = k / tau_relax_realized
+
+# -------------------------------------------------------------------------------------
+# 3. Stability. Two distinct, separately asserted conditions.
+# -------------------------------------------------------------------------------------
+stability:
+  # (a) discretization / positivity: guarantees A entrywise nonnegative, positive diagonal
+  diagonal_margin_delta_diag: 0.05
+  diagonal_condition: dt * (sum_j C_ij + C_i0) / S_i <= 1 - delta_diag  for all i
+  # (b) contraction: every v1 scenario is intended-contracting
+  all_v1_scenarios_intended_contracting: true
+  contraction_margin_delta: 0.005
+  contraction_condition: spectral_radius(A) <= 1 - delta
+  # delta = 0.005 admits tau_relax up to -1/log(0.995) = 199.5 fine steps, comfortably
+  # above the HIGH target of 80. Contraction requires strictly positive boundary leakage.
+  require_positive_boundary_leakage: true
+  non_contracting_systems: OUT_OF_SCOPE_V1
+
+# -------------------------------------------------------------------------------------
+# 4. Data-generating process. RESTRICTED PHYSICALLY INTERPRETABLE SPECIAL CASE of the
+#    repository model h_{m+1} = A h_m + B_R R_m - B_Q q_m + eps_m. NOT a reparameterization.
+# -------------------------------------------------------------------------------------
+dgp:
+  state_equation: >
+    S_i * (h_{i,t+1} - h_{i,t}) / dt
+      = R_{i,t} - Q_{i,t}
+        + sum_{j != i} C_ij * (h_{j,t} - h_{i,t})
+        + C_i0 * (h_i_b - h_{i,t})
+        + eps_{i,t}
+  observation_equation: y_{i,t} = h_{i,t} + nu_{i,t}
+  matrix_form: h_{t+1} = A h_t + b + dt * diag(1/S) * (R_t - Q_t + eps_t)
+  A_definition: A = I - dt * diag(1/S) * L ;  L_ii = sum_{j!=i} C_ij + C_i0 ;  L_ij = -C_ij
+  B_R_definition: B_R = dt * diag(1/S)
+  B_Q_definition: B_Q = dt * diag(1/S)
+  restriction_note: >
+    B_R == B_Q encodes unit recharge efficiency. This restriction is itself stressed in
+    scenario S7 variant recharge_efficiency_mismatch, where the truth uses B_R != B_Q while
+    the estimator retains the restricted family.
+
+  # Boundary/intercept mapping, defined explicitly and deliberately nonzero so that the
+  # estimator must absorb a real intercept rather than inherit a convenient zero.
+  boundary_intercept: b_i = dt * C_i0 * h_i_b / S_i
+  boundary_head_h_b: 5.0
+
+  # Process-noise semantics, stated unambiguously.
+  process_noise_semantics: FLUX_DISTURBANCE
+  process_noise_note: >
+    eps has the same units as R and Q and enters head as dt * eps_i / S_i, consistent with
+    its position inside the storage balance. An additive head-state disturbance is a
+    DIFFERENT object and is NOT used in v1.
+  process_noise_sd_default: 0.05
+
+  # Storage is set per node; conductances are then derived from the target relaxation rate
+  # and the coupling share gamma, so that memory and coupling are controlled independently.
+  storage_S_base: 1.0
+  storage_S_heterogeneity: 0.25      # S_i = S_base * (1 + U(-h, h)) with frozen per-node draws
+  derivation: >
+    r_i = dt * (sum_j C_ij + C_i0) / S_i is the total relaxation rate. For target tau and
+    coupling share gamma, r = (1 - exp(-1/tau)) / (1 - gamma); neighbour conductances carry
+    share gamma of r and boundary leakage carries (1 - gamma).
+
+# -------------------------------------------------------------------------------------
+# 5. Geometry, topologies, and the GEOMETRY-ONLY candidate graph rule.
+# -------------------------------------------------------------------------------------
+geometry:
+  # The candidate-graph rule is frozen, depends ONLY on node coordinates, and NEVER
+  # inspects the true edge set. Enforced by test_candidate_graph_independent_of_truth.
+  candidate_rule: radius
+  candidate_radius: 2.5
+  candidate_knn_fallback_k: 3        # used only if the radius rule yields an empty candidate set
+  # In favourable scenarios the DGP is constructed so the true graph is NESTED inside the
+  # candidate rule by design. Scenario S9 deliberately violates the nesting.
+  true_graph_nested_by_design: [single, path5, star5, null5, bridge6]
+  true_graph_not_nested: [path5_hidden]
+
+topologies:
+  single:
+    coordinates: [[0.0, 0.0]]
+    true_edges: []
+  path5:
+    coordinates: [[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0], [4.0, 0.0]]
+    true_edges: [[0, 1], [1, 2], [2, 3], [3, 4]]
+    expected_candidate_pairs: 7      # 4 true + 3 decoy at distance 2.0
+  star5:
+    coordinates: [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [-1.0, 0.0], [0.0, -1.0]]
+    true_edges: [[0, 1], [0, 2], [0, 3], [0, 4]]
+    expected_candidate_pairs: 10     # 4 true + 6 leaf-leaf decoys
+  null5:
+    coordinates: [[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0], [4.0, 0.0]]
+    true_edges: []
+    expected_candidate_pairs: 7      # identical geometry to path5, zero true edges
+  bridge6:
+    coordinates: [[0.0, 0.0], [1.0, 0.0], [0.5, 0.87],
+                  [2.4, 0.0], [3.4, 0.0], [2.9, 0.87]]
+    true_edges: [[0, 1], [0, 2], [1, 2], [3, 4], [3, 5], [4, 5], [1, 3]]
+    expected_candidate_pairs: 12     # 7 true + 5 decoy
+  path5_hidden:
+    coordinates: [[0.0, 0.0], [1.0, 0.0], [2.0, 0.0], [3.0, 0.0], [4.0, 0.0]]
+    true_edges: [[0, 1], [1, 2], [2, 3], [3, 4], [0, 4]]
+    expected_candidate_pairs: 7      # the true (0,4) link at distance 4.0 is OUTSIDE the rule
+    candidate_support_misspecified: true
+
+coupling:
+  # gamma_i = sum_j kappa_ij / (sum_j kappa_ij + kappa_i0): the share of total relaxation
+  # carried by neighbours rather than by the boundary. Strength is therefore defined
+  # RELATIVE to local relaxation, not in absolute conductance units.
+  #
+  # Physical conductance C_ij is UNIFORM AND SYMMETRIC across true edges; boundary leakage
+  # C_i0 = deg_i * c * (1 - gamma)/gamma carries the remaining share. kappa_ij = dt*C_ij/S_i
+  # is then asymmetric precisely because S_i differs between nodes, which is the point.
+  gamma_levels:
+    NONE: 0.0
+    LOW: 0.15
+    MED: 0.35
+    HIGH: 0.60
+  # Feasibility: hitting a very short relaxation time while a large share of the relaxation
+  # is carried by neighbours drives the diagonal of A below the discretization margin. The
+  # binding case is the highest-degree node, so infeasibility is TOPOLOGY-SPECIFIC: only the
+  # degree-4 centre of star5 is affected at LOW memory. Enumerated exhaustively by building
+  # every topology x memory x gamma combination; the combinations below are declared
+  # infeasible and EXCLUDED by design, and appear in no gate cell, stress curve, or grid.
+  # scripts/freeze_protocol.py rebuilds every combination actually used and fails if one of
+  # these is reached.
+  infeasible_combinations:
+    - {topology: star5, memory: LOW, gamma: MED,  reason: diagonal_margin_violation_degree4_centre}
+    - {topology: star5, memory: LOW, gamma: HIGH, reason: diagonal_margin_violation_degree4_centre}
+
+# -------------------------------------------------------------------------------------
+# 6. Forcing processes.
+# -------------------------------------------------------------------------------------
+forcing:
+  recharge:
+    mean: 1.2
+    seasonal_amplitude: 0.5
+    ar1_phi: 0.8
+    ar1_innovation_sd: 0.08
+    nonnegativity: clip_at_zero
+  pumping:
+    mean: 1.0
+    seasonal_amplitude: 0.4
+    ar1_phi: 0.7
+    ar1_innovation_sd: 0.06
+    # Independent white excitation is what makes the pumping coefficient identifiable.
+    independent_excitation_sd: 0.15
+    nonnegativity: clip_at_zero
+  # Clipping must be effectively inactive; asserted by test_forcing_clipping_negligible and
+  # enforced across EVERY cell at freeze time by freeze_protocol.validate_forcing_clipping.
+  # Rationale: nonnegativity clipping is a nonlinearity in an otherwise linear DGP. It breaks
+  # the exactness of paired-counterfactual differencing and injects an uncontrolled
+  # misspecification, so it is a hard constraint on scenario parameters rather than a
+  # tolerance to be widened if a cell violates it.
+  max_clip_fraction: 0.001
+  # Confounding: correlation between the pumping and recharge SEASONAL shapes.
+  # Implemented as s_Q = rho * sin(2*pi*t/P + phi) + sqrt(1 - rho^2) * cos(2*pi*t/P + phi),
+  # which is exactly orthogonal over a period, so realized corr == rho.
+  confounding_rho_levels: [0.0, 0.3, 0.6, 0.9]
+  per_node_phase_offsets: frozen_uniform_over_period
+
+# -------------------------------------------------------------------------------------
+# 7. Observation model, including all pumping-quality regimes stated explicitly.
+# -------------------------------------------------------------------------------------
+observation:
+  # Head observation noise level is set from the REALIZED head sd over the BURN-IN window
+  # (never the analysis window), so the noise level does not depend on the analysed data.
+  snr_definition: snr_head = sd(h over burn-in window) / sd(nu)
+  snr_levels: [2, 5, 10, 20, .inf]
+
+  # Forcing is INTERVAL-AGGREGATED over each cadence interval, as real monthly pumping
+  # volumes are. Heads are point observations at cadence instants.
+  forcing_aggregation: interval_sum_over_cadence_interval
+
+  pumping_quality_regimes:
+    P-EXACT:
+      description: exact absolute pumping in model flux units
+      absolute_scale_known: true
+    P-MULTNOISE:
+      description: multiplicative measurement noise, median-corrected to be mean-unbiased
+      form: Q_obs = Q_true_interval * exp(N(0, s^2) - s^2/2)
+      s_default: 0.10
+      absolute_scale_known: true
+    P-SCALEBIAS:
+      description: unknown constant multiplicative scale bias, one draw per replicate
+      form: Q_obs = c * Q_true_interval,  log(c) ~ N(0, 0.30^2)
+      absolute_scale_known: false
+    P-TEMPAGG:
+      description: >
+        reported only as annual (52 fine-step) totals, disaggregated back to cadence
+        intervals by a FIXED mean seasonal template, destroying within-year variation
+      absolute_scale_known: true
+    P-SPATIALAGG:
+      description: >
+        only a basin total is reported, allocated to nodes by a fixed imperfect share
+        vector (true mean shares perturbed by Dirichlet noise, one draw per replicate)
+      dirichlet_concentration: 60.0
+      absolute_scale_known: false
+
+  recharge_quality_regimes:
+    R-EXACT:    {form: R_proxy = R_true_interval}
+    R-NOISE:    {form: "R_proxy = R_true_interval + N(0, sigma * sd(R_interval))", sigma_default: 0.20}
+    R-LAG:      {form: R_proxy = R_true_interval lagged by lag_fine_steps, lag_default: 4}
+    R-NOISELAG: {form: both, sigma_default: 0.20, lag_default: 4}
+    R-SCALE:    {form: "R_proxy = c * R_true_interval, log(c) ~ N(0, 0.30^2)"}
+  latent_recharge_never_exposed: true
+
+  missingness:
+    mcar_fraction_levels: [0.0, 0.10, 0.30, 0.50]
+    block_outage:
+      description: contiguous station dropout, applied on top of MCAR
+      blocks_per_node_levels: [0, 1, 2]
+      block_length_cadence_steps: 8
+    observed_node_fraction_levels: [0.4, 0.6, 0.8, 1.0]
+    mnar: NOT_MODELLED_IN_V1
+  # OCWD rule inherited: heads are NEVER interpolated. Only consecutive observed cadence
+  # pairs enter fitting.
+  head_interpolation: PROHIBITED
+
+# -------------------------------------------------------------------------------------
+# 8. Protected evaluation protocol.
+# -------------------------------------------------------------------------------------
+splits:
+  type: chronological
+  train_fraction: 0.70
+  validation_fraction: 0.15
+  test_fraction: 0.15
+  preprocessing_fit_on: TRAIN_ONLY
+  complexity_selection_on: VALIDATION_ONLY
+  test_usage: PROTECTED_FINAL_METRICS_ONLY
+  prohibited_test_selection:
+    - model_family
+    - regularization_lambda
+    - kernel_bandwidth
+    - graph_complexity
+    - edge_thresholds
+    - stopping_rules
+  synthetic_truth_is_not_a_validation_signal: true
+
+# -------------------------------------------------------------------------------------
+# 9. Estimator ladder. All rungs linear, node-specific parameters, fit at cadence step.
+# -------------------------------------------------------------------------------------
+models:
+  common_features: [intercept, own_level_lag1, season_sin, season_cos, time_trend]
+  B0:
+    description: background / no-managed-forcing baseline
+    extra_features: []
+  L:
+    description: local forcing response; conceptual analogue of the M1L tier
+    extra_features: [own_pumping, own_recharge_proxy]
+  S:
+    description: spatial forcing without a dynamic head-flow network
+    extra_features: [kernel_weighted_neighbour_pumping, kernel_weighted_neighbour_recharge]
+    kernel: exp(-d_ij / lambda_km)
+    kernel_bandwidth_grid: [0.5, 1.0, 2.0, 4.0]
+    bandwidth_selected_on: VALIDATION_ONLY
+    uses_true_adjacency: false
+  N:
+    description: minimal dynamic groundwater network
+    extra_features: [own_pumping, own_recharge_proxy, candidate_head_differences]
+    head_difference_term: kappa_ij * (y_j - y_i) for j in candidate_neighbours(i)
+    nonnegativity_constrained: [kappa]
+    unconstrained_and_unpenalized: [own_pumping, own_recharge_proxy, intercept,
+                                    own_level_lag1, season_sin, season_cos, time_trend]
+    pumping_sign_is_NOT_constrained: true
+    penalty_grid_lambda: [0.0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0]
+    penalty_selected_on: VALIDATION_ONLY
+    row_admissibility: >
+      a cadence row tau is usable for node i only if y_i[tau], y_i[tau+1] and y_j[tau] for
+      every candidate neighbour j are observed. Unobserved nodes are removed from the
+      candidate set entirely. No head is interpolated to rescue a row.
+
+# -------------------------------------------------------------------------------------
+# 10. Network coefficient semantics. kappa is NOT physical conductance.
+# -------------------------------------------------------------------------------------
+network_semantics:
+  kappa_definition: kappa_ij = dt * C_ij / S_i
+  kappa_is_effective_directed_coupling: true
+  symmetry_enforced: false
+  symmetry_note: kappa_ij != kappa_ji in general because S_i != S_j
+  edge_support: UNDIRECTED
+  edge_support_rule: an undirected pair is present if EITHER direction is selected
+
+  # Cadence-aware, frozen BEFORE any results are inspected.
+  true_strong_edge_rule: max((A^k)_ij, (A^k)_ji) >= 0.01
+  detected_edge_rule: max(kappa_hat_ij, kappa_hat_ji) >= 0.01
+  strong_edge_threshold: 0.01
+  true_strong_edges_outside_candidate_set_count_as: FALSE_NEGATIVE
+
+  physical_conductance_reconstruction:
+    permitted_only_when: absolute_S_identifiable
+    formula: C_hat_ij = kappa_hat_ij * S_hat_i / dt
+    S_hat_formula: S_hat_i = -dt / beta_hat_Q_i        # requires beta_hat_Q_i < 0
+  # Bounded symmetric normalized discrepancy. The raw ratio is NOT used: it is unstable
+  # near zero.
+  physics_consistency_diagnostic:
+    name: D_phys
+    formula: >
+      D_phys_ij = abs(kappa_hat_ij*S_hat_i - kappa_hat_ji*S_hat_j)
+                  / (abs(kappa_hat_ij*S_hat_i) + abs(kappa_hat_ji*S_hat_j) + epsilon_stab)
+    epsilon_stab: 1.0e-9
+    range: [0, 1]
+    interpretation: D_phys near 0 indicates directional consistency with a common physical conductance
+    interpretable_only_when:
+      - absolute_S_identifiable is true
+      - both directional estimates nondegenerate (kappa_hat_ij >= strong_edge_threshold and
+        kappa_hat_ji >= strong_edge_threshold)
+    otherwise: reported as null, never as a numeric value
+
+# -------------------------------------------------------------------------------------
+# 11. Estimands. These CHANGE WITH CADENCE and the change is preregistered.
+# -------------------------------------------------------------------------------------
+estimands:
+  exact_coarse_dynamics: h_{t+k} = A^k h_t + sum_{r=0}^{k-1} A^{k-1-r} B u_{t+r}
+  aggregation_note: >
+    With only the interval aggregate U = sum_r u_{t+r} observed there is in general NO
+    exact B_k with sum_r A^{k-1-r} B u_{t+r} = B_k U for all forcing paths.
+
+  k_equals_1:
+    direct_fine_parameter_recovery: PRIMARY
+    targets: [A, B_Q, kappa, S]
+  k_greater_than_1:
+    direct_fine_parameter_recovery: NOT_PRIMARY
+    A_hat_compared_to: A_to_the_k
+    A_comparison_caveat: >
+      A_hat also absorbs forcing-aggregation effects, so this comparison is reported as
+      state-transition recovery, not as clean parameter recovery.
+    primary_targets:
+      - protected_transition_recovery
+      - intervention_recovery
+      - impulse_response_recovery
+
+  pseudo_true_coarse_coefficient:
+    reported: only_where_it_aids_interpretation
+    always_labelled_as_pseudo_true: true
+    definition: >
+      B_k_pseudo := argmin_B  E_forcing || sum_{r=0}^{k-1} A^{k-1-r} B u_{t+r} - B U ||^2
+    property: population L2 projection onto the aggregate-forcing linear family
+    depends_on_forcing_process: true
+    computed_in: evaluation_layer_from_truth
+    monte_carlo_draws: 400
+
+  absolute_S_and_C_identifiable_only_when:
+    - pumping observed on a true absolute scale (P-EXACT or P-MULTNOISE)
+    - pumping-channel parameterization holds (B_Q = dt * diag(1/S))
+    - excitation sufficient (measured by the identifiability diagnostics, not assumed)
+    - cadence k == 1
+  otherwise_report: EFFECTIVE_RESPONSE_COEFFICIENTS_ONLY
+  otherwise_prohibited: [physical_storage, physical_conductance]
+
+  # Absolute vs relative intervention recovery must never be conflated.
+  intervention_recovery_kinds:
+    RELATIVE:
+      description: shape and ratios of delta_h; invariant to unknown forcing scale
+    ABSOLUTE:
+      description: delta_h per unit of ABSOLUTE withdrawal
+      requires_absolute_scale_known: true
+  planning_readiness_rule: >
+    A regime whose pumping scale is unknown (P-SCALEBIAS, P-SPATIALAGG, R-SCALE) can NEVER
+    be scored as planning-ready for absolute withdrawal constraints, regardless of how good
+    its relative recovery is.
+
+# -------------------------------------------------------------------------------------
+# 12. Intervention evaluator. PAIRED, never used for fitting or selection.
+# -------------------------------------------------------------------------------------
+interventions:
+  launched_at: PROTECTED_TEST_ONSET
+  never_used_for: [fitting, hyperparameter_selection, model_selection, thresholding]
+
+  pairing:
+    baseline_and_intervention_share:
+      - initial_state
+      - recharge_and_background_forcing
+      - process_noise_realization_eps
+    estimand: delta_h = h_intervention - h_baseline
+    rationale: common disturbances cancel exactly in the paired difference
+  also_report_noise_free_structural_response: true
+
+  magnitude_fraction_of_mean_pumping: 0.5
+  types:
+    pulse:
+      description: additional pumping over a single cadence interval at onset
+      duration_fine_steps: null            # equals one cadence interval
+    persistent_step:
+      description: sustained additional pumping, then release, to observe recovery
+      duration_fine_steps: 26
+    new_node_pumping:
+      description: step applied at the node with the LOWEST mean pumping
+      duration_fine_steps: 26
+      node_selection: lowest_mean_true_pumping
+    multi_node_withdrawal:
+      description: simultaneous step at two nodes
+      duration_fine_steps: 26
+      n_nodes: 2
+
+  horizons_fine_steps: [4, 13, 26, 52]
+  horizon_rule: >
+    evaluated at ceil(H / k) cadence steps; a horizon is reported only if it is at least
+    one cadence step and fits inside the protected test segment
+  cumulative_drawdown_horizon_fine_steps: 52
+  primary_horizon_fine_steps: 26
+
+# -------------------------------------------------------------------------------------
+# 13. Spatial evaluation. NOT zero-shot generalization.
+# -------------------------------------------------------------------------------------
+spatial_evaluation:
+  zero_shot_held_out_node: NOT_PERFORMED_IN_V1
+  zero_shot_rationale: >
+    B0/L/S/N use NODE-SPECIFIC parameters, so a node entirely absent from training has no
+    estimated parameters and zero-shot inference at that node is not mathematically
+    possible. A fully held-out-node experiment would require an explicitly shared-parameter
+    model, which v1 does not implement.
+
+  protected_future_time_evaluation:
+    description: standard chronological protected-test evaluation for nodes with training history
+    enabled: true
+
+  masked_node_protocol:
+    description: evaluates PROPAGATION THROUGH MONITORING LOSS, not zero-shot prediction
+    preconditions:
+      - the masked node HAS train/validation history
+      - the masked node's parameters are estimable from that history
+    onset: PROTECTED_TEST_ONSET                   # preregistered, identical across models
+    mask_horizon_cadence_steps: 12
+    mask_horizon_rule: min(12, protected_test_length_cadence_steps)
+    recursion_initial_state: final admissible PRE-MASK head observation of the masked node
+    min_completed_steps: 4
+    permitted_inputs_after_onset:
+      - own predicted state from the recursion
+      - own observed pumping and recharge proxy
+      - observed heads of NON-masked neighbours
+      - >
+        most recent observed head of a NON-masked neighbour when that neighbour is missing at
+        the current instant (operational nowcast of a station that is still monitored)
+      - deterministic calendar features
+    prohibited_inputs_after_onset:
+      - any withheld head observation of the masked node
+      - carry-forward of the masked node's own head
+    neighbour_carry_forward_rationale: >
+      Without neighbour carry-forward the recursion aborts on the first missing neighbour
+      head, so at the reference regime's 10% missingness the masked-node criterion would be
+      unevaluable in most replicates. Carry-forward applies ONLY to non-masked neighbours,
+      never to the masked node, and the number of carried-forward steps is reported as a
+      diagnostic (masked_node_carry_forward_steps_*). A replicate contributes to the
+      criterion only if at least min_completed_steps recursion steps completed.
+    leak_enforcement: >
+      test_masked_node_no_leak poisons every withheld entry with a large sentinel value and
+      asserts the recursive forecast is bit-identical to the NaN-masked run
+    masked_node_selection: frozen index 0 for single/star topologies, index 2 for path/bridge
+    masked_node_selection_fallback: >
+      If the preferred index is not an observed node (unavoidable once
+      observed_node_fraction < 1), fall back to the observed node nearest the preferred index,
+      ties broken toward the lower index. Deterministic, seed-independent, and identical
+      across models and across the paired arms, so it cannot advantage any rung. Without the
+      fallback the criterion silently vanishes in precisely the sparse-monitoring cells it is
+      meant to characterize: at observed_node_fraction = 0.4 the preferred path5 node is
+      uninstrumented in every replicate.
+    start_instant_rule: >
+      The recursion starts at the LAST instant at or before onset-1 at which the masked node
+      was actually observed, not rigidly at onset-1. The horizon is measured from that start.
+      Anchoring rigidly at onset-1 would discard a replicate whenever that single instant was
+      missing, which at the reference 10% missingness is 10% of replicates for no scientific
+      reason.
+    missing_reason_reporting: >
+      masked_node_status_{L,S,N} records OK, NO_START_OBSERVATION, or RECURSION_STOPPED_EARLY,
+      and masked_node_status records EVALUATED, NO_OBSERVED_NODES, or HORIZON_TOO_SHORT, so a
+      NaN rate in the criterion is always attributable rather than mute.
+
+# -------------------------------------------------------------------------------------
+# 14. Metrics.
+# -------------------------------------------------------------------------------------
+metrics:
+  predictive_are_secondary: true
+  predictive:
+    - rmse_protected_test
+    - mae_protected_test
+    - normalized_transition_error
+    - improvement_vs_B0
+  primary:
+    - normalized_intervention_response_error      # NIRE
+    - step_response_error
+    - cumulative_drawdown_error
+    - vulnerability_rank_spearman
+    - vulnerability_rank_topk_overlap
+  nire_definition: NIRE = ||delta_h_hat - delta_h_true||_2 / ||delta_h_true||_2
+  # A node enters the NIRE average only if its true response is materially nonzero, so that
+  # nodes with essentially no true response cannot dominate the ratio. Frozen before results.
+  nire_node_inclusion_threshold: 0.01
+  topk_k: 2
+  parameter_recovery:
+    metrics:
+      - relative_parameter_error
+      - sign_recovery
+      - storage_response_recovery
+      - coupling_strength_recovery
+    subject_to: estimands.k_equals_1 / estimands.k_greater_than_1 rules
+  network_recovery:
+    - edge_precision
+    - edge_recall
+    - edge_f1
+    - edge_false_positive_rate
+    - edge_false_negative_rate
+    - strong_coupling_weight_error
+    - D_phys
+  falsification:
+    - false_edge_count            # S6
+    - false_edge_any_fraction     # S6
+    - false_pumping_effect_rate   # S8
+  identifiability_diagnostics:
+    - design_matrix_rank
+    - singular_values
+    - condition_number
+    - pumping_excitation_residual_fraction
+    - max_variance_inflation_factor
+  diagnostics_distinguish: [structural_non_identifiability, practical_noise_driven_difficulty]
+
+# -------------------------------------------------------------------------------------
+# 15. Uncertainty. Diagnostic only in v1 -- NOT part of any gate.
+# -------------------------------------------------------------------------------------
+uncertainty:
+  iid_bootstrap: PROHIBITED_DEPENDENT_SERIES
+  estimator: moving_block_bootstrap
+  block_length_rule: max(2, ceil(2.0 * tau_relax_realized / k))    # cadence steps
+  n_bootstrap_analysis: 200
+  n_bootstrap_smoke: 20
+  nominal_interval: 0.90
+  coverage_is_a_gate_criterion: false
+  coverage_role: REPORTED_DIAGNOSTIC_ONLY
+  monte_carlo_variability_reported_separately: true
+  promotion_to_gate: DEFERRED_TO_POSSIBLE_V2_AFTER_ESTIMATOR_VALIDATION
+
+# -------------------------------------------------------------------------------------
+# 16. Seeds. Three DISJOINT pools with distinct root entropies.
+# -------------------------------------------------------------------------------------
+seeds:
+  rng_implementation: numpy.random.Generator(PCG64) via numpy.random.SeedSequence
+  spawn_protocol: SeedSequence(entropy=<pool_entropy>).spawn(n) then default_rng(child)
+  pools:
+    G0:
+      entropy: 20260906000001
+      n_seeds: 5
+      role: deterministic implementation sanity only
+    CALIBRATION:
+      entropy: 20260906000002
+      n_seeds: 8
+      role: design-time variance calibration only; never an analysis replicate
+    SMOKE:
+      entropy: 20260906000003
+      n_seeds: 3
+      role: ENGINEERING ONLY
+    ANALYSIS:
+      entropy: 20260906000004
+      n_seeds: 60
+      role: substantive inference
+  disjointness_required: true
+  smoke_rules:
+    - smoke results detect implementation failures and measure runtime ONLY
+    - smoke results MUST NOT alter scientific thresholds
+    - smoke results MUST NOT be used to choose favourable regimes
+    - smoke results MUST NOT tune gates
+    - smoke results MUST NOT support substantive scientific claims
+    - no smoke seed may appear in any substantive output
+
+# -------------------------------------------------------------------------------------
+# 17. Scenario classes.
+# -------------------------------------------------------------------------------------
+scenarios:
+  S0: {name: oracle_single_node,             purpose: implementation sanity}
+  S1: {name: practical_local_response,       purpose: practical local identifiability}
+  S2: {name: pumping_recharge_confounding,   purpose: climate-vs-pumping attribution}
+  S3: {name: imperfect_recharge_observation, purpose: proxy-quality sensitivity}
+  S4: {name: oracle_small_network,           purpose: favourable network recoverability}
+  S5: {name: realistic_sparse_network,       purpose: primary practical network test}
+  S6: {name: null_network_falsification,     purpose: false-structure discovery}
+  S7: {name: controlled_misspecification,    purpose: prediction-vs-intervention divergence}
+  S8: {name: managed_forcing_placebo,        purpose: false pumping-effect discovery}
+  S9: {name: candidate_support_misspecification, purpose: unavailable true links}
+
+s6_null_construction:
+  C_ij: 0 for all i != j
+  # Marginal head variance is NOT force-matched to the coupled reference. This was attempted
+  # at freeze time via the process-noise channel and is infeasible, for a reason worth
+  # recording: measured on the CALIBRATION seed pool, process noise at the reference level
+  # contributes only about 0.13% of stationary head variance (16.591 at zero process noise
+  # vs 16.612 at the reference level), because head variance is dominated by the integrated
+  # low-frequency forcing. The null system also has ~2.1x the coupled reference's head
+  # variance (16.59 vs 7.80), since coupling drains node-specific forcing through additional
+  # boundary paths. Matching would therefore require changing the forcing process or the
+  # relaxation time, both of which are controlled factors.
+  match_marginal_head_variance: false
+  match_attempted_and_rejected: true
+  rejection_rationale: >
+    The quantity that governs inference difficulty is already matched by construction: the
+    snr_head definition ties observation-noise sd to REALIZED head sd, so S5 and S6 face the
+    same head signal-to-noise ratio despite different absolute variances. The residual
+    marginal-variance difference is a structural consequence of coupling, not a nuisance, and
+    suppressing it would distort the very truth the null scenario is meant to represent.
+  required_reporting:
+    - realized_head_sd
+    - realized_observation_noise_sd
+    - realized_snr_head
+    - realized_snr_head_detrended
+    - process_noise_variance_share
+  cross_scenario_comparison_caveat: >
+    S5-vs-S6 comparisons (and therefore SGI_G2 vs SGI_G3) must be read alongside the reported
+    realized variances, which differ by roughly a factor of two in absolute terms.
+  variance_characterization_reference: {topology: path5, memory: MED, gamma: MED}
+  characterization_artifact: outputs/provenance/S6_VARIANCE_CHARACTERIZATION.json
+
+s7_variants:
+  delayed_recharge:
+    description: truth applies a distributed lag to recharge; estimator uses the contemporaneous proxy
+    lag_weights: [0.5, 0.3, 0.2]
+  recharge_efficiency_mismatch:
+    description: truth has B_R != B_Q; estimator retains the restricted B_R == B_Q family
+    recharge_efficiency: 0.6
+  weak_nonlinear_recharge:
+    description: truth applies a mild concave recharge response
+    form: R_effective = R * (1 - kappa_nl * R / (1 + R)),  kappa_nl = 0.25
+  latent_common_climate:
+    description: an unobserved common climate factor drives recharge at all nodes
+    common_factor_sd: 0.20
+    form: R = R_base * exp(f_t - log_sd^2/2),  f_t ~ AR1(phi=0.9), stationary sd = log_sd
+    parameterization: >
+      common_factor_sd is the factor's STATIONARY sd expressed in absolute recharge units at
+      mean recharge, so log_sd = common_factor_sd / recharge.mean and the AR(1) innovation sd
+      is log_sd*sqrt(1-phi^2). Two errors are ruled out by construction here: passing the
+      stationary sd directly as an innovation sd (which inflates the factor 2.3x), and using
+      an ADDITIVE factor, which leaves only ~2.5 sd of headroom above zero at the seasonal
+      trough and pushes this cell into the clipping limit.
+    multiplicative_rationale: >
+      A climate anomaly scales recharge rather than adding a fixed volume, so the
+      multiplicative form is the more physical one, and it keeps R strictly positive so this
+      scenario carries ONLY its intended misspecification and no undocumented clipping
+      nonlinearity. The state equation remains linear in R; only the exogenous input changes.
+
+s8_placebo_construction:
+  description: >
+    an OBSERVED pumping-like variable strongly correlated with recharge/climate but with
+    ZERO causal effect on head. The true causal pumping remains present and unobserved-as-
+    placebo; the placebo is offered to the estimator as if it were pumping.
+  placebo_correlation_with_recharge: 0.85
+  placebo_causal_effect: 0.0
+  additional_diagnostics: [time_shift_placebo, season_preserving_permutation_placebo]
+  time_shift_fine_steps: 26
+
+# -------------------------------------------------------------------------------------
+# 18. Reference regime. Every 1-D stress curve is a deviation from exactly this point.
+# -------------------------------------------------------------------------------------
+reference_regime:
+  memory: MED
+  cadence: 4
+  gamma: MED
+  pumping_quality: P-MULTNOISE
+  pumping_quality_param: 0.10
+  recharge_quality: R-NOISE
+  recharge_quality_param: 0.20
+  confounding_rho: 0.3
+  mcar_fraction: 0.10
+  blocks_per_node: 0
+  observed_node_fraction: 1.0
+  snr_head: 10
+  process_noise_sd: 0.05
+
+oracle_favourable_overrides:
+  cadence: 1
+  pumping_quality: P-EXACT
+  recharge_quality: R-EXACT
+  confounding_rho: 0.0
+  mcar_fraction: 0.0
+  blocks_per_node: 0
+  observed_node_fraction: 1.0
+  snr_head: 20
+  process_noise_sd: 0.02
+  gamma: HIGH
+
+# -------------------------------------------------------------------------------------
+# 19. GATE POPULATIONS. Exact cells, seeds, aggregation rules and statistics.
+#     No vague terms. Oracle cells never compensate for realistic-cell failure:
+#     every required cell must pass ON ITS OWN.
+# -------------------------------------------------------------------------------------
+gates:
+  aggregation_rules:
+    replicate_unit: one seed from the named pool applied to one cell
+    per_cell_statistic_over_seeds: as named per criterion (median or fraction)
+    multi_node_cells: >
+      per-replicate node-level values are reduced to a replicate-level value by the MEAN
+      over evaluated nodes BEFORE the across-seed statistic is taken
+    combination_across_required_cells: LOGICAL_AND
+    oracle_cells_may_not_compensate: true
+
+  SGI_G0:
+    alias: G0
+    name: deterministic_implementation_sanity
+    seed_pool: G0
+    required_cells:
+      C_G0:
+        scenario: S0
+        topology: single
+        overrides:
+          memory: MED
+          cadence: 1
+          pumping_quality: P-EXACT
+          recharge_quality: R-EXACT
+          confounding_rho: 0.0
+          mcar_fraction: 0.0
+          blocks_per_node: 0
+          observed_node_fraction: 1.0
+          snr_head: .inf
+          process_noise_sd: 0.0
+    criteria:
+      - id: G0_transition_exact
+        statistic: max_over_seeds(max_abs_transition_residual)
+        comparator: "<="
+        threshold: 1.0e-9
+      - id: G0_coefficient_exact
+        statistic: max_over_seeds(max_abs_relative_error over {A_11, B_Q, B_R, intercept})
+        comparator: "<="
+        threshold: 1.0e-8
+      - id: G0_storage_exact
+        statistic: max_over_seeds(abs_relative_error(S_hat, S_true))
+        comparator: "<="
+        threshold: 1.0e-8
+      - id: G0_design_full_rank
+        statistic: min_over_seeds(rank_deficiency)
+        comparator: "=="
+        threshold: 0
+    all_seeds_must_pass: true
+    on_failure: BLOCK_ALL_DOWNSTREAM_SCIENTIFIC_CONCLUSIONS
+
+  SGI_G1:
+    alias: G1
+    name: local_response_support
+    seed_pool: ANALYSIS
+    evaluated_model: L
+    required_cells:
+      G1R1: {scenario: S1, topology: single, overrides: {}}
+      G1R2: {scenario: S1, topology: single, overrides: {cadence: 1}}
+      G1R3: {scenario: S1, topology: single, overrides: {mcar_fraction: 0.30}}
+      G1R4: {scenario: S2, topology: single, overrides: {confounding_rho: 0.60}}
+      G1R5: {scenario: S3, topology: single, overrides: {recharge_quality_param: 0.40}}
+      G1R6: {scenario: S1, topology: path5,  overrides: {}}
+    criteria:
+      - id: G1_sign
+        description: estimated pumping response must lower head
+        statistic: fraction_of_replicates(beta_hat_Q < 0)
+        comparator: ">="
+        threshold: 0.95
+      - id: G1_intervention
+        description: persistent-step NIRE at the primary 26-step horizon
+        statistic: median_over_replicates(nire_step_h26)
+        comparator: "<="
+        threshold: 0.20
+      - id: G1_stability_blowup
+        statistic: fraction_of_replicates(max_abs_protected_prediction > 1000.0)
+        comparator: "=="
+        threshold: 0.0
+      - id: G1_stability_vs_B0
+        statistic: median_over_replicates(rmse_L) / median_over_replicates(rmse_B0)
+        comparator: "<="
+        threshold: 1.0
+    coverage_criterion: EXCLUDED_IN_V1
+    each_required_cell_must_pass_independently: true
+    interpretation_note: >
+      G1R6 applies a LOCAL model to a genuinely coupled truth. Its failure is a scientific
+      result about local-model adequacy under coupling, not an implementation defect, and
+      it is deliberately kept in the required set.
+    report_continuous_metrics_regardless_of_pass_fail: true
+
+  SGI_G2:
+    alias: G2
+    name: network_complexity_support
+    seed_pool: ANALYSIS
+    evaluated_model: N
+    comparison_set: [B0, L, S]
+    required_cells:
+      G2R1: {scenario: S4, topology: path5, overrides: ORACLE_FAVOURABLE}
+      G2R2: {scenario: S4, topology: star5, overrides: ORACLE_FAVOURABLE}
+      G2R3: {scenario: S5, topology: path5, overrides: {}}
+      G2R4: {scenario: S5, topology: star5, overrides: {}}
+    criteria:
+      - id: G2_intervention_gain
+        description: >
+          N must materially improve PROTECTED INTERVENTION accuracy over the best simpler
+          model, where best_simple = min over {B0, L, S} of median nire_step_h26
+        statistic: (median_nire_best_simple - median_nire_N) / median_nire_best_simple
+        comparator: ">="
+        threshold: 0.10
+      - id: G2_strong_edge_f1
+        statistic: median_over_replicates(strong_edge_undirected_f1)
+        comparator: ">="
+        threshold: 0.80
+      - id: G2_masked_node_no_collapse
+        description: >
+          propagation through monitoring loss. masked_node_nmpe is the normalized error of a
+          recursive forecast of the masked node over the mask horizon; observed_node_nmpe is
+          the same horizon with the recursion re-initialized each step from the node's own
+          observed head (monitoring intact). Both are normalized by the sd of the true head
+          over the horizon. This is a FORECAST quantity, not an intervention NIRE.
+        statistic: median_over_replicates(masked_node_nmpe) / median_over_replicates(observed_node_nmpe)
+        comparator: "<="
+        threshold: 1.50
+    global_criteria:
+      - id: G2_requires_G3_not_triggered
+        rule: SGI_G3 must not be triggered
+      - id: G2_not_merely_rmse
+        rule: >
+          record whether one-step protected RMSE improvement ALONE would have passed; a
+          cell that passes on RMSE but fails G2_intervention_gain does NOT pass
+    each_required_cell_must_pass_independently: true
+
+  SGI_G3:
+    alias: G3
+    name: no_network_falsification
+    seed_pool: ANALYSIS
+    required_cells:
+      G3R1: {scenario: S6, topology: null5, overrides: {}}
+      G3R2: {scenario: S6, topology: null5, overrides: ORACLE_FAVOURABLE}
+      G3R3: {scenario: S8, topology: single, overrides: {}}
+      G3R4: {scenario: S8, topology: path5, overrides: {}}
+    triggers_any_of:
+      - id: G3_null_false_edges_median
+        cells: [G3R1, G3R2]
+        statistic: median_over_replicates(false_edge_count)
+        comparator: ">"
+        threshold: 0.5
+      - id: G3_null_false_edges_any
+        cells: [G3R1, G3R2]
+        statistic: fraction_of_replicates(false_edge_count >= 1)
+        comparator: ">"
+        threshold: 0.20
+      - id: G3_placebo_effect
+        cells: [G3R3, G3R4]
+        statistic: >
+          fraction_of_replicates(abs(placebo_step_response) >
+                                 0.20 * abs(true_real_pumping_step_response))
+        comparator: ">"
+        threshold: 0.20
+      - id: G3_prediction_intervention_inversion
+        cells: [G2R1, G2R2, G2R3, G2R4]
+        rule: >
+          median one-step protected RMSE of N is BETTER than the best simpler model while
+          median nire_step_h26 of N is WORSE than the best simpler model
+    on_trigger:
+      NETWORK_IDENTIFIABILITY_STATUS: NOT_EARNED
+      overrides_SGI_G2: true
+
+# -------------------------------------------------------------------------------------
+# 20. Reporting cells that are NOT gates.
+# -------------------------------------------------------------------------------------
+reporting_cells:
+  R_S7_delayed:        {scenario: S7, topology: path5, variant: delayed_recharge,             overrides: {}}
+  R_S7_effmismatch:    {scenario: S7, topology: path5, variant: recharge_efficiency_mismatch, overrides: {}}
+  R_S7_nonlin:         {scenario: S7, topology: path5, variant: weak_nonlinear_recharge,      overrides: {}}
+  R_S7_latentclimate:  {scenario: S7, topology: path5, variant: latent_common_climate,        overrides: {}}
+  R_S9_hidden:         {scenario: S9, topology: path5_hidden, overrides: {}}
+  R_S4_bridge:         {scenario: S4, topology: bridge6, overrides: ORACLE_FAVOURABLE}
+  R_S5_bridge:         {scenario: S5, topology: bridge6, overrides: {}}
+
+# -------------------------------------------------------------------------------------
+# 21. Experiment grid: targeted stress curves + a small number of two-factor grids.
+#     NO generic fractional factorial. Every cell is a deviation from reference_regime.
+# -------------------------------------------------------------------------------------
+experiment_grid:
+  design_type: targeted_stress_curves_plus_named_two_factor_grids
+  fractional_factorial: NOT_USED
+  fractional_factorial_rationale: >
+    a generic fractional factorial would leave its estimable interactions undocumented and
+    its aliasing structure unstated; interpretable curves and named two-factor grids are
+    preferred. Consequence, stated openly: no formal estimate of higher-order interactions
+    outside the five named grids is produced.
+
+  stress_curves:
+    curve_cadence:            {topology: path5, scenario: S5, vary: cadence,               values: [1, 2, 4, 13]}
+    curve_missing:            {topology: path5, scenario: S5, vary: mcar_fraction,         values: [0.0, 0.10, 0.30, 0.50]}
+    curve_block_outage:       {topology: path5, scenario: S5, vary: blocks_per_node,       values: [0, 1, 2]}
+    curve_pumping_quality:    {topology: path5, scenario: S5, vary: pumping_quality,       values: [P-EXACT, P-MULTNOISE, P-SCALEBIAS, P-TEMPAGG, P-SPATIALAGG]}
+    curve_recharge_quality:   {topology: path5, scenario: S5, vary: recharge_quality,      values: [R-EXACT, R-NOISE, R-LAG, R-NOISELAG, R-SCALE]}
+    curve_confounding:        {topology: path5, scenario: S2, vary: confounding_rho,       values: [0.0, 0.3, 0.6, 0.9]}
+    curve_observed_nodes:     {topology: path5, scenario: S5, vary: observed_node_fraction, values: [0.4, 0.6, 0.8, 1.0]}
+    curve_snr:                {topology: path5, scenario: S5, vary: snr_head,              values: [2, 5, 10, 20]}
+    curve_coupling_strength:  {topology: path5, scenario: S5, vary: gamma,                 values: [NONE, LOW, MED, HIGH]}
+    curve_memory:             {topology: path5, scenario: S5, vary: memory,                values: [LOW, MED, HIGH]}
+    # v1 is otherwise an OBSERVATION-LIMITED regime: at the reference process-noise level the
+    # flux disturbance contributes only ~0.13% of head variance, far less than observation
+    # noise. This curve is what actually covers the process-noise-limited regime, spanning
+    # negligible -> comparable to observation noise -> dominant.
+    curve_process_noise:      {topology: path5, scenario: S5, vary: process_noise_sd,      values: [0.05, 0.25, 1.0]}
+
+  two_factor_grids:
+    grid_cadence_x_memory:
+      scenario: S5
+      topology: path5
+      factors: {cadence: [1, 2, 4, 13], memory: [LOW, MED, HIGH]}
+      reported_axis: cadence_over_tau_relax_realized
+      cells: 12
+    grid_recharge_x_confounding:
+      scenario: S3
+      topology: path5
+      factors: {recharge_quality: [R-EXACT, R-NOISE, R-LAG, R-NOISELAG], confounding_rho: [0.0, 0.3, 0.6, 0.9]}
+      cells: 16
+    grid_missing_x_obsnodes:
+      scenario: S5
+      topology: path5
+      factors: {mcar_fraction: [0.0, 0.10, 0.30, 0.50], observed_node_fraction: [0.4, 0.6, 0.8, 1.0]}
+      cells: 16
+    grid_coupling_x_snr:
+      scenario: S5
+      topology: path5
+      factors: {gamma: [LOW, MED, HIGH], snr_head: [2, 5, 10, 20]}
+      cells: 12
+    grid_candsupport_x_coupling:
+      scenario: S9
+      topology_by_level: {nested: path5, misspecified: path5_hidden}
+      factors: {candidate_support: [nested, misspecified], gamma: [LOW, MED, HIGH]}
+      cells: 6
+
+# -------------------------------------------------------------------------------------
+# 22. Output schema.
+# -------------------------------------------------------------------------------------
+outputs:
+  replicate_record_is_scalar_only: true
+  no_full_trajectory_arrays_persisted: true
+  files:
+    - outputs/FINAL_SYNTHETIC_IDENTIFIABILITY_REPORT.md
+    - outputs/FINAL_SYNTHETIC_IDENTIFIABILITY_STATUS.json
+    - outputs/scenario_summary.csv
+    - outputs/parameter_recovery.csv
+    - outputs/intervention_recovery.csv
+    - outputs/network_recovery.csv
+    - outputs/data_adequacy_map.csv
+    - outputs/data_adequacy_map.md
+    - outputs/prediction_vs_intervention.csv
+    - outputs/AP_DATA_REQUIREMENTS_FROM_SYNTHETIC.md
+    - outputs/provenance/DESIGN_FREEZE.json
+    - outputs/provenance/DESIGN_FREEZE_MANIFEST.csv
+    - outputs/provenance/CODE_MANIFEST.csv
+    - outputs/provenance/RUN_MANIFEST.json
+    - outputs/provenance/TEST_RESULTS.json
+  final_status_tokens:
+    - LOCAL_RESPONSE_NOT_IDENTIFIED
+    - LOCAL_RESPONSE_IDENTIFIED_NETWORK_NOT_EARNED
+    - SPATIAL_FORCING_EARNED_NETWORK_NOT_EARNED
+    - NETWORK_IDENTIFIABLE_UNDER_SPECIFIED_DATA_REGIME
+    - INCONCLUSIVE
+  status_must_state_exact_data_regime: true
+
+# -------------------------------------------------------------------------------------
+# 23. Execution phases.
+# -------------------------------------------------------------------------------------
+execution:
+  phase_1_authorized:
+    - pytest
+    - SGI_G0
+    - engineering_smoke
+    - runtime_storage_benchmark
+  phase_1_terminates_with: MANDATORY_EXTERNAL_REVIEW_CHECKPOINT
+  phase_2_requires_explicit_authorization:
+    - full_monte_carlo_sweep
+    - summarization
+    - figures
+    - final_report_and_status
+    - ap_data_requirements
+  slurm:
+    expected_needed: false
+    preferred_partitions: [sched_mit_sloan_batch, sched_mit_sloan_batch_r8, ou_sloan_batch]
+    deprioritized_partition: mit_normal
+    submission_requires_authorization: true

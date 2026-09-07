@@ -1,0 +1,56 @@
+{
+  "code_hash": "94ce983d26c715ecf431e5f35f8256deadd2c6ebe48a4a276d8fd3233c8aa8ca",
+  "design_artifacts": [
+    "config/design_v1.yaml",
+    "DESIGN_FREEZE.md"
+  ],
+  "design_hash": "6e70d37874f9895a3fc089b1f3a982cd8033a1bb2201153b418492bbba41bdcc",
+  "design_status": "FROZEN",
+  "design_version": "design_v1",
+  "forcing_clipping": {
+    "argmax_cell": "CURVE_curve_memory_LOW",
+    "limit": 0.001,
+    "max_clip_fraction_over_cells": 0.00016025641025641026,
+    "n_cells_checked": 127,
+    "n_seeds_per_cell": 8
+  },
+  "frozen_at_utc": "2026-09-07T02:41:38.537121+00:00",
+  "full_sweep_launched": false,
+  "n_code_files": 24,
+  "n_frozen_systems": 16,
+  "numpy_version": "2.4.6",
+  "phase": "PHASE_1_PRE_SWEEP",
+  "python_executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+  "python_version": "3.11.15",
+  "s6_variance_characterization": {
+    "calibration_seed_pool": "CALIBRATION",
+    "interpretation": "Process noise contributes a negligible share of head variance at the reference level, so it cannot be used to equalize marginal variance in either direction. snr_head already equalizes head signal-to-noise across scenarios; the residual variance difference is a structural consequence of coupling and is reported rather than suppressed.",
+    "match_enforced": false,
+    "n_calibration_seeds": 8,
+    "null_over_reference_variance_ratio": 2.1300890974289235,
+    "process_noise_variance_share_null": 0.001252184796139895,
+    "process_noise_variance_share_reference": 0.003523994935084504,
+    "variance_coupled_reference": 7.798572588593116,
+    "variance_coupled_reference_zero_process_noise": 7.771090458290025,
+    "variance_null": 16.611654446470254,
+    "variance_null_zero_process_noise": 16.590853585333655
+  },
+  "seed_pool_hashes": {
+    "ANALYSIS": "bd6db2aac7743cc83d5d5ecd8b5f07fefe18747649e3489a5b89e7e0cb689015",
+    "CALIBRATION": "7aedf1a97f413d4642668e5741b17c7418db60593c0246df64faaea8c8b00228",
+    "G0": "3bbd798d908bdf08d888efb5756236757f2b9bd5fdc19bc7cbe5fe7d7725c489",
+    "SMOKE": "d4e3c7dcd48e6f1f24713ca3113252be1642392abef9afa25db5d6b66ccac633"
+  },
+  "seed_pool_sizes": {
+    "ANALYSIS": 60,
+    "CALIBRATION": 8,
+    "G0": 5,
+    "SMOKE": 3
+  },
+  "time_base": [
+    "cadence 1: 519 transitions -> 363/78/78",
+    "cadence 2: 259 transitions -> 181/39/39",
+    "cadence 4: 129 transitions -> 90/19/20",
+    "cadence 13: 39 transitions -> 27/6/6"
+  ]
+}
