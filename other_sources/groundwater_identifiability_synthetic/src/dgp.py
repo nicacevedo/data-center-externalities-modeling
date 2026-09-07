@@ -168,6 +168,52 @@ def build_system(
     )
 
 
+def as_matched_local_dynamics_null(system: SystemTruth) -> SystemTruth:
+    """S6b: remove coupling while preserving nodewise local self-dynamics.
+
+    C_ij_null = 0
+    C_i0_null = C_i0_ref + sum_j C_ij_ref
+    hence A_ii_null = A_ii_ref and A_ij_null = 0.
+
+    The unforced equilibrium is preserved by b_null = (I - A_null) h_eq_ref.
+    Marginal head variance is NOT claimed to match.
+    """
+    n = system.n_nodes
+    C_null = np.zeros_like(system.C)
+    C0_null = system.C0 + system.C.sum(axis=1)
+    A_null = np.diag(np.diag(system.A).copy())
+    # Physical construction of A from C0_null must match diag(A_ref).
+    A_from_C = np.eye(n) - system.dt * (np.diag(C0_null) / system.S[:, None])
+    if not np.allclose(np.diag(A_from_C), np.diag(system.A), atol=1e-10):
+        raise ValueError("S6b A_ii matching failed")
+    h_eq_ref = np.linalg.solve(np.eye(n) - system.A, system.b)
+    b_null = (np.eye(n) - A_null) @ h_eq_ref
+    kappa_null = np.zeros_like(system.kappa)
+    rho_A = float(np.max(np.abs(np.linalg.eigvals(A_null))))
+    if 0.0 < rho_A < 1.0:
+        tau_realized = float(-1.0 / np.log(rho_A))
+    else:
+        tau_realized = float("inf")
+    return SystemTruth(
+        topology=system.topology,
+        coordinates=system.coordinates,
+        S=system.S.copy(),
+        C=C_null,
+        C0=C0_null,
+        h_b=system.h_b.copy(),
+        A=A_null,
+        b=b_null,
+        B_Q=system.B_Q.copy(),
+        B_R=system.B_R.copy(),
+        kappa=kappa_null,
+        true_edges=frozenset(),
+        dt=system.dt,
+        rho_A=rho_A,
+        tau_relax_realized=tau_realized,
+        recharge_efficiency=system.recharge_efficiency,
+    )
+
+
 def check_stability(design: dict[str, Any], system: SystemTruth) -> dict[str, Any]:
     """Assert both stability conditions. Returns the realized diagnostics."""
     stab = design["stability"]
@@ -192,7 +238,7 @@ def check_stability(design: dict[str, Any], system: SystemTruth) -> dict[str, An
         raise ValueError("conductance must be nonnegative")
     if np.any(system.C0 <= 0.0):
         raise ValueError("boundary leakage must be strictly positive for contraction")
-    if np.any(system.A < 0.0):
+    if np.any(system.A < -1e-12):
         raise ValueError("A must be entrywise nonnegative")
 
     return {

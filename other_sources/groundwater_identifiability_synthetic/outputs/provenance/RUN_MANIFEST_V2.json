@@ -1,0 +1,27 @@
+{
+  "analysis_seeds_inspected": false,
+  "branch": "testing/synthetic-groundwater-identifiability",
+  "cell_count": 129,
+  "code_hash": "5429a6378005b4152130f6b9707cc1fc61abdf3a81a83e3849530d1ea8f856fd",
+  "design_hash": "b53f5594a444ae4826adfe2c47818080508a4c4b00a38fa25b4ffc483e20a8a5",
+  "frozen_at_utc": "2026-09-07T04:19:39.245735+00:00",
+  "full_sweep_launched": false,
+  "git_head": "1b95209b1a2f0e20ae8bfac3910bd5359a420c82",
+  "numpy_version": "2.4.6",
+  "parent_checkpoint_commit": "1b95209b1a2f0e20ae8bfac3910bd5359a420c82",
+  "python_version": "3.11.15",
+  "rng_implementation": "numpy.random.Generator(PCG64)",
+  "scenario_count": 12,
+  "seed_pool_hashes": {
+    "ANALYSIS": "bd6db2aac7743cc83d5d5ecd8b5f07fefe18747649e3489a5b89e7e0cb689015",
+    "CALIBRATION": "7aedf1a97f413d4642668e5741b17c7418db60593c0246df64faaea8c8b00228",
+    "G0": "3bbd798d908bdf08d888efb5756236757f2b9bd5fdc19bc7cbe5fe7d7725c489",
+    "SMOKE": "d4e3c7dcd48e6f1f24713ca3113252be1642392abef9afa25db5d6b66ccac633"
+  },
+  "seed_pool_sizes": {
+    "ANALYSIS": 60,
+    "CALIBRATION": 8,
+    "G0": 5,
+    "SMOKE": 3
+  }
+}

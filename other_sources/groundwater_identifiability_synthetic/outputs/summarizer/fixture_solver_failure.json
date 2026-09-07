@@ -1,0 +1,220 @@
+{
+  "analysis_seeds_used": false,
+  "banner": "NON-INFERENTIAL. This summary was produced from fixtures or SMOKE seeds. It must not be used to set thresholds, choose regimes, or make scientific claims.",
+  "data_adequacy": [
+    {
+      "cadence": 4.0,
+      "cell_id": "G1R1",
+      "complexity_unsupported": false,
+      "estimability_rate_N": 1.0,
+      "mcar_fraction": 0.1,
+      "not_estimable_rate_N": 0.0,
+      "scenario": "S1"
+    }
+  ],
+  "fixture": "solver_failure.csv",
+  "gates": {
+    "SGI_G0": {
+      "all_required_cells_pass": false,
+      "cells": {
+        "C_G0": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        }
+      },
+      "oracle_compensated": false,
+      "realistic_failures": [
+        "C_G0"
+      ]
+    },
+    "SGI_G1": {
+      "all_required_cells_pass": false,
+      "cells": {
+        "G1R1": {
+          "pass": false,
+          "reason": "solver_failure",
+          "state": "FIT_FAILED"
+        },
+        "G1R2": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G1R3": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G1R4": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G1R5": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G1R6": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        }
+      },
+      "oracle_compensated": false,
+      "realistic_failures": [
+        "G1R4",
+        "G1R5",
+        "G1R2",
+        "G1R3",
+        "G1R6",
+        "G1R1"
+      ]
+    },
+    "SGI_G2": {
+      "all_required_cells_pass": false,
+      "cells": {
+        "G2R1": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G2R2": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G2R3": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G2R4": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        }
+      },
+      "oracle_compensated": false,
+      "realistic_failures": [
+        "G2R3",
+        "G2R4"
+      ]
+    },
+    "SGI_G3": {
+      "all_required_cells_pass": false,
+      "cells": {
+        "G3R1": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G3R1b": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G3R2": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G3R2b": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G3R3": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        },
+        "G3R4": {
+          "pass": false,
+          "reason": "no_records",
+          "state": "NOT_ESTIMABLE"
+        }
+      },
+      "oracle_compensated": false,
+      "realistic_failures": [
+        "G3R2",
+        "G3R4",
+        "G3R2b",
+        "G3R1b",
+        "G3R1",
+        "G3R3"
+      ],
+      "triggers": {
+        "G3_null_s6a_false_edges_any": {
+          "cells": [
+            "G3R1",
+            "G3R2"
+          ],
+          "severity": "HARD_FAILURE",
+          "triggered": false,
+          "value": NaN
+        },
+        "G3_null_s6a_false_edges_median": {
+          "cells": [
+            "G3R1",
+            "G3R2"
+          ],
+          "severity": "HARD_FAILURE",
+          "triggered": false,
+          "value": NaN
+        },
+        "G3_null_s6b_false_edges_any": {
+          "cells": [
+            "G3R1b",
+            "G3R2b"
+          ],
+          "severity": "ROBUSTNESS_EVIDENCE",
+          "triggered": false,
+          "value": NaN
+        },
+        "G3_null_s6b_false_edges_median": {
+          "cells": [
+            "G3R1b",
+            "G3R2b"
+          ],
+          "severity": "ROBUSTNESS_EVIDENCE",
+          "triggered": false,
+          "value": NaN
+        },
+        "G3_placebo_effect": {
+          "cells": [
+            "G3R3",
+            "G3R4"
+          ],
+          "severity": "HARD_FAILURE",
+          "triggered": false,
+          "value": NaN
+        },
+        "G3_prediction_intervention_inversion": {
+          "cells": [
+            "G2R1",
+            "G2R2",
+            "G2R3",
+            "G2R4"
+          ],
+          "severity": "HARD_FAILURE",
+          "triggered": false,
+          "value": NaN
+        },
+        "_hard_failure": false,
+        "_robustness_only": false
+      }
+    }
+  },
+  "n_records": 3,
+  "prediction_vs_intervention": [
+    {
+      "cell_id": "G1R1",
+      "intervention_gain_N_vs_L": NaN,
+      "prediction_gain_N_vs_L": NaN,
+      "prediction_vs_intervention_inversion": false
+    }
+  ],
+  "source": "FIXTURE"
+}

@@ -130,6 +130,7 @@ def model_paired_response(
     model: str,
     spec: InterventionSpec,
     n_cadence_steps: int,
+    channel: str = "pumping",
 ) -> np.ndarray:
     """delta_yhat at cadence resolution for a fitted rung.
 
@@ -149,8 +150,8 @@ def model_paired_response(
     for node, fit in ladder.fits.get(model, {}).items():
         if fit is None:
             continue
-        beta_q[node] = fit.coef_of("pumping", 0.0)
-        beta_qn[node] = fit.coef_of("neighbour_pumping", 0.0)
+        beta_q[node] = fit.coef_of(channel, 0.0)
+        beta_qn[node] = fit.coef_of("neighbour_pumping", 0.0) if channel == "pumping" else 0.0
 
     cadence = bundle.cadence
     delta_q_fine = _delta_q_fine(spec, n, cadence)
@@ -205,6 +206,52 @@ def _last_observed_at_or_before(y: np.ndarray, tau: int, node: int) -> float:
     return float("nan")
 
 
+def frozen_masked_node_index(design: dict, topology: str) -> int:
+    """Topology table lookup. Independent of realized missingness."""
+    table = design["spatial_evaluation"]["masked_node_protocol"]["masked_node_selection"]["by_topology"]
+    if topology not in table:
+        raise KeyError(f"no frozen masked-node index for topology {topology}")
+    return int(table[topology])
+
+
+def _one_forecast_step(
+    bundle: ObservationBundle,
+    fit,
+    model: str,
+    node: int,
+    tau: int,
+    state: float,
+    bandwidth: float | None,
+) -> tuple[float | None, int]:
+    """Advance one cadence step. Returns (next_state, neighbour_carry_forwards) or (None, _)."""
+    values: list[float] = [state, bundle.season_sin[tau], bundle.season_cos[tau], bundle.time_trend[tau]]
+    if model in ("L", "S", "N"):
+        values.append(bundle.Q_obs[tau, node])
+        values.append(bundle.R_proxy[tau, node])
+        if bundle.P_placebo is not None:
+            values.append(bundle.P_placebo[tau, node])
+    if model == "S" and bandwidth is not None:
+        weights = np.exp(-bundle.distances[node] / float(bandwidth))
+        weights[node] = 0.0
+        weights[~bundle.observed_nodes] = 0.0
+        values.append(float(bundle.Q_obs[tau] @ weights))
+        values.append(float(bundle.R_proxy[tau] @ weights))
+    carry = 0
+    if model == "N":
+        for j in fit.kappa_neighbors:
+            neighbour = bundle.y[tau, j]
+            if not np.isfinite(neighbour):
+                neighbour = _last_observed_at_or_before(bundle.y, tau, j)
+                carry += 1
+            if not np.isfinite(neighbour):
+                return None, carry
+            values.append(float(neighbour) - state)
+    row = np.asarray(values, dtype=float)
+    if row.shape[0] != fit.coef.shape[0] or not np.all(np.isfinite(row)):
+        return None, carry
+    return float(fit.intercept + row @ fit.coef), carry
+
+
 def masked_node_forecast(
     bundle: ObservationBundle,
     ladder: LadderFit,
@@ -212,75 +259,75 @@ def masked_node_forecast(
     node: int,
     onset_transition: int,
     horizon: int,
-) -> tuple[np.ndarray, int]:
-    """Recursive forecast of a masked node's head. Returns (predictions, carry_forward_steps).
+) -> tuple[np.ndarray, dict[str, int | str]]:
+    """Recursive forecast aligned to TEST onset.
 
-    Protocol, exactly as frozen in design_v1:
-      - the node HAS train/validation history and its parameters are estimable;
-      - the recursion starts from the final admissible PRE-MASK head observation;
-      - afterwards only the node's own predicted state, its own pumping and recharge proxy,
-        observed (or last-observed) heads of NON-masked neighbours, and calendar features
-        may be used;
-      - no withheld head of the masked node may enter the recursion.
+    Protocol, frozen in design_v2:
+      - start from the last admissible PRE-MASK head (instant t_anchor < onset);
+      - if t_anchor < onset - 1, warm-forward internally to onset (NOT scored);
+      - score only heads at instants onset, ..., onset+horizon-1;
+      - no withheld TEST head of the masked node may enter.
 
-    `test_masked_node_no_leak` poisons every withheld entry with a large finite sentinel and
-    asserts the output is bit-identical to the NaN-masked run.
+    Returns (predictions of length `horizon`, diagnostics).
     """
+    empty = np.full(horizon, np.nan)
+    info: dict[str, int | str] = {
+        "warm_forward_steps": 0,
+        "carry_forward_steps": 0,
+        "anchor_instant": -1,
+        "status": "NOT_ESTIMABLE",
+    }
     fit = ladder.fits.get(model, {}).get(node)
     if fit is None:
-        return np.full(horizon, np.nan), 0
+        info["status"] = "NOT_ESTIMABLE"
+        return empty, info
 
-    # "Final ADMISSIBLE pre-mask head observation": walk back past any pre-mask gap rather
-    # than requiring the single instant onset-1 to be observed. Anchoring rigidly at onset-1
-    # would abandon the whole replicate whenever that one instant happened to be missing.
     start = -1
     for tau in range(onset_transition - 1, -1, -1):
         if np.isfinite(bundle.y[tau, node]):
             start = tau
             break
     if start < 0:
-        return np.full(horizon, np.nan), 0
+        info["status"] = "NO_START_OBSERVATION"
+        return empty, info
+    info["anchor_instant"] = start
     state = float(bundle.y[start, node])
-
     bandwidth = ladder.selection.get("S", {}).get("bandwidth")
-    predictions = np.full(horizon, np.nan)
     carry_forward = 0
 
+    # Warm-forward from start to onset-1. Predictions in this loop are NOT scored.
+    for tau in range(start, onset_transition - 1):
+        if tau >= bundle.n_transitions:
+            info["status"] = "RECURSION_STOPPED_EARLY"
+            info["carry_forward_steps"] = carry_forward
+            info["warm_forward_steps"] = tau - start
+            return empty, info
+        nxt, carry = _one_forecast_step(bundle, fit, model, node, tau, state, bandwidth)
+        carry_forward += carry
+        if nxt is None:
+            info["status"] = "RECURSION_STOPPED_EARLY"
+            info["carry_forward_steps"] = carry_forward
+            info["warm_forward_steps"] = tau - start
+            return empty, info
+        state = nxt
+    info["warm_forward_steps"] = max(0, (onset_transition - 1) - start)
+
+    predictions = np.full(horizon, np.nan)
     for step in range(horizon):
-        tau = start + step
+        tau = onset_transition - 1 + step
         if tau >= bundle.n_transitions:
             break
-        values: list[float] = [state, bundle.season_sin[tau], bundle.season_cos[tau], bundle.time_trend[tau]]
-        if model in ("L", "S", "N"):
-            values.append(bundle.Q_obs[tau, node])
-            values.append(bundle.R_proxy[tau, node])
-        if model == "S" and bandwidth is not None:
-            weights = np.exp(-bundle.distances[node] / float(bandwidth))
-            weights[node] = 0.0
-            weights[~bundle.observed_nodes] = 0.0
-            values.append(float(bundle.Q_obs[tau] @ weights))
-            values.append(float(bundle.R_proxy[tau] @ weights))
-        if model == "N":
-            aborted = False
-            for j in fit.kappa_neighbors:
-                neighbour = bundle.y[tau, j]
-                if not np.isfinite(neighbour):
-                    neighbour = _last_observed_at_or_before(bundle.y, tau, j)
-                    carry_forward += 1
-                if not np.isfinite(neighbour):
-                    aborted = True
-                    break
-                values.append(float(neighbour) - state)
-            if aborted:
-                break
-
-        row = np.asarray(values, dtype=float)
-        if row.shape[0] != fit.coef.shape[0] or not np.all(np.isfinite(row)):
+        nxt, carry = _one_forecast_step(bundle, fit, model, node, tau, state, bandwidth)
+        carry_forward += carry
+        if nxt is None:
             break
-        state = float(fit.intercept + row @ fit.coef)
+        state = nxt
         predictions[step] = state
 
-    return predictions, carry_forward
+    info["carry_forward_steps"] = carry_forward
+    completed = int(np.sum(np.isfinite(predictions)))
+    info["status"] = "OK" if completed else "RECURSION_STOPPED_EARLY"
+    return predictions, info
 
 
 def observed_node_chained_forecast(

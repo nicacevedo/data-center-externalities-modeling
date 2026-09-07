@@ -74,6 +74,10 @@ def scenario_options(design: dict[str, Any], regime: RegimeSpec) -> dict[str, An
             options["recharge_efficiency"] = float(
                 variants["recharge_efficiency_mismatch"]["recharge_efficiency"]
             )
+    if regime.scenario in ("S6", "S6a"):
+        options["null_mode"] = "global_memory"
+    if regime.scenario == "S6b":
+        options["null_mode"] = "matched_local_dynamics"
     if regime.scenario == "S8":
         options["placebo_correlation"] = float(
             design["s8_placebo_construction"]["placebo_correlation_with_recharge"]
@@ -132,18 +136,13 @@ def run_replicate(
         gamma_label=regime.gamma,
         recharge_efficiency=float(options.get("recharge_efficiency", 1.0)),
     )
+    if options.get("null_mode") == "matched_local_dynamics":
+        system = dgp.as_matched_local_dynamics_null(system)
     stability = dgp.check_stability(design, system)
 
     effective_regime = regime
     trajectory = dgp.simulate(design, system, effective_regime, rng, options)
-    bundle = make_observations(
-        design,
-        system,
-        trajectory,
-        effective_regime,
-        rng,
-        use_placebo_as_pumping=(regime.scenario == "S8"),
-    )
+    bundle = make_observations(design, system, trajectory, effective_regime, rng)
     ladder = fit_ladder(bundle, design)
 
     record: dict[str, Any] = {
@@ -172,6 +171,9 @@ def run_replicate(
         "n_transitions": bundle.n_transitions,
         "clip_fraction": trajectory.clip_fraction,
         "absolute_pumping_scale_known": bool(bundle.absolute_pumping_scale_known),
+        "realized_local_persistence_mean_A_ii": float(np.mean(np.diag(system.A))),
+        "null_mode": str(options.get("null_mode", "")),
+        "has_placebo": bool(bundle.P_placebo is not None),
         "selected_bandwidth": ladder.selection.get("S", {}).get("bandwidth", np.nan),
         "selected_lambda": ladder.selection.get("N", {}).get("lambda", np.nan),
     }
@@ -220,12 +222,37 @@ def run_replicate(
     record["sign_correct_fraction_L"] = float(np.mean(beta_q_hat < 0))
     record["beta_q_hat_mean_L"] = _nanmean(beta_q_hat)
 
+    ident_cfg = design.get("physical_parameter_identifiability", {})
+    excluded = set(ident_cfg.get("requires_all", {}).get("scenario_not_in", ["S7"]))
+    cond_threshold = float(ident_cfg.get("requires_all", {}).get("condition_number_below", 1e6))
+    excit_threshold = float(
+        ident_cfg.get("requires_all", {}).get("pumping_excitation_fraction_above", 0.05)
+    )
+    pumping_ok = regime.pumping_quality in ident_cfg.get("requires_all", {}).get(
+        "pumping_quality_in", ["P-EXACT", "P-MULTNOISE"]
+    )
+    recharge_ok = regime.recharge_quality in ident_cfg.get("requires_all", {}).get(
+        "recharge_quality_in", ["R-EXACT"]
+    )
+    rank_def = record.get("rank_deficiency_max_L", np.nan)
+    cond_val = record.get("condition_number_L", np.nan)
+    excit_val = record.get("pumping_excitation_fraction_L", np.nan)
+    rank_ok = np.isfinite(rank_def) and float(rank_def) == 0.0
+    cond_ok = np.isfinite(cond_val) and float(cond_val) < cond_threshold
+    excit_ok = np.isfinite(excit_val) and float(excit_val) > excit_threshold
     absolute_S_identifiable = bool(
-        bundle.absolute_pumping_scale_known
-        and k == 1
-        and regime.scenario not in ("S7",)
+        k == 1
+        and bundle.absolute_pumping_scale_known
+        and pumping_ok
+        and recharge_ok
+        and float(regime.confounding_rho) == 0.0
+        and rank_ok
+        and cond_ok
+        and excit_ok
+        and regime.scenario not in excluded
     )
     record["absolute_S_identifiable"] = absolute_S_identifiable
+    record["physical_parameter_identifiable"] = absolute_S_identifiable
 
     S_hat = np.full(system.n_nodes, np.nan)
     with np.errstate(divide="ignore", invalid="ignore"):
@@ -320,7 +347,16 @@ def run_replicate(
     # ---- uncertainty (diagnostic only) ----
     if with_bootstrap and n_bootstrap > 0:
         record.update(
-            _bootstrap_block(design, system, bundle, ladder, n_bootstrap, stability, seed)
+            _bootstrap_block(
+                design,
+                system,
+                bundle,
+                ladder,
+                n_bootstrap,
+                stability,
+                seed,
+                physical_identifiable=bool(record.get("physical_parameter_identifiable")),
+            )
         )
 
     # ---- SGI_G0 exact-recovery quantities ----
@@ -378,49 +414,59 @@ def _g0_block(system, bundle, ladder: LadderFit) -> dict[str, Any]:
 
 
 def _estimability_block(bundle, ladder: LadderFit) -> dict[str, Any]:
-    """Whether each rung could be fitted at all, recorded for EVERY replicate.
+    """First-class estimability. NEVER dropped by later aggregation.
 
-    A rung that cannot be estimated and a rung that was estimated and performed badly both
-    leave NaN metrics, but they are opposite findings, and the deliverable is a data-adequacy
-    map on which "the network model is not estimable at this observation quality" is one of
-    the most informative cells. So estimability is recorded as a first-class result rather
-    than inferred from absent columns.
-
-    A rung is UNDERDETERMINED when admissible rows are too few for its column count: the N
-    rung requires a node and all its candidate neighbours to be observed in the same
-    interval, so admissible rows fall off far faster than the raw missingness rate.
+    Replicate-level states: NOT_ESTIMABLE, FIT_FAILED, ESTIMATED.
+    Gate aggregation maps ESTIMATED onto ESTIMATED_FAILED_GATE / ESTIMATED_PASSED_GATE.
     """
     out: dict[str, Any] = {}
     for model in ("B0", "L", "S", "N"):
         designs = ladder.designs.get(model, {})
         fits = ladder.fits.get(model, {})
-        n_nodes = len(designs)
-        if n_nodes == 0:
-            # Distinguish a rung that does not exist for this topology (N on a single node)
-            # from one that exists but had no admissible row anywhere. The first is a
-            # definitional absence; the second is the data-adequacy result itself.
-            applicable = not (model in ("S", "N") and int(bundle.observed_nodes.size) < 2)
+        reasons = ladder.reasons.get(model, {})
+        n_nodes = len(designs) if designs else int(bundle.n_nodes)
+        applicable = not (
+            model in ("S", "N") and (bundle.n_nodes < 2 or int(np.sum(bundle.observed_nodes)) < 2)
+        )
+        if not applicable:
             out[f"estimable_{model}"] = 0.0
-            out[f"estimability_status_{model}"] = (
-                "NO_ADMISSIBLE_ROWS" if applicable else "MODEL_NOT_APPLICABLE"
-            )
+            out[f"estimability_status_{model}"] = "NOT_ESTIMABLE"
+            out[f"estimability_reason_{model}"] = "model_not_applicable"
             out[f"n_nodes_fitted_{model}"] = 0.0
             out[f"frac_nodes_fitted_{model}"] = np.nan
             out[f"median_admissible_train_rows_{model}"] = 0.0
             continue
 
+        if not designs:
+            out[f"estimable_{model}"] = 0.0
+            out[f"estimability_status_{model}"] = "NOT_ESTIMABLE"
+            out[f"estimability_reason_{model}"] = reasons.get(next(iter(reasons), 0), "no_admissible_rows") if reasons else "no_admissible_rows"
+            out[f"n_nodes_fitted_{model}"] = 0.0
+            out[f"frac_nodes_fitted_{model}"] = 0.0
+            out[f"median_admissible_train_rows_{model}"] = 0.0
+            continue
+
         fitted = sum(1 for node in designs if fits.get(node) is not None)
-        train_rows = [int(np.sum(d.split == "TRAIN")) for d in designs.values()]
-        n_cols = int(np.median([d.X.shape[1] for d in designs.values()]))
+        train_rows = [int(np.sum(d.split == TRAIN)) for d in designs.values()]
+        n_cols = int(np.median([d.X.shape[1] for d in designs.values()])) if designs else 0
+        reason_values = list(reasons.values()) if reasons else []
+        if any(r == "solver_failure" for r in reason_values) and fitted == 0:
+            status, reason = "FIT_FAILED", "solver_failure"
+        elif fitted == 0:
+            status = "NOT_ESTIMABLE"
+            reason = next((r for r in reason_values if r != "ESTIMATED"), "insufficient_training_rows")
+        elif fitted < len(designs):
+            status = "NOT_ESTIMABLE"
+            reason = "insufficient_training_rows"
+        else:
+            status, reason = "ESTIMATED", "ESTIMATED"
         out[f"n_nodes_fitted_{model}"] = float(fitted)
-        out[f"frac_nodes_fitted_{model}"] = float(fitted) / float(n_nodes)
-        out[f"median_admissible_train_rows_{model}"] = float(np.median(train_rows))
+        out[f"frac_nodes_fitted_{model}"] = float(fitted) / float(max(len(designs), 1))
+        out[f"median_admissible_train_rows_{model}"] = float(np.median(train_rows)) if train_rows else 0.0
         out[f"n_cols_design_{model}"] = float(n_cols)
-        out[f"estimable_{model}"] = float(fitted == n_nodes)
-        out[f"estimability_status_{model}"] = (
-            "ESTIMABLE" if fitted == n_nodes
-            else ("UNDERDETERMINED" if fitted == 0 else "PARTIAL")
-        )
+        out[f"estimable_{model}"] = float(status == "ESTIMATED")
+        out[f"estimability_status_{model}"] = status
+        out[f"estimability_reason_{model}"] = reason
     return out
 
 
@@ -526,26 +572,53 @@ def _intervention_block(
                 else np.nan
             )
 
-    # S8: how large is the apparent response to a variable with zero causal effect?
+    # S8: placebo coefficient and false-effect, CONDITIONAL on real pumping remaining present.
     if regime.scenario == "S8":
+        threshold_frac = 0.20
         step_spec = next((s for s in specs if s.name == "persistent_step"), None)
+        true_real_mag = np.nan
         if step_spec is not None:
             delta_true_fine = interventions.true_paired_response(
                 system, trajectory, onset_fine, step_spec, k
             )
             delta_true = interventions.sample_true_at_cadence(delta_true_fine, k, n_steps)
-            true_magnitude = float(np.abs(delta_true).max())
-            for model in ("L", "N"):
-                if model not in ladder.fits:
-                    continue
+            true_real_mag = float(np.abs(delta_true).max())
+        out["true_real_pumping_step_response"] = true_real_mag
+        for model in ("L", "N"):
+            if model not in ladder.fits:
+                continue
+            coefs = [
+                fit.coef_of("placebo", np.nan)
+                for fit in ladder.fits[model].values()
+                if fit is not None
+            ]
+            placebo_coef = _nanmean(coefs)
+            out[f"placebo_coef_{model}"] = placebo_coef
+            out[f"placebo_coef_sign_{model}"] = float(np.sign(placebo_coef)) if np.isfinite(placebo_coef) else np.nan
+            out[f"placebo_coef_abs_{model}"] = abs(placebo_coef) if np.isfinite(placebo_coef) else np.nan
+            pumping_present = all(
+                "pumping" in fit.names
+                for fit in ladder.fits[model].values()
+                if fit is not None
+            )
+            out[f"s8_real_pumping_present_{model}"] = float(pumping_present)
+            if step_spec is not None:
                 delta_hat = interventions.model_paired_response(
-                    bundle, ladder, model, step_spec, n_steps
+                    bundle, ladder, model, step_spec, n_steps, channel="placebo"
                 )
                 placebo_magnitude = float(np.abs(delta_hat).max())
-                out[f"placebo_step_response_{model}"] = placebo_magnitude
-                out[f"placebo_relative_to_true_{model}"] = (
-                    placebo_magnitude / true_magnitude if true_magnitude > 0 else np.nan
-                )
+            else:
+                placebo_magnitude = np.nan
+            out[f"placebo_step_response_{model}"] = placebo_magnitude
+            out[f"placebo_relative_to_true_{model}"] = (
+                placebo_magnitude / true_real_mag if true_real_mag > 0 else np.nan
+            )
+            out[f"placebo_false_effect_{model}"] = float(
+                np.isfinite(placebo_magnitude)
+                and np.isfinite(true_real_mag)
+                and true_real_mag > 0
+                and abs(placebo_magnitude) > threshold_frac * abs(true_real_mag)
+            )
 
     # Vulnerability ranking: step at each node in turn, rank by that node's own drawdown.
     if system.n_nodes > 2:
@@ -581,20 +654,18 @@ def _masked_node_block(design, system, trajectory, bundle, ladder: LadderFit) ->
     out: dict[str, Any] = {}
     cfg = design["spatial_evaluation"]["masked_node_protocol"]
     if system.n_nodes < 2:
+        out["masked_node_status"] = "NOT_ESTIMABLE"
+        out["masked_node_reason"] = "model_not_applicable"
         return out
 
-    # Frozen preferred index, with a deterministic fallback to the nearest observed node.
-    # Under partial monitoring the preferred node is often not instrumented at all, and a
-    # rigid index would silently delete the entire masked-node criterion in exactly the
-    # sparse-network cells it is most informative about.
-    preferred = 0 if system.topology in ("single", "star5") else 2
-    observed = np.flatnonzero(bundle.observed_nodes)
-    if observed.size == 0:
-        out["masked_node_status"] = "NO_OBSERVED_NODES"
-        return out
-    node = int(observed[np.lexsort((observed, np.abs(observed - preferred)))[0]])
+    node = interventions.frozen_masked_node_index(design, system.topology)
     out["masked_node_index"] = float(node)
-    out["masked_node_used_fallback_index"] = float(node != preferred)
+    out["masked_node_used_fallback_index"] = 0.0
+
+    if not bundle.observed_nodes[node]:
+        out["masked_node_status"] = "NOT_ESTIMABLE"
+        out["masked_node_reason"] = "target_node_unobserved"
+        return out
 
     onset = bundle.test_onset()
     horizon = int(min(int(cfg["mask_horizon_cadence_steps"]), bundle.n_transitions - onset))
@@ -603,17 +674,21 @@ def _masked_node_block(design, system, trajectory, bundle, ladder: LadderFit) ->
         return out
 
     masked_bundle = mask_node_for_test(bundle, node, onset, horizon)
+    # Scored instants are TEST-onset aligned: heads at onset, ..., onset+horizon-1.
     truth_instants = trajectory.analysis_start + bundle.t_fine[onset : onset + horizon].astype(int)
     truth_instants = truth_instants[truth_instants < trajectory.h.shape[0]]
     true_heads = trajectory.h[truth_instants, node]
 
-    min_steps = int(
-        design["spatial_evaluation"]["masked_node_protocol"].get("min_completed_steps", 4)
-    )
+    min_steps = int(cfg.get("min_completed_steps", 4))
     for model in ("L", "S", "N"):
         if model not in ladder.fits:
+            out[f"masked_node_status_{model}"] = "NOT_ESTIMABLE"
             continue
-        masked, carry_forward = interventions.masked_node_forecast(
+        if ladder.fits.get(model, {}).get(node) is None:
+            out[f"masked_node_status_{model}"] = "NOT_ESTIMABLE"
+            out[f"masked_node_nmpe_{model}"] = np.nan
+            continue
+        masked, info = interventions.masked_node_forecast(
             masked_bundle, ladder, model, node, onset, horizon
         )
         intact = interventions.observed_node_chained_forecast(
@@ -621,28 +696,36 @@ def _masked_node_block(design, system, trajectory, bundle, ladder: LadderFit) ->
         )
         completed = int(np.sum(np.isfinite(masked)))
         out[f"masked_node_steps_completed_{model}"] = float(completed)
-        out[f"masked_node_carry_forward_steps_{model}"] = float(carry_forward)
+        out[f"masked_node_carry_forward_steps_{model}"] = float(info.get("carry_forward_steps", 0))
+        out[f"masked_node_warm_forward_steps_{model}"] = float(info.get("warm_forward_steps", 0))
+        out[f"masked_node_anchor_instant_{model}"] = float(info.get("anchor_instant", -1))
+        aligned = masked[: true_heads.shape[0]]
         out[f"masked_node_nmpe_{model}"] = (
-            metrics.normalized_forecast_error(true_heads, masked)
+            metrics.normalized_forecast_error(true_heads, aligned)
             if completed >= min_steps
             else np.nan
         )
         out[f"observed_node_nmpe_{model}"] = metrics.normalized_forecast_error(true_heads, intact)
-        # Record WHY a replicate is missing, so a NaN rate is diagnosable rather than mute.
-        out[f"masked_node_status_{model}"] = (
-            "OK" if completed >= min_steps
-            else ("NO_START_OBSERVATION" if completed == 0 else "RECURSION_STOPPED_EARLY")
-        )
+        if info.get("status") == "NO_START_OBSERVATION":
+            out[f"masked_node_status_{model}"] = "NOT_ESTIMABLE"
+            out[f"masked_node_reason_{model}"] = "unavailable_mask_anchor"
+        elif completed >= min_steps:
+            out[f"masked_node_status_{model}"] = "OK"
+        else:
+            out[f"masked_node_status_{model}"] = str(info.get("status", "RECURSION_STOPPED_EARLY"))
     out["masked_node_status"] = "EVALUATED"
     out["masked_node_horizon"] = float(horizon)
     return out
 
 
-def _bootstrap_block(design, system, bundle, ladder, n_bootstrap, stability, seed) -> dict[str, Any]:
+def _bootstrap_block(
+    design, system, bundle, ladder, n_bootstrap, stability, seed, physical_identifiable: bool = False
+) -> dict[str, Any]:
     """Moving-block bootstrap over contiguous TRAIN blocks. DIAGNOSTIC ONLY.
 
-    The iid bootstrap is invalid for these dependent series and is not used. Coverage is
-    reported, never gated, in v1.
+    The iid bootstrap is invalid for these dependent series and is not used.
+    At k=1, coverage against fine-step -B_Q is reported only if physical identifiability
+    holds. At k>1, coverage is against the pseudo-true coarse estimand, never fine B_Q.
     """
     from .fit import _fit_scaled
 
@@ -650,10 +733,27 @@ def _bootstrap_block(design, system, bundle, ladder, n_bootstrap, stability, see
     if "L" not in ladder.designs:
         return out
 
-    block = max(2, int(np.ceil(2.0 * stability["tau_relax_realized"] / bundle.cadence)))
+    k = int(bundle.cadence)
+    block = max(2, int(np.ceil(2.0 * stability["tau_relax_realized"] / k)))
+    out["bootstrap_block_length"] = float(block)
+    out["bootstrap_resampling_unit"] = "contiguous_train_transition_blocks"
     nominal = float(design["uncertainty"]["nominal_interval"])
     rng = rng_for(seed + 7717)
-    covered, total = 0, 0
+    covered_phys, covered_pseudo, total = 0, 0, 0
+    B_pseudo_diag = None
+    if k > 1:
+        try:
+            B_pseudo = metrics.pseudo_true_coarse_B(
+                system.A,
+                system.B_Q,
+                k,
+                _forcing_sampler(design),
+                int(design["estimands"]["pseudo_true_coarse_coefficient"]["monte_carlo_draws"]),
+                rng_for(seed + 991),
+            )
+            B_pseudo_diag = np.diag(B_pseudo)
+        except Exception:
+            B_pseudo_diag = None
 
     for node, design_obj in ladder.designs["L"].items():
         mask = design_obj.split == TRAIN
@@ -679,16 +779,28 @@ def _bootstrap_block(design, system, bundle, ladder, n_bootstrap, stability, see
             continue
         alpha = (1.0 - nominal) / 2.0
         lower, upper = np.quantile(estimates, [alpha, 1.0 - alpha])
-        true_beta = -system.B_Q[node]
         total += 1
-        covered += int(lower <= true_beta <= upper)
         out.setdefault("bootstrap_interval_width_mean", []).append(float(upper - lower))
+        if k == 1 and physical_identifiable:
+            true_beta = -system.B_Q[node]
+            covered_phys += int(lower <= true_beta <= upper)
+        if k > 1 and B_pseudo_diag is not None:
+            covered_pseudo += int(lower <= -B_pseudo_diag[node] <= upper)
 
     if total:
-        out["bootstrap_coverage_beta_q"] = covered / total
         out["bootstrap_n_nodes"] = float(total)
         widths = out.pop("bootstrap_interval_width_mean", [])
         out["bootstrap_interval_width_mean"] = float(np.mean(widths)) if widths else np.nan
+        if k == 1 and physical_identifiable:
+            out["bootstrap_coverage_beta_q_physical"] = covered_phys / total
+            out["bootstrap_coverage_beta_q"] = covered_phys / total  # alias, physical only
+        else:
+            out["bootstrap_coverage_beta_q_physical"] = np.nan
+            out["bootstrap_coverage_beta_q"] = np.nan
+        if k > 1 and B_pseudo_diag is not None:
+            out["bootstrap_coverage_beta_q_pseudo_true"] = covered_pseudo / total
+        else:
+            out["bootstrap_coverage_beta_q_pseudo_true"] = np.nan
     else:
         out.pop("bootstrap_interval_width_mean", None)
     return out

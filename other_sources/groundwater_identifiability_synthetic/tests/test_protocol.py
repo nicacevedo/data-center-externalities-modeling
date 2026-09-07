@@ -175,12 +175,9 @@ def test_masked_node_completes_steps_at_reference_missingness(design):
 
 
 def test_masked_node_start_walks_back_past_a_missing_pre_mask_instant(design):
-    """"Final ADMISSIBLE pre-mask observation" means the last one that exists.
+    """Warm-forward when onset-1 is missing; scored timestamps stay TEST-aligned.
 
-    Anchoring rigidly at onset-1 discards the whole replicate whenever that single instant
-    happens to be missing, which at the reference 10% missingness is 10% of replicates for no
-    scientific reason. The recursion must instead start from the most recent observed
-    pre-mask head, and must still never touch a withheld one.
+    Predictions[0] corresponds to the head at instant `onset`, not at the earlier anchor.
     """
     from dataclasses import replace
 
@@ -189,16 +186,19 @@ def test_masked_node_start_walks_back_past_a_missing_pre_mask_instant(design):
     onset = bundle.test_onset()
 
     y = bundle.y.copy()
-    y[onset - 1, node] = np.nan          # knock out exactly the rigid anchor
+    y[onset - 1, node] = np.nan
     gapped = mask_node_for_test(replace(bundle, y=y), node, onset, horizon)
 
-    predictions, _ = interventions.masked_node_forecast(gapped, ladder, "N", node, onset, horizon)
+    predictions, info = interventions.masked_node_forecast(gapped, ladder, "N", node, onset, horizon)
     minimum = int(design["spatial_evaluation"]["masked_node_protocol"]["min_completed_steps"])
-    assert int(np.sum(np.isfinite(predictions))) >= minimum, (
-        "a single missing pre-mask instant must not abandon the replicate"
-    )
+    assert int(np.sum(np.isfinite(predictions))) >= minimum
+    assert int(info["warm_forward_steps"]) >= 1
+    assert predictions.shape[0] == horizon
 
-    # The walk-back must not become an excuse to read a withheld value.
+    intact = interventions.masked_node_forecast(mask_node_for_test(bundle, node, onset, horizon), ladder, "N", node, onset, horizon)[0]
+    # Both series are scored on the same TEST instants; they need not be equal, but lengths match.
+    assert intact.shape == predictions.shape
+
     poisoned_y = y.copy()
     poisoned_y[onset : onset + horizon, node] = 1.0e9
     poisoned = mask_node_for_test(replace(bundle, y=poisoned_y), node, onset, horizon)
@@ -207,34 +207,17 @@ def test_masked_node_start_walks_back_past_a_missing_pre_mask_instant(design):
     assert np.array_equal(predictions[good], other[good])
 
 
-def test_masked_node_falls_back_to_an_observed_node_under_partial_monitoring(design):
-    """The frozen preferred index is often uninstrumented once observed_node_fraction < 1.
-
-    Without the deterministic nearest-observed fallback the masked-node criterion silently
-    disappears in exactly the sparse-network cells it is most informative about, so this
-    checks the fallback both fires and stays deterministic.
-    """
-    observed = np.array([False, False, True, False, True])
-    for preferred, expected in ((2, 2), (0, 2)):
-        chosen = int(
-            np.flatnonzero(observed)[
-                np.lexsort(
-                    (np.flatnonzero(observed), np.abs(np.flatnonzero(observed) - preferred))
-                )[0]
-            ]
-        )
-        assert chosen == expected
-        assert observed[chosen], "fallback must land on an observed node"
-
-    # Ties resolve toward the lower index, so the choice is seed- and model-independent.
-    tied = np.array([True, False, False, False, True])
-    idx = np.flatnonzero(tied)
-    chosen = int(idx[np.lexsort((idx, np.abs(idx - 2)))[0]])
-    assert chosen == 0
+def test_frozen_masked_node_has_no_post_missingness_fallback(design):
+    """If the frozen target is unobserved, status is NOT_ESTIMABLE — no substitution."""
+    node = interventions.frozen_masked_node_index(design, "path5")
+    assert node == 2
+    star = interventions.frozen_masked_node_index(design, "star5")
+    assert star == 0
+    assert design["spatial_evaluation"]["masked_node_protocol"]["masked_node_selection"]["fallback_after_missingness"] == "PROHIBITED"
 
 
 def test_zero_shot_held_out_node_is_not_claimed(design):
-    assert design["spatial_evaluation"]["zero_shot_held_out_node"] == "NOT_PERFORMED_IN_V1"
+    assert design["spatial_evaluation"]["zero_shot_held_out_node"] == "NOT_PERFORMED_IN_V2"
 
 
 # -------------------------------------------------------------------------------------

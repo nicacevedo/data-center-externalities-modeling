@@ -1,0 +1,84 @@
+{
+  "cell_count": 129,
+  "code_hash": "5429a6378005b4152130f6b9707cc1fc61abdf3a81a83e3849530d1ea8f856fd",
+  "design_artifacts": [
+    "config/design_v2.yaml",
+    "DESIGN_FREEZE_V2.md"
+  ],
+  "design_hash": "b53f5594a444ae4826adfe2c47818080508a4c4b00a38fa25b4ffc483e20a8a5",
+  "design_status": "FROZEN",
+  "design_version": "design_v2",
+  "forcing_clipping": {
+    "argmax_cell": "CURVE_curve_memory_LOW",
+    "limit": 0.001,
+    "max_clip_fraction_over_cells": 0.00016025641025641026,
+    "n_cells_checked": 129,
+    "n_seeds_per_cell": 8
+  },
+  "frozen_at_utc": "2026-09-07T04:19:39.245735+00:00",
+  "full_sweep_launched": false,
+  "git_branch": "testing/synthetic-groundwater-identifiability",
+  "git_head": "1b95209b1a2f0e20ae8bfac3910bd5359a420c82",
+  "n_code_files": 28,
+  "n_frozen_systems": 17,
+  "numpy_version": "2.4.6",
+  "parent_checkpoint_commit": "1b95209b1a2f0e20ae8bfac3910bd5359a420c82",
+  "phase": "PHASE_1_5_PRE_SWEEP",
+  "plan": {
+    "gate_cells": 17,
+    "reporting_cells": 7,
+    "stress_curve_cells": 43,
+    "total_unique_cells": 129,
+    "two_factor_grid_cells": 62
+  },
+  "python_executable": "/home/nacevedo/.conda/envs/dc_externalities/bin/python",
+  "python_version": "3.11.15",
+  "rng_implementation": "numpy.random.Generator(PCG64)",
+  "s6_variance_characterization": {
+    "calibration_seed_pool": "CALIBRATION",
+    "interpretation": "S6a is the v1 global-memory null. S6b matches A_ii of the coupled reference. Neither force-matches marginal variance. snr_head equalizes inference difficulty.",
+    "local_persistence_mean_A_ii_reference": 0.897333063367156,
+    "local_persistence_mean_A_ii_s6a": 0.9427883763896692,
+    "local_persistence_mean_A_ii_s6b": 0.897333063367156,
+    "match_enforced": false,
+    "n_calibration_seeds": 8,
+    "null_over_reference_variance_ratio": 2.1300890974289235,
+    "process_noise_variance_share_null": 0.001252184796139895,
+    "process_noise_variance_share_reference": 0.003523994935084504,
+    "process_noise_variance_share_s6a": 0.001252184796139895,
+    "s6a_over_reference_variance_ratio": 2.1300890974289235,
+    "s6b_burn_in_fine_steps": 142,
+    "s6b_max_diagonal_load": 0.13512698823908806,
+    "s6b_min_diagonal_A": 0.8648730117609119,
+    "s6b_over_reference_variance_ratio": 1.0351842017065598,
+    "s6b_rho_A": 0.9450552913595216,
+    "s6b_tau_not_forced_to_memory_target": true,
+    "s6b_tau_relax_realized": 17.69540564097365,
+    "s6b_timescale_note": "S6b spectral radius is max|A_ii| after zeroing off-diagonals. Coupled MED tau=20 is a network eigenmode and is not inherited. S6b tau is recorded from the constructed A_null; it is not retuned to the MED target.",
+    "variance_coupled_reference": 7.798572588593116,
+    "variance_coupled_reference_zero_process_noise": 7.771090458290025,
+    "variance_null": 16.611654446470254,
+    "variance_s6a": 16.611654446470254,
+    "variance_s6a_zero_process_noise": 16.590853585333655,
+    "variance_s6b": 8.072959139573424
+  },
+  "scenario_count": 12,
+  "seed_pool_hashes": {
+    "ANALYSIS": "bd6db2aac7743cc83d5d5ecd8b5f07fefe18747649e3489a5b89e7e0cb689015",
+    "CALIBRATION": "7aedf1a97f413d4642668e5741b17c7418db60593c0246df64faaea8c8b00228",
+    "G0": "3bbd798d908bdf08d888efb5756236757f2b9bd5fdc19bc7cbe5fe7d7725c489",
+    "SMOKE": "d4e3c7dcd48e6f1f24713ca3113252be1642392abef9afa25db5d6b66ccac633"
+  },
+  "seed_pool_sizes": {
+    "ANALYSIS": 60,
+    "CALIBRATION": 8,
+    "G0": 5,
+    "SMOKE": 3
+  },
+  "time_base": [
+    "cadence 1: 519 transitions -> 363/78/78",
+    "cadence 2: 259 transitions -> 181/39/39",
+    "cadence 4: 129 transitions -> 90/19/20",
+    "cadence 13: 39 transitions -> 27/6/6"
+  ]
+}

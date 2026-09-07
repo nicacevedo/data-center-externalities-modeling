@@ -49,7 +49,7 @@ def main() -> int:
     args = parser.parse_args()
 
     design = load_design()
-    freeze_path = PROVENANCE / "DESIGN_FREEZE.json"
+    freeze_path = PROVENANCE / "DESIGN_V2_FREEZE.json"
     if not freeze_path.exists():
         raise SystemExit("design is not frozen; run scripts/freeze_protocol.py first")
     with open(freeze_path, "r", encoding="utf-8") as handle:

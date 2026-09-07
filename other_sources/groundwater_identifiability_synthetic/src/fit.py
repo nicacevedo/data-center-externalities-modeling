@@ -219,6 +219,7 @@ class LadderFit:
     fits: dict[str, dict[int, NodeFit]]
     designs: dict[str, dict[int, NodeDesign]]
     selection: dict[str, dict]
+    reasons: dict[str, dict[int, str]] = field(default_factory=dict)
 
     def has(self, model: str, node: int) -> bool:
         return self.fits.get(model, {}).get(node) is not None
@@ -236,11 +237,37 @@ def fit_ladder(
     fits: dict[str, dict[int, NodeFit]] = {}
     designs: dict[str, dict[int, NodeDesign]] = {}
     selection: dict[str, dict] = {}
+    reasons: dict[str, dict[int, str]] = {}
+
+    def _record_fits(model: str, node_designs: dict[int, NodeDesign], lam: float = 0.0) -> None:
+        reasons[model] = {}
+        fitted: dict[int, NodeFit] = {}
+        for node, d in node_designs.items():
+            n_train = int(np.sum(d.split == TRAIN))
+            min_rows = max(12, d.X.shape[1] + 2)
+            if n_train < min_rows:
+                reasons[model][node] = "insufficient_training_rows"
+                fitted[node] = None  # type: ignore[assignment]
+                continue
+            try:
+                fitted[node] = fit_node(d, lam=lam)
+            except Exception:
+                reasons[model][node] = "solver_failure"
+                fitted[node] = None  # type: ignore[assignment]
+                continue
+            if fitted[node] is None:
+                reasons[model][node] = "insufficient_training_rows"
+            else:
+                reasons[model][node] = "ESTIMATED"
+        designs[model] = node_designs
+        fits[model] = {n: f for n, f in fitted.items() if f is not None}
 
     for model in models:
         if model == "S" and n == 1:
+            reasons[model] = {i: "model_not_applicable" for i in range(n)}
             continue
         if model == "N" and n == 1:
+            reasons[model] = {i: "model_not_applicable" for i in range(n)}
             continue
 
         if model == "S":
@@ -260,10 +287,10 @@ def fit_ladder(
                 if count and (score / count) < best_score:
                     best_score, best = score / count, bandwidth
             if best is None:
+                reasons[model] = {node: "no_admissible_rows" for node in nodes}
                 continue
             selection["S"] = {"bandwidth": best, "validation_rmse": best_score}
-            designs[model] = {node: build_design(bundle, node, model, bandwidth=best) for node in nodes}
-            fits[model] = {node: fit_node(d) for node, d in designs[model].items()}
+            _record_fits(model, {node: build_design(bundle, node, model, bandwidth=best) for node in nodes})
 
         elif model == "N":
             grid = [float(v) for v in design_cfg["models"]["N"]["penalty_grid_lambda"]]
@@ -282,16 +309,16 @@ def fit_ladder(
                 if count and (score / count) < best_score:
                     best_score, best = score / count, lam
             if best is None:
+                reasons[model] = {node: "no_admissible_rows" for node in nodes}
+                designs[model] = node_designs
                 continue
             selection["N"] = {"lambda": best, "validation_rmse": best_score}
-            designs[model] = node_designs
-            fits[model] = {node: fit_node(node_designs[node], lam=best) for node in nodes}
+            _record_fits(model, node_designs, lam=best)
 
         else:
-            designs[model] = {node: build_design(bundle, node, model) for node in nodes}
-            fits[model] = {node: fit_node(d) for node, d in designs[model].items()}
+            _record_fits(model, {node: build_design(bundle, node, model) for node in nodes})
 
-    return LadderFit(fits=fits, designs=designs, selection=selection)
+    return LadderFit(fits=fits, designs=designs, selection=selection, reasons=reasons)
 
 
 # -------------------------------------------------------------------------------------

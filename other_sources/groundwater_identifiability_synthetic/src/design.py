@@ -2,6 +2,9 @@
 
 Nothing in this module touches synthetic truth values; it only resolves the frozen design
 into concrete regime specifications and reproducible RNG streams.
+
+Active protocol is design_v2. design_v1.yaml remains on disk as historical evidence and is
+not the default load path.
 """
 
 from __future__ import annotations
@@ -16,11 +19,13 @@ import numpy as np
 import yaml
 
 MODULE_ROOT = Path(__file__).resolve().parent.parent
-CONFIG_PATH = MODULE_ROOT / "config" / "design_v1.yaml"
-FREEZE_DOC_PATH = MODULE_ROOT / "DESIGN_FREEZE.md"
+CONFIG_PATH = MODULE_ROOT / "config" / "design_v2.yaml"
+FREEZE_DOC_PATH = MODULE_ROOT / "DESIGN_FREEZE_V2.md"
+V1_CONFIG_PATH = MODULE_ROOT / "config" / "design_v1.yaml"
+FREEZE_JSON_RELATIVE = "outputs/provenance/DESIGN_V2_FREEZE.json"
 
 # Canonical scientific-design artifacts. Together these determine DESIGN_HASH.
-DESIGN_ARTIFACTS = ("config/design_v1.yaml", "DESIGN_FREEZE.md")
+DESIGN_ARTIFACTS = ("config/design_v2.yaml", "DESIGN_FREEZE_V2.md")
 
 # Every source file whose content is scientific. Determines CODE_HASH.
 CODE_GLOBS = ("src/*.py", "scripts/*.py", "tests/*.py")

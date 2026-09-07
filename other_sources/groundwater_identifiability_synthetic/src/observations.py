@@ -23,6 +23,7 @@ class ObservationBundle:
     y: np.ndarray                    # (M, n)  heads at cadence instants, NaN where missing
     Q_obs: np.ndarray                # (M-1, n) interval-aggregated observed pumping
     R_proxy: np.ndarray              # (M-1, n) interval-aggregated recharge proxy
+    P_placebo: np.ndarray | None     # (M-1, n) placebo pumping-like channel (S8); None otherwise
     t_fine: np.ndarray               # (M,) fine index of each observation instant
     season_sin: np.ndarray           # (M-1,)
     season_cos: np.ndarray           # (M-1,)
@@ -269,7 +270,14 @@ def make_observations(
     rng: np.random.Generator,
     use_placebo_as_pumping: bool = False,
 ) -> ObservationBundle:
-    """Build the observation bundle. This is the ONLY boundary truth may cross."""
+    """Build the observation bundle. This is the ONLY boundary truth may cross.
+
+    Real pumping always occupies Q_obs. If a placebo series exists on the trajectory it is
+    attached as P_placebo (S8). Replacing Q with the placebo is a v1 behaviour that v2
+    refuses.
+    """
+    if use_placebo_as_pumping:
+        raise ValueError("v2 S8 must not replace real pumping with the placebo")
     k = int(regime.cadence)
     period = float(design["time"]["seasonal_period_fine_steps"])
     start = trajectory.analysis_start
@@ -297,8 +305,7 @@ def make_observations(
 
     # Forcing is interval-aggregated over [t_tau, t_tau + k).
     starts = offsets[:-1]
-    q_source = trajectory.Q_placebo if use_placebo_as_pumping else trajectory.Q_true
-    q_fine = q_source[start : start + horizon]
+    q_fine = trajectory.Q_true[start : start + horizon]
     r_fine = trajectory.R_true[start : start + horizon]
     q_interval = _interval_sums(q_fine, starts, k)
 
@@ -309,6 +316,11 @@ def make_observations(
         design, regime, q_interval, q_fine, starts, k, period, phases, rng
     )
     r_proxy = _degrade_recharge(regime, r_fine, starts, k, rng)
+
+    p_placebo = None
+    if trajectory.Q_placebo is not None:
+        p_fine = trajectory.Q_placebo[start : start + horizon]
+        p_placebo = _interval_sums(p_fine, starts, k)
 
     t_fine = offsets.astype(float)
     angle = 2.0 * np.pi * t_fine[:-1] / period
@@ -322,6 +334,7 @@ def make_observations(
         y=y_obs,
         Q_obs=q_obs,
         R_proxy=r_proxy,
+        P_placebo=p_placebo,
         t_fine=t_fine,
         season_sin=np.sin(angle),
         season_cos=np.cos(angle),
@@ -339,6 +352,7 @@ def make_observations(
             "offsets_fine": offsets,
             "pumping_quality": regime.pumping_quality,
             "recharge_quality": regime.recharge_quality,
+            "has_placebo": p_placebo is not None,
         },
     )
 
@@ -365,6 +379,7 @@ def mask_node_for_test(
         y=y,
         Q_obs=bundle.Q_obs,
         R_proxy=bundle.R_proxy,
+        P_placebo=bundle.P_placebo,
         t_fine=bundle.t_fine,
         season_sin=bundle.season_sin,
         season_cos=bundle.season_cos,

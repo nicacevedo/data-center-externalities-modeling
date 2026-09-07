@@ -203,7 +203,7 @@ def test_gate_names_do_not_collide_with_the_ocwd_feasibility_gates(design):
 
 def test_uncertainty_coverage_is_not_a_gate_criterion(design):
     assert design["uncertainty"]["coverage_is_a_gate_criterion"] is False
-    assert design["gates"]["SGI_G1"]["coverage_criterion"] == "EXCLUDED_IN_V1"
+    assert design["gates"]["SGI_G1"]["coverage_criterion"] == "EXCLUDED_IN_V2"
     assert design["uncertainty"]["iid_bootstrap"] == "PROHIBITED_DEPENDENT_SERIES"
     blob = str(design["gates"]["SGI_G1"]["criteria"]).lower()
     assert "coverage" not in blob
@@ -213,7 +213,7 @@ def test_hashes_are_stable_and_cover_all_design_artifacts(module_root):
     assert design_hash() == design_hash()
     assert code_hash() == code_hash()
     assert len(DESIGN_ARTIFACTS) >= 2
-    assert "DESIGN_FREEZE.md" in DESIGN_ARTIFACTS
+    assert "DESIGN_FREEZE_V2.md" in DESIGN_ARTIFACTS
     for relative in DESIGN_ARTIFACTS:
         assert (module_root / relative).exists()
 
@@ -224,13 +224,13 @@ def test_design_hash_changes_when_a_design_artifact_changes(module_root, tmp_pat
     staging = tmp_path / "module"
     staging.mkdir()
     (staging / "config").mkdir()
-    shutil.copy(module_root / "config" / "design_v1.yaml", staging / "config" / "design_v1.yaml")
-    shutil.copy(module_root / "DESIGN_FREEZE.md", staging / "DESIGN_FREEZE.md")
+    shutil.copy(module_root / "config" / "design_v2.yaml", staging / "config" / "design_v2.yaml")
+    shutil.copy(module_root / "DESIGN_FREEZE_V2.md", staging / "DESIGN_FREEZE_V2.md")
     before = design_hash(staging)
 
-    with open(staging / "DESIGN_FREEZE.md", "a", encoding="utf-8") as handle:
+    with open(staging / "DESIGN_FREEZE_V2.md", "a", encoding="utf-8") as handle:
         handle.write("\nscientific change\n")
-    assert design_hash(staging) != before, "DESIGN_FREEZE.md must be inside the freeze scope"
+    assert design_hash(staging) != before, "DESIGN_FREEZE_V2.md must be inside the freeze scope"
 
 
 ALLOWED_PREFIX = "other_sources/groundwater_identifiability_synthetic/"

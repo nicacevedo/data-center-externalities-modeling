@@ -90,9 +90,25 @@ def test_direct_parameter_recovery_is_primary_only_at_cadence_one(design):
 
 
 def test_absolute_storage_is_not_claimed_when_the_pumping_scale_is_unknown(design):
-    """P-SCALEBIAS destroys the absolute scale, so absolute S must not be reported."""
+    """P-SCALEBIAS destroys the absolute scale, so absolute S must not be reported.
+
+    Known scale is necessary but not sufficient: the positive control must also satisfy
+    the full v2 physical-identifiability conjunction (k=1, R-EXACT, zero confounding, ...).
+    """
     known = resolve_regime(
-        design, "T", "S1", "single", overrides={"cadence": 1, "pumping_quality": "P-EXACT"}
+        design,
+        "T",
+        "S1",
+        "single",
+        overrides={
+            "cadence": 1,
+            "pumping_quality": "P-EXACT",
+            "recharge_quality": "R-EXACT",
+            "confounding_rho": 0.0,
+            "mcar_fraction": 0.0,
+            "snr_head": 20,
+            "process_noise_sd": 0.02,
+        },
     )
     unknown = resolve_regime(
         design, "T", "S1", "single", overrides={"cadence": 1, "pumping_quality": "P-SCALEBIAS"}
@@ -178,7 +194,7 @@ def test_block_outages_are_contiguous(design):
 def test_runner_refuses_when_the_design_hash_does_not_match(module_root, tmp_path):
     """run_g0.py must refuse to run against a stale freeze."""
     provenance = module_root / "outputs" / "provenance"
-    freeze_path = provenance / "DESIGN_FREEZE.json"
+    freeze_path = provenance / "DESIGN_V2_FREEZE.json"
     if not freeze_path.exists():
         pytest.skip("design not yet frozen")
 

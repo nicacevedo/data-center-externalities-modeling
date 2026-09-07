@@ -77,6 +77,10 @@ def build_design(
         columns.append(bundle.R_proxy[:, node])
         names.append("recharge_proxy")
         penalized.append(False)
+        if bundle.P_placebo is not None:
+            columns.append(bundle.P_placebo[:, node])
+            names.append("placebo")
+            penalized.append(False)
 
     if model == "S":
         if bandwidth is None:

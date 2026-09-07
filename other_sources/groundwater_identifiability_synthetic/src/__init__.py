@@ -1,4 +1,4 @@
-"""Synthetic known-truth groundwater identifiability experiment (design_v1).
+"""Synthetic known-truth groundwater identifiability experiment (design_v2).
 
 Scope: reduced-order head / pumping / recharge response core only. See SCOPE.md.
 
@@ -8,4 +8,4 @@ reachable only from the data-generating process and the post-fit evaluation laye
 """
 
 MODULE_NAME = "groundwater_identifiability_synthetic"
-DESIGN_VERSION = "design_v1"
+DESIGN_VERSION = "design_v2"
