@@ -1,0 +1,15 @@
+{
+  "phase": "PASS_1_COMPLETE",
+  "V3_ANALYSIS_POOL_FROZEN": true,
+  "V3_ANALYSIS_REPLICATES_RUN": 0,
+  "V3_ANALYSIS_OUTCOMES_INSPECTED": false,
+  "tests_passed": 35,
+  "v2_parity_live_bit_identical": "9/9",
+  "smoke_completed": 63,
+  "smoke_failures": 0,
+  "smoke_non_inferential": true,
+  "authorize_token_used": false,
+  "V3_DESIGN_HASH": "b2ab28a240a29ec2268dc46be8d850a8f1dcac1017e94fbdf8dfe133beb6e0e3",
+  "V3_CODE_HASH": "cb8c3377f143bf80a7612a95ff2dae049c3be70910f2f8180365a651bb494ac7",
+  "interval_semantics": "Reported 95% bootstrap and Wilson intervals are pointwise Monte Carlo uncertainty intervals for their individual estimands. They are not simultaneous family-wise confidence bands over all V3 contrasts."
+}

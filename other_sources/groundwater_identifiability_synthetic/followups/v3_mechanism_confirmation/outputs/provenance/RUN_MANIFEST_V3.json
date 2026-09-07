@@ -1,0 +1,13 @@
+{
+  "phase": "PASS_1",
+  "rng_mode_substantive": "named_substreams",
+  "system_seed_mode_substantive": "orthogonal_v3",
+  "rng_mode_parity": "legacy_sequential",
+  "system_seed_mode_parity": "legacy_v2",
+  "V3_DESIGN_HASH": "b2ab28a240a29ec2268dc46be8d850a8f1dcac1017e94fbdf8dfe133beb6e0e3",
+  "V3_CODE_HASH": "cb8c3377f143bf80a7612a95ff2dae049c3be70910f2f8180365a651bb494ac7",
+  "V3_ANALYSIS_POOL_FROZEN": true,
+  "V3_ANALYSIS_REPLICATES_RUN": 0,
+  "V3_ANALYSIS_OUTCOMES_INSPECTED": false,
+  "interval_semantics": "Reported 95% bootstrap and Wilson intervals are pointwise Monte Carlo uncertainty intervals for their individual estimands. They are not simultaneous family-wise confidence bands over all V3 contrasts."
+}

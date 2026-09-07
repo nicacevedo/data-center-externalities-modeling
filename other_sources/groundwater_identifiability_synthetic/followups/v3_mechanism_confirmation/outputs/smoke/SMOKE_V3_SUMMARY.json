@@ -1,0 +1,213 @@
+{
+  "banner": "ENGINEERING SMOKE OUTPUT -- NOT A SCIENTIFIC RESULT.",
+  "non_inferential": true,
+  "n_expected": 63,
+  "n_completed": 63,
+  "n_failures": 0,
+  "failures": [],
+  "elapsed_s": 4.512384126894176,
+  "rng_mode": "named_substreams",
+  "system_seed_mode": "orthogonal_v3",
+  "NOT_ESTIMABLE": 0,
+  "FIT_FAILED": 0,
+  "summarizer": {
+    "n_records": 63,
+    "n_cells": 21,
+    "interval_semantics": "Reported 95% bootstrap and Wilson intervals are pointwise Monte Carlo uncertainty intervals for their individual estimands. They are not simultaneous family-wise confidence bands over all V3 contrasts.",
+    "sesoi_role": "preregistered SESOI / decision-relevance reference magnitudes, NOT gates",
+    "sesoi": {
+      "nire": 0.05,
+      "rate_difference": 0.1,
+      "reliability_discrepancy": 0.05
+    },
+    "legacy_v2_orientation_only": {
+      "nire": 0.2,
+      "edge_f1": 0.8,
+      "placebo_ratio": 0.2
+    },
+    "gates": {},
+    "block_d_factorial": {
+      "interval_semantics": "Reported 95% bootstrap and Wilson intervals are pointwise Monte Carlo uncertainty intervals for their individual estimands. They are not simultaneous family-wise confidence bands over all V3 contrasts.",
+      "three_way_role": "preregistered secondary/descriptive",
+      "sesoi_role": "preregistered SESOI / decision-relevance reference magnitudes, NOT gates",
+      "sesoi": {
+        "nire": 0.05,
+        "rate_difference": 0.1,
+        "reliability_discrepancy": 0.05
+      },
+      "outcomes": {
+        "placebo_false_effect_L": {
+          "main_pumping": {
+            "n_paired_seeds": 3,
+            "mean": -0.08333333333333333,
+            "median": 0.0,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "main_recharge": {
+            "n_paired_seeds": 3,
+            "mean": 0.4166666666666667,
+            "median": 0.5,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "main_confounding": {
+            "n_paired_seeds": 3,
+            "mean": 0.0,
+            "median": 0.0,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "int_pumping_recharge": {
+            "n_paired_seeds": 3,
+            "mean": -0.08333333333333333,
+            "median": 0.0,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "int_pumping_confounding": {
+            "n_paired_seeds": 3,
+            "mean": 0.0,
+            "median": 0.0,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "int_recharge_confounding": {
+            "n_paired_seeds": 3,
+            "mean": 0.0,
+            "median": 0.0,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "int_three_way": {
+            "n_paired_seeds": 3,
+            "mean": 0.0,
+            "median": 0.0,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": false
+          }
+        },
+        "placebo_relative_to_true_L": {
+          "main_pumping": {
+            "n_paired_seeds": 3,
+            "mean": 0.0016274509284667851,
+            "median": 0.009214424079448492,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "main_recharge": {
+            "n_paired_seeds": 3,
+            "mean": 0.07314781336454058,
+            "median": 0.08424140290305866,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "main_confounding": {
+            "n_paired_seeds": 3,
+            "mean": 0.0010060150817157072,
+            "median": -0.00013100668090714612,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "int_pumping_recharge": {
+            "n_paired_seeds": 3,
+            "mean": -0.005772445625264563,
+            "median": -0.0025523789911163844,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "int_pumping_confounding": {
+            "n_paired_seeds": 3,
+            "mean": 4.212660178156089e-05,
+            "median": 0.0008976024248041163,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "int_recharge_confounding": {
+            "n_paired_seeds": 3,
+            "mean": 0.0038552203956900843,
+            "median": 0.0035473230100761394,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": true
+          },
+          "int_three_way": {
+            "n_paired_seeds": 3,
+            "mean": 0.0012211253449464614,
+            "median": -0.00025358356526211656,
+            "pointwise_interval": [
+              NaN,
+              NaN
+            ],
+            "primary": false
+          }
+        }
+      },
+      "main_effects": [
+        "pumping_quality",
+        "recharge_quality",
+        "confounding_rho"
+      ],
+      "two_way_interactions": [
+        [
+          "pumping_quality",
+          "recharge_quality"
+        ],
+        [
+          "pumping_quality",
+          "confounding_rho"
+        ],
+        [
+          "recharge_quality",
+          "confounding_rho"
+        ]
+      ],
+      "three_way_interaction": [
+        "pumping_quality",
+        "recharge_quality",
+        "confounding_rho"
+      ]
+    },
+    "benchmarks_merged": false,
+    "non_inferential": true
+  },
+  "V3_ANALYSIS_REPLICATES_RUN": 0
+}

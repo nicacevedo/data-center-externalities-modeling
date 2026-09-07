@@ -1,0 +1,105 @@
+{
+  "n_replicates": 9,
+  "all_live_bit_identical": true,
+  "replicates": [
+    {
+      "cell_id": "G1R1",
+      "seed": 14299546645614273481,
+      "rng_mode": "legacy_sequential",
+      "system_seed_mode": "legacy_v2",
+      "n_shared_fields": 121,
+      "live_v2_vs_v3_mismatches": [],
+      "bit_identical_live": true,
+      "csv_mismatches": [],
+      "csv_match": true
+    },
+    {
+      "cell_id": "G1R1",
+      "seed": 11541533788630002761,
+      "rng_mode": "legacy_sequential",
+      "system_seed_mode": "legacy_v2",
+      "n_shared_fields": 121,
+      "live_v2_vs_v3_mismatches": [],
+      "bit_identical_live": true,
+      "csv_mismatches": [],
+      "csv_match": true
+    },
+    {
+      "cell_id": "G1R1",
+      "seed": 17651365740284380227,
+      "rng_mode": "legacy_sequential",
+      "system_seed_mode": "legacy_v2",
+      "n_shared_fields": 121,
+      "live_v2_vs_v3_mismatches": [],
+      "bit_identical_live": true,
+      "csv_mismatches": [],
+      "csv_match": true
+    },
+    {
+      "cell_id": "G2R3",
+      "seed": 14299546645614273481,
+      "rng_mode": "legacy_sequential",
+      "system_seed_mode": "legacy_v2",
+      "n_shared_fields": 251,
+      "live_v2_vs_v3_mismatches": [],
+      "bit_identical_live": true,
+      "csv_mismatches": [],
+      "csv_match": true
+    },
+    {
+      "cell_id": "G2R3",
+      "seed": 11541533788630002761,
+      "rng_mode": "legacy_sequential",
+      "system_seed_mode": "legacy_v2",
+      "n_shared_fields": 251,
+      "live_v2_vs_v3_mismatches": [],
+      "bit_identical_live": true,
+      "csv_mismatches": [],
+      "csv_match": true
+    },
+    {
+      "cell_id": "G2R3",
+      "seed": 17651365740284380227,
+      "rng_mode": "legacy_sequential",
+      "system_seed_mode": "legacy_v2",
+      "n_shared_fields": 251,
+      "live_v2_vs_v3_mismatches": [],
+      "bit_identical_live": true,
+      "csv_mismatches": [],
+      "csv_match": true
+    },
+    {
+      "cell_id": "G3R3",
+      "seed": 14299546645614273481,
+      "rng_mode": "legacy_sequential",
+      "system_seed_mode": "legacy_v2",
+      "n_shared_fields": 129,
+      "live_v2_vs_v3_mismatches": [],
+      "bit_identical_live": true,
+      "csv_mismatches": [],
+      "csv_match": true
+    },
+    {
+      "cell_id": "G3R3",
+      "seed": 11541533788630002761,
+      "rng_mode": "legacy_sequential",
+      "system_seed_mode": "legacy_v2",
+      "n_shared_fields": 129,
+      "live_v2_vs_v3_mismatches": [],
+      "bit_identical_live": true,
+      "csv_mismatches": [],
+      "csv_match": true
+    },
+    {
+      "cell_id": "G3R3",
+      "seed": 17651365740284380227,
+      "rng_mode": "legacy_sequential",
+      "system_seed_mode": "legacy_v2",
+      "n_shared_fields": 129,
+      "live_v2_vs_v3_mismatches": [],
+      "bit_identical_live": true,
+      "csv_mismatches": [],
+      "csv_match": true
+    }
+  ]
+}

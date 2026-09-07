@@ -1,0 +1,18 @@
+{
+  "banner": "ENGINEERING SMOKE OUTPUT -- NOT A SCIENTIFIC RESULT.",
+  "tier1_cells": [
+    "A_PEXACT",
+    "A_S025",
+    "A_S050",
+    "A_S100",
+    "A_S200"
+  ],
+  "note": "array-equality CRN is in tests_v3/test_modes_and_crn.py",
+  "smoke_pairing_groups": [
+    "block_A_k1",
+    "block_A_k4",
+    "block_B_gamma",
+    "block_C_real",
+    "block_D"
+  ]
+}

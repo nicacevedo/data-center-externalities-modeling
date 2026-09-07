@@ -1,0 +1,1499 @@
+# design_v3 -- V3 prospective mechanism-confirmation experiment
+#
+# Isolated follow-up. Does not mutate design_v2.yaml or DESIGN_FREEZE_V2.md.
+# Together with DESIGN_FREEZE_V3.md and BENCHMARK_DEFINITIONS.md this file
+# determines V3_DESIGN_HASH.
+#
+# gates: {}  -- V3 defines no qualification gates.
+# Hypotheses are post-hoc relative to V2 and prospective relative to V3.
+#
+design_version: design_v3
+design_status: FROZEN_PASS1
+parent_design: design_v2
+parent_checkpoint_commit: 1b95209b1a2f0e20ae8bfac3910bd5359a420c82
+scope_token: V3_MECHANISM_CONFIRMATION_ONLY
+time:
+  dt_fine: 1.0
+  fine_step_interpretation: one_week
+  seasonal_period_fine_steps: 52
+  burn_in_floor_fine_steps: 104
+  burn_in_rule: max(burn_in_floor_fine_steps, ceil(burn_in_tau_multiple * tau_relax_realized))
+  burn_in_tau_multiple: 8.0
+  analysis_horizon_fine_steps: 520
+  analysis_horizon_seasonal_cycles: 10
+  cadences_fine_steps:
+  - 1
+  - 2
+  - 4
+  - 13
+  cadence_labels:
+    1: weekly
+    2: biweekly
+    4: monthly_approx
+    13: quarterly
+  usable_transitions_by_cadence:
+    1: 519
+    2: 259
+    4: 129
+    13: 39
+  split_counts_by_cadence:
+    1:
+      train: 363
+      validation: 78
+      test: 78
+    2:
+      train: 181
+      validation: 39
+      test: 39
+    4:
+      train: 90
+      validation: 19
+      test: 20
+    13:
+      train: 27
+      validation: 6
+      test: 6
+  data_poor_cadences:
+  - 13
+memory_regimes:
+  definition_realized: tau_relax_realized = -1.0 / log(spectral_radius(A))
+  realized_is_authoritative: true
+  nominal_labels_are_targets_only: true
+  targets_fine_steps:
+    LOW: 4.0
+    MED: 20.0
+    HIGH: 80.0
+  target_match_tolerance: 0.02
+  reported_ratio: cadence_over_tau_relax_realized = k / tau_relax_realized
+stability:
+  diagonal_margin_delta_diag: 0.05
+  diagonal_condition: dt * (sum_j C_ij + C_i0) / S_i <= 1 - delta_diag  for all i
+  all_v2_scenarios_intended_contracting: true
+  all_v1_scenarios_intended_contracting: true
+  contraction_margin_delta: 0.005
+  contraction_condition: spectral_radius(A) <= 1 - delta
+  require_positive_boundary_leakage: true
+  non_contracting_systems: OUT_OF_SCOPE_V1
+dgp:
+  state_equation: "S_i * (h_{i,t+1} - h_{i,t}) / dt\n  = R_{i,t} - Q_{i,t}\n    + sum_{j != i} C_ij *\
+    \ (h_{j,t} - h_{i,t})\n    + C_i0 * (h_i_b - h_{i,t})\n    + eps_{i,t}\n"
+  observation_equation: y_{i,t} = h_{i,t} + nu_{i,t}
+  matrix_form: h_{t+1} = A h_t + b + dt * diag(1/S) * (R_t - Q_t + eps_t)
+  A_definition: A = I - dt * diag(1/S) * L ;  L_ii = sum_{j!=i} C_ij + C_i0 ;  L_ij = -C_ij
+  B_R_definition: B_R = dt * diag(1/S)
+  B_Q_definition: B_Q = dt * diag(1/S)
+  restriction_note: 'B_R == B_Q encodes unit recharge efficiency. This restriction is itself stressed
+    in scenario S7 variant recharge_efficiency_mismatch, where the truth uses B_R != B_Q while the estimator
+    retains the restricted family.
+
+    '
+  boundary_intercept: b_i = dt * C_i0 * h_i_b / S_i
+  boundary_head_h_b: 5.0
+  process_noise_semantics: FLUX_DISTURBANCE
+  process_noise_note: 'eps has the same units as R and Q and enters head as dt * eps_i / S_i, consistent
+    with its position inside the storage balance.     An additive head-state disturbance is a DIFFERENT
+    object and is NOT used in v2.
+
+    '
+  process_noise_sd_default: 0.05
+  storage_S_base: 1.0
+  storage_S_heterogeneity: 0.25
+  derivation: 'r_i = dt * (sum_j C_ij + C_i0) / S_i is the total relaxation rate. For target tau and coupling
+    share gamma, r = (1 - exp(-1/tau)) / (1 - gamma); neighbour conductances carry share gamma of r and
+    boundary leakage carries (1 - gamma).
+
+    '
+geometry:
+  candidate_rule: radius
+  candidate_radius: 2.5
+  candidate_knn_fallback_k: 3
+  true_graph_nested_by_design:
+  - single
+  - path5
+  - star5
+  - null5
+  - bridge6
+  true_graph_not_nested:
+  - path5_hidden
+topologies:
+  single:
+    coordinates:
+    - - 0.0
+      - 0.0
+    true_edges: []
+  path5:
+    coordinates:
+    - - 0.0
+      - 0.0
+    - - 1.0
+      - 0.0
+    - - 2.0
+      - 0.0
+    - - 3.0
+      - 0.0
+    - - 4.0
+      - 0.0
+    true_edges:
+    - - 0
+      - 1
+    - - 1
+      - 2
+    - - 2
+      - 3
+    - - 3
+      - 4
+    expected_candidate_pairs: 7
+  star5:
+    coordinates:
+    - - 0.0
+      - 0.0
+    - - 1.0
+      - 0.0
+    - - 0.0
+      - 1.0
+    - - -1.0
+      - 0.0
+    - - 0.0
+      - -1.0
+    true_edges:
+    - - 0
+      - 1
+    - - 0
+      - 2
+    - - 0
+      - 3
+    - - 0
+      - 4
+    expected_candidate_pairs: 10
+  null5:
+    coordinates:
+    - - 0.0
+      - 0.0
+    - - 1.0
+      - 0.0
+    - - 2.0
+      - 0.0
+    - - 3.0
+      - 0.0
+    - - 4.0
+      - 0.0
+    true_edges: []
+    expected_candidate_pairs: 7
+  bridge6:
+    coordinates:
+    - - 0.0
+      - 0.0
+    - - 1.0
+      - 0.0
+    - - 0.5
+      - 0.87
+    - - 2.4
+      - 0.0
+    - - 3.4
+      - 0.0
+    - - 2.9
+      - 0.87
+    true_edges:
+    - - 0
+      - 1
+    - - 0
+      - 2
+    - - 1
+      - 2
+    - - 3
+      - 4
+    - - 3
+      - 5
+    - - 4
+      - 5
+    - - 1
+      - 3
+    expected_candidate_pairs: 12
+  path5_hidden:
+    coordinates:
+    - - 0.0
+      - 0.0
+    - - 1.0
+      - 0.0
+    - - 2.0
+      - 0.0
+    - - 3.0
+      - 0.0
+    - - 4.0
+      - 0.0
+    true_edges:
+    - - 0
+      - 1
+    - - 1
+      - 2
+    - - 2
+      - 3
+    - - 3
+      - 4
+    - - 0
+      - 4
+    expected_candidate_pairs: 7
+    candidate_support_misspecified: true
+coupling:
+  gamma_levels:
+    NONE: 0.0
+    LOW: 0.15
+    MED: 0.35
+    HIGH: 0.6
+  infeasible_combinations:
+  - topology: star5
+    memory: LOW
+    gamma: MED
+    reason: diagonal_margin_violation_degree4_centre
+  - topology: star5
+    memory: LOW
+    gamma: HIGH
+    reason: diagonal_margin_violation_degree4_centre
+forcing:
+  recharge:
+    mean: 1.2
+    seasonal_amplitude: 0.5
+    ar1_phi: 0.8
+    ar1_innovation_sd: 0.08
+    nonnegativity: clip_at_zero
+  pumping:
+    mean: 1.0
+    seasonal_amplitude: 0.4
+    ar1_phi: 0.7
+    ar1_innovation_sd: 0.06
+    independent_excitation_sd: 0.15
+    nonnegativity: clip_at_zero
+  max_clip_fraction: 0.001
+  confounding_rho_levels:
+  - 0.0
+  - 0.3
+  - 0.6
+  - 0.9
+  per_node_phase_offsets: frozen_uniform_over_period
+observation:
+  snr_definition: snr_head = sd(h over burn-in window) / sd(nu)
+  snr_levels:
+  - 2
+  - 5
+  - 10
+  - 20
+  - .inf
+  forcing_aggregation: interval_sum_over_cadence_interval
+  pumping_quality_regimes:
+    P-EXACT:
+      description: exact absolute pumping in model flux units
+      absolute_scale_known: true
+    P-MULTNOISE:
+      description: multiplicative measurement noise, median-corrected to be mean-unbiased
+      form: Q_obs = Q_true_interval * exp(N(0, s^2) - s^2/2)
+      s_default: 0.1
+      absolute_scale_known: true
+    P-SCALEBIAS:
+      description: unknown constant multiplicative scale bias, one draw per replicate
+      form: Q_obs = c * Q_true_interval,  log(c) ~ N(0, 0.30^2)
+      absolute_scale_known: false
+    P-TEMPAGG:
+      description: 'reported only as annual (52 fine-step) totals, disaggregated back to cadence intervals
+        by a FIXED mean seasonal template, destroying within-year variation
+
+        '
+      absolute_scale_known: true
+    P-SPATIALAGG:
+      description: 'only a basin total is reported, allocated to nodes by a fixed imperfect share vector
+        (true mean shares perturbed by Dirichlet noise, one draw per replicate)
+
+        '
+      dirichlet_concentration: 60.0
+      absolute_scale_known: false
+  recharge_quality_regimes:
+    R-EXACT:
+      form: R_proxy = R_true_interval
+    R-NOISE:
+      form: R_proxy = R_true_interval + N(0, sigma * sd(R_interval))
+      sigma_default: 0.2
+    R-LAG:
+      form: R_proxy = R_true_interval lagged by lag_fine_steps
+      lag_default: 4
+    R-NOISELAG:
+      form: both
+      sigma_default: 0.2
+      lag_default: 4
+    R-SCALE:
+      form: R_proxy = c * R_true_interval, log(c) ~ N(0, 0.30^2)
+  latent_recharge_never_exposed: true
+  missingness:
+    mcar_fraction_levels:
+    - 0.0
+    - 0.1
+    - 0.3
+    - 0.5
+    block_outage:
+      description: contiguous station dropout, applied on top of MCAR
+      blocks_per_node_levels:
+      - 0
+      - 1
+      - 2
+      block_length_cadence_steps: 8
+    observed_node_fraction_levels:
+    - 0.4
+    - 0.6
+    - 0.8
+    - 1.0
+    mnar: NOT_MODELLED_IN_V1
+  head_interpolation: PROHIBITED
+splits:
+  type: chronological
+  train_fraction: 0.7
+  validation_fraction: 0.15
+  test_fraction: 0.15
+  preprocessing_fit_on: TRAIN_ONLY
+  complexity_selection_on: VALIDATION_ONLY
+  test_usage: PROTECTED_FINAL_METRICS_ONLY
+  prohibited_test_selection:
+  - model_family
+  - regularization_lambda
+  - kernel_bandwidth
+  - graph_complexity
+  - edge_thresholds
+  - stopping_rules
+  synthetic_truth_is_not_a_validation_signal: true
+models:
+  common_features:
+  - intercept
+  - own_level_lag1
+  - season_sin
+  - season_cos
+  - time_trend
+  B0:
+    description: background / no-managed-forcing baseline
+    extra_features: []
+  L:
+    description: local forcing response; conceptual analogue of the M1L tier
+    extra_features:
+    - own_pumping
+    - own_recharge_proxy
+  S:
+    description: spatial forcing without a dynamic head-flow network
+    extra_features:
+    - kernel_weighted_neighbour_pumping
+    - kernel_weighted_neighbour_recharge
+    kernel: exp(-d_ij / lambda_km)
+    kernel_bandwidth_grid:
+    - 0.5
+    - 1.0
+    - 2.0
+    - 4.0
+    bandwidth_selected_on: VALIDATION_ONLY
+    uses_true_adjacency: false
+  N:
+    description: minimal dynamic groundwater network
+    extra_features:
+    - own_pumping
+    - own_recharge_proxy
+    - candidate_head_differences
+    head_difference_term: kappa_ij * (y_j - y_i) for j in candidate_neighbours(i)
+    nonnegativity_constrained:
+    - kappa
+    unconstrained_and_unpenalized:
+    - own_pumping
+    - own_recharge_proxy
+    - intercept
+    - own_level_lag1
+    - season_sin
+    - season_cos
+    - time_trend
+    pumping_sign_is_NOT_constrained: true
+    penalty_grid_lambda:
+    - 0.0
+    - 0.001
+    - 0.003
+    - 0.01
+    - 0.03
+    - 0.1
+    - 0.3
+    - 1.0
+    penalty_selected_on: VALIDATION_ONLY
+    row_admissibility: 'a cadence row tau is usable for node i only if y_i[tau], y_i[tau+1] and y_j[tau]
+      for every candidate neighbour j are observed. Unobserved nodes are removed from the candidate set
+      entirely. No head is interpolated to rescue a row.
+
+      '
+network_semantics:
+  kappa_definition: kappa_ij = dt * C_ij / S_i
+  kappa_is_effective_directed_coupling: true
+  symmetry_enforced: false
+  symmetry_note: kappa_ij != kappa_ji in general because S_i != S_j
+  edge_support: UNDIRECTED
+  edge_support_rule: an undirected pair is present if EITHER direction is selected
+  true_strong_edge_rule: max((A^k)_ij, (A^k)_ji) >= 0.01
+  detected_edge_rule: max(kappa_hat_ij, kappa_hat_ji) >= 0.01
+  strong_edge_threshold: 0.01
+  true_strong_edges_outside_candidate_set_count_as: FALSE_NEGATIVE
+  physical_conductance_reconstruction:
+    permitted_only_when: absolute_S_identifiable
+    formula: C_hat_ij = kappa_hat_ij * S_hat_i / dt
+    S_hat_formula: S_hat_i = -dt / beta_hat_Q_i
+  physics_consistency_diagnostic:
+    name: D_phys
+    formula: "D_phys_ij = abs(kappa_hat_ij*S_hat_i - kappa_hat_ji*S_hat_j)\n            / (abs(kappa_hat_ij*S_hat_i)\
+      \ + abs(kappa_hat_ji*S_hat_j) + epsilon_stab)\n"
+    epsilon_stab: 1.0e-09
+    range:
+    - 0
+    - 1
+    interpretation: D_phys near 0 indicates directional consistency with a common physical conductance
+    interpretable_only_when:
+    - absolute_S_identifiable is true
+    - both directional estimates nondegenerate (kappa_hat_ij >= strong_edge_threshold and kappa_hat_ji
+      >= strong_edge_threshold)
+    otherwise: reported as null, never as a numeric value
+estimands:
+  exact_coarse_dynamics: h_{t+k} = A^k h_t + sum_{r=0}^{k-1} A^{k-1-r} B u_{t+r}
+  aggregation_note: 'With only the interval aggregate U = sum_r u_{t+r} observed there is in general NO
+    exact B_k with sum_r A^{k-1-r} B u_{t+r} = B_k U for all forcing paths.
+
+    '
+  k_equals_1:
+    direct_fine_parameter_recovery: PRIMARY
+    targets:
+    - A
+    - B_Q
+    - kappa
+    - S
+  k_greater_than_1:
+    direct_fine_parameter_recovery: NOT_PRIMARY
+    A_hat_compared_to: A_to_the_k
+    A_comparison_caveat: 'A_hat also absorbs forcing-aggregation effects, so this comparison is reported
+      as state-transition recovery, not as clean parameter recovery.
+
+      '
+    primary_targets:
+    - protected_transition_recovery
+    - intervention_recovery
+    - impulse_response_recovery
+  pseudo_true_coarse_coefficient:
+    reported: only_where_it_aids_interpretation
+    always_labelled_as_pseudo_true: true
+    definition: 'B_k_pseudo := argmin_B  E_forcing || sum_{r=0}^{k-1} A^{k-1-r} B u_{t+r} - B U ||^2
+
+      '
+    property: population L2 projection onto the aggregate-forcing linear family
+    depends_on_forcing_process: true
+    computed_in: evaluation_layer_from_truth
+    monte_carlo_draws: 400
+  absolute_S_and_C_identifiable_only_when:
+  - pumping observed on a true absolute scale (P-EXACT or P-MULTNOISE)
+  - pumping-channel parameterization holds (B_Q = dt * diag(1/S))
+  - excitation sufficient (measured by the identifiability diagnostics, not assumed)
+  - cadence k == 1
+  otherwise_report: EFFECTIVE_RESPONSE_COEFFICIENTS_ONLY
+  otherwise_prohibited:
+  - physical_storage
+  - physical_conductance
+  intervention_recovery_kinds:
+    RELATIVE:
+      description: shape and ratios of delta_h; invariant to unknown forcing scale
+    ABSOLUTE:
+      description: delta_h per unit of ABSOLUTE withdrawal
+      requires_absolute_scale_known: true
+  planning_readiness_rule: 'A regime whose pumping scale is unknown (P-SCALEBIAS, P-SPATIALAGG, R-SCALE)
+    can NEVER be scored as planning-ready for absolute withdrawal constraints, regardless of how good
+    its relative recovery is.
+
+    '
+interventions:
+  launched_at: PROTECTED_TEST_ONSET
+  never_used_for:
+  - fitting
+  - hyperparameter_selection
+  - model_selection
+  - thresholding
+  pairing:
+    baseline_and_intervention_share:
+    - initial_state
+    - recharge_and_background_forcing
+    - process_noise_realization_eps
+    estimand: delta_h = h_intervention - h_baseline
+    rationale: common disturbances cancel exactly in the paired difference
+  also_report_noise_free_structural_response: true
+  magnitude_fraction_of_mean_pumping: 0.5
+  types:
+    pulse:
+      description: additional pumping over a single cadence interval at onset
+      duration_fine_steps: null
+    persistent_step:
+      description: sustained additional pumping, then release, to observe recovery
+      duration_fine_steps: 26
+    new_node_pumping:
+      description: step applied at the node with the LOWEST mean pumping
+      duration_fine_steps: 26
+      node_selection: lowest_mean_true_pumping
+    multi_node_withdrawal:
+      description: simultaneous step at two nodes
+      duration_fine_steps: 26
+      n_nodes: 2
+  horizons_fine_steps:
+  - 4
+  - 13
+  - 26
+  - 52
+  horizon_rule: 'evaluated at ceil(H / k) cadence steps; a horizon is reported only if it is at least
+    one cadence step and fits inside the protected test segment
+
+    '
+  cumulative_drawdown_horizon_fine_steps: 52
+  primary_horizon_fine_steps: 26
+spatial_evaluation:
+  zero_shot_held_out_node: NOT_PERFORMED_IN_V2
+  zero_shot_rationale: 'B0/L/S/N use NODE-SPECIFIC parameters, so a node entirely absent from training
+    has no estimated parameters and zero-shot inference at that node is not mathematically possible. A
+    fully held-out-node experiment would require an explicitly shared-parameter model, which v2 does not
+    implement.
+
+    '
+  protected_future_time_evaluation:
+    description: standard chronological protected-test evaluation for nodes with training history
+    enabled: true
+  masked_node_protocol:
+    description: evaluates PROPAGATION THROUGH MONITORING LOSS, not zero-shot prediction
+    preconditions:
+    - the masked node HAS train/validation history
+    - the masked node's parameters are estimable from that history
+    onset: PROTECTED_TEST_ONSET
+    mask_horizon_cadence_steps: 12
+    mask_horizon_rule: min(12, protected_test_length_cadence_steps)
+    recursion_initial_state: final admissible PRE-MASK head observation of the masked node
+    min_completed_steps: 4
+    permitted_inputs_after_onset:
+    - own predicted state from the recursion
+    - own observed pumping and recharge proxy
+    - observed heads of NON-masked neighbours
+    - 'most recent observed head of a NON-masked neighbour when that neighbour is missing at the current
+      instant (operational nowcast of a station that is still monitored)
+
+      '
+    - deterministic calendar features
+    prohibited_inputs_after_onset:
+    - any withheld head observation of the masked node
+    - carry-forward of the masked node's own head
+    neighbour_carry_forward_rationale: 'Without neighbour carry-forward the recursion aborts on the first
+      missing neighbour head, so at the reference regime''s 10% missingness the masked-node criterion
+      would be unevaluable in most replicates. Carry-forward applies ONLY to non-masked neighbours, never
+      to the masked node, and the number of carried-forward steps is reported as a diagnostic (masked_node_carry_forward_steps_*).
+      A replicate contributes to the criterion only if at least min_completed_steps recursion steps completed.
+
+      '
+    leak_enforcement: 'test_masked_node_no_leak poisons every withheld entry with a large sentinel value
+      and asserts the recursive forecast is bit-identical to the NaN-masked run
+
+      '
+    masked_node_selection:
+      timing: BEFORE_MISSINGNESS_REALIZED
+      fallback_after_missingness: PROHIBITED
+      by_topology:
+        single: 0
+        star5: 0
+        path5: 2
+        path5_hidden: 2
+        bridge6: 2
+        null5: 2
+      if_target_unobserved_or_not_estimable: NOT_ESTIMABLE
+      no_adaptive_substitution: true
+    start_instant_rule: 'Find the last admissible PRE-MASK head observation of the frozen target node
+      (instant t_anchor < TEST_onset). If t_anchor < TEST_onset - 1, recursively propagate internally
+      from t_anchor up to TEST_onset. Those warm-forward predictions are NOT scored. Score only predictions
+      aligned exactly with TEST-onset truth and subsequent protected TEST times (heads at instants onset,
+      onset+1, ..., onset+horizon-1). If no admissible pre-mask observation exists, status = NOT_ESTIMABLE
+      (reason unavailable_mask_anchor). Do not start scoring from an earlier instant.
+
+      '
+    missing_reason_reporting: 'masked_node_status_{L,S,N} records OK, NOT_ESTIMABLE, NO_START_OBSERVATION,
+      RECURSION_STOPPED_EARLY, or HORIZON_TOO_SHORT. masked_node_status records EVALUATED, NOT_ESTIMABLE,
+      TARGET_UNOBSERVED, NO_OBSERVED_NODES, or HORIZON_TOO_SHORT. Warm-forward length is recorded as masked_node_warm_forward_steps_*.
+
+      '
+metrics:
+  predictive_are_secondary: true
+  predictive:
+  - rmse_protected_test
+  - mae_protected_test
+  - normalized_transition_error
+  - improvement_vs_B0
+  primary:
+  - normalized_intervention_response_error
+  - step_response_error
+  - cumulative_drawdown_error
+  - vulnerability_rank_spearman
+  - vulnerability_rank_topk_overlap
+  nire_definition: NIRE = ||delta_h_hat - delta_h_true||_2 / ||delta_h_true||_2
+  nire_node_inclusion_threshold: 0.01
+  topk_k: 2
+  parameter_recovery:
+    metrics:
+    - relative_parameter_error
+    - sign_recovery
+    - storage_response_recovery
+    - coupling_strength_recovery
+    subject_to: estimands.k_equals_1 / estimands.k_greater_than_1 rules
+  network_recovery:
+  - edge_precision
+  - edge_recall
+  - edge_f1
+  - edge_false_positive_rate
+  - edge_false_negative_rate
+  - strong_coupling_weight_error
+  - D_phys
+  falsification:
+  - false_edge_count
+  - false_edge_any_fraction
+  - false_pumping_effect_rate
+  identifiability_diagnostics:
+  - design_matrix_rank
+  - singular_values
+  - condition_number
+  - pumping_excitation_residual_fraction
+  - max_variance_inflation_factor
+  diagnostics_distinguish:
+  - structural_non_identifiability
+  - practical_noise_driven_difficulty
+physical_parameter_identifiability:
+  recoverable_quantities_when_true:
+  - S_i
+  - C_ij
+  otherwise_report:
+  - A
+  - effective_B_Q
+  - kappa_ij
+  - intervention_response
+  kappa_semantics: kappa_ij = dt * C_ij / S_i
+  requires_all:
+    cadence_k_equals_1: true
+    absolute_forcing_scale_known: true
+    pumping_quality_in:
+    - P-EXACT
+    - P-MULTNOISE
+    recharge_quality_in:
+    - R-EXACT
+    confounding_rho_equals: 0.0
+    design_full_rank: true
+    condition_number_below: 1.0e6
+    pumping_excitation_fraction_above: 0.05
+    scenario_not_in:
+    - S7
+    - S8
+    - S6a
+    - S6b
+    - S9
+  excluded_reason:
+    S7: controlled misspecification of the physical parameterization
+    S8: placebo channel is present; S/C recovery is not the estimand
+    S6a: null network; no physical C_ij to recover
+    S6b: null network; no physical C_ij to recover
+    S9: candidate-support misspecification
+    k_gt_1: no exact coarse physical S/C; report A^k and pseudo-true coarse B
+    P-SCALEBIAS: unknown multiplicative pumping scale
+    P-TEMPAGG: within-year pumping variation destroyed
+    P-SPATIALAGG: spatial aggregation of pumping
+    R-NOISE: recharge proxy is noisy; storage/conductance not separately pinned
+    R-LAG: recharge timing misspecified
+    R-NOISELAG: recharge noisy and lagged
+    R-SCALE: recharge scale unknown
+    confounding_rho_gt_0: seasonal pumping/recharge confounding prevents clean separation
+estimability:
+  states:
+  - NOT_ESTIMABLE
+  - FIT_FAILED
+  - ESTIMATED
+  gate_states_after_aggregation:
+  - NOT_ESTIMABLE
+  - FIT_FAILED
+  - ESTIMATED_FAILED_GATE
+  - ESTIMATED_PASSED_GATE
+  reason_codes:
+  - insufficient_training_rows
+  - no_admissible_rows
+  - rank_deficient
+  - ill_conditioned
+  - solver_failure
+  - missing_required_forcing
+  - unavailable_mask_anchor
+  - target_node_unobserved
+  - model_not_applicable
+  - other_documented_reason
+  not_estimable_never_dropped: true
+  required_cell_not_estimable: COMPLEXITY_UNSUPPORTED_UNDER_THAT_REGIME
+  oracle_cells_may_not_compensate_for_not_estimable: true
+uncertainty:
+  iid_bootstrap: PROHIBITED_DEPENDENT_SERIES
+  estimator: moving_block_bootstrap
+  resampling_unit: contiguous TRAIN transition blocks of a single node
+  block_length_rule: max(2, ceil(2.0 * tau_relax_realized / k))
+  temporal_dependence: preserved_within_block
+  n_bootstrap_analysis: 200
+  n_bootstrap_smoke: 20
+  nominal_interval: 0.9
+  coverage_is_a_gate_criterion: false
+  coverage_role: REPORTED_DIAGNOSTIC_ONLY
+  monte_carlo_variability_reported_separately: true
+  cadence_semantics:
+    k_equals_1: 'interval coverage of the pumping coefficient may be compared to the fine-step physical
+      -B_Q, and only then, and only where physical_parameter_identifiability is true. Label: bootstrap_coverage_beta_q_physical.
+
+      '
+    k_greater_than_1: 'NEVER compare a fitted coarse-cadence pumping coefficient to fine-step B_Q. Coverage,
+      if reported, is relative to the pseudo-true coarse estimand (bootstrap_coverage_beta_q_pseudo_true)
+      and is a diagnostic. Interval width and stability (bootstrap_interval_width_mean) are always reported.
+
+      '
+  promotion_to_gate: NOT_IN_V2
+seeds:
+  rng_implementation: numpy.random.Generator(PCG64) via numpy.random.SeedSequence
+  spawn_protocol: SeedSequence(entropy=<pool_entropy>).spawn(n) then default_rng(child)
+  pools:
+    V3_DETERMINISM:
+      entropy: 20260907030001
+      n_seeds: 5
+      role: deterministic implementation sanity only
+    V3_SMOKE:
+      entropy: 20260907030002
+      n_seeds: 3
+      role: ENGINEERING ONLY
+    V3_ANALYSIS:
+      entropy: 20260907030003
+      n_seeds: 200
+      role: substantive inference; outcomes unused in Pass 1
+    V3_BENCHMARK:
+      entropy: 20260907030004
+      n_seeds: 16
+      role: F_train Monte Carlo approximation only
+  disjointness_required: true
+  analysis_pool_may_be_materialized_for_hashing: true
+  analysis_outcomes_inspected_pass1: false
+scenarios:
+  S0:
+    name: oracle_single_node
+    purpose: implementation sanity
+  S1:
+    name: practical_local_response
+    purpose: practical local identifiability
+  S2:
+    name: pumping_recharge_confounding
+    purpose: climate-vs-pumping attribution
+  S3:
+    name: imperfect_recharge_observation
+    purpose: proxy-quality sensitivity
+  S4:
+    name: oracle_small_network
+    purpose: favourable network recoverability
+  S5:
+    name: realistic_sparse_network
+    purpose: primary practical network test
+  S6:
+    name: null_network_falsification_legacy_alias
+    purpose: alias of S6a; do not use in new cells
+  S6a:
+    name: global_memory_null
+    purpose: false-structure discovery under C_ij=0 with independently targeted local memory
+  S6b:
+    name: matched_local_dynamics_null
+    purpose: false-structure discovery with A_ii preserved from the coupled reference
+  S7:
+    name: controlled_misspecification
+    purpose: prediction-vs-intervention divergence
+  S8:
+    name: managed_forcing_placebo
+    purpose: false pumping-effect discovery
+  S9:
+    name: candidate_support_misspecification
+    purpose: unavailable true links
+s6_null_construction:
+  families:
+    S6a_global_memory_null:
+      label: S6a
+      topology: null5
+      C_ij: 0 for all i != j
+      memory_control: independently targeted tau_relax via boundary leakage, same rule as coupled systems
+      match_A_ii_to_coupled_reference: false
+      match_marginal_head_variance: false
+      retained_from_v1: true
+    S6b_matched_local_dynamics_null:
+      label: S6b
+      source_coupled_system:
+        topology: path5
+        memory: MED
+        gamma: MED
+      geometry: path5 coordinates (identical candidate graph)
+      construction: 'Build the coupled reference. Then set C_ij_null = 0 and C_i0_null = C_i0_reference
+        + sum_j C_ij_reference, so A_ii_null = A_ii_reference and A_ij_null = 0. S_i, B_Q, B_R, forcing
+        process, process-noise regime, measurement-noise regime, cadence, missingness, geometry, and observation
+        design are preserved. The unforced equilibrium is preserved by setting b_null = (I - A_null) h_eq_ref
+        where h_eq_ref = (I - A_ref)^{-1} b_ref.
+
+        '
+      match_A_ii_to_coupled_reference: true
+      match_A_ij_off_diagonal: zero
+      match_marginal_head_variance: false
+      do_not_claim_variance_matching: true
+  match_marginal_head_variance: false
+  match_attempted_and_rejected: true
+  rejection_rationale: 'The quantity that governs inference difficulty is already matched by construction:
+    the snr_head definition ties observation-noise sd to REALIZED head sd, so S5 and both nulls face the
+    same head signal-to-noise ratio despite different absolute variances. The residual marginal-variance
+    difference is a structural consequence of coupling, not a nuisance.
+
+    '
+  required_reporting:
+  - realized_head_sd
+  - realized_observation_noise_sd
+  - realized_snr_head
+  - realized_snr_head_detrended
+  - process_noise_variance_share
+  - realized_local_persistence_mean_A_ii
+  - rho_A
+  - tau_relax_realized
+  - pumping_excitation_fraction_L
+  - false_edge_count
+  - false_edge_any
+  cross_scenario_comparison_caveat: 'S5-vs-S6a and S5-vs-S6b comparisons must be read alongside the reported
+    realized variances and local-persistence diagnostics. S6a and S6b are scored separately.
+
+    '
+  variance_characterization_reference:
+    topology: path5
+    memory: MED
+    gamma: MED
+  characterization_artifact: outputs/provenance/S6_VARIANCE_CHARACTERIZATION_V2.json
+s7_variants:
+  delayed_recharge:
+    description: truth applies a distributed lag to recharge; estimator uses the contemporaneous proxy
+    lag_weights:
+    - 0.5
+    - 0.3
+    - 0.2
+  recharge_efficiency_mismatch:
+    description: truth has B_R != B_Q; estimator retains the restricted B_R == B_Q family
+    recharge_efficiency: 0.6
+  weak_nonlinear_recharge:
+    description: truth applies a mild concave recharge response
+    form: R_effective = R * (1 - kappa_nl * R / (1 + R)),  kappa_nl = 0.25
+  latent_common_climate:
+    description: an unobserved common climate factor drives recharge at all nodes
+    common_factor_sd: 0.2
+    form: R = R_base * exp(f_t - log_sd^2/2),  f_t ~ AR1(phi=0.9), stationary sd = log_sd
+    parameterization: 'common_factor_sd is the factor''s STATIONARY sd expressed in absolute recharge
+      units at mean recharge, so log_sd = common_factor_sd / recharge.mean and the AR(1) innovation sd
+      is log_sd*sqrt(1-phi^2). Two errors are ruled out by construction here: passing the stationary sd
+      directly as an innovation sd (which inflates the factor 2.3x), and using an ADDITIVE factor, which
+      leaves only ~2.5 sd of headroom above zero at the seasonal trough and pushes this cell into the
+      clipping limit.
+
+      '
+    multiplicative_rationale: 'A climate anomaly scales recharge rather than adding a fixed volume, so
+      the multiplicative form is the more physical one, and it keeps R strictly positive so this scenario
+      carries ONLY its intended misspecification and no undocumented clipping nonlinearity. The state
+      equation remains linear in R; only the exogenous input changes.
+
+      '
+s8_placebo_construction:
+  description: "The estimator receives BOTH the ordinary observed/proxy pumping channel Q_real_observed\
+    \ AND a separate pumping-like placebo P_placebo. Truth continues to respond to real pumping and has\
+    \ a ZERO causal coefficient on P_placebo:\n  h_{t+1} = ... - B_Q * Q_real,t + 0 * P_placebo,t + ...\n\
+    P_placebo is correlated with recharge/climate. This tests whether the estimator assigns a nonzero\
+    \ causal/response effect to P_placebo CONDITIONAL ON real pumping. The placebo MUST NOT replace real\
+    \ pumping.\n"
+  placebo_correlation_with_recharge: 0.85
+  placebo_causal_effect: 0.0
+  estimator_receives:
+  - Q_real_observed
+  - P_placebo
+  truth_receives:
+  - Q_real
+  required_outputs:
+  - placebo_coef_L
+  - placebo_coef_sign_L
+  - placebo_coef_abs_L
+  - placebo_false_effect_L
+  - placebo_step_response_L
+  - placebo_false_discovery
+  false_effect_rule: abs(placebo_step_response) > 0.20 * abs(true_real_pumping_step_response)
+  additional_diagnostics:
+  - time_shift_placebo
+  - season_preserving_permutation_placebo
+  time_shift_fine_steps: 26
+reference_regime:
+  memory: MED
+  cadence: 4
+  gamma: MED
+  pumping_quality: P-MULTNOISE
+  pumping_quality_param: 0.1
+  recharge_quality: R-NOISE
+  recharge_quality_param: 0.2
+  confounding_rho: 0.3
+  mcar_fraction: 0.1
+  blocks_per_node: 0
+  observed_node_fraction: 1.0
+  snr_head: 10
+  process_noise_sd: 0.05
+oracle_favourable_overrides:
+  cadence: 1
+  pumping_quality: P-EXACT
+  recharge_quality: R-EXACT
+  confounding_rho: 0.0
+  mcar_fraction: 0.0
+  blocks_per_node: 0
+  observed_node_fraction: 1.0
+  snr_head: 20
+  process_noise_sd: 0.02
+  gamma: HIGH
+gates: {}
+reporting_cells: {}
+experiment_grid:
+  design_type: named_orthogonal_cells_only
+  fractional_factorial: NOT_USED
+  stress_curves: {}
+  two_factor_grids: {}
+outputs:
+  replicate_record_is_scalar_only: true
+  no_full_trajectory_arrays_persisted: true
+  files:
+  - outputs/FINAL_SYNTHETIC_IDENTIFIABILITY_REPORT.md
+  - outputs/FINAL_SYNTHETIC_IDENTIFIABILITY_STATUS.json
+  - outputs/scenario_summary.csv
+  - outputs/parameter_recovery.csv
+  - outputs/intervention_recovery.csv
+  - outputs/network_recovery.csv
+  - outputs/data_adequacy_map.csv
+  - outputs/data_adequacy_map.md
+  - outputs/prediction_vs_intervention.csv
+  - outputs/AP_DATA_REQUIREMENTS_FROM_SYNTHETIC.md
+  - outputs/provenance/DESIGN_V2_FREEZE.json
+  - outputs/provenance/DESIGN_V2_FREEZE_MANIFEST.csv
+  - outputs/provenance/CODE_MANIFEST_V2.csv
+  - outputs/provenance/RUN_MANIFEST_V2.json
+  - outputs/provenance/FROZEN_SYSTEMS_V2.csv
+  - outputs/provenance/S6_VARIANCE_CHARACTERIZATION_V2.json
+  final_status_tokens:
+  - LOCAL_RESPONSE_NOT_IDENTIFIED
+  - LOCAL_RESPONSE_IDENTIFIED_NETWORK_NOT_EARNED
+  - SPATIAL_FORCING_EARNED_NETWORK_NOT_EARNED
+  - NETWORK_IDENTIFIABLE_UNDER_SPECIFIED_DATA_REGIME
+  - INCONCLUSIVE
+  status_must_state_exact_data_regime: true
+execution:
+  phase_1_authorized:
+  - pytest
+  - SGI_G0
+  - engineering_smoke
+  - runtime_storage_benchmark
+  phase_1_terminates_with: MANDATORY_EXTERNAL_REVIEW_CHECKPOINT
+  phase_2_requires_explicit_authorization:
+  - full_monte_carlo_sweep
+  - summarization
+  - figures
+  - final_report_and_status
+  - ap_data_requirements
+  slurm:
+    expected_needed: false
+    preferred_partitions:
+    - sched_mit_sloan_batch
+    - sched_mit_sloan_batch_r8
+    - ou_sloan_batch
+    deprioritized_partition: mit_normal
+    submission_requires_authorization: true
+parent_design_hash: b53f5594a444ae4826adfe2c47818080508a4c4b00a38fa25b4ffc483e20a8a5
+parent_code_hash: 7cc64809bf240d7afea164c9a24a737c75de88a0b5e8d38f4e85b704f00d863c
+obs_fav_gamma_free_overrides:
+  cadence: 1
+  pumping_quality: P-EXACT
+  recharge_quality: R-EXACT
+  confounding_rho: 0.0
+  mcar_fraction: 0.0
+  blocks_per_node: 0
+  observed_node_fraction: 1.0
+  snr_head: 20
+  process_noise_sd: 0.02
+v3:
+  n_unique_cells: 21
+  n_analysis_seeds_per_cell: 200
+  rng_mode_substantive: named_substreams
+  system_seed_mode_substantive: orthogonal_v3
+  rng_mode_parity: legacy_sequential
+  system_seed_mode_parity: legacy_v2
+  legal_mode_pairs:
+  - - legacy_sequential
+    - legacy_v2
+  - - named_substreams
+    - orthogonal_v3
+  analysis_authorization_token: I_AUTHORIZE_THE_V3_MECHANISM_CONFIRMATION_SWEEP
+  sesoi:
+    nire: 0.05
+    rate_difference: 0.1
+    reliability_discrepancy: 0.05
+    role: preregistered SESOI / decision-relevance reference magnitudes, NOT gates
+  legacy_v2_orientation:
+    nire: 0.2
+    edge_f1: 0.8
+    placebo_ratio: 0.2
+  interval_semantics: pointwise Monte Carlo uncertainty intervals; not simultaneous family-wise bands
+  V3_ANALYSIS_POOL_FROZEN: true
+  V3_ANALYSIS_REPLICATES_RUN: 0
+  V3_ANALYSIS_OUTCOMES_INSPECTED: false
+  cell_ids:
+  - A_PEXACT
+  - A_S025
+  - A_S050
+  - A_S100
+  - A_S200
+  - A1_PEXACT_K1
+  - A1_S100_K1
+  - B_GNONE
+  - B_GLOW
+  - B_GMED
+  - B_GHIGH
+  - C_REAL_GMED
+  - C_REAL_GHIGH
+  - D_PE_RE_R0
+  - D_PE_RE_R3
+  - D_PE_RN_R0
+  - D_PE_RN_R3
+  - D_PM_RE_R0
+  - D_PM_RE_R3
+  - D_PM_RN_R0
+  - D_PM_RN_R3
+v3_cells:
+  A_PEXACT:
+    block: A
+    scenario: S1
+    topology: single
+    notes: Q1 reference arm
+    memory: MED
+    cadence: 4
+    gamma: NONE
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_A_k4
+  A_S025:
+    block: A
+    scenario: S1
+    topology: single
+    notes: sigma 0.025
+    memory: MED
+    cadence: 4
+    gamma: NONE
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.025
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_A_k4
+  A_S050:
+    block: A
+    scenario: S1
+    topology: single
+    notes: sigma 0.05
+    memory: MED
+    cadence: 4
+    gamma: NONE
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.05
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_A_k4
+  A_S100:
+    block: A
+    scenario: S1
+    topology: single
+    notes: v2 G1R1 configuration
+    memory: MED
+    cadence: 4
+    gamma: NONE
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.1
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_A_k4
+  A_S200:
+    block: A
+    scenario: S1
+    topology: single
+    notes: sigma 0.20
+    memory: MED
+    cadence: 4
+    gamma: NONE
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.2
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_A_k4
+  A1_PEXACT_K1:
+    block: A_prime
+    scenario: S1
+    topology: single
+    notes: k=1 P-EXACT anchor
+    memory: MED
+    cadence: 1
+    gamma: MED
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_A_k1
+  A1_S100_K1:
+    block: A_prime
+    scenario: S1
+    topology: single
+    notes: v2 G1R2 configuration
+    memory: MED
+    cadence: 1
+    gamma: MED
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.1
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_A_k1
+  B_GNONE:
+    block: B
+    scenario: S5
+    topology: path5
+    notes: Block B gamma NONE; V2 zero-coupling construction
+    memory: MED
+    cadence: 1
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-EXACT
+    recharge_quality_param: 0.0
+    confounding_rho: 0.0
+    mcar_fraction: 0.0
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 20
+    process_noise_sd: 0.02
+    gamma: NONE
+    identification_regime: FAVOURABLE
+    pairing_group: block_B_gamma
+  B_GLOW:
+    block: B
+    scenario: S5
+    topology: path5
+    notes: Block B gamma LOW
+    memory: MED
+    cadence: 1
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-EXACT
+    recharge_quality_param: 0.0
+    confounding_rho: 0.0
+    mcar_fraction: 0.0
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 20
+    process_noise_sd: 0.02
+    gamma: LOW
+    identification_regime: FAVOURABLE
+    pairing_group: block_B_gamma
+  B_GMED:
+    block: B
+    scenario: S5
+    topology: path5
+    notes: Block B/C FAV x MED
+    memory: MED
+    cadence: 1
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-EXACT
+    recharge_quality_param: 0.0
+    confounding_rho: 0.0
+    mcar_fraction: 0.0
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 20
+    process_noise_sd: 0.02
+    gamma: MED
+    identification_regime: FAVOURABLE
+    pairing_group: block_B_gamma
+  B_GHIGH:
+    block: B
+    scenario: S5
+    topology: path5
+    notes: Block B/C FAV x HIGH
+    memory: MED
+    cadence: 1
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-EXACT
+    recharge_quality_param: 0.0
+    confounding_rho: 0.0
+    mcar_fraction: 0.0
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 20
+    process_noise_sd: 0.02
+    gamma: HIGH
+    identification_regime: FAVOURABLE
+    pairing_group: block_B_gamma
+  C_REAL_GMED:
+    block: C
+    scenario: S5
+    topology: path5
+    notes: v2 G2R3 configuration
+    memory: MED
+    cadence: 4
+    gamma: MED
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.1
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    identification_regime: REALISTIC
+    pairing_group: block_C_real
+  C_REAL_GHIGH:
+    block: C
+    scenario: S5
+    topology: path5
+    notes: v2 coupling-curve HIGH config
+    memory: MED
+    cadence: 4
+    gamma: HIGH
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.1
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    identification_regime: REALISTIC
+    pairing_group: block_C_real
+  D_PE_RE_R0:
+    block: D
+    scenario: S8
+    topology: single
+    notes: Block D factorial cell
+    memory: MED
+    cadence: 4
+    gamma: MED
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-EXACT
+    recharge_quality_param: 0.0
+    confounding_rho: 0.0
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_D
+  D_PE_RE_R3:
+    block: D
+    scenario: S8
+    topology: single
+    notes: Block D factorial cell
+    memory: MED
+    cadence: 4
+    gamma: MED
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-EXACT
+    recharge_quality_param: 0.0
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_D
+  D_PE_RN_R0:
+    block: D
+    scenario: S8
+    topology: single
+    notes: Block D factorial cell
+    memory: MED
+    cadence: 4
+    gamma: MED
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.0
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_D
+  D_PE_RN_R3:
+    block: D
+    scenario: S8
+    topology: single
+    notes: Block D factorial cell
+    memory: MED
+    cadence: 4
+    gamma: MED
+    pumping_quality: P-EXACT
+    pumping_quality_param: 0.0
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_D
+  D_PM_RE_R0:
+    block: D
+    scenario: S8
+    topology: single
+    notes: Block D factorial cell
+    memory: MED
+    cadence: 4
+    gamma: MED
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.1
+    recharge_quality: R-EXACT
+    recharge_quality_param: 0.0
+    confounding_rho: 0.0
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_D
+  D_PM_RE_R3:
+    block: D
+    scenario: S8
+    topology: single
+    notes: Block D factorial cell
+    memory: MED
+    cadence: 4
+    gamma: MED
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.1
+    recharge_quality: R-EXACT
+    recharge_quality_param: 0.0
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_D
+  D_PM_RN_R0:
+    block: D
+    scenario: S8
+    topology: single
+    notes: Block D factorial cell
+    memory: MED
+    cadence: 4
+    gamma: MED
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.1
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.0
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_D
+  D_PM_RN_R3:
+    block: D
+    scenario: S8
+    topology: single
+    notes: "v2 G3R3 configuration \u2014 external-consistency anchor"
+    memory: MED
+    cadence: 4
+    gamma: MED
+    pumping_quality: P-MULTNOISE
+    pumping_quality_param: 0.1
+    recharge_quality: R-NOISE
+    recharge_quality_param: 0.2
+    confounding_rho: 0.3
+    mcar_fraction: 0.1
+    blocks_per_node: 0
+    observed_node_fraction: 1.0
+    snr_head: 10
+    process_noise_sd: 0.05
+    pairing_group: block_D
+block_d_factorial:
+  factors:
+    pumping_quality:
+    - P-EXACT
+    - P-MULTNOISE
+    recharge_quality:
+    - R-EXACT
+    - R-NOISE
+    confounding_rho:
+    - 0.0
+    - 0.3
+  cell_id_template: D_{PE|PM}_{RE|RN}_{R0|R3}
+  main_effects:
+  - pumping_quality
+  - recharge_quality
+  - confounding_rho
+  two_way_interactions:
+  - - pumping_quality
+    - recharge_quality
+  - - pumping_quality
+    - confounding_rho
+  - - recharge_quality
+    - confounding_rho
+  three_way_interaction:
+  - pumping_quality
+  - recharge_quality
+  - confounding_rho
+  three_way_role: preregistered secondary/descriptive
+  outcomes:
+  - placebo_false_effect_L
+  - placebo_relative_to_true_L

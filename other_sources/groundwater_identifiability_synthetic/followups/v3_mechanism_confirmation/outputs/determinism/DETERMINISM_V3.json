@@ -1,0 +1,14 @@
+{
+  "engineering_only": true,
+  "seed_pool": "V3_DETERMINISM",
+  "rng_mode": "named_substreams",
+  "system_seed_mode": "orthogonal_v3",
+  "g0_max_abs_transition_residual": 1.0658141036401503e-14,
+  "g0_max_abs_relative_coef_error": 6.476414257413906e-14,
+  "g0_storage_relative_error": 1.439630012058745e-15,
+  "partial_reliability_q": 1.0,
+  "nire_persistent_step_h26_L": 1.6332729280867793e-15,
+  "placebo_false_effect_L": null,
+  "A_diag_relative_error_L": 3.5014361289587816e-16,
+  "B_Q_relative_error_median": 1.3699021599530634e-15
+}
