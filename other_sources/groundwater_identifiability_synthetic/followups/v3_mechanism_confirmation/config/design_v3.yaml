@@ -8,7 +8,7 @@
 # Hypotheses are post-hoc relative to V2 and prospective relative to V3.
 #
 design_version: design_v3
-design_status: FROZEN_PASS1_1
+design_status: FROZEN_PASS1_2
 parent_design: design_v2
 parent_checkpoint_commit: 1b95209b1a2f0e20ae8bfac3910bd5359a420c82
 scope_token: V3_MECHANISM_CONFIRMATION_ONLY
@@ -761,7 +761,7 @@ seeds:
     V3_ANALYSIS:
       entropy: 20260907030003
       n_seeds: 200
-      role: substantive inference; outcomes unused in Pass 1 / Pass 1.1
+      role: substantive inference; outcomes unused in Pass 1 / Pass 1.1 / Pass 1.2
     V3_BENCHMARK:
       entropy: 20260907030004
       n_seeds: 128
@@ -1637,6 +1637,8 @@ benchmark_layers:
       residual norm, because sqrt(1 - rho^2) has absolute resolution only sqrt(machine eps) when the true
       minimum is zero.
     fallback_name_if_not_global: F_intervention_verified_domain
+    paper_language: numerically globally verified over the full extended-real response parameterization
+    formal_interval_certificate: false
   recombination_diagnostics:
     quantities:
     - nire_recomb_trueA_hatB

@@ -3,7 +3,7 @@
 V3 prospective mechanism-confirmation follow-up. Isolated under
 `followups/v3_mechanism_confirmation/`. Does not mutate frozen V2.
 
-Current checkpoint: **PASS 1.1 — FINAL PRE-ANALYSIS FREEZE**.
+Current checkpoint: **PASS 1.2 — EXACT I/O, RESUME, AND SCIENTIFIC-FREEZE HARDENING**.
 
 ## Evidence hierarchy
 
@@ -61,10 +61,12 @@ BENCHMARK pool count changed  = 16 -> 128
    and the diagnostic `F_intervention_pumped`, and the exact known-truth
    `neighbor_unmodeled_floor` is added. See `BENCHMARK_DEFINITIONS.md`.
 3. **`F_intervention` global validity.** Replaced the finite `a ∈ [-2.5, 2.5]` search with an
-   exact global argument over the complete algebraic response family (`a ∈ ℝ ∪ {±∞}`,
-   `κ ∈ ℝ`): amplitude profiled analytically, all stationary points of the resulting pole-free
-   rational function enumerated as polynomial roots, explicit limit at infinity, cross-checked
-   against an independent compactified full-line scan.
+   argument that is **numerically globally verified over the full extended-real response
+   parameterization** (`a ∈ ℝ ∪ {±∞}`, `κ ∈ ℝ`): amplitude profiled analytically, all
+   stationary points of the resulting pole-free rational function enumerated as polynomial
+   roots, explicit limit at infinity, cross-checked against an independent compactified
+   full-line scan. This is not a formal interval-arithmetic certificate. Field name
+   `F_intervention_global_certified` is retained.
 4. **Recombination language.** Documented as algebraic recombination diagnostics for the
    retained local terms; explicitly not an exact decomposition or complete partition for
    coupled systems.
@@ -79,6 +81,32 @@ BENCHMARK pool count changed  = 16 -> 128
 Nothing in Block A's Tier-1 measurement-error design and nothing in Block D's 8 cells was
 weakened or redesigned.
 
+## Pass 1.2 changes relative to Pass 1.1 (implementation only)
+
+```text
+cells changed                 = 0
+resolved cell count           = 21   (unchanged)
+ANALYSIS seed count changed   = 0    (n = 200 per cell, unchanged)
+BENCHMARK n                   = 128  (unchanged)
+hypotheses / SESOI / gates    = unchanged
+```
+
+1. **Exact uint64 provenance.** One canonical seed parser (`src_v3/records.py:parse_seed`)
+   keeps seed identifiers as exact integers through generation, CSV, resume, pairing,
+   summarization, and output hashing. Seeds are never routed through IEEE-754 floating point.
+2. **Typed scientific CSV.** Schema-aware parsing: integer seeds, canonical `True`/`False`
+   booleans, categorical strings, numeric metrics with explicit NaN/blank handling. Resume,
+   canonical summarization, standalone summarization, and audit helpers share this parser.
+3. **Fail-closed writer.** The CSV writer uses the deterministic sorted union of keys and
+   raises on unexpected fields rather than silently dropping them.
+4. **Resume idempotency.** Restart keys are exact `(cell_id, uint64 seed)` pairs.
+   Transient interruption resumes the exact frozen run. A scientific/code defect after
+   ANALYSIS begins is a STOP: invalidate affected outputs and obtain external review before
+   any code change. Do not automatically patch after inspecting substantive results.
+5. **Canonical ANALYSIS summary only after complete success.** `n_completed = 4200`,
+   `n_failures = 0`, unique `(cell_id, seed) = 4200`, 21 cells, 200 seeds/cell. Incomplete
+   runs set `ANALYSIS_INCOMPLETE = TRUE` and do not write `V3_ANALYSIS_SUMMARY.json`.
+
 ## Pass 1.1 authorization state
 
 ```text
@@ -91,7 +119,18 @@ FULL ANALYSIS LAUNCHER = NOT EXECUTED
 
 Mechanical materialization of the V3 ANALYSIS seed pool for hashing and
 disjointness is permitted. Individual seed values are not printed, inspected,
-or used to generate data in Pass 1 / Pass 1.1.
+or used to generate data in Pass 1 / Pass 1.1 / Pass 1.2.
+
+## Pass 1.2 authorization state
+
+```text
+V3_ANALYSIS_POOL_FROZEN = true
+V3_ANALYSIS_REPLICATES_RUN = 0
+V3_ANALYSIS_OUTCOMES_INSPECTED = false
+FULL ANALYSIS LAUNCHER = IMPLEMENTED AND FROZEN
+FULL ANALYSIS LAUNCHER = NOT EXECUTED
+NO SOURCE-CODE CHANGE REQUIRED FOR PASS 2
+```
 
 ## Future-paper claim boundaries
 

@@ -6,19 +6,20 @@ Pass 2 usage (zero source-code changes):
     python scripts_v3/summarize_v3.py --analysis
 
 requires the frozen ANALYSIS replicate table already written by `run_v3.py`.
-This script never launches replicates.
+This script never launches replicates. It refuses to write a canonical ANALYSIS
+summary unless the CSV is the complete exact 21 × 200 result set.
 """
 
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 from pathlib import Path
 
 import _bootstrap_path  # noqa: F401
 
-from src_v3.design import MODULE_ROOT, code_hash, design_hash
+from src_v3.design import MODULE_ROOT, code_hash, design_hash, load_design
+from src_v3.records import parse_csv, unique_pairs
 from src_v3.summarize_v3 import summarize_analysis, summarize_records
 
 ANALYSIS_CSV = MODULE_ROOT / "outputs" / "analysis" / "V3_ANALYSIS_REPLICATES.csv"
@@ -29,25 +30,8 @@ FREEZE_JSON = MODULE_ROOT / "outputs" / "provenance" / "DESIGN_V3_FREEZE.json"
 BENCHMARK_JSON = MODULE_ROOT / "outputs" / "benchmarks" / "BENCHMARKS_V3.json"
 
 
-def _coerce(records: list[dict]) -> list[dict]:
-    coerced = []
-    for row in records:
-        out = dict(row)
-        for key, value in row.items():
-            if value == "":
-                out[key] = float("nan")
-                continue
-            try:
-                out[key] = float(value)
-            except (TypeError, ValueError):
-                pass
-        coerced.append(out)
-    return coerced
-
-
 def _load_csv(path: Path) -> list[dict]:
-    with open(path, "r", encoding="utf-8", newline="") as handle:
-        return _coerce(list(csv.DictReader(handle)))
+    return parse_csv(path)
 
 
 def _load_benchmarks() -> tuple[dict[str, dict] | None, list[dict] | None]:
@@ -77,6 +61,26 @@ def _require_matching_freeze() -> dict:
     return freeze
 
 
+def _require_complete_analysis(records: list[dict]) -> None:
+    design = load_design()
+    n_cells = len(list(design["v3"]["cell_ids"]))
+    n_seeds = int(design["v3"]["n_analysis_seeds_per_cell"])
+    expected = n_cells * n_seeds
+    pairs = unique_pairs(records)
+    cells = {str(r.get("cell_id")) for r in records if r.get("cell_id")}
+    if (
+        len(records) != expected
+        or len(pairs) != expected
+        or len(cells) != n_cells
+        or len(records) != len(pairs)
+    ):
+        raise SystemExit(
+            "ANALYSIS_INCOMPLETE: canonical scientific summary NOT WRITTEN. "
+            f"n_records={len(records)} n_unique_pairs={len(pairs)} n_cells={len(cells)} "
+            f"expected={expected}"
+        )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -94,6 +98,7 @@ def main(argv: list[str] | None = None) -> int:
                 "with the authorization token first. This summarizer does not launch replicates."
             )
         records = _load_csv(ANALYSIS_CSV)
+        _require_complete_analysis(records)
         benchmarks, convergence = _load_benchmarks()
         payload = summarize_analysis(
             records, benchmarks=benchmarks, convergence=convergence

@@ -4,13 +4,15 @@
   "V3_ANALYSIS_OUTCOMES_INSPECTED": false,
   "V3_ANALYSIS_POOL_FROZEN": true,
   "V3_ANALYSIS_REPLICATES_RUN": 0,
-  "V3_CODE_HASH": "04630e6ac17aa075cabb3fcc6c6466ddeb45267286f67c384073b865bca3aa8c",
-  "V3_DESIGN_HASH": "ac15674161c1483011af1ddf9d4019493e36dbc7195c635f076b99de8735cade",
+  "V3_CODE_HASH": "1f1eea435b3c0ecd52153cccc312163528bf126bac2ff1a830b4e7779e43d348",
+  "V3_DESIGN_HASH": "7da1654e7c2729639db8bc1dd5e8a20078ce5750e93a05564f1f6dd9f506da69",
   "analysis_launcher": {
+    "canonical_summary_requires_complete_result_set": true,
     "executes_frozen_plan_with_token": true,
     "expected_replicates": 4200,
     "preflight_only_flag": "--preflight-only",
     "requires_token": true,
+    "resume_keys": "exact (cell_id, uint64 seed)",
     "script": "scripts_v3/run_v3.py"
   },
   "benchmark_layers": {
@@ -25,7 +27,8 @@
       "F_train_true",
       "F_train_obs",
       "fitted_nire_L"
-    ]
+    ],
+    "paper_language": "numerically globally verified over the full extended-real response parameterization"
   },
   "benchmark_pool": {
     "convergence_prefixes": [
@@ -40,7 +43,7 @@
     "previous_n_seeds_pass1": 16,
     "role": "F_train_true / F_train_obs pseudo-true Monte Carlo approximation only"
   },
-  "checkpoint": "PASS_1_1_FINAL_PRE_ANALYSIS_FREEZE",
+  "checkpoint": "PASS_1_2_EXACT_IO_RESUME_HARDENING",
   "code_globs": [
     "src_v3/*.py",
     "scripts_v3/*.py",
@@ -52,7 +55,7 @@
     "BENCHMARK_DEFINITIONS.md"
   ],
   "design_version": "design_v3",
-  "frozen_at_utc": "2026-09-07T17:11:45.668978+00:00",
+  "frozen_at_utc": "2026-09-07T18:05:55.843204+00:00",
   "gates": {},
   "legal_mode_pairs": [
     [
@@ -80,6 +83,21 @@
     "resolved_cell_count": 21,
     "source_changes_required_for_pass_2": 0
   },
+  "pass_1_2_change_summary": {
+    "ANALYSIS_seed_count_changed": 0,
+    "ANALYSIS_seeds_per_cell": 200,
+    "BENCHMARK_n": 128,
+    "canonical_summary_requires_complete_result_set": true,
+    "cells_changed": 0,
+    "exact_uint64_provenance": true,
+    "gates": {},
+    "hypotheses_unchanged": true,
+    "resolved_cell_count": 21,
+    "resume_exact_integer_keys": true,
+    "sesoi_unchanged": true,
+    "source_changes_required_for_pass_2": 0,
+    "typed_scientific_csv": true
+  },
   "platform": "Linux-5.14.0-687.39.1.el9_8.x86_64-x86_64-with-glibc2.28",
   "resolved_cell_count": 21,
   "resolved_cell_manifest_hash": "d5836258e55e672f023840b016d97eca61365b0f44d05b08cc8451b27aeb5e72",
@@ -95,6 +113,7 @@
     "emits_support_status": false,
     "entrypoint": "summarize_analysis",
     "module": "src_v3/summarize_v3.py",
+    "record_parser": "src_v3/records.py",
     "reinterprets_v2": false
   },
   "v2_seed_pool_hashes": {

@@ -1,19 +1,21 @@
 {
-  "phase": "PASS_1_1",
+  "phase": "PASS_1_2",
   "rng_mode_substantive": "named_substreams",
   "system_seed_mode_substantive": "orthogonal_v3",
   "rng_mode_parity": "legacy_sequential",
   "system_seed_mode_parity": "legacy_v2",
-  "V3_DESIGN_HASH": "ac15674161c1483011af1ddf9d4019493e36dbc7195c635f076b99de8735cade",
-  "V3_CODE_HASH": "04630e6ac17aa075cabb3fcc6c6466ddeb45267286f67c384073b865bca3aa8c",
+  "V3_DESIGN_HASH": "7da1654e7c2729639db8bc1dd5e8a20078ce5750e93a05564f1f6dd9f506da69",
+  "V3_CODE_HASH": "1f1eea435b3c0ecd52153cccc312163528bf126bac2ff1a830b4e7779e43d348",
   "V3_ANALYSIS_POOL_FROZEN": true,
   "V3_ANALYSIS_REPLICATES_RUN": 0,
   "V3_ANALYSIS_OUTCOMES_INSPECTED": false,
   "interval_semantics": "Reported 95% bootstrap and Wilson intervals are pointwise Monte Carlo uncertainty intervals for their individual estimands. They are not simultaneous family-wise confidence bands over all V3 contrasts.",
-  "checkpoint": "PASS_1_1_FINAL_PRE_ANALYSIS_FREEZE",
+  "checkpoint": "PASS_1_2_EXACT_IO_RESUME_HARDENING",
   "expected_analysis_replicates": 4200,
   "analysis_launcher_executable": true,
   "analysis_launcher_executed": false,
   "source_changes_required_for_pass_2": 0,
-  "benchmark_pool_n": 128
+  "benchmark_pool_n": 128,
+  "exact_uint64_provenance": true,
+  "canonical_summary_requires_complete_result_set": true
 }

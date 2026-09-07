@@ -5,7 +5,7 @@
   "n_completed": 63,
   "n_failures": 0,
   "failures": [],
-  "elapsed_s": 3.274005315033719,
+  "elapsed_s": 2.9617503138724715,
   "rng_mode": "named_substreams",
   "system_seed_mode": "orthogonal_v3",
   "NOT_ESTIMABLE": 0,
@@ -34226,11 +34226,12 @@
     },
     "benchmarks_merged": true
   },
+  "canonical_smoke_reload": true,
   "benchmarks_merged": true,
   "storage_projection": {
-    "smoke_csv_bytes": 141423,
-    "bytes_per_replicate_approx": 2244.809523809524,
-    "projected_analysis_4200_bytes": 9428200.0,
+    "smoke_csv_bytes": 140416,
+    "bytes_per_replicate_approx": 2228.8253968253966,
+    "projected_analysis_4200_bytes": 9361066.666666666,
     "note": "NON-INFERENTIAL engineering projection only"
   },
   "V3_ANALYSIS_REPLICATES_RUN": 0

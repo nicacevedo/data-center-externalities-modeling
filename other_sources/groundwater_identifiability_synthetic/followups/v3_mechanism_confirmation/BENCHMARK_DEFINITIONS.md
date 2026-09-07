@@ -253,11 +253,16 @@ with `yhat` the unit-normalised true pumped-node response.
    extended parameter line and must agree.
 
 `F_intervention_global_certified` is True only when the two independent global strategies
-agree within tolerance and the optimum is not attained at infinity. If it were ever False for
-a cell, the quantity is reported under the weaker name
+agree within tolerance and the optimum is not attained at infinity. Paper language for this
+verification is **numerically globally verified over the full extended-real response
+parameterization**, not a formal interval-arithmetic / root certificate. If the flag were
+ever False for a cell, the quantity is reported under the weaker name
 `F_intervention_verified_domain` with `F_intervention_domain` stating the exact numerical
-domain, and the paper claim is weakened accordingly. Realized Pass-1.1 state: certified for
-all 21 cells, domain `a ∈ ℝ ∪ {±∞}`, `κ ∈ ℝ`.
+domain, and the paper claim is weakened accordingly. Realized Pass-1.1 state: the flag is
+True for all 21 cells, domain `a ∈ ℝ ∪ {±∞}`, `κ ∈ ℝ`. The scientific interpretation
+(pumped-node representability, all-node spatial-propagation limitation, neighbour-unmodeled
+structural floor, true-variable training target, observed-variable pseudo-true target) is
+unchanged.
 
 **Value reporting.** The rational form *locates* the optimum; the value there is *reported*
 from the direct residual norm, because `sqrt(1 − ρ²)` has absolute resolution only

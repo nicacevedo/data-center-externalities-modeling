@@ -104,7 +104,7 @@ def test_live_hashes_match_frozen_provenance(v3_root):
     assert freeze["resolved_cell_count"] == 21
     assert freeze["n_seeds"]["V3_ANALYSIS"] == 200
     assert freeze["n_seeds"]["V3_BENCHMARK"] == 128
-    assert freeze.get("checkpoint") == "PASS_1_1_FINAL_PRE_ANALYSIS_FREEZE"
+    assert freeze.get("checkpoint") == "PASS_1_2_EXACT_IO_RESUME_HARDENING"
     assert freeze["V3_ANALYSIS_REPLICATES_RUN"] == 0
     assert freeze["V3_ANALYSIS_OUTCOMES_INSPECTED"] is False
     assert design_hash() == freeze["V3_DESIGN_HASH"]

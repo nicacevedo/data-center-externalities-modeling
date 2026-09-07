@@ -1,6 +1,6 @@
 # PROTOCOL.md
 
-V3 Pass-1 / Pass-1.1 / Pass-2 protocol. Canonical scientific plan:
+V3 Pass-1 / Pass-1.1 / Pass-1.2 / Pass-2 protocol. Canonical scientific plan:
 `/home/nacevedo/RA/data-center-externalities-modeling/V3 GW PLAN.md`
 
 ## Pass 1 (first checkpoint)
@@ -17,7 +17,7 @@ V3 Pass-1 / Pass-1.1 / Pass-2 protocol. Canonical scientific plan:
 9. Engineering smoke: 21 cells × 3 V3_SMOKE seeds.
 10. STOP. Do not run `21 × 200` ANALYSIS.
 
-## Pass 1.1 (final pre-analysis freeze — this checkpoint)
+## Pass 1.1 (final scientific pre-analysis freeze)
 
 Narrow correction and verification pass. No new experiment design. 21 cells, n=200,
 Blocks A / A′ / B / C / D, named-substream CRN, `orthogonal_v3` seeding, full 2×2×2 S8
@@ -85,6 +85,30 @@ decomposition and **not** a complete partition of intervention error: the omitte
 neighbour-state propagation lies outside the local family and is quantified separately and
 exactly by `neighbor_unmodeled_floor`.
 
+## Pass 1.2 (exact I/O, resume, and scientific-freeze hardening — this checkpoint)
+
+Implementation-only correction. 21 cells, n=200, Blocks A / A′ / B / C / D, named-substream
+CRN, `orthogonal_v3` seeding, no V3 gates, V2 immutable — all preserved unchanged.
+
+1. Canonical uint64 seed parser; no IEEE-754 seed routing.
+2. Schema-aware CSV reader/writer shared by resume, summarization, and audit helpers.
+3. Fail-closed writer (union schema or raise; never silent column drop).
+4. Resume keys are exact `(cell_id, uint64 seed)` pairs.
+5. Canonical ANALYSIS summary written only after a complete exact 21 × 200 result set with
+   zero failures. Incomplete runs write `V3_ANALYSIS_INCOMPLETE.json` and never
+   `V3_ANALYSIS_SUMMARY.json`.
+6. Re-run all validation: V2 + V3 test suites, 9-replicate V2 parity, deterministic sanity,
+   63-replicate engineering smoke, `--preflight-only`. Do not run ANALYSIS.
+
+### Restartability
+
+- **Transient interruption** (killed process, disk full, host reboot): resume the exact
+  frozen run with `--resume`. Completed `(cell_id, seed)` pairs are skipped by exact integer
+  comparison. No scientific change.
+- **Scientific or implementation defect discovered after ANALYSIS begins:** STOP. Invalidate
+  the affected outputs. Obtain external review before any code change. Do not automatically
+  patch code after inspecting substantive results.
+
 ## Pass 2 (not this task)
 
 Requires `--authorize <TOKEN>` where `<TOKEN>` is the frozen
@@ -106,8 +130,10 @@ the config, n = 200 ANALYSIS seeds per cell, 4,200 expected replicates, seed uni
 uint64 range, `V3_DESIGN_HASH`, `V3_CODE_HASH`, resolved-cell manifest hash, `V3_ANALYSIS`
 seed-pool hash, frozen resolved cell count, V2 parent design/code hashes, pairwise seed-pool
 disjointness, and absence of pre-existing ANALYSIS replicate outputs. Only then does it
-execute exactly the frozen plan and hand the records to
-`src_v3.summarize_v3.summarize_analysis`.
+execute exactly the frozen plan, validate the complete exact result set, and only then
+hand the records to `src_v3.summarize_v3.summarize_analysis` for the canonical scientific
+summary. Incomplete runs set `ANALYSIS_INCOMPLETE = TRUE` and do not write
+`V3_ANALYSIS_SUMMARY.json`.
 
 `execute_plan(..., authorized=True)` is the only way to run the `V3_ANALYSIS` pool. The test
 suite never passes it, so no test can execute a substantive seed.

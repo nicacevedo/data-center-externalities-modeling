@@ -78,9 +78,14 @@ def test_main_source_wires_token_then_preflight_then_authorized_execute():
     assert "args.authorize != token" in source
     assert "preflight(" in source
     assert "execute_plan(" in source
+    assert "write_canonical_analysis_summary(" in source
     assert "authorized=True" in source
-    assert "summarize_analysis(" in source
     assert source.index("args.authorize != token") < source.index("execute_plan(")
+    assert source.index("execute_plan(") < source.index("write_canonical_analysis_summary(")
+    writer = inspect.getsource(run_v3.write_canonical_analysis_summary)
+    assert "validate_complete_result_set(" in writer
+    assert "summarize_analysis(" in writer
+    assert writer.index("validate_complete_result_set(") < writer.index("summarize_analysis(")
 
 
 def test_build_plan_is_exactly_21_by_200(design):

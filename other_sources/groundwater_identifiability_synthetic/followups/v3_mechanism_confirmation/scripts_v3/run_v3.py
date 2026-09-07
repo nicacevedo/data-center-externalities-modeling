@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """V3 ANALYSIS launcher. FROZEN AND EXECUTABLE.
 
-Contract (Pass 1.1 hard requirement):
+Contract (Pass 1.2 hard requirement):
 
     missing / wrong authorization              -> REFUSE
     correct authorization
@@ -11,6 +11,13 @@ Contract (Pass 1.1 hard requirement):
       + correct 21-cell resolved manifest hash
       + correct n = 200 ANALYSIS seeds per cell
       + correct substantive mode pair          -> execute exactly the frozen 21 x 200 plan
+      -> validate complete exact result set
+      -> only then write the canonical ANALYSIS summary and hash outputs
+
+If the run is incomplete:
+
+    ANALYSIS_INCOMPLETE = TRUE
+    canonical scientific summary = NOT WRITTEN
 
 The substantive mode pair is exactly `(named_substreams, orthogonal_v3)`. The legacy pair
 `(legacy_sequential, legacy_v2)` exists only for the V2 bit-for-bit parity script and is
@@ -32,7 +39,6 @@ temporary plans instead.
 from __future__ import annotations
 
 import argparse
-import csv
 import hashlib
 import json
 import platform
@@ -61,6 +67,16 @@ from src_v3.design import (
 )
 from src_v3.evaluation import run_replicate
 from src_v3.modes import RNG_NAMED, SEED_ORTHOGONAL, require_legal
+from src_v3.records import (
+    append_record,
+    existing_keys,
+    parse_csv,
+    parse_record,
+    parse_seed,
+    unique_pairs,
+    write_csv,
+    write_output_hashes,
+)
 from src_v3.summarize_v3 import summarize_analysis
 
 ANALYSIS_POOL = "V3_ANALYSIS"
@@ -98,7 +114,7 @@ class AnalysisPlan:
     def jobs(self):
         for cell_id in self.cell_ids:
             for seed in self.seeds:
-                yield cell_id, int(seed)
+                yield cell_id, parse_seed(seed)
 
 
 def resolved_cell_manifest_hash(design: dict[str, Any]) -> str:
@@ -118,7 +134,7 @@ def build_plan(
     return AnalysisPlan(
         pool=str(pool),
         cell_ids=tuple(regimes),
-        seeds=tuple(int(s) for s in seed_list(design, pool)),
+        seeds=tuple(parse_seed(s) for s in seed_list(design, pool)),
         rng_mode=str(rng_mode),
         system_seed_mode=str(system_seed_mode),
         regimes=regimes,
@@ -313,16 +329,8 @@ def _seed_overlap(design: dict[str, Any]) -> list[list[str]]:
 
 
 def _existing_keys(csv_path: Path) -> set[tuple[str, int]]:
-    if not csv_path.exists():
-        return set()
-    keys: set[tuple[str, int]] = set()
-    with open(csv_path, "r", encoding="utf-8", newline="") as handle:
-        for row in csv.DictReader(handle):
-            try:
-                keys.add((str(row["cell_id"]), int(float(row["seed"]))))
-            except (KeyError, TypeError, ValueError):
-                continue
-    return keys
+    """Resume keys: exact (cell_id, uint64 seed) from the canonical CSV parser."""
+    return existing_keys(csv_path)
 
 
 def execute_plan(
@@ -355,19 +363,13 @@ def execute_plan(
             if path.exists():
                 path.unlink()
 
-    records: list[dict[str, Any]] = []
+    records: list[dict[str, Any]] = parse_csv(csv_path) if resume else []
     failures: list[dict[str, Any]] = []
-    fieldnames: list[str] | None = None
-    if resume and csv_path.exists():
-        with open(csv_path, "r", encoding="utf-8", newline="") as handle:
-            reader = csv.DictReader(handle)
-            fieldnames = list(reader.fieldnames or []) or None
-            records.extend(dict(row) for row in reader)
-
     started = time.perf_counter()
     n_attempted = 0
     with open(jsonl_path, "a", encoding="utf-8") as stream:
         for cell_id, seed in plan.jobs():
+            seed = parse_seed(seed)
             if (cell_id, seed) in done:
                 continue
             n_attempted += 1
@@ -375,7 +377,7 @@ def execute_plan(
                 record = runner(
                     design,
                     plan.regimes[cell_id],
-                    int(seed),
+                    seed,
                     rng_mode=plan.rng_mode,
                     system_seed_mode=plan.system_seed_mode,
                 )
@@ -383,26 +385,19 @@ def execute_plan(
                 failures.append(
                     {
                         "cell_id": cell_id,
-                        "seed": int(seed),
+                        "seed": seed,
                         "error": str(exc),
                         "traceback": traceback.format_exc(),
                     }
                 )
                 continue
-            record = dict(record)
+            record = parse_record(dict(record))
             record.setdefault("cell_id", cell_id)
-            record["seed"] = int(seed)
+            record["seed"] = seed
             record["source_pool"] = plan.pool
-            records.append(record)
+            records = append_record(csv_path, record, records)
+            done.add((cell_id, seed))
             stream.write(json.dumps(record, default=str) + "\n")
-            if fieldnames is None:
-                fieldnames = sorted(record)
-                with open(csv_path, "w", encoding="utf-8", newline="") as handle:
-                    csv.DictWriter(handle, fieldnames=fieldnames).writeheader()
-            with open(csv_path, "a", encoding="utf-8", newline="") as handle:
-                csv.DictWriter(
-                    handle, fieldnames=fieldnames, extrasaction="ignore"
-                ).writerow(record)
             if progress_every and len(records) % progress_every == 0:
                 log(f"  {len(records)}/{plan.expected_replicates} replicates")
     elapsed = time.perf_counter() - started
@@ -416,6 +411,8 @@ def execute_plan(
         "system_seed_mode": plan.system_seed_mode,
         "n_expected": plan.expected_replicates,
         "n_completed": len(records),
+        "n_unique_pairs": len(unique_pairs(records)),
+        "n_duplicate_pairs": len(records) - len(unique_pairs(records)),
         "n_attempted_this_invocation": n_attempted,
         "n_failures": len(failures),
         "failures": failures,
@@ -427,6 +424,149 @@ def execute_plan(
         "replicates_csv": str(csv_path),
         "replicates_jsonl": str(jsonl_path),
         "records": records,
+    }
+
+
+def validate_complete_result_set(plan: AnalysisPlan, summary: dict[str, Any]) -> dict[str, Any]:
+    """Fail closed unless the on-disk result set is exactly the frozen plan.
+
+    For the ANALYSIS pool this is 21 cells × 200 seeds = 4200 unique pairs, zero
+    failures, zero duplicates. For a temporary non-ANALYSIS plan the same algebra
+    is checked against that plan's own expected size, so tests can exercise the
+    guard without touching a substantive seed.
+    """
+    records = list(summary.get("records") or [])
+    pairs = unique_pairs(records)
+    cells = sorted({str(r.get("cell_id")) for r in records if r.get("cell_id")})
+    seeds = sorted({parse_seed(r["seed"]) for r in records if r.get("seed", "") not in ("", None)})
+    n_failures = int(summary.get("n_failures") or 0)
+    n_completed = len(records)
+    n_unique = len(pairs)
+    n_duplicate = n_completed - n_unique
+    expected_cells = list(plan.cell_ids)
+    expected_seeds = [parse_seed(s) for s in plan.seeds]
+    expected_pairs = {(c, s) for c in expected_cells for s in expected_seeds}
+    missing = sorted(expected_pairs - set(pairs))
+    extra = sorted(set(pairs) - expected_pairs)
+    checks = {
+        "n_failures_zero": n_failures == 0,
+        "n_completed_equals_expected": n_completed == plan.expected_replicates,
+        "n_unique_pairs_equals_expected": n_unique == plan.expected_replicates,
+        "n_duplicate_pairs_zero": n_duplicate == 0,
+        "cells_match_plan": cells == sorted(expected_cells),
+        "n_cells": len(cells) == len(expected_cells),
+        "n_seeds_per_cell": (
+            all(
+                {parse_seed(r["seed"]) for r in records if str(r.get("cell_id")) == cid}
+                == set(expected_seeds)
+                for cid in expected_cells
+            )
+            if records
+            else plan.expected_replicates == 0
+        ),
+        "missing_pairs_zero": not missing,
+        "extra_pairs_zero": not extra,
+    }
+    if plan.pool == ANALYSIS_POOL:
+        checks.update(
+            {
+                "analysis_n_cells_21": len(expected_cells) == EXPECTED_CELLS,
+                "analysis_n_seeds_200": len(expected_seeds) == EXPECTED_SEEDS_PER_CELL,
+                "analysis_n_replicates_4200": plan.expected_replicates == EXPECTED_REPLICATES,
+            }
+        )
+    ok = all(checks.values())
+    return {
+        "ok": ok,
+        "ANALYSIS_INCOMPLETE": not ok,
+        "n_completed": n_completed,
+        "n_failures": n_failures,
+        "n_unique_pairs": n_unique,
+        "n_duplicate_pairs": n_duplicate,
+        "n_cells": len(cells),
+        "n_seeds": len(seeds),
+        "n_missing_pairs": len(missing),
+        "n_extra_pairs": len(extra),
+        "checks": checks,
+        "canonical_summary_permitted": ok,
+    }
+
+
+CANONICAL_SUMMARY_NAME = "V3_ANALYSIS_SUMMARY.json"
+INCOMPLETE_MARKER_NAME = "V3_ANALYSIS_INCOMPLETE.json"
+
+
+def write_canonical_analysis_summary(
+    plan: AnalysisPlan,
+    summary: dict[str, Any],
+    out_dir: Path,
+    *,
+    benchmarks: dict[str, dict] | None = None,
+    convergence: list[dict] | None = None,
+    skip_summarize: bool = False,
+    n_bootstrap: int | None = None,
+) -> dict[str, Any]:
+    """Write the canonical scientific summary only after a complete exact result set.
+
+    Incomplete runs write ``V3_ANALYSIS_INCOMPLETE.json`` and never create
+    ``V3_ANALYSIS_SUMMARY.json``.
+    """
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    summary_path = out_dir / CANONICAL_SUMMARY_NAME
+    incomplete_path = out_dir / INCOMPLETE_MARKER_NAME
+    validation = validate_complete_result_set(plan, summary)
+    if not validation["ok"]:
+        if summary_path.exists():
+            summary_path.unlink()
+        marker = {
+            "ANALYSIS_INCOMPLETE": True,
+            "canonical_scientific_summary": "NOT_WRITTEN",
+            "validation": validation,
+        }
+        with open(incomplete_path, "w", encoding="utf-8") as handle:
+            json.dump(marker, handle, indent=2, default=str)
+            handle.write("\n")
+        return {
+            "wrote_canonical_summary": False,
+            "canonical_summary_path": None,
+            "incomplete_marker_path": str(incomplete_path),
+            "validation": validation,
+        }
+    if incomplete_path.exists():
+        incomplete_path.unlink()
+    if skip_summarize:
+        return {
+            "wrote_canonical_summary": False,
+            "canonical_summary_path": None,
+            "incomplete_marker_path": None,
+            "validation": validation,
+            "skipped": True,
+        }
+    summarize_kwargs: dict[str, Any] = {
+        "benchmarks": benchmarks,
+        "convergence": convergence,
+    }
+    if n_bootstrap is not None:
+        summarize_kwargs["n_bootstrap"] = int(n_bootstrap)
+    payload = summarize_analysis(summary["records"], **summarize_kwargs)
+    with open(summary_path, "w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, default=str)
+        handle.write("\n")
+    hashed = write_output_hashes(
+        out_dir,
+        [
+            out_dir / "V3_ANALYSIS_REPLICATES.csv",
+            out_dir / "V3_ANALYSIS_REPLICATES.jsonl",
+            summary_path,
+        ],
+    )
+    return {
+        "wrote_canonical_summary": True,
+        "canonical_summary_path": str(summary_path),
+        "incomplete_marker_path": None,
+        "output_hashes_path": str(hashed),
+        "validation": validation,
     }
 
 
@@ -501,6 +641,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         resume=bool(args.resume),
     )
     benchmarks, convergence = _load_benchmarks()
+    canonical = write_canonical_analysis_summary(
+        plan,
+        summary,
+        out_dir,
+        benchmarks=benchmarks,
+        convergence=convergence,
+        skip_summarize=bool(args.no_summarize),
+    )
+    validation = canonical["validation"]
 
     out_dir.mkdir(parents=True, exist_ok=True)
     manifest = {
@@ -510,26 +659,24 @@ def main(argv: Sequence[str] | None = None) -> int:
         "authorized": True,
         "preflight": report,
         "execution": {k: v for k, v in summary.items() if k != "records"},
+        "validation": validation,
+        "ANALYSIS_INCOMPLETE": validation["ANALYSIS_INCOMPLETE"],
         "V3_ANALYSIS_POOL_FROZEN": True,
         "V3_ANALYSIS_REPLICATES_RUN": summary["n_completed"],
-        "V3_ANALYSIS_OUTCOMES_INSPECTED": True,
+        "V3_ANALYSIS_OUTCOMES_INSPECTED": bool(canonical["wrote_canonical_summary"]),
+        "canonical_scientific_summary": (
+            "WRITTEN" if canonical["wrote_canonical_summary"] else "NOT_WRITTEN"
+        ),
     }
     with open(out_dir / "RUN_MANIFEST_V3_ANALYSIS.json", "w", encoding="utf-8") as handle:
         json.dump(manifest, handle, indent=2, default=str)
         handle.write("\n")
 
-    if not args.no_summarize:
-        payload = summarize_analysis(
-            summary["records"], benchmarks=benchmarks, convergence=convergence
-        )
-        with open(out_dir / "V3_ANALYSIS_SUMMARY.json", "w", encoding="utf-8") as handle:
-            json.dump(payload, handle, indent=2, default=str)
-            handle.write("\n")
-
-    if summary["n_failures"] or summary["n_completed"] != plan.expected_replicates:
+    if validation["ANALYSIS_INCOMPLETE"]:
         raise SystemExit(
-            f"V3 ANALYSIS incomplete: {summary['n_completed']}/{plan.expected_replicates} "
-            f"failures={summary['n_failures']}"
+            "V3 ANALYSIS incomplete: canonical scientific summary NOT WRITTEN. "
+            f"completed={summary['n_completed']}/{plan.expected_replicates} "
+            f"unique={validation['n_unique_pairs']} failures={summary['n_failures']}"
         )
     print(
         f"V3 ANALYSIS complete: {summary['n_completed']}/{plan.expected_replicates} "

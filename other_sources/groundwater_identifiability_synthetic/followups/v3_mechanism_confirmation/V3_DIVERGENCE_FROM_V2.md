@@ -11,6 +11,7 @@ as changed must match its V2 parent byte-for-byte (see `V2_PARENT_MANIFEST.csv`)
 - `src_v3/diagnostics.py`
 - `src_v3/benchmarks.py`
 - `src_v3/summarize_v3.py`
+- `src_v3/records.py`
 
 ## Intentional changes to vendored files
 
@@ -78,3 +79,13 @@ New files with no V2 parent, added or rewritten in Pass 1.1:
 **No vendored V2 file changed its classification in Pass 1.1.** The set of changed vendored
 files is exactly the set listed above under "Intentional changes to vendored files", and every
 other vendored file still matches its V2 parent byte-for-byte.
+
+## Pass 1.2 additions (no new vendored divergence)
+
+New file with no V2 parent:
+
+- `src_v3/records.py` — canonical uint64 seed parser, typed scientific CSV schema, fail-closed
+  writer, exact resume keys.
+
+Launcher / summarizer consumers now reuse that module. **No vendored V2 file changed its
+classification in Pass 1.2.**

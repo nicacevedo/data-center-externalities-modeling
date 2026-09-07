@@ -151,7 +151,7 @@ def main() -> int:
     bench_spec = design["seeds"]["pools"]["V3_BENCHMARK"]
     freeze = {
         "frozen_at_utc": datetime.now(timezone.utc).isoformat(),
-        "checkpoint": "PASS_1_1_FINAL_PRE_ANALYSIS_FREEZE",
+        "checkpoint": "PASS_1_2_EXACT_IO_RESUME_HARDENING",
         "design_version": design["design_version"],
         "V3_DESIGN_HASH": v3_design_h,
         "V3_CODE_HASH": v3_code_h,
@@ -191,6 +191,21 @@ def main() -> int:
             "launcher_now_executes_frozen_full_run": True,
             "source_changes_required_for_pass_2": 0,
         },
+        "pass_1_2_change_summary": {
+            "cells_changed": 0,
+            "resolved_cell_count": 21,
+            "ANALYSIS_seed_count_changed": 0,
+            "ANALYSIS_seeds_per_cell": int(design["v3"]["n_analysis_seeds_per_cell"]),
+            "BENCHMARK_n": int(bench_spec["n_seeds"]),
+            "hypotheses_unchanged": True,
+            "sesoi_unchanged": True,
+            "gates": {},
+            "exact_uint64_provenance": True,
+            "typed_scientific_csv": True,
+            "resume_exact_integer_keys": True,
+            "canonical_summary_requires_complete_result_set": True,
+            "source_changes_required_for_pass_2": 0,
+        },
         "benchmark_layers": {
             "ordering": list(design["benchmark_layers"]["ordering"]),
             "decomposition_is_additive": False,
@@ -198,10 +213,17 @@ def main() -> int:
             "f_intervention_domain": str(
                 design["benchmark_layers"]["f_intervention_global_validity"]["parameter_domain"]
             ),
+            "paper_language": str(
+                design["benchmark_layers"]["f_intervention_global_validity"].get(
+                    "paper_language",
+                    "numerically globally verified over the full extended-real response parameterization",
+                )
+            ),
         },
         "summarizer": {
             "module": "src_v3/summarize_v3.py",
             "entrypoint": "summarize_analysis",
+            "record_parser": "src_v3/records.py",
             "across_seed_bootstrap_resamples": int(
                 design["v3"]["summarizer"]["across_seed_bootstrap_resamples"]
             ),
@@ -215,6 +237,8 @@ def main() -> int:
             "executes_frozen_plan_with_token": True,
             "preflight_only_flag": "--preflight-only",
             "expected_replicates": 4200,
+            "canonical_summary_requires_complete_result_set": True,
+            "resume_keys": "exact (cell_id, uint64 seed)",
         },
     }
     with open(PROVENANCE / "DESIGN_V3_FREEZE.json", "w", encoding="utf-8") as handle:
@@ -246,7 +270,7 @@ def main() -> int:
         handle.write("\n")
 
     run_manifest = {
-        "phase": "PASS_1_1",
+        "phase": "PASS_1_2",
         "rng_mode_substantive": "named_substreams",
         "system_seed_mode_substantive": "orthogonal_v3",
         "rng_mode_parity": "legacy_sequential",
@@ -261,19 +285,21 @@ def main() -> int:
             "uncertainty intervals for their individual estimands. They are not "
             "simultaneous family-wise confidence bands over all V3 contrasts."
         ),
-        "checkpoint": "PASS_1_1_FINAL_PRE_ANALYSIS_FREEZE",
+        "checkpoint": "PASS_1_2_EXACT_IO_RESUME_HARDENING",
         "expected_analysis_replicates": 4200,
         "analysis_launcher_executable": True,
         "analysis_launcher_executed": False,
         "source_changes_required_for_pass_2": 0,
         "benchmark_pool_n": int(bench_spec["n_seeds"]),
+        "exact_uint64_provenance": True,
+        "canonical_summary_requires_complete_result_set": True,
     }
     with open(PROVENANCE / "RUN_MANIFEST_V3.json", "w", encoding="utf-8") as handle:
         json.dump(run_manifest, handle, indent=2)
         handle.write("\n")
 
     checkpoint = {
-        "phase": "PASS_1_1_COMPLETE",
+        "phase": "PASS_1_2_COMPLETE",
         "V3_ANALYSIS_POOL_FROZEN": True,
         "V3_ANALYSIS_REPLICATES_RUN": 0,
         "V3_ANALYSIS_OUTCOMES_INSPECTED": False,
@@ -287,12 +313,14 @@ def main() -> int:
         "ANALYSIS_seeds_per_cell": 200,
         "expected_ANALYSIS_replicates": 4200,
         "BENCHMARK_n": int(bench_spec["n_seeds"]),
-        "BENCHMARK_pool_count_change": "16 -> 128",
         "cells_changed": 0,
         "ANALYSIS_seed_count_changed": 0,
+        "exact_uint64_provenance": True,
+        "resume_idempotency": True,
+        "canonical_summary_requires_complete_result_set": True,
         "interval_semantics": run_manifest["interval_semantics"],
     }
-    with open(PROVENANCE / "PASS1_1_CHECKPOINT.json", "w", encoding="utf-8") as handle:
+    with open(PROVENANCE / "PASS1_2_CHECKPOINT.json", "w", encoding="utf-8") as handle:
         json.dump(checkpoint, handle, indent=2)
         handle.write("\n")
 

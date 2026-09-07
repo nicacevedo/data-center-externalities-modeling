@@ -3,11 +3,9 @@
 
 from __future__ import annotations
 
-import csv
 import json
 import time
 import traceback
-from pathlib import Path
 
 import _bootstrap_path  # noqa: F401
 import numpy as np
@@ -15,6 +13,7 @@ import numpy as np
 from src_v3.design import MODULE_ROOT, load_design, seed_list, v3_all_cells
 from src_v3.evaluation import run_replicate
 from src_v3.modes import RNG_NAMED, SEED_ORTHOGONAL
+from src_v3.records import parse_csv, parse_seed, write_csv
 from src_v3.summarize_v3 import summarize_records
 
 OUT = MODULE_ROOT / "outputs" / "smoke"
@@ -41,7 +40,7 @@ def main() -> int:
                 rec = run_replicate(
                     design,
                     regime,
-                    int(seed),
+                    parse_seed(seed),
                     rng_mode=RNG_NAMED,
                     system_seed_mode=SEED_ORTHOGONAL,
                 )
@@ -53,20 +52,26 @@ def main() -> int:
                 failures.append(
                     {
                         "cell_id": cell_id,
-                        "seed": int(seed),
+                        "seed": parse_seed(seed),
                         "error": str(exc),
                         "traceback": traceback.format_exc(),
                     }
                 )
     elapsed = time.perf_counter() - t0
     OUT.mkdir(parents=True, exist_ok=True)
+    csv_path = OUT / "SMOKE_V3_REPLICATES.csv"
     if records:
-        fields = sorted({k for r in records for k in r})
-        with open(OUT / "SMOKE_V3_REPLICATES.csv", "w", encoding="utf-8", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=fields)
-            writer.writeheader()
-            for row in records:
-                writer.writerow(row)
+        write_csv(csv_path, records)
+        reloaded = parse_csv(csv_path)
+        if len(reloaded) != len(records):
+            raise SystemExit(f"smoke CSV round-trip dropped rows: {len(reloaded)}/{len(records)}")
+        for original, loaded in zip(records, reloaded):
+            if parse_seed(original["seed"]) != parse_seed(loaded["seed"]):
+                raise SystemExit("smoke seed round-trip lost a uint64 identifier")
+            if str(original["cell_id"]) != str(loaded["cell_id"]):
+                raise SystemExit("smoke cell_id round-trip mismatch")
+    else:
+        reloaded = []
 
     benchmarks = None
     convergence = None
@@ -76,7 +81,7 @@ def main() -> int:
         benchmarks = {str(r["cell_id"]): r for r in payload.get("rows", [])}
         convergence = payload.get("convergence") or None
 
-    n_bytes = (OUT / "SMOKE_V3_REPLICATES.csv").stat().st_size if records else 0
+    n_bytes = csv_path.stat().st_size if records else 0
     bytes_per_replicate = n_bytes / max(len(records), 1)
     storage_projection = {
         "smoke_csv_bytes": n_bytes,
@@ -101,8 +106,9 @@ def main() -> int:
             1 for r in records if r.get("estimability_status_L") == "FIT_FAILED"
         ),
         "summarizer": summarize_records(
-            records, benchmarks=benchmarks, convergence=convergence
+            reloaded, benchmarks=benchmarks, convergence=convergence
         ),
+        "canonical_smoke_reload": True,
         "benchmarks_merged": bool(benchmarks),
         "storage_projection": storage_projection,
         "V3_ANALYSIS_REPLICATES_RUN": 0,

@@ -36,6 +36,7 @@ from typing import Any, Iterable, Sequence
 import numpy as np
 
 from .diagnostics import RECOMBINATION_SEMANTICS
+from .records import parse_record, parse_seed
 
 INTERVAL_SEMANTICS = (
     "Reported 95% bootstrap and Wilson intervals are pointwise Monte Carlo "
@@ -359,10 +360,7 @@ def _by_seed(records: Sequence[dict], cell_id: str, metric: str) -> dict[int, fl
     for row in records:
         if str(row.get("cell_id")) != cell_id:
             continue
-        try:
-            seed = int(float(row["seed"]))
-        except (KeyError, TypeError, ValueError):
-            continue
+        seed = parse_seed(row["seed"])
         out[seed] = _num(row.get(metric))
     return out
 
@@ -372,10 +370,7 @@ def _cell_seeds(records: Sequence[dict], cell_id: str) -> set[int]:
     for row in records:
         if str(row.get("cell_id")) != cell_id:
             continue
-        try:
-            seeds.add(int(float(row["seed"])))
-        except (KeyError, TypeError, ValueError):
-            continue
+        seeds.add(parse_seed(row["seed"]))
     return seeds
 
 
@@ -1235,12 +1230,12 @@ def summarize_analysis(
     non_inferential: bool = False,
 ) -> dict[str, Any]:
     """Full preregistered V3 summary. No gates, no support status, no V2 reinterpretation."""
-    records = list(records)
+    records = [parse_record(row) for row in records]
     mode_report = check_uniform_substantive_modes(records)
     if require_substantive_modes:
         require_uniform_substantive_modes(records)
     cells = sorted({str(r.get("cell_id")) for r in records if r.get("cell_id")})
-    seeds = sorted({int(float(r["seed"])) for r in records if str(r.get("seed", "")) != ""})
+    seeds = sorted({parse_seed(r["seed"]) for r in records if r.get("seed", "") != "" and r.get("seed") is not None})
     payload: dict[str, Any] = {
         "n_records": len(records),
         "n_cells": len(cells),
