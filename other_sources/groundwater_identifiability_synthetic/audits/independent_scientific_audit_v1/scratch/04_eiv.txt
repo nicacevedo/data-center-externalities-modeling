@@ -1,0 +1,236 @@
+####################################################################################################
+# A. SHAPE-vs-SCALE DECOMPOSITION OF LOCAL PERSISTENT-STEP FAILURE
+####################################################################################################
+
+Across all 128 non-G0 cells (per-cell medians):
+  NIRE h26 (scale+shape)                 median=0.8492  q10=0.7507  q90=0.9049  min=0.1791  max=1.0000
+  relative shape error (shape only)      median=0.0371  q10=0.0238  q90=0.0878  min=0.0123  max=0.3395
+
+  spearman(NIRE, shape_error) over cells = +0.179
+  cells with shape_error <= 0.20         = 124 / 128
+  cells with NIRE       <= 0.20          = 2 / 128
+  cells with shape_error <= 0.5*NIRE     = 128 / 128
+
+Interpretation: shape error far below NIRE => residual error is dominated by AMPLITUDE,
+i.e. the pumping-response coefficient, not by the persistence/transition operator.
+
+--- G1 required cells ---
+         nire_persistent_step_h26_L  relative_shape_error_persistent_step_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L
+cell_id                                                                                                                                                                            
+G1R1                       0.564834                                0.046080                 0.075483                        NaN                               0.490624     0.614430
+G1R2                       0.530328                                0.129934                 0.076086                   0.225161                                    NaN     0.501483
+G1R3                       0.571730                                0.048620                 0.081008                        NaN                               0.507823     0.647315
+G1R4                       0.546377                                0.031814                 0.052733                        NaN                               0.497539     0.552549
+G1R5                       0.541081                                0.037263                 0.062552                        NaN                               0.478572     0.658856
+G1R6                       0.849710                                0.037112                 0.071380                        NaN                               0.514447     0.516973
+
+--- key stress curves: NIRE vs shape ---
+
+  [snr]
+                    nire_persistent_step_h26_L  relative_shape_error_persistent_step_L  A_diag_relative_error_L  B_Q_pseudo_true_relative_error_median  B_Q_relative_error_median
+cell_id                                                                                                                                                                          
+CURVE_curve_snr_2                     0.935986                                0.337836                 0.758448                               0.478764                        NaN
+CURVE_curve_snr_5                     0.885160                                0.128021                 0.253038                               0.509818                        NaN
+CURVE_curve_snr_10                    0.849710                                0.037112                 0.071380                               0.514447                        NaN
+CURVE_curve_snr_20                    0.831193                                0.023651                 0.081558                               0.511931                        NaN
+
+  [process_noise]
+                                nire_persistent_step_h26_L  relative_shape_error_persistent_step_L  A_diag_relative_error_L  B_Q_pseudo_true_relative_error_median  B_Q_relative_error_median
+cell_id                                                                                                                                                                                      
+CURVE_curve_process_noise_0p05                    0.849710                                0.037112                 0.071380                               0.514447                        NaN
+CURVE_curve_process_noise_0p25                    0.844537                                0.038837                 0.081270                               0.498180                        NaN
+CURVE_curve_process_noise_1p0                     0.841826                                0.057375                 0.106938                               0.497897                        NaN
+
+  [pumping_quality]
+                                         nire_persistent_step_h26_L  relative_shape_error_persistent_step_L  A_diag_relative_error_L  B_Q_pseudo_true_relative_error_median  B_Q_relative_error_median
+cell_id                                                                                                                                                                                               
+CURVE_curve_pumping_quality_PEXACT                         0.706363                                0.028109                 0.060235                               0.098247                        NaN
+CURVE_curve_pumping_quality_PMULTNOISE                     0.849710                                0.037112                 0.071380                               0.514447                        NaN
+CURVE_curve_pumping_quality_PSCALEBIAS                     0.737322                                0.031225                 0.055532                               0.202221                        NaN
+CURVE_curve_pumping_quality_PTEMPAGG                       0.806498                                0.050381                 0.091139                               0.491518                        NaN
+CURVE_curve_pumping_quality_PSPATIALAGG                    0.779818                                0.035399                 0.077647                               0.282128                        NaN
+
+  [coupling]
+                                    nire_persistent_step_h26_L  relative_shape_error_persistent_step_L  A_diag_relative_error_L  B_Q_pseudo_true_relative_error_median  B_Q_relative_error_median
+cell_id                                                                                                                                                                                          
+CURVE_curve_coupling_strength_NONE                    0.580411                                0.051288                 0.074572                               0.515549                        NaN
+CURVE_curve_coupling_strength_LOW                     0.774017                                0.023857                 0.065473                               0.516940                        NaN
+CURVE_curve_coupling_strength_MED                     0.849710                                0.037112                 0.071380                               0.514447                        NaN
+CURVE_curve_coupling_strength_HIGH                    0.914325                                0.022215                 0.131331                               0.537533                        NaN
+
+  [cadence]
+                        nire_persistent_step_h26_L  relative_shape_error_persistent_step_L  A_diag_relative_error_L  B_Q_pseudo_true_relative_error_median  B_Q_relative_error_median
+cell_id                                                                                                                                                                              
+CURVE_curve_cadence_1                     0.844167                                0.110320                 0.087609                                    NaN                   0.276074
+CURVE_curve_cadence_2                     0.823505                                0.053538                 0.052900                               0.383505                        NaN
+CURVE_curve_cadence_4                     0.849710                                0.037112                 0.071380                               0.514447                        NaN
+CURVE_curve_cadence_13                    0.914100                                0.050213                 0.410886                               0.716781                        NaN
+
+--- oracle cells (best local regimes) ---
+             nire_persistent_step_h26_L  relative_shape_error_persistent_step_L  A_diag_relative_error_L  B_Q_relative_error_median   rmse_test_L topology gamma scenario
+cell_id                                                                                                                                                                  
+G3R2b                      1.791207e-01                            5.908495e-02             5.332359e-02               4.226620e-02  1.984218e-01    path5  HIGH      S6b
+G3R2                       1.899909e-01                            5.960463e-02             3.720524e-02               5.321463e-02  2.854092e-01    null5  HIGH      S6a
+G2R1                       8.234171e-01                            3.749258e-02             1.740588e-02               3.993231e-02  2.186911e-01    path5  HIGH       S4
+G2R2                       8.226451e-01                            5.579350e-02             1.697448e-02               4.444212e-02  1.990315e-01    star5  HIGH       S4
+R_S4_bridge                8.555984e-01                            4.486599e-02             1.559982e-02               4.316444e-02  2.180725e-01  bridge6  HIGH       S4
+C_G0                       4.342755e-15                            9.288159e-16             4.085009e-16               2.537405e-15  5.023379e-15   single   MED       S0
+
+
+####################################################################################################
+# B. SIGNED BIAS IN THE ESTIMATED PUMPING RESPONSE (classical EIV attenuation test)
+####################################################################################################
+
+The estimated pumping coefficient beta_q_hat is stored; at k>1 the frozen pseudo-true
+coarse target B_Q_pseudo_true_diag_mean is also stored. Classical errors-in-variables on
+the PUMPING regressor (P-MULTNOISE = 10% multiplicative noise on observed pumping) predicts
+ATTENUATION: |beta_q_hat| systematically BELOW the pseudo-true value.
+
+n cells (k>1) with both quantities: 118
+  median signed relative bias in B_Q = -0.5126
+  fraction of cells ATTENUATED (<0)  = 0.966
+  q10 = -0.5248   q90 = -0.4854
+
+By pumping-quality regime:
+                 count    median       min       max
+pumping_quality                                     
+P-EXACT              1  0.012263  0.012263  0.012263
+P-MULTNOISE        114 -0.512872 -0.717865 -0.394081
+P-SCALEBIAS          1  0.013414  0.013414  0.013414
+P-SPATIALAGG         1  0.109990  0.109990  0.109990
+P-TEMPAGG            1  0.081488  0.081488  0.081488
+
+By head SNR (does head noise drive the pumping-coefficient bias?):
+          count    median
+snr_head                 
+2.0           4 -0.519038
+5.0           4 -0.510370
+10.0        106 -0.511790
+20.0          4 -0.512872
+
+By process noise:
+                  count    median
+process_noise_sd                 
+0.05                116 -0.512837
+0.25                  1 -0.497817
+1.00                  1 -0.445351
+
+Replicate-level check on the pumping-quality stress curve (P-* at k=4, S5/path5):
+  CURVE_curve_pumping_quality_PEXACT               n= 60 median_signed_rel_bias=+0.0129  frac_attenuated=0.417
+  CURVE_curve_pumping_quality_PMULTNOISE           n= 60 median_signed_rel_bias=-0.5162  frac_attenuated=1.000
+  CURVE_curve_pumping_quality_PSCALEBIAS           n= 60 median_signed_rel_bias=+0.0110  frac_attenuated=0.467
+  CURVE_curve_pumping_quality_PSPATIALAGG          n= 60 median_signed_rel_bias=+0.1084  frac_attenuated=0.300
+  CURVE_curve_pumping_quality_PTEMPAGG             n= 60 median_signed_rel_bias=+0.0815  frac_attenuated=0.450
+
+
+####################################################################################################
+# C. LAGGED-HEAD EIV HYPOTHESIS — the five stated predictions, tested
+####################################################################################################
+
+[1] Does intervention NIRE improve STRONGLY with head SNR?
+                    nire_persistent_step_h26_L  A_diag_relative_error_L  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head
+cell_id                                                                                                                                       
+CURVE_curve_snr_2                     0.935986                 0.758448                               0.478764     1.643756           2.049877
+CURVE_curve_snr_5                     0.885160                 0.253038                               0.509818     0.797964           5.124691
+CURVE_curve_snr_10                    0.849710                 0.071380                               0.514447     0.516973          10.249383
+CURVE_curve_snr_20                    0.831193                 0.081558                               0.511931     0.403948          20.498765
+  SNR 2 -> 20 :  NIRE 0.936 -> 0.831  (delta -0.105, -11.2%)
+                 A_diag_err 0.758 -> 0.082  (-89.2%)
+                 B_Q_err    0.479 -> 0.512  (+6.9%)
+  => head SNR fixes PERSISTENCE almost completely but barely moves INTERVENTION error,
+     because the pumping-response error is unaffected by head SNR.
+
+  Same contrast inside the gamma x snr grid (12 cells):
+snr_head      2.0       5.0       10.0      20.0
+gamma                                           
+HIGH      0.339489  0.115439  0.022215  0.029402
+LOW       0.283120  0.074971  0.023857  0.026187
+MED       0.337836  0.128021  0.037112  0.023651
+
+[2] Does intervention NIRE improve when PROCESS noise decreases?
+                                nire_persistent_step_h26_L  relative_shape_error_persistent_step_L  A_diag_relative_error_L  B_Q_pseudo_true_relative_error_median  rmse_test_L
+cell_id                                                                                                                                                                        
+CURVE_curve_process_noise_0p05                    0.849710                                0.037112                 0.071380                               0.514447     0.516973
+CURVE_curve_process_noise_0p25                    0.844537                                0.038837                 0.081270                               0.498180     0.677319
+CURVE_curve_process_noise_1p0                     0.841826                                0.057375                 0.106938                               0.497897     1.885136
+  => 20x process-noise increase changes NIRE by <1%. NOT process-limited.
+
+[3] Is estimated persistence systematically biased?
+  Stored column A_diag_relative_error_L is an ABSOLUTE relative error (unsigned).
+  The SIGN/direction of the persistence bias is NOT recoverable from stored outputs.
+  Magnitude at reference conditions (snr 10, k=4): 0.0713799256663922
+  Magnitude at snr 2 : 0.7584484371735192
+
+[4] Is long-horizon intervention error >> one-step prediction error?
+  median over cells: h4=0.8310 h13=0.8428 h26=0.8492 h52=0.8560
+  per-cell h52/h4 ratio: median=1.0301  q90=1.1410  max=5.2166
+  cells where h4 error already exceeds 0.5: 120 / 128
+
+  Cells with the LARGEST horizon growth (compounding signature):
+                                    nire_persistent_step_h4_L  nire_persistent_step_h13_L  nire_persistent_step_h26_L  nire_persistent_step_h52_L  horizon_growth  cadence gamma topology  snr_head
+cell_id                                                                                                                                                                                            
+G3R2                                                 0.055825                    0.120546                    0.189991                    0.291214        5.216564        1  HIGH    null5      20.0
+G3R2b                                                0.056562                    0.109486                    0.179121                    0.269653        4.767392        1  HIGH    path5      20.0
+G1R2                                                 0.309395                    0.420301                    0.530328                    0.638200        2.062738        1   MED   single      10.0
+GRID_grid_cadence_x_memory_1_HIGH                    0.646921                    0.707026                    0.760475                    0.842447        1.302241        1   MED    path5      10.0
+G1R3                                                 0.507714                    0.547982                    0.571730                    0.629231        1.239343        4   MED   single      10.0
+G1R1                                                 0.491004                    0.533029                    0.564834                    0.592407        1.206522        4   MED   single      10.0
+GRID_grid_coupling_x_snr_LOW_2                       0.751780                    0.853062                    0.883796                    0.904700        1.203411        4   LOW    path5       2.0
+CURVE_curve_coupling_strength_NONE                   0.504079                    0.550014                    0.580411                    0.604879        1.199969        4  NONE    path5      10.0
+
+[5] Are pumping-response coefficients BETTER recovered than transition persistence?
+
+  k=1 cells (direct fine-parameter comparison is PRIMARY per frozen design), n=10:
+                                   A_diag_relative_error_L  B_Q_relative_error_median  ratio_BQ_over_A
+cell_id                                                                                               
+CURVE_curve_cadence_1                             0.087609                   0.276074         3.151193
+G1R2                                              0.076086                   0.225161         2.959288
+G2R1                                              0.017406                   0.039932         2.294185
+G2R2                                              0.016974                   0.044442         2.618173
+G3R2                                              0.037205                   0.053215         1.430299
+G3R2b                                             0.053324                   0.042266         0.792636
+GRID_grid_cadence_x_memory_1_HIGH                 0.062427                   0.306563         4.910775
+GRID_grid_cadence_x_memory_1_LOW                  0.225713                   0.280255         1.241642
+GRID_grid_cadence_x_memory_1_MED                  0.087609                   0.276074         3.151193
+R_S4_bridge                                       0.015600                   0.043164         2.766984
+
+  median A_diag_relative_error   = 0.0579
+  median B_Q_relative_error      = 0.1392
+  cells where B_Q error > A error = 9 / 10
+
+  k>1 cells (pseudo-true coarse comparison), n=118:
+  median A_diag_relative_error            = 0.0758
+  median B_Q_pseudo_true_relative_error   = 0.5119
+  cells where B_Q error > A error         = 110 / 118
+
+  => PREDICTION 5 IS REFUTED: the pumping-response coefficient is the WORSE-recovered
+     quantity, by roughly 3-7x, at both k=1 and k>1.
+
+
+####################################################################################################
+# D. ANALYTIC SENSITIVITY (post-hoc, uses stored medians only; no refitting)
+####################################################################################################
+
+For a single-node persistent step of size dQ starting at rest, the cadence-sampled response is
+    dh_m = -B * sum_{j<m} a^j * dQ,      a = A^k (per-cadence-step persistence).
+A relative error e_B in B scales the whole path by (1+e_B): it contributes |e_B| to NIRE
+exactly. A relative error e_a in a distorts the path shape and its accumulated amplitude.
+Below: NIRE implied by perturbing ONLY a, ONLY B, using the frozen stored median errors.
+
+                                        k  m_steps  a_true_per_step  stored_eA  stored_eB  NIRE_if_only_A_wrong_(+)  NIRE_if_only_A_wrong_(-)  NIRE_if_only_B_wrong  observed_NIRE_h26_L  observed_shape_error
+cell_id                                                                                                                                                                                                       
+G1R1                                    4        7         0.818731   0.075483   0.490624                  0.143062                  0.119868              0.490624             0.564834              0.046080
+G1R2                                    1       26         0.951229   0.076086   0.225161                  0.534293                  0.390719              0.225161             0.530328              0.129934
+G1R5                                    4        7         0.818731   0.062552   0.478572                  0.116719                  0.100803              0.478572             0.541081              0.037263
+CURVE_curve_snr_2                       4        7         0.648358   0.758448   0.478764                  1.079011                  0.500889              0.478764             0.935986              0.337836
+CURVE_curve_snr_20                      4        7         0.648358   0.081558   0.511931                  0.102212                  0.088384              0.511931             0.831193              0.023651
+CURVE_curve_pumping_quality_PEXACT      4        7         0.648358   0.060235   0.098247                  0.074025                  0.066490              0.098247             0.706363              0.028109
+CURVE_curve_pumping_quality_PMULTNOISE  4        7         0.648358   0.071380   0.514447                  0.088622                  0.078035              0.514447             0.849710              0.037112
+G3R2                                    1       26         0.941771   0.037205   0.053215                  0.332504                  0.219597              0.053215             0.189991              0.059605
+G3R2b                                   1       26         0.850893   0.053324   0.042266                  0.289919                  0.191471              0.042266             0.179121              0.059085
+
+Read: 'NIRE_if_only_B_wrong' equals |e_B| by construction (pure amplitude error). The A-only
+columns show how much NIRE the stored persistence error can generate on its own. Where the
+A-only figures are far below the observed NIRE while the B-only figure is comparable, the
+frozen evidence points at the FORCING-RESPONSE coefficient, not at persistence.
+

@@ -1,0 +1,151 @@
+####################################################################################################
+# ESTIMABILITY EXCEPTIONS
+####################################################################################################
+
+Cells where the LOCAL model is not estimable in every replicate:
+                                      estimability_rate_L  mcar_fraction  observed_node_fraction  cadence  nire_persistent_step_h26_L
+cell_id                                                                                                                              
+CURVE_curve_missing_0p5                          0.933333            0.5                     1.0        4                    0.843836
+GRID_grid_missing_x_obsnodes_0p5_0p4             0.983333            0.5                     0.4        4                    1.000000
+GRID_grid_missing_x_obsnodes_0p5_0p6             0.983333            0.5                     0.6        4                    0.888566
+GRID_grid_missing_x_obsnodes_0p5_0p8             0.916667            0.5                     0.8        4                    0.851453
+GRID_grid_missing_x_obsnodes_0p5_1p0             0.933333            0.5                     1.0        4                    0.843836
+
+Cells where the NETWORK model is not estimable in every replicate: 19
+                                      estimability_rate_N  mcar_fraction  observed_node_fraction  cadence  blocks_per_node  strong_edge_undirected_f1
+cell_id                                                                                                                                              
+C_G0                                             0.000000            0.0                     1.0        1                0                        NaN
+CURVE_curve_missing_0p5                          0.000000            0.5                     1.0        4                0                        NaN
+G1R2                                             0.000000            0.1                     1.0        1                0                        NaN
+G1R1                                             0.000000            0.1                     1.0        4                0                        NaN
+G1R3                                             0.000000            0.3                     1.0        4                0                        NaN
+G1R4                                             0.000000            0.1                     1.0        4                0                        NaN
+G3R3                                             0.000000            0.1                     1.0        4                0                        NaN
+G1R5                                             0.000000            0.1                     1.0        4                0                        NaN
+GRID_grid_missing_x_obsnodes_0p5_0p8             0.000000            0.5                     0.8        4                0                        NaN
+GRID_grid_missing_x_obsnodes_0p5_1p0             0.000000            0.5                     1.0        4                0                        NaN
+GRID_grid_missing_x_obsnodes_0p5_0p6             0.000000            0.5                     0.6        4                0                        NaN
+GRID_grid_missing_x_obsnodes_0p5_0p4             0.283333            0.5                     0.4        4                0                   0.000000
+GRID_grid_missing_x_obsnodes_0p3_1p0             0.383333            0.3                     1.0        4                0                   0.571429
+CURVE_curve_missing_0p3                          0.383333            0.3                     1.0        4                0                   0.571429
+GRID_grid_cadence_x_memory_13_HIGH               0.800000            0.1                     1.0       13                0                   0.535714
+GRID_grid_cadence_x_memory_13_LOW                0.816667            0.1                     1.0       13                0                   0.000000
+CURVE_curve_cadence_13                           0.833333            0.1                     1.0       13                0                   0.666667
+GRID_grid_cadence_x_memory_13_MED                0.833333            0.1                     1.0       13                0                   0.666667
+GRID_grid_missing_x_obsnodes_0p3_0p8             0.850000            0.3                     0.8        4                0                   0.400000
+
+
+####################################################################################################
+# FACTOR RANKING FOR LOCAL INTERVENTION RECOVERY (frozen 1-D stress curves)
+####################################################################################################
+
+All curves share the same S5/path5 baseline cell (CURVE_curve_*_<reference level> == the
+reference regime), so the swing within a curve isolates that one factor over its frozen
+tested range. Sign convention: 'best' = lowest NIRE.
+
+                  factor                                                      frozen_levels  NIRE_L_best  NIRE_L_worst  NIRE_L_swing best_level worst_level  gap_of_best_to_frozen_0.20  NIRE_N_swing  edge_F1_swing
+coupling_strength(truth)                                         NONE -> LOW -> MED -> HIGH     0.580411      0.914325      0.333914       NONE        HIGH                    0.380411      0.177820       0.878205
+         pumping_quality P-EXACT -> P-MULTNOISE -> P-SCALEBIAS -> P-TEMPAGG -> P-SPATIALAGG     0.706363      0.849710      0.143346    P-EXACT P-MULTNOISE                    0.506363      0.219907       0.047727
+                head_snr                                         2.0 -> 5.0 -> 10.0 -> 20.0     0.831193      0.935986      0.104793       20.0         2.0                    0.631193      0.208052       0.083333
+                 cadence                                                  1 -> 2 -> 4 -> 13     0.823505      0.914100      0.090595          2          13                    0.623505      0.197598       0.133333
+        hydraulic_memory                                                 LOW -> MED -> HIGH     0.769902      0.849710      0.079808       HIGH         MED                    0.569902      0.034291       0.093939
+  observed_node_fraction                                           0.4 -> 0.6 -> 0.8 -> 1.0     0.830530      0.894068      0.063538        0.8         0.4                    0.630530      0.184073       0.727273
+         confounding_rho                                           0.0 -> 0.3 -> 0.6 -> 0.9     0.828088      0.857679      0.029591        0.9         0.0                    0.628088      0.066687       0.022727
+            block_outage                                                        0 -> 1 -> 2     0.836381      0.858740      0.022359          2           1                    0.636381      0.070696       0.060606
+        recharge_quality               R-EXACT -> R-NOISE -> R-LAG -> R-NOISELAG -> R-SCALE     0.844629      0.859552      0.014923 R-NOISELAG       R-LAG                    0.644629      0.071944       0.022727
+           process_noise                                                0.05 -> 0.25 -> 1.0     0.841826      0.849710      0.007883        1.0        0.05                    0.641826      0.323315       0.000000
+        mcar_missingness                                           0.0 -> 0.1 -> 0.3 -> 0.5     0.841989      0.849710      0.007720        0.0         0.1                    0.641989      0.099921       0.228571
+
+
+Same ranking by effect on NETWORK edge F1 (descending swing):
+                  factor                                                      frozen_levels  edge_F1_swing  NIRE_N_swing
+coupling_strength(truth)                                         NONE -> LOW -> MED -> HIGH       0.878205      0.177820
+  observed_node_fraction                                           0.4 -> 0.6 -> 0.8 -> 1.0       0.727273      0.184073
+        mcar_missingness                                           0.0 -> 0.1 -> 0.3 -> 0.5       0.228571      0.099921
+                 cadence                                                  1 -> 2 -> 4 -> 13       0.133333      0.197598
+        hydraulic_memory                                                 LOW -> MED -> HIGH       0.093939      0.034291
+                head_snr                                         2.0 -> 5.0 -> 10.0 -> 20.0       0.083333      0.208052
+            block_outage                                                        0 -> 1 -> 2       0.060606      0.070696
+         pumping_quality P-EXACT -> P-MULTNOISE -> P-SCALEBIAS -> P-TEMPAGG -> P-SPATIALAGG       0.047727      0.219907
+         confounding_rho                                           0.0 -> 0.3 -> 0.6 -> 0.9       0.022727      0.066687
+        recharge_quality               R-EXACT -> R-NOISE -> R-LAG -> R-NOISELAG -> R-SCALE       0.022727      0.071944
+           process_noise                                                0.05 -> 0.25 -> 1.0       0.000000      0.323315
+
+
+OBSERVATION-BUNDLE contrast at fixed uncoupled truth (the only route below 0.20):
+                                          regime                               cell   NIRE_L  meets_frozen_0.20
+           uncoupled truth + realistic obs (k=1)                               G1R2 0.530328              False
+           uncoupled truth + realistic obs (k=4)                               G1R1 0.564834              False
+   uncoupled truth + realistic obs (k=4, 5-node)                               G3R1 0.543815              False
+        uncoupled truth + ORACLE obs (S6a null5)                               G3R2 0.189991               True
+   uncoupled truth + ORACLE obs (S6b path5-geom)                              G3R2b 0.179121               True
+           COUPLED truth + ORACLE obs (S4 path5)                               G2R1 0.823417              False
+           COUPLED truth + ORACLE obs (S4 star5)                               G2R2 0.822645              False
+        COUPLED truth + realistic obs (S5 path5)                               G2R3 0.849710              False
+zero-coupling truth + realistic obs (gamma NONE) CURVE_curve_coupling_strength_NONE 0.580411              False
+
+
+####################################################################################################
+# EMPIRICAL DECISION TABLE
+####################################################################################################
+
+wrote /tmp/sgi_independent_audit/EMPIRICAL_DECISION_TABLE.csv  (129 regimes x 34 fields)
+
+Classification tallies over the 129 frozen cells:
+   126  FORECASTING_ONLY
+   125  ABSOLUTE_PHYSICAL_SCALE_NOT_IDENTIFIED
+   122  NETWORK_NOT_EARNED
+    17  SPATIAL_FORCING_DIAGNOSTIC_ONLY
+     7  NETWORK_CONDITIONALLY_TESTABLE
+     3  LOCAL_RESPONSE_CREDIBLE
+
+Cells classified LOCAL_RESPONSE_CREDIBLE:
+        scenario topology gamma  cadence pumping_quality recharge_quality  confounding_rho  mcar_fraction  snr_head  process_noise_sd        nire_L                                                                     classification
+cell_id                                                                                                                                                                                                                               
+C_G0          S0   single   MED        1         P-EXACT          R-EXACT              0.0            0.0       inf              0.00  4.342755e-15                                         LOCAL_RESPONSE_CREDIBLE;NETWORK_NOT_EARNED
+G3R2         S6a    null5  HIGH        1         P-EXACT          R-EXACT              0.0            0.0      20.0              0.02  1.899909e-01  LOCAL_RESPONSE_CREDIBLE;NETWORK_NOT_EARNED;ABSOLUTE_PHYSICAL_SCALE_NOT_IDENTIFIED
+G3R2b        S6b    path5  HIGH        1         P-EXACT          R-EXACT              0.0            0.0      20.0              0.02  1.791207e-01  LOCAL_RESPONSE_CREDIBLE;NETWORK_NOT_EARNED;ABSOLUTE_PHYSICAL_SCALE_NOT_IDENTIFIED
+
+Cells classified NETWORK_CONDITIONALLY_TESTABLE:
+                                             scenario topology gamma  cadence pumping_quality  snr_head  observed_node_fraction   edge_f1  false_edge_any_rate    nire_N
+cell_id                                                                                                                                                                 
+CURVE_curve_coupling_strength_HIGH                 S5    path5  HIGH        4     P-MULTNOISE      10.0                     1.0  0.878205                  0.0  0.750482
+GRID_grid_cadence_x_memory_2_LOW                   S5    path5   MED        2     P-MULTNOISE      10.0                     1.0  0.923077                  0.0  0.506097
+GRID_grid_candsupport_x_coupling_nested_HIGH       S9    path5  HIGH        4     P-MULTNOISE      10.0                     1.0  0.878205                  0.0  0.750482
+GRID_grid_coupling_x_snr_HIGH_10                   S5    path5  HIGH        4     P-MULTNOISE      10.0                     1.0  0.878205                  0.0  0.750482
+GRID_grid_coupling_x_snr_HIGH_2                    S5    path5  HIGH        4     P-MULTNOISE       2.0                     1.0  0.923077                  0.0  0.910279
+GRID_grid_coupling_x_snr_HIGH_20                   S5    path5  HIGH        4     P-MULTNOISE      20.0                     1.0  0.833333                  0.0  0.733190
+GRID_grid_coupling_x_snr_HIGH_5                    S5    path5  HIGH        4     P-MULTNOISE       5.0                     1.0  0.923077                  0.0  0.784074
+
+Cells where the SPATIAL-forcing model beats the local model on intervention:
+  17 / 129 cells
+                                                   scenario      topology gamma    nire_L    nire_S    nire_N
+cell_id                                                                                                      
+CURVE_curve_coupling_strength_LOW                        S5         path5   LOW  0.774017  0.772315  0.674133
+CURVE_curve_coupling_strength_NONE                       S5         path5  NONE  0.580411  0.567825  0.572662
+CURVE_curve_memory_LOW                                   S5         path5   MED  0.810161  0.640188  0.734709
+CURVE_curve_snr_20                                       S5         path5   MED  0.831193  0.818539  0.746720
+G2R2                                                     S4         star5  HIGH  0.822645  0.807597  0.302988
+G3R1                                                    S6a         null5   MED  0.543815  0.539199  0.547230
+GRID_grid_cadence_x_memory_1_LOW                         S5         path5   MED  0.760826  0.711017  0.459983
+GRID_grid_cadence_x_memory_2_LOW                         S5         path5   MED  0.779709  0.665556  0.506097
+GRID_grid_cadence_x_memory_4_LOW                         S5         path5   MED  0.810161  0.640188  0.734709
+GRID_grid_candsupport_x_coupling_misspecified_HIGH       S9  path5_hidden  HIGH  0.895815  0.854707  0.774281
+GRID_grid_candsupport_x_coupling_nested_LOW              S9         path5   LOW  0.774017  0.772315  0.674133
+GRID_grid_coupling_x_snr_HIGH_20                         S5         path5  HIGH  0.902650  0.896907  0.733190
+GRID_grid_coupling_x_snr_LOW_10                          S5         path5   LOW  0.774017  0.772315  0.674133
+GRID_grid_coupling_x_snr_LOW_20                          S5         path5   LOW  0.756394  0.752322  0.671089
+GRID_grid_coupling_x_snr_MED_20                          S5         path5   MED  0.831193  0.818539  0.746720
+GRID_grid_recharge_x_confounding_REXACT_0p9              S3         path5   MED  0.843315  0.821631  0.699195
+GRID_grid_recharge_x_confounding_RLAG_0p9                S3         path5   MED  0.843809  0.832932  0.779276
+
+ABSOLUTE_PHYSICAL_SCALE_NOT_IDENTIFIED count: 125
+Cells where absolute_S_identifiable is TRUE:
+            scenario topology  cadence pumping_quality recharge_quality  confounding_rho        nire_L
+cell_id                                                                                               
+C_G0              S0   single        1         P-EXACT          R-EXACT              0.0  4.342755e-15
+G2R1              S4    path5        1         P-EXACT          R-EXACT              0.0  8.234171e-01
+G2R2              S4    star5        1         P-EXACT          R-EXACT              0.0  8.226451e-01
+R_S4_bridge       S4  bridge6        1         P-EXACT          R-EXACT              0.0  8.555984e-01
+
+wrote /tmp/sgi_independent_audit/EMPIRICAL_DECISION_TABLE.md

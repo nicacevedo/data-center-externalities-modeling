@@ -1,0 +1,505 @@
+{
+  "integrity": {
+    "n_records": 7740,
+    "n_cells": 129,
+    "n_unique_cell_seed": 7740,
+    "duplicate_cell_seed": 0,
+    "n_unique_seeds": 60,
+    "source_pool_values": [
+      "ANALYSIS"
+    ],
+    "smoke_any_true": false,
+    "replicates_per_cell": [
+      60
+    ],
+    "n_not_estimable_N": 829,
+    "n_fit_failed_L": 0,
+    "n_not_estimable_L": 15
+  },
+  "SGI_G1": {
+    "rows": [
+      {
+        "cell_id": "G1R1",
+        "n_replicates": 60,
+        "n_estimated": 60,
+        "estimability_rate": 1.0,
+        "nire_h26_L_median": 0.5648338842738063,
+        "nire_h26_L_q10": 0.3486871689001954,
+        "nire_h26_L_q90": 0.7207069368083049,
+        "threshold": 0.2,
+        "G1_intervention_pass": false,
+        "G1_sign_value": 1.0,
+        "G1_sign_pass": true,
+        "G1_blowup_value": 0.0,
+        "G1_blowup_pass": true,
+        "G1_rmse_ratio_value": 0.834353210255031,
+        "G1_rmse_vs_B0_pass": true,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "cell_pass": false
+      },
+      {
+        "cell_id": "G1R2",
+        "n_replicates": 60,
+        "n_estimated": 60,
+        "estimability_rate": 1.0,
+        "nire_h26_L_median": 0.5303282436861227,
+        "nire_h26_L_q10": 0.3959539320824824,
+        "nire_h26_L_q90": 0.6942864565072832,
+        "threshold": 0.2,
+        "G1_intervention_pass": false,
+        "G1_sign_value": 1.0,
+        "G1_sign_pass": true,
+        "G1_blowup_value": 0.0,
+        "G1_blowup_pass": true,
+        "G1_rmse_ratio_value": 0.9408136142901905,
+        "G1_rmse_vs_B0_pass": true,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "cell_pass": false
+      },
+      {
+        "cell_id": "G1R3",
+        "n_replicates": 60,
+        "n_estimated": 60,
+        "estimability_rate": 1.0,
+        "nire_h26_L_median": 0.5717300402578194,
+        "nire_h26_L_q10": 0.3888136527760244,
+        "nire_h26_L_q90": 0.7580288655350957,
+        "threshold": 0.2,
+        "G1_intervention_pass": false,
+        "G1_sign_value": 1.0,
+        "G1_sign_pass": true,
+        "G1_blowup_value": 0.0,
+        "G1_blowup_pass": true,
+        "G1_rmse_ratio_value": 0.8787907640318557,
+        "G1_rmse_vs_B0_pass": true,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "cell_pass": false
+      },
+      {
+        "cell_id": "G1R4",
+        "n_replicates": 60,
+        "n_estimated": 60,
+        "estimability_rate": 1.0,
+        "nire_h26_L_median": 0.5463766077976233,
+        "nire_h26_L_q10": 0.36079527178501003,
+        "nire_h26_L_q90": 0.693201643397972,
+        "threshold": 0.2,
+        "G1_intervention_pass": false,
+        "G1_sign_value": 1.0,
+        "G1_sign_pass": true,
+        "G1_blowup_value": 0.0,
+        "G1_blowup_pass": true,
+        "G1_rmse_ratio_value": 0.8161023102977634,
+        "G1_rmse_vs_B0_pass": true,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "cell_pass": false
+      },
+      {
+        "cell_id": "G1R5",
+        "n_replicates": 60,
+        "n_estimated": 60,
+        "estimability_rate": 1.0,
+        "nire_h26_L_median": 0.5410808535099827,
+        "nire_h26_L_q10": 0.3117552262827825,
+        "nire_h26_L_q90": 0.7206187082405574,
+        "threshold": 0.2,
+        "G1_intervention_pass": false,
+        "G1_sign_value": 1.0,
+        "G1_sign_pass": true,
+        "G1_blowup_value": 0.0,
+        "G1_blowup_pass": true,
+        "G1_rmse_ratio_value": 0.8946811308101954,
+        "G1_rmse_vs_B0_pass": true,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "cell_pass": false
+      },
+      {
+        "cell_id": "G1R6",
+        "n_replicates": 60,
+        "n_estimated": 60,
+        "estimability_rate": 1.0,
+        "nire_h26_L_median": 0.849709637254372,
+        "nire_h26_L_q10": 0.7789597206900416,
+        "nire_h26_L_q90": 0.9075139924690728,
+        "threshold": 0.2,
+        "G1_intervention_pass": false,
+        "G1_sign_value": 1.0,
+        "G1_sign_pass": true,
+        "G1_blowup_value": 0.0,
+        "G1_blowup_pass": true,
+        "G1_rmse_ratio_value": 0.8019019420694624,
+        "G1_rmse_vs_B0_pass": true,
+        "failed_criteria": [
+          "G1_intervention"
+        ],
+        "cell_pass": false
+      }
+    ],
+    "all_required_cells_pass": false
+  },
+  "SGI_G2_RAW": {
+    "rows": [
+      {
+        "cell_id": "G2R1",
+        "scenario": "S4",
+        "topology": "path5",
+        "regime": "ORACLE",
+        "n_replicates": 60,
+        "n_estimated_N": 60,
+        "estimability_rate_N": 1.0,
+        "strong_edge_f1_median": 1.0,
+        "f1_threshold": 0.8,
+        "edge_precision_median": 1.0,
+        "edge_recall_median": 1.0,
+        "nire_h26_N_median": 0.22928696079196442,
+        "nire_h26_L_median": 0.8234171422087457,
+        "nire_h26_B0_median": 1.0,
+        "nire_h26_S_median": 0.8303873984443129,
+        "best_simple_nire": 0.8234171422087457,
+        "intervention_gain": 0.7215421576275157,
+        "gain_threshold": 0.1,
+        "masked_over_observed_nmpe": 0.8087741960122269,
+        "failed_criteria": [],
+        "cell_pass": true
+      },
+      {
+        "cell_id": "G2R2",
+        "scenario": "S4",
+        "topology": "star5",
+        "regime": "ORACLE",
+        "n_replicates": 60,
+        "n_estimated_N": 60,
+        "estimability_rate_N": 1.0,
+        "strong_edge_f1_median": 0.888888888888889,
+        "f1_threshold": 0.8,
+        "edge_precision_median": 0.8,
+        "edge_recall_median": 1.0,
+        "nire_h26_N_median": 0.3029882142364223,
+        "nire_h26_L_median": 0.8226450927861861,
+        "nire_h26_B0_median": 1.0,
+        "nire_h26_S_median": 0.8075971885610338,
+        "best_simple_nire": 0.8075971885610338,
+        "intervention_gain": 0.6248275519924942,
+        "gain_threshold": 0.1,
+        "masked_over_observed_nmpe": 0.8944105422345594,
+        "failed_criteria": [],
+        "cell_pass": true
+      },
+      {
+        "cell_id": "G2R3",
+        "scenario": "S5",
+        "topology": "path5",
+        "regime": "REALISTIC",
+        "n_replicates": 60,
+        "n_estimated_N": 60,
+        "estimability_rate_N": 1.0,
+        "strong_edge_f1_median": 0.7272727272727273,
+        "f1_threshold": 0.8,
+        "edge_precision_median": 0.6666666666666666,
+        "edge_recall_median": 0.75,
+        "nire_h26_N_median": 0.7326996062141401,
+        "nire_h26_L_median": 0.849709637254372,
+        "nire_h26_B0_median": 1.0,
+        "nire_h26_S_median": 0.8886819556514698,
+        "best_simple_nire": 0.849709637254372,
+        "intervention_gain": 0.13770590082786524,
+        "gain_threshold": 0.1,
+        "masked_over_observed_nmpe": 1.2726852926637728,
+        "failed_criteria": [
+          "G2_strong_edge_f1"
+        ],
+        "cell_pass": false
+      },
+      {
+        "cell_id": "G2R4",
+        "scenario": "S5",
+        "topology": "star5",
+        "regime": "REALISTIC",
+        "n_replicates": 60,
+        "n_estimated_N": 60,
+        "estimability_rate_N": 1.0,
+        "strong_edge_f1_median": 0.5454545454545454,
+        "f1_threshold": 0.8,
+        "edge_precision_median": 0.5,
+        "edge_recall_median": 0.75,
+        "nire_h26_N_median": 0.8064570804335882,
+        "nire_h26_L_median": 0.9028527820249279,
+        "nire_h26_B0_median": 1.0,
+        "nire_h26_S_median": 0.971418874545951,
+        "best_simple_nire": 0.9028527820249279,
+        "intervention_gain": 0.10676790669586506,
+        "gain_threshold": 0.1,
+        "masked_over_observed_nmpe": 0.9307075169893158,
+        "failed_criteria": [
+          "G2_strong_edge_f1"
+        ],
+        "cell_pass": false
+      }
+    ],
+    "all_required_cells_pass": false
+  },
+  "SGI_G3": {
+    "triggers": {
+      "G3_null_s6a_false_edges_median": {
+        "cells": [
+          "G3R1",
+          "G3R2"
+        ],
+        "statistic": "median_over_replicates(false_edge_count)",
+        "comparator": ">",
+        "threshold": 0.5,
+        "severity": "HARD_FAILURE",
+        "family": "S6a_global_memory_null",
+        "per_cell": {
+          "G3R1": {
+            "evaluated_model": "N",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 3.0,
+            "triggered": true,
+            "regime": "REALISTIC"
+          },
+          "G3R2": {
+            "evaluated_model": "N",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 0.0,
+            "triggered": false,
+            "regime": "ORACLE"
+          }
+        },
+        "triggered": true,
+        "triggered_cells": [
+          "G3R1"
+        ],
+        "realistic_triggered_cells": [
+          "G3R1"
+        ]
+      },
+      "G3_null_s6a_false_edges_any": {
+        "cells": [
+          "G3R1",
+          "G3R2"
+        ],
+        "statistic": "fraction_of_replicates(false_edge_count >= 1)",
+        "comparator": ">",
+        "threshold": 0.2,
+        "severity": "HARD_FAILURE",
+        "family": "S6a_global_memory_null",
+        "per_cell": {
+          "G3R1": {
+            "evaluated_model": "N",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 0.9666666666666667,
+            "triggered": true,
+            "regime": "REALISTIC"
+          },
+          "G3R2": {
+            "evaluated_model": "N",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 0.48333333333333334,
+            "triggered": true,
+            "regime": "ORACLE"
+          }
+        },
+        "triggered": true,
+        "triggered_cells": [
+          "G3R1",
+          "G3R2"
+        ],
+        "realistic_triggered_cells": [
+          "G3R1"
+        ]
+      },
+      "G3_null_s6b_false_edges_median": {
+        "cells": [
+          "G3R1b",
+          "G3R2b"
+        ],
+        "statistic": "median_over_replicates(false_edge_count)",
+        "comparator": ">",
+        "threshold": 0.5,
+        "severity": "ROBUSTNESS_EVIDENCE",
+        "family": "S6b_matched_local_dynamics_null",
+        "per_cell": {
+          "G3R1b": {
+            "evaluated_model": "N",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 2.0,
+            "triggered": true,
+            "regime": "REALISTIC"
+          },
+          "G3R2b": {
+            "evaluated_model": "N",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 0.0,
+            "triggered": false,
+            "regime": "ORACLE"
+          }
+        },
+        "triggered": true,
+        "triggered_cells": [
+          "G3R1b"
+        ],
+        "realistic_triggered_cells": [
+          "G3R1b"
+        ]
+      },
+      "G3_null_s6b_false_edges_any": {
+        "cells": [
+          "G3R1b",
+          "G3R2b"
+        ],
+        "statistic": "fraction_of_replicates(false_edge_count >= 1)",
+        "comparator": ">",
+        "threshold": 0.2,
+        "severity": "ROBUSTNESS_EVIDENCE",
+        "family": "S6b_matched_local_dynamics_null",
+        "per_cell": {
+          "G3R1b": {
+            "evaluated_model": "N",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 0.9666666666666667,
+            "triggered": true,
+            "regime": "REALISTIC"
+          },
+          "G3R2b": {
+            "evaluated_model": "N",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 0.26666666666666666,
+            "triggered": true,
+            "regime": "ORACLE"
+          }
+        },
+        "triggered": true,
+        "triggered_cells": [
+          "G3R1b",
+          "G3R2b"
+        ],
+        "realistic_triggered_cells": [
+          "G3R1b"
+        ]
+      },
+      "G3_placebo_effect": {
+        "cells": [
+          "G3R3",
+          "G3R4"
+        ],
+        "statistic": "fraction_of_replicates(placebo_false_effect_L == 1)",
+        "comparator": ">",
+        "threshold": 0.2,
+        "severity": "HARD_FAILURE",
+        "family": "S8_managed_forcing_placebo",
+        "per_cell": {
+          "G3R3": {
+            "evaluated_model": "L",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 0.6,
+            "triggered": true,
+            "regime": "REALISTIC"
+          },
+          "G3R4": {
+            "evaluated_model": "L",
+            "n_estimated": 60,
+            "n_replicates": 60,
+            "value": 0.6,
+            "triggered": true,
+            "regime": "REALISTIC"
+          }
+        },
+        "triggered": true,
+        "triggered_cells": [
+          "G3R3",
+          "G3R4"
+        ],
+        "realistic_triggered_cells": [
+          "G3R3",
+          "G3R4"
+        ]
+      },
+      "G3_prediction_intervention_inversion": {
+        "cells": [
+          "G2R1",
+          "G2R2",
+          "G2R3",
+          "G2R4"
+        ],
+        "per_cell": {
+          "G2R1": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0,
+            "rmse_N": 0.20064145466811772,
+            "rmse_best_simple": 0.2167645433231474,
+            "nire_N": 0.22928696079196442,
+            "nire_best_simple": 0.8234171422087457
+          },
+          "G2R2": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0,
+            "rmse_N": 0.1879271520912909,
+            "rmse_best_simple": 0.19833748350173655,
+            "nire_N": 0.3029882142364223,
+            "nire_best_simple": 0.8075971885610338
+          },
+          "G2R3": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0,
+            "rmse_N": 0.5179865236116052,
+            "rmse_best_simple": 0.5169733385739854,
+            "nire_N": 0.7326996062141401,
+            "nire_best_simple": 0.849709637254372
+          },
+          "G2R4": {
+            "evaluated_model": "N",
+            "triggered": false,
+            "value": 0.0,
+            "rmse_N": 0.588614549233603,
+            "rmse_best_simple": 0.5616397230085644,
+            "nire_N": 0.8064570804335882,
+            "nire_best_simple": 0.9028527820249279
+          }
+        },
+        "severity": "HARD_FAILURE",
+        "triggered": false,
+        "triggered_cells": []
+      }
+    },
+    "hard_failure": true,
+    "robustness_only": false,
+    "evaluated_model_by_cell": {
+      "G3R1": "N",
+      "G3R2": "N",
+      "G3R1b": "N",
+      "G3R2b": "N",
+      "G3R3": "L",
+      "G3R4": "L"
+    }
+  },
+  "derived_status": {
+    "LOCAL_RESPONSE_STATUS": "LOCAL_RESPONSE_NOT_IDENTIFIED",
+    "SGI_G2_RAW_pass": false,
+    "SGI_G3_hard_fail": true,
+    "NETWORK_SUPPORT_FINAL": "NOT_EARNED"
+  },
+  "discrepancies_vs_canonical": []
+}

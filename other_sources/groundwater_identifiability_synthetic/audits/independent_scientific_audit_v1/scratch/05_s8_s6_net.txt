@@ -1,0 +1,269 @@
+####################################################################################################
+# S8 PLACEBO MECHANISM
+####################################################################################################
+
+S8 cells present in the ENTIRE frozen sweep: ['G3R3', 'G3R4']
+S8 cell count = 2   (design defines only G3R3 and G3R4)
+
+Frozen S8 observation configuration (both cells use overrides {} = reference regime):
+cell_id                  G3R3         G3R4
+scenario                   S8           S8
+topology               single        path5
+cadence                     4            4
+pumping_quality   P-MULTNOISE  P-MULTNOISE
+recharge_quality      R-NOISE      R-NOISE
+recharge_sigma            0.2          0.2
+confounding_rho           0.3          0.3
+mcar_fraction             0.1          0.1
+snr_head                 10.0         10.0
+process_noise_sd         0.05         0.05
+n_nodes                     1            5
+
+*** The frozen sweep contains NO S8 cell with R-EXACT recharge, and NO S8 cell with
+    confounding_rho != 0.3, and no S8 SNR/cadence/process-noise variation.
+    Section-10 question ('does placebo failure decline when recharge is exact and
+    confounding weak?') is therefore NOT IDENTIFIABLE FROM STORED FROZEN OUTPUTS. ***
+
+Replicate-level S8 diagnostics:
+
+  --- G3R3 (n_estimated=60) ---
+    real pumping retained in every fit          : True
+    placebo_false_effect rate (frozen threshold 0.20 of true) : 0.6000
+    placebo_coef_L        median=+0.23975  q10=+0.08069  q90=+0.38407
+    frac placebo_coef < 0 (drawdown-like sign)  : 0.050
+    placebo_step_response median=1.51406   true_real_step_response median=6.73950
+    placebo_relative_to_true  median=0.2247  q10=0.0737  q90=0.3956
+    frac with ratio in (0.20, 0.50]            : 0.583
+    frac with ratio > 1.0                      : 0.000
+    within-cell spearman(placebo_relative_to_true, X) across 60 seeds:
+       -0.172  pumping_excitation_fraction_L
+       +0.137  seasonal_variance_share
+       -0.117  condition_number_L
+       -0.082  A_diag_relative_error_L
+       -0.070  max_vif_L
+       +0.041  realized_snr_head
+       -0.038  realized_snr_head_detrended
+       +0.035  B_Q_pseudo_true_relative_error_median
+
+  --- G3R4 (n_estimated=60) ---
+    real pumping retained in every fit          : True
+    placebo_false_effect rate (frozen threshold 0.20 of true) : 0.6000
+    placebo_coef_L        median=+0.21617  q10=+0.15549  q90=+0.30430
+    frac placebo_coef < 0 (drawdown-like sign)  : 0.000
+    placebo_step_response median=1.39487   true_real_step_response median=5.56995
+    placebo_relative_to_true  median=0.2504  q10=0.0423  q90=0.4438
+    frac with ratio in (0.20, 0.50]            : 0.550
+    frac with ratio > 1.0                      : 0.000
+    within-cell spearman(placebo_relative_to_true, X) across 60 seeds:
+       +0.315  realized_snr_head_detrended
+       -0.279  max_vif_L
+       -0.274  condition_number_L
+       -0.268  seasonal_variance_share
+       -0.232  A_diag_relative_error_L
+       +0.186  pumping_excitation_fraction_L
+       +0.114  realized_snr_head
+       -0.098  B_Q_pseudo_true_relative_error_median
+
+Comparator: placebo channel is only constructed in S8, so no non-S8 baseline exists.
+Design fact: placebo correlation with recharge/climate = 0.85, true causal effect = 0.
+
+
+####################################################################################################
+# S6a / S6b FALSE-EDGE MECHANISM
+####################################################################################################
+
+Frozen configurations:
+cell_id                                      G3R1       G3R2        G3R1b      G3R2b
+scenario                                      S6a        S6a          S6b        S6b
+topology                                    null5      null5        path5      path5
+cadence                                         4          1            4          1
+gamma                                         MED       HIGH          MED       HIGH
+pumping_quality                       P-MULTNOISE    P-EXACT  P-MULTNOISE    P-EXACT
+recharge_quality                          R-NOISE    R-EXACT      R-NOISE    R-EXACT
+confounding_rho                               0.3        0.0          0.3        0.0
+mcar_fraction                                 0.1        0.0          0.1        0.0
+observed_node_fraction                        1.0        1.0          1.0        1.0
+snr_head                                     10.0       20.0         10.0       20.0
+process_noise_sd                             0.05       0.02         0.05       0.02
+n_nodes                                         5          5            5          5
+n_true_strong_edges                           0.0        0.0          0.0        0.0
+realized_snr_head                       10.304077  20.517678    10.311521  20.519955
+realized_local_persistence_mean_A_ii     0.940456   0.941771     0.897333   0.850893
+rho_A                                    0.951229   0.951229     0.945055   0.929598
+tau_relax_realized                           20.0       20.0    17.695406  13.698019
+
+False-edge outcomes (N model, ESTIMATED replicates only):
+          regime null  n_replicates  n_estimated_N  estimability_rate_N  median_false_edge_count  mean_false_edge_count  frac_any_false_edge  q90_false_edge  max_false_edge  n_candidate_pairs_proxy  median_selected_lambda  median_realized_snr  median_condition_number_N
+cell                                                                                                                                                                                                                                                                         
+G3R1   REALISTIC  S6a            60             60                  1.0                      3.0               3.516667             0.966667             5.1             7.0                      8.8                     1.0            10.304077                  22.016878
+G3R2      ORACLE  S6a            60             60                  1.0                      0.0               0.566667             0.483333             1.0             2.0                      8.8                     1.0            20.517678                  25.351301
+G3R1b  REALISTIC  S6b            60             60                  1.0                      2.0               2.433333             0.966667             4.0             6.0                      8.8                     1.0            10.311521                  23.970994
+G3R2b     ORACLE  S6b            60             60                  1.0                      0.0               0.333333             0.266667             1.0             2.0                      8.8                     1.0            20.519955                  26.778643
+
+ORACLE vs REALISTIC contrast, per null family:
+  S6a: median false edges  realistic=3.0 -> oracle=0.0
+       any-false-edge rate  realistic=0.967 -> oracle=0.483
+  S6b: median false edges  realistic=2.0 -> oracle=0.0
+       any-false-edge rate  realistic=0.967 -> oracle=0.267
+
+Frozen thresholds: median > 0.5 and any-rate > 0.2 (both trigger).
+Oracle any-rate S6a = 0.483 (> 0.2 => triggers even under favourable known truth)
+Oracle any-rate S6b = 0.267 (> 0.2 => triggers even under favourable known truth)
+
+
+####################################################################################################
+# ORACLE vs REALISTIC NETWORK BOUNDARY
+####################################################################################################
+cell_id                           G2R1      G2R2         G2R3         G2R4 R_S4_bridge  R_S5_bridge
+scenario                            S4        S4           S5           S5          S4           S5
+topology                         path5     star5        path5        star5     bridge6      bridge6
+regime_lbl                      ORACLE    ORACLE    REALISTIC    REALISTIC      ORACLE    REALISTIC
+cadence                              1         1            4            4           1            4
+gamma                             HIGH      HIGH          MED          MED        HIGH          MED
+pumping_quality                P-EXACT   P-EXACT  P-MULTNOISE  P-MULTNOISE     P-EXACT  P-MULTNOISE
+recharge_quality               R-EXACT   R-EXACT      R-NOISE      R-NOISE     R-EXACT      R-NOISE
+confounding_rho                    0.0       0.0          0.3          0.3         0.0          0.3
+mcar_fraction                      0.0       0.0          0.1          0.1         0.0          0.1
+observed_node_fraction             1.0       1.0          1.0          1.0         1.0          1.0
+snr_head                          20.0      20.0         10.0         10.0        20.0         10.0
+process_noise_sd                  0.02      0.02         0.05         0.05        0.02         0.05
+n_true_strong_edges                4.0       4.0          4.0          4.0         7.0          7.0
+strong_edge_undirected_f1          1.0  0.888889     0.727273     0.545455    0.933333     0.666667
+edge_precision                     1.0       0.8     0.666667          0.5      0.9375     0.666667
+edge_recall                        1.0       1.0         0.75         0.75         1.0     0.571429
+false_edge_count                   0.0       1.0          1.0          3.0         0.5          2.0
+false_edge_any_rate                0.3       0.6          0.8          1.0         0.5     0.916667
+nire_persistent_step_h26_N    0.229287  0.302988       0.7327     0.806457    0.392173     0.800695
+nire_persistent_step_h26_L    0.823417  0.822645      0.84971     0.902853    0.855598     0.879009
+nire_persistent_step_h26_B0        1.0       1.0          1.0          1.0         1.0          1.0
+nire_persistent_step_h26_S    0.830387  0.807597     0.888682     0.971419    0.860979     1.125789
+rmse_test_N                   0.200641  0.187927     0.517987     0.588615    0.204828     0.676177
+rmse_test_L                   0.218691  0.199031     0.516973      0.56164    0.218073     0.616522
+estimability_rate_N                1.0       1.0          1.0          1.0         1.0          1.0
+selected_lambda                    0.3       0.3          1.0          1.0         0.3          1.0
+A_diag_relative_error_N       0.048042  0.032296     0.086649     0.098933    0.052329     0.103359
+strong_coupling_weight_error   0.01103  0.011466      0.04796     0.040705    0.010902     0.040966
+
+Both regimes differ in EXACTLY the ORACLE_FAVOURABLE bundle:
+  cadence 4->1, P-MULTNOISE->P-EXACT, R-NOISE->R-EXACT, rho 0.3->0.0,
+  MCAR 0.1->0.0, snr_head 10->20, process_noise 0.05->0.02, gamma MED->HIGH.
+gamma MED->HIGH also RAISES true coupling strength, which makes edges easier to detect.
+
+Isolating observation quality at fixed realistic scenario (S5 path5) via the frozen curves:
+
+  [snr]
+                    strong_edge_undirected_f1  edge_precision  edge_recall  false_edge_count  false_edge_any_rate  nire_persistent_step_h26_N  estimability_rate_N
+cell_id                                                                                                                                                           
+CURVE_curve_snr_2                    0.666667        0.600000        0.750               2.0             0.950000                    0.940752                  1.0
+CURVE_curve_snr_5                    0.750000        0.666667        0.875               2.0             0.883333                    0.771007                  1.0
+CURVE_curve_snr_10                   0.727273        0.666667        0.750               1.0             0.800000                    0.732700                  1.0
+CURVE_curve_snr_20                   0.738636        0.708333        0.750               1.0             0.700000                    0.746720                  1.0
+
+  [missing]
+                         strong_edge_undirected_f1  edge_precision  edge_recall  false_edge_count  false_edge_any_rate  nire_persistent_step_h26_N  estimability_rate_N
+cell_id                                                                                                                                                                
+CURVE_curve_missing_0p0                   0.800000        0.666667         1.00               1.5             0.850000                    0.730599             1.000000
+CURVE_curve_missing_0p1                   0.727273        0.666667         0.75               1.0             0.800000                    0.732700             1.000000
+CURVE_curve_missing_0p3                   0.571429        0.666667         0.50               1.0             0.608696                    0.830520             0.383333
+CURVE_curve_missing_0p5                        NaN             NaN          NaN               NaN                  NaN                         NaN             0.000000
+
+  [observed_nodes]
+                                strong_edge_undirected_f1  edge_precision  edge_recall  false_edge_count  false_edge_any_rate  nire_persistent_step_h26_N  estimability_rate_N
+cell_id                                                                                                                                                                       
+CURVE_curve_observed_nodes_0p4                   0.000000        0.000000         0.00               0.0                 0.35                    0.916773                  1.0
+CURVE_curve_observed_nodes_0p6                   0.333333        0.500000         0.25               1.0                 0.65                    0.874932                  1.0
+CURVE_curve_observed_nodes_0p8                   0.571429        0.666667         0.50               1.0                 0.65                    0.787448                  1.0
+CURVE_curve_observed_nodes_1p0                   0.727273        0.666667         0.75               1.0                 0.80                    0.732700                  1.0
+
+  [cadence]
+                        strong_edge_undirected_f1  edge_precision  edge_recall  false_edge_count  false_edge_any_rate  nire_persistent_step_h26_N  estimability_rate_N
+cell_id                                                                                                                                                               
+CURVE_curve_cadence_1                    0.750000        0.750000        0.750               1.0             0.800000                    0.741321             1.000000
+CURVE_curve_cadence_2                    0.800000        0.750000        0.875               1.0             0.733333                    0.706324             1.000000
+CURVE_curve_cadence_4                    0.727273        0.666667        0.750               1.0             0.800000                    0.732700             1.000000
+CURVE_curve_cadence_13                   0.666667        0.916667        0.500               0.5             0.500000                    0.903922             0.833333
+
+  [coupling]
+                                    strong_edge_undirected_f1  edge_precision  edge_recall  false_edge_count  false_edge_any_rate  nire_persistent_step_h26_N  estimability_rate_N
+cell_id                                                                                                                                                                           
+CURVE_curve_coupling_strength_NONE                   0.000000        0.000000          NaN               3.0             0.983333                    0.572662                  1.0
+CURVE_curve_coupling_strength_LOW                    0.633333        0.666667     0.500000               1.0             0.833333                    0.674133                  1.0
+CURVE_curve_coupling_strength_MED                    0.727273        0.666667     0.750000               1.0             0.800000                    0.732700                  1.0
+CURVE_curve_coupling_strength_HIGH                   0.878205        1.000000     0.785714               0.0             0.000000                    0.750482                  1.0
+
+  [confounding]
+                             strong_edge_undirected_f1  edge_precision  edge_recall  false_edge_count  false_edge_any_rate  nire_persistent_step_h26_N  estimability_rate_N
+cell_id                                                                                                                                                                    
+CURVE_curve_confounding_0p0                   0.727273        0.666667         0.75               1.0             0.800000                    0.762484                  1.0
+CURVE_curve_confounding_0p3                   0.727273        0.666667         0.75               1.0             0.800000                    0.732700                  1.0
+CURVE_curve_confounding_0p6                   0.727273        0.666667         0.75               1.5             0.783333                    0.718380                  1.0
+CURVE_curve_confounding_0p9                   0.750000        0.666667         0.75               2.0             0.816667                    0.695797                  1.0
+
+  [process_noise]
+                                strong_edge_undirected_f1  edge_precision  edge_recall  false_edge_count  false_edge_any_rate  nire_persistent_step_h26_N  estimability_rate_N
+cell_id                                                                                                                                                                       
+CURVE_curve_process_noise_0p05                   0.727273        0.666667         0.75               1.0             0.800000                    0.732700                  1.0
+CURVE_curve_process_noise_0p25                   0.727273        0.666667         0.75               2.0             0.850000                    0.690612                  1.0
+CURVE_curve_process_noise_1p0                    0.727273        0.600000         1.00               2.0             0.966667                    1.013927                  1.0
+
+
+####################################################################################################
+# PREDICTION vs INTERVENTION
+####################################################################################################
+
+Spearman association over 128 non-G0 cells:
+  rmse_test_L  vs nire_h26_L : +0.234
+  rmse_test_N  vs nire_h26_N : +0.458
+
+Normalized comparison (rmse relative to B0 baseline rmse, i.e. does L predict better than the naive baseline?):
+  rmse_test_L / rmse_test_B0 : median=0.810  q10=0.726  q90=0.897
+  cells where L predicts BETTER than B0 : 128 / 128
+  of those, cells where nire_h26_L > 0.5: 126
+  cells where L predicts better than B0 AND nire_h26_L > 0.20 : 126
+
+Strongest-prediction cells (lowest rmse_test_L/rmse_test_B0) and their intervention error:
+                                             rmse_ratio  rmse_test_L  rmse_test_B0  nire_persistent_step_h26_L  relative_shape_error_persistent_step_L scenario topology gamma
+cell_id                                                                                                                                                                       
+GRID_grid_recharge_x_confounding_REXACT_0p9    0.625667     0.352367      0.563187                    0.843315                                0.017324       S3    path5   MED
+G3R2b                                          0.640619     0.198422      0.309735                    0.179121                                0.059085      S6b    path5  HIGH
+R_S7_latentclimate                             0.644278     0.609010      0.945259                    0.829016                                0.023373       S7    path5   MED
+GRID_grid_recharge_x_confounding_REXACT_0p6    0.676561     0.408805      0.604239                    0.850193                                0.028208       S3    path5   MED
+CURVE_curve_pumping_quality_PSCALEBIAS         0.699380     0.450879      0.644684                    0.737322                                0.031225       S5    path5   MED
+G2R1                                           0.701507     0.218691      0.311745                    0.823417                                0.037493       S4    path5  HIGH
+CURVE_curve_pumping_quality_PEXACT             0.702079     0.452619      0.644684                    0.706363                                0.028109       S5    path5   MED
+R_S4_bridge                                    0.708128     0.218073      0.307956                    0.855598                                0.044866       S4  bridge6  HIGH
+G2R2                                           0.708344     0.199031      0.280982                    0.822645                                0.055793       S4    star5  HIGH
+CURVE_curve_recharge_quality_RSCALE            0.711211     0.458506      0.644684                    0.856523                                0.039794       S5    path5   MED
+CURVE_curve_recharge_quality_REXACT            0.711211     0.458506      0.644684                    0.856523                                0.039794       S5    path5   MED
+GRID_grid_recharge_x_confounding_REXACT_0p3    0.711211     0.458506      0.644684                    0.856523                                0.039794       S3    path5   MED
+
+N-vs-L prediction gain compared with N-vs-L intervention gain (frozen table):
+  cells with prediction_gain_N_vs_L > 0 : 17 / 128
+  cells with intervention_gain_N_vs_L < 0 : 18 / 128
+  cells flagged prediction_vs_intervention_inversion : 3
+  cells flagged frozen g3_prediction_intervention_inversion : 3
+
+  Inversion cells (N predicts better than L but intervenes worse):
+                             cell_id scenario  prediction_gain_N_vs_L  intervention_gain_N_vs_L  rmse_test_N_median  rmse_test_L_median  nire_persistent_step_h26_N_median  nire_persistent_step_h26_L_median
+      CURVE_curve_observed_nodes_0p6       S5                0.008085                 -0.015283            0.521503            0.525753                           0.874932                           0.861762
+GRID_grid_missing_x_obsnodes_0p0_0p4       S5                0.003825                 -0.001859            0.509101            0.511056                           0.906789                           0.905106
+GRID_grid_missing_x_obsnodes_0p1_0p6       S5                0.008085                 -0.015283            0.521503            0.525753                           0.874932                           0.861762
+
+S7 controlled-misspecification reporting cells (designed for this divergence):
+                                         variant  rmse_test_L  rmse_test_B0  nire_persistent_step_h26_L  rmse_test_N  nire_persistent_step_h26_N  strong_edge_undirected_f1  false_edge_count  false_edge_any_rate
+cell_id                                                                                                                                                                                                           
+R_S7_delayed                    delayed_recharge     0.525404      0.643728                    0.849332     0.523037                    0.747440                   0.727273               1.0             0.800000
+R_S7_effmismatch    recharge_efficiency_mismatch     0.496347      0.609738                    0.842153     0.504613                    0.767384                   0.750000               1.0             0.783333
+R_S7_nonlin              weak_nonlinear_recharge     0.457031      0.570989                    0.848454     0.463604                    0.756222                   0.738636               1.0             0.716667
+R_S7_latentclimate         latent_common_climate     0.609010      0.945259                    0.829016     0.618380                    0.764593                   0.800000               2.0             0.983333
+
+S9 candidate-support misspecification:
+                                                        topology gamma  strong_edge_undirected_f1  edge_recall  edge_precision  false_edge_count  false_edge_any_rate  nire_persistent_step_h26_N  nire_persistent_step_h26_L  estimability_rate_N
+cell_id                                                                                                                                                                                                                                           
+GRID_grid_candsupport_x_coupling_misspecified_HIGH  path5_hidden  HIGH                   0.727273     0.800000        0.666667               2.0             0.900000                    0.774281                    0.895815                  1.0
+GRID_grid_candsupport_x_coupling_misspecified_LOW   path5_hidden   LOW                   0.600000     0.600000        0.666667               1.0             0.833333                    0.786456                    0.838879                  1.0
+GRID_grid_candsupport_x_coupling_misspecified_MED   path5_hidden   MED                   0.666667     0.600000        0.666667               2.0             0.800000                    0.873739                    0.904784                  1.0
+GRID_grid_candsupport_x_coupling_nested_HIGH               path5  HIGH                   0.878205     0.785714        1.000000               0.0             0.000000                    0.750482                    0.914325                  1.0
+GRID_grid_candsupport_x_coupling_nested_LOW                path5   LOW                   0.633333     0.500000        0.666667               1.0             0.833333                    0.674133                    0.774017                  1.0
+GRID_grid_candsupport_x_coupling_nested_MED                path5   MED                   0.727273     0.750000        0.666667               1.0             0.800000                    0.732700                    0.849710                  1.0
+R_S9_hidden                                         path5_hidden   MED                   0.666667     0.600000        0.666667               2.0             0.800000                    0.873739                    0.904784                  1.0

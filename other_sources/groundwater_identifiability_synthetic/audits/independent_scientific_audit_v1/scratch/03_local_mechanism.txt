@@ -1,0 +1,386 @@
+####################################################################################################
+# 1. FULL FROZEN CONFIGURATION OF EVERY G1 CELL (corrects the G1R2 interpretation error)
+####################################################################################################
+cell_id                                      G1R1         G1R2         G1R3         G1R4         G1R5         G1R6
+scenario                                       S1           S1           S1           S2           S3           S1
+topology                                   single       single       single       single       single        path5
+memory                                        MED          MED          MED          MED          MED          MED
+gamma                                         MED          MED          MED          MED          MED          MED
+cadence                                         4            1            4            4            4            4
+cadence_over_tau_relax                        0.2         0.05          0.2          0.2          0.2          0.2
+tau_relax_realized                           20.0         20.0         20.0         20.0         20.0         20.0
+pumping_quality                       P-MULTNOISE  P-MULTNOISE  P-MULTNOISE  P-MULTNOISE  P-MULTNOISE  P-MULTNOISE
+recharge_quality                          R-NOISE      R-NOISE      R-NOISE      R-NOISE      R-NOISE      R-NOISE
+recharge_sigma                                0.2          0.2          0.2          0.2          0.4          0.2
+recharge_lag                                    0            0            0            0            0            0
+confounding_rho                               0.3          0.3          0.3          0.6          0.3          0.3
+mcar_fraction                                 0.1          0.1          0.3          0.1          0.1          0.1
+blocks_per_node                                 0            0            0            0            0            0
+observed_node_fraction                        1.0          1.0          1.0          1.0          1.0          1.0
+snr_head                                     10.0         10.0         10.0         10.0         10.0         10.0
+process_noise_sd                             0.05         0.05         0.05         0.05         0.05         0.05
+n_nodes                                         1            1            1            1            1            5
+absolute_pumping_scale_known                 True         True         True         True         True         True
+absolute_S_identifiable                     False        False        False        False        False        False
+physical_parameter_identifiable             False        False        False        False        False        False
+realized_snr_head                       10.301308    10.301308    10.301308     10.43792    10.301308    10.249383
+realized_snr_head_detrended              3.515137     3.515137     3.515137     4.375737     3.515137     3.231031
+realized_head_sd                         3.440381     3.440381     3.440381     2.814093     3.440381     2.770115
+realized_observation_noise_sd            0.335172     0.335172     0.335172     0.270283     0.335172     0.271101
+realized_local_persistence_mean_A_ii     0.951229     0.951229     0.951229     0.951229     0.951229     0.897333
+pumping_excitation_fraction_L            0.195628     0.326654     0.187738     0.193304     0.196931     0.196571
+condition_number_L                       9.289489     8.497556      9.79756     9.191797     8.376499     9.535086
+max_vif_L                               17.181624    13.555779    18.756644    14.538454    14.812557      16.5566
+n_transitions                                 129          519          129          129          129          129
+n_rows_L                                     73.0        298.0         43.0         73.0         73.0         72.6
+seasonal_variance_share                  0.882612     0.882612     0.882612     0.825385     0.882612     0.897975
+nire_persistent_step_h26_L               0.564834     0.530328      0.57173     0.546377     0.541081      0.84971
+
+
+####################################################################################################
+# 2. AUDIT QUESTION A — distribution of local persistent-step NIRE (h26) over all cells
+####################################################################################################
+n cells total = 129, non-G0 = 128
+
+C_G0 (implementation-sanity oracle) nire_persistent_step_h26_L = np.float64(4.342754643737851e-15)
+
+non-G0 cells with finite nire_persistent_step_h26_L: 128
+  min    = 0.1791   (G3R2b)
+  q05    = 0.5447
+  q25    = 0.8260
+  median = 0.8492
+  q75    = 0.8595
+  max    = 1.0000   (GRID_grid_missing_x_obsnodes_0p5_0p4)
+  cells <= 0.20 frozen G1 criterion : 2
+  cells <= 0.40                     : 2
+  cells <= 0.50                     : 2
+
+--- 12 BEST local-response cells (lowest median NIRE h26 L) ---
+                                    nire_persistent_step_h26_L scenario topology memory gamma  cadence  cadence_over_tau_relax  tau_relax_realized pumping_quality recharge_quality  recharge_sigma  recharge_lag  confounding_rho  mcar_fraction  blocks_per_node  observed_node_fraction  snr_head  process_noise_sd  n_nodes  absolute_pumping_scale_known  absolute_S_identifiable  physical_parameter_identifiable
+cell_id                                                                                                                                                                                                                                                                                                                                                                                                                
+G3R2b                                                 0.179121      S6b    path5    MED  HIGH        1                0.073003           13.698019         P-EXACT          R-EXACT             0.0             0              0.0            0.0                0                     1.0      20.0              0.02        5                          True                    False                            False
+G3R2                                                  0.189991      S6a    null5    MED  HIGH        1                0.050000           20.000000         P-EXACT          R-EXACT             0.0             0              0.0            0.0                0                     1.0      20.0              0.02        5                          True                    False                            False
+G1R2                                                  0.530328       S1   single    MED   MED        1                0.050000           20.000000     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        1                          True                    False                            False
+G3R1b                                                 0.536795      S6b    path5    MED   MED        4                0.226047           17.695406     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        5                          True                    False                            False
+G3R3                                                  0.538391       S8   single    MED   MED        4                0.200000           20.000000     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        1                          True                    False                            False
+G1R5                                                  0.541081       S3   single    MED   MED        4                0.200000           20.000000     P-MULTNOISE          R-NOISE             0.4             0              0.3            0.1                0                     1.0      10.0              0.05        1                          True                    False                            False
+G3R1                                                  0.543815      S6a    null5    MED   MED        4                0.200000           20.000000     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        5                          True                    False                            False
+G1R4                                                  0.546377       S2   single    MED   MED        4                0.200000           20.000000     P-MULTNOISE          R-NOISE             0.2             0              0.6            0.1                0                     1.0      10.0              0.05        1                          True                    False                            False
+G1R1                                                  0.564834       S1   single    MED   MED        4                0.200000           20.000000     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        1                          True                    False                            False
+G1R3                                                  0.571730       S1   single    MED   MED        4                0.200000           20.000000     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.3                0                     1.0      10.0              0.05        1                          True                    False                            False
+CURVE_curve_coupling_strength_NONE                    0.580411       S5    path5    MED  NONE        4                0.200000           20.000000     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        5                          True                    False                            False
+CURVE_curve_pumping_quality_PEXACT                    0.706363       S5    path5    MED   MED        4                0.200000           20.000000         P-EXACT          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        5                          True                    False                            False
+
+--- 10 WORST local-response cells ---
+                                              nire_persistent_step_h26_L scenario topology memory gamma  cadence  cadence_over_tau_relax  tau_relax_realized pumping_quality recharge_quality  recharge_sigma  recharge_lag  confounding_rho  mcar_fraction  blocks_per_node  observed_node_fraction  snr_head  process_noise_sd  n_nodes  absolute_pumping_scale_known  absolute_S_identifiable  physical_parameter_identifiable
+cell_id                                                                                                                                                                                                                                                                                                                                                                                                                          
+GRID_grid_missing_x_obsnodes_0p5_0p4                            1.000000       S5    path5    MED   MED        4                    0.20                20.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.5                0                     0.4      10.0              0.05        5                          True                    False                            False
+GRID_grid_missing_x_obsnodes_0p3_0p4                            0.958790       S5    path5    MED   MED        4                    0.20                20.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.3                0                     0.4      10.0              0.05        5                          True                    False                            False
+GRID_grid_coupling_x_snr_HIGH_2                                 0.957813       S5    path5    MED  HIGH        4                    0.20                20.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0       2.0              0.05        5                          True                    False                            False
+CURVE_curve_snr_2                                               0.935986       S5    path5    MED   MED        4                    0.20                20.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0       2.0              0.05        5                          True                    False                            False
+GRID_grid_coupling_x_snr_MED_2                                  0.935986       S5    path5    MED   MED        4                    0.20                20.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0       2.0              0.05        5                          True                    False                            False
+GRID_grid_coupling_x_snr_HIGH_5                                 0.931303       S5    path5    MED  HIGH        4                    0.20                20.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0       5.0              0.05        5                          True                    False                            False
+GRID_grid_cadence_x_memory_13_LOW                               0.921035       S5    path5    LOW   MED       13                    3.25                 4.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        5                          True                    False                            False
+CURVE_curve_coupling_strength_HIGH                              0.914325       S5    path5    MED  HIGH        4                    0.20                20.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        5                          True                    False                            False
+GRID_grid_candsupport_x_coupling_nested_HIGH                    0.914325       S9    path5    MED  HIGH        4                    0.20                20.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        5                          True                    False                            False
+GRID_grid_coupling_x_snr_HIGH_10                                0.914325       S5    path5    MED  HIGH        4                    0.20                20.0     P-MULTNOISE          R-NOISE             0.2             0              0.3            0.1                0                     1.0      10.0              0.05        5                          True                    False                            False
+
+--- FULL config of the single best non-G0 cell + comparison to C_G0 ---
+cell_id                                   G3R2b      C_G0
+scenario                                    S6b        S0
+topology                                  path5    single
+memory                                      MED       MED
+gamma                                      HIGH       MED
+cadence                                       1         1
+cadence_over_tau_relax                 0.073003      0.05
+tau_relax_realized                    13.698019      20.0
+pumping_quality                         P-EXACT   P-EXACT
+recharge_quality                        R-EXACT   R-EXACT
+recharge_sigma                              0.0       0.0
+recharge_lag                                  0         0
+confounding_rho                             0.0       0.0
+mcar_fraction                               0.0       0.0
+blocks_per_node                               0         0
+observed_node_fraction                      1.0       1.0
+snr_head                                   20.0       inf
+process_noise_sd                           0.02       0.0
+n_nodes                                       5         1
+absolute_pumping_scale_known               True      True
+absolute_S_identifiable                   False      True
+physical_parameter_identifiable           False      True
+realized_snr_head                     20.519955       inf
+realized_snr_head_detrended            5.117003       inf
+realized_head_sd                        3.10979  3.970035
+realized_observation_noise_sd          0.152078       0.0
+realized_local_persistence_mean_A_ii   0.850893  0.951229
+pumping_excitation_fraction_L          0.259168  0.264491
+condition_number_L                    11.174864   10.3758
+max_vif_L                             21.187779   20.1304
+n_transitions                               519       519
+n_rows_L                                  363.0     363.0
+seasonal_variance_share                0.936292  0.914202
+nire_persistent_step_h26_L             0.179121       0.0
+
+
+####################################################################################################
+# 3. AUDIT QUESTION B — what drives local intervention error (rank correlations)
+####################################################################################################
+
+Spearman rank correlation with nire_persistent_step_h26_L across 128 non-G0 cells:
+  +0.832   n=128   cumulative_drawdown_error_persistent_step_L
+  -0.468   n=128   realized_snr_head_detrended
+  +0.437   n=128   A_diag_relative_error_L
+  +0.384   n=128   cadence
+  -0.384   n=128   n_transitions
+  -0.382   n=128   n_rows_L
+  -0.378   n=128   realized_local_persistence_mean_A_ii
+  +0.364   n=128   A_vs_Ak_max_abs_error_L
+  -0.323   n=128   snr_head
+  -0.316   n=128   realized_snr_head
+  -0.287   n=128   observed_node_fraction
+  +0.285   n=128   cadence_over_tau_relax
+  -0.276   n=128   smallest_singular_value_L
+  -0.255   n=128   pumping_excitation_fraction_L
+  +0.234   n=128   rmse_test_L
+  +0.202   n=128   seasonal_variance_share
+  +0.179   n=128   relative_shape_error_persistent_step_L
+  +0.162   n=128   max_vif_L
+  -0.154   n=128   tau_relax_realized
+  +0.146   n=128   condition_number_L
+  -0.139   n=128   rmse_improvement_vs_B0_L
+  +0.135   n=128   process_noise_sd
+  +0.132   n=128   mcar_fraction
+  +0.095   n=118   B_Q_pseudo_true_relative_error_median
+  -0.094   n=128   confounding_rho
+  -0.073   n=128   recharge_sigma
+  +0.058   n=128   recharge_lag
+  +0.013   n=128   blocks_per_node
+  +0.012   n= 10   B_Q_relative_error_median
+
+
+####################################################################################################
+# 4. HORIZON GROWTH — is intervention error a long-horizon compounding phenomenon?
+####################################################################################################
+
+Median over non-G0 cells of the per-cell median NIRE, by horizon:
+  nire_persistent_step_h4_L        n_cells=128  median=0.8310  q25=0.8148  q75=0.8404
+  nire_persistent_step_h13_L       n_cells=128  median=0.8428  q25=0.8195  q75=0.8542
+  nire_persistent_step_h26_L       n_cells=128  median=0.8492  q25=0.8260  q75=0.8595
+  nire_persistent_step_h52_L       n_cells=128  median=0.8560  q25=0.8320  q75=0.8714
+
+Same for C_G0 (exact-implementation oracle):
+  nire_persistent_step_h4_L        np.float64(2.6102391261179174e-15)
+  nire_persistent_step_h13_L       np.float64(3.4685624362014104e-15)
+  nire_persistent_step_h26_L       np.float64(4.342754643737851e-15)
+  nire_persistent_step_h52_L       np.float64(6.480909962865311e-15)
+
+G1 cells across horizons:
+         nire_persistent_step_h4_L  nire_persistent_step_h13_L  nire_persistent_step_h26_L  nire_persistent_step_h52_L
+cell_id                                                                                                               
+G1R1                      0.491004                    0.533029                    0.564834                    0.592407
+G1R2                      0.309395                    0.420301                    0.530328                    0.638200
+G1R3                      0.507714                    0.547982                    0.571730                    0.629231
+G1R4                      0.497280                    0.530516                    0.546377                    0.567701
+G1R5                      0.478299                    0.515498                    0.541081                    0.565295
+G1R6                      0.830962                    0.842793                    0.849710                    0.855951
+
+
+####################################################################################################
+# 5. PERSISTENCE vs PUMPING-RESPONSE recovery (EIV hypothesis, part 1)
+####################################################################################################
+
+k=1 cells: 10  (B_Q_relative_error_median is defined only here)
+                                   A_diag_relative_error_L  B_Q_relative_error_median  nire_persistent_step_h26_L  rmse_test_L  realized_snr_head  process_noise_sd  snr_head  storage_relative_error_median scenario topology memory
+cell_id                                                                                                                                                                                                                              
+CURVE_curve_cadence_1                             0.087609                   0.276074                    0.844167     0.398466          10.249383              0.05      10.0                            NaN       S5    path5    MED
+G1R2                                              0.076086                   0.225161                    0.530328     0.501483          10.301308              0.05      10.0                            NaN       S1   single    MED
+G2R1                                              0.017406                   0.039932                    0.823417     0.218691          20.308987              0.02      20.0                       0.038399       S4    path5    MED
+G2R2                                              0.016974                   0.044442                    0.822645     0.199031          20.485409              0.02      20.0                       0.044621       S4    star5    MED
+G3R2                                              0.037205                   0.053215                    0.189991     0.285409          20.517678              0.02      20.0                            NaN      S6a    null5    MED
+G3R2b                                             0.053324                   0.042266                    0.179121     0.198422          20.519955              0.02      20.0                            NaN      S6b    path5    MED
+GRID_grid_cadence_x_memory_1_HIGH                 0.062427                   0.306563                    0.760475     0.671718           9.874165              0.05      10.0                            NaN       S5    path5   HIGH
+GRID_grid_cadence_x_memory_1_LOW                  0.225713                   0.280255                    0.760826     0.188812          10.205663              0.05      10.0                            NaN       S5    path5    LOW
+GRID_grid_cadence_x_memory_1_MED                  0.087609                   0.276074                    0.844167     0.398466          10.249383              0.05      10.0                            NaN       S5    path5    MED
+R_S4_bridge                                       0.015600                   0.043164                    0.855598     0.218073          20.433736              0.02      20.0                       0.043291       S4  bridge6    MED
+
+
+k>1 cells: 118  (pseudo-true coarse B_Q comparison)
+  median A_diag_relative_error_L                 = 0.0758
+  median B_Q_pseudo_true_relative_error_median   = 0.5119
+  spearman(A_diag_err , NIRE)  = +0.436
+  spearman(B_Q_ps_err , NIRE)  = +0.095
+  spearman(A_diag_err , B_Q_ps_err) = +0.051
+
+
+####################################################################################################
+# 6. 1-D STRESS CURVES (frozen), local model
+####################################################################################################
+
+--- curve_snr ---
+                    nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                 
+CURVE_curve_snr_2                     0.935986                   0.825570                    0.954057                 0.758448                        NaN                               0.478764     1.643756           2.049877            7.984729                       0.197614                  1.0
+CURVE_curve_snr_5                     0.885160                   0.834115                    0.902477                 0.253038                        NaN                               0.509818     0.797964           5.124691            8.889378                       0.196632                  1.0
+CURVE_curve_snr_10                    0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+CURVE_curve_snr_20                    0.831193                   0.828336                    0.831269                 0.081558                        NaN                               0.511931     0.403948          20.498765            9.773726                       0.197102                  1.0
+
+--- curve_process_noise ---
+                                nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                             
+CURVE_curve_process_noise_0p05                    0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+CURVE_curve_process_noise_0p25                    0.844537                   0.828505                    0.849793                 0.081270                        NaN                               0.498180     0.677319          10.136841            8.913461                       0.197164                  1.0
+CURVE_curve_process_noise_1p0                     0.841826                   0.815404                    0.849738                 0.106938                        NaN                               0.497897     1.885136          10.323302            7.649322                       0.197809                  1.0
+
+--- curve_cadence ---
+                        nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                     
+CURVE_curve_cadence_1                     0.844167                   0.768400                    0.876518                 0.087609                   0.276074                                    NaN     0.398466          10.249383            8.591143                       0.323016                  1.0
+CURVE_curve_cadence_2                     0.823505                   0.801948                    0.852902                 0.052900                        NaN                               0.383505     0.425310          10.249383            8.984955                       0.248413                  1.0
+CURVE_curve_cadence_4                     0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+CURVE_curve_cadence_13                    0.914100                   0.912402                    0.917534                 0.410886                        NaN                               0.716781     0.924094          10.249383           12.347198                       0.134187                  1.0
+
+--- curve_missing ---
+                         nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                      
+CURVE_curve_missing_0p0                    0.841989                   0.837687                    0.853195                 0.058649                        NaN                               0.503078     0.510110          10.249383            9.389334                       0.197764             1.000000
+CURVE_curve_missing_0p1                    0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571             1.000000
+CURVE_curve_missing_0p3                    0.843126                   0.837437                    0.848411                 0.084282                        NaN                               0.511128     0.541771          10.249383           10.321969                       0.188731             1.000000
+CURVE_curve_missing_0p5                    0.843836                   0.833654                    0.868724                 0.153380                        NaN                               0.543081     0.617524          10.222830           12.602984                       0.168329             0.933333
+
+--- curve_pumping_quality ---
+                                         nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                                      
+CURVE_curve_pumping_quality_PEXACT                         0.706363                   0.695500                    0.721510                 0.060235                        NaN                               0.098247     0.452619          10.249383           10.178016                       0.104458                  1.0
+CURVE_curve_pumping_quality_PMULTNOISE                     0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+CURVE_curve_pumping_quality_PSCALEBIAS                     0.737322                   0.729422                    0.751167                 0.055532                        NaN                               0.202221     0.450879          10.249383           10.213895                       0.104793                  1.0
+CURVE_curve_pumping_quality_PTEMPAGG                       0.806498                   0.838598                    0.811205                 0.091139                        NaN                               0.491518     0.562055          10.249383           29.496545                       0.009361                  1.0
+CURVE_curve_pumping_quality_PSPATIALAGG                    0.779818                   0.792764                    0.789826                 0.077647                        NaN                               0.282128     0.548160          10.249383            9.168747                       0.324065                  1.0
+
+--- curve_recharge_quality ---
+                                        nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                                     
+CURVE_curve_recharge_quality_REXACT                       0.856523                   0.844586                    0.864985                 0.089871                        NaN                               0.514602     0.458506          10.249383           11.073087                       0.195372                  1.0
+CURVE_curve_recharge_quality_RNOISE                       0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+CURVE_curve_recharge_quality_RLAG                         0.859552                   0.828797                    0.874117                 0.149153                        NaN                               0.493251     0.564765          10.249383           12.765602                       0.197844                  1.0
+CURVE_curve_recharge_quality_RNOISELAG                    0.844629                   0.820863                    0.856272                 0.095175                        NaN                               0.498131     0.578139          10.249383           10.161736                       0.197075                  1.0
+CURVE_curve_recharge_quality_RSCALE                       0.856523                   0.844586                    0.864985                 0.089871                        NaN                               0.514602     0.458506          10.249383           11.073087                       0.195372                  1.0
+
+--- curve_confounding ---
+                             nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                          
+CURVE_curve_confounding_0p0                    0.857679                   0.834626                    0.864211                 0.088307                        NaN                               0.511949     0.558523          10.177183           10.108034                       0.195981                  1.0
+CURVE_curve_confounding_0p3                    0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+CURVE_curve_confounding_0p6                    0.839392                   0.829146                    0.847825                 0.065637                        NaN                               0.517496     0.468313          10.343906            9.140946                       0.195248                  1.0
+CURVE_curve_confounding_0p9                    0.828088                   0.828363                    0.829862                 0.084020                        NaN                               0.511471     0.411796          10.580853            8.556063                       0.196137                  1.0
+
+--- curve_memory ---
+                         nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                      
+CURVE_curve_memory_LOW                     0.810161                   0.831654                    0.809902                 1.000387                        NaN                               0.522937     0.311478          10.205663            8.185245                       0.189255                  1.0
+CURVE_curve_memory_MED                     0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+CURVE_curve_memory_HIGH                    0.769902                   0.758670                    0.793676                 0.056261                        NaN                               0.522820     0.836220           9.874165            8.852424                       0.197050                  1.0
+
+--- curve_coupling_strength ---
+                                    nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                                 
+CURVE_curve_coupling_strength_NONE                    0.580411                   0.504079                    0.604879                 0.074572                        NaN                               0.515549     0.657913          10.219533            9.864984                       0.198017                  1.0
+CURVE_curve_coupling_strength_LOW                     0.774017                   0.759666                    0.778314                 0.065473                        NaN                               0.516940     0.609597          10.189328            9.837003                       0.192899                  1.0
+CURVE_curve_coupling_strength_MED                     0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+CURVE_curve_coupling_strength_HIGH                    0.914325                   0.882231                    0.919217                 0.131331                        NaN                               0.537533     0.550918          10.222867            9.054731                       0.192724                  1.0
+
+--- curve_observed_nodes ---
+                                nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                             
+CURVE_curve_observed_nodes_0p4                    0.894068                   0.891395                    0.898836                 0.066319                        NaN                               0.495718     0.511632          10.249383            9.475365                       0.189616                  1.0
+CURVE_curve_observed_nodes_0p6                    0.861762                   0.849995                    0.870075                 0.069107                        NaN                               0.506288     0.525753          10.249383            9.593700                       0.191034                  1.0
+CURVE_curve_observed_nodes_0p8                    0.830530                   0.826576                    0.840525                 0.065305                        NaN                               0.500205     0.514355          10.249383            9.596693                       0.194326                  1.0
+CURVE_curve_observed_nodes_1p0                    0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+
+--- curve_block_outage ---
+                            nire_persistent_step_h26_L  nire_persistent_step_h4_L  nire_persistent_step_h52_L  A_diag_relative_error_L  B_Q_relative_error_median  B_Q_pseudo_true_relative_error_median  rmse_test_L  realized_snr_head  condition_number_L  pumping_excitation_fraction_L  estimability_rate_L
+cell_id                                                                                                                                                                                                                                                                                                         
+CURVE_curve_block_outage_0                    0.849710                   0.830962                    0.855951                 0.071380                        NaN                               0.514447     0.516973          10.249383            9.535086                       0.196571                  1.0
+CURVE_curve_block_outage_1                    0.858740                   0.837298                    0.857683                 0.073358                        NaN                               0.530496     0.525357          10.249383            9.630855                       0.194577                  1.0
+CURVE_curve_block_outage_2                    0.836381                   0.825094                    0.854326                 0.072397                        NaN                               0.514129     0.538722          10.249383            9.783149                       0.188710                  1.0
+
+
+####################################################################################################
+# 7. TWO-FACTOR GRIDS, local model NIRE h26
+####################################################################################################
+
+--- cadence x memory : NIRE h26 L ---
+memory      HIGH       LOW       MED
+cad                                 
+1       0.760475  0.760826  0.844167
+2       0.765032  0.779709  0.823505
+4       0.769902  0.810161  0.849710
+13      0.849378  0.921035  0.914100
+
+  (cadence / tau_relax_realized)
+memory    HIGH   LOW   MED
+cad                       
+1       0.0125  0.25  0.05
+2       0.0250  0.50  0.10
+4       0.0500  1.00  0.20
+13      0.1625  3.25  0.65
+
+  A_diag_relative_error_L
+memory      HIGH        LOW       MED
+cad                                  
+1       0.062427   0.225713  0.087609
+2       0.057295   0.578524  0.052900
+4       0.056261   1.000387  0.071380
+13      0.145497  49.641699  0.410886
+
+--- recharge_quality x confounding_rho : NIRE h26 L ---
+confounding_rho        0.0       0.3       0.6       0.9
+recharge_quality                                        
+R-EXACT           0.863304  0.856523  0.850193  0.843315
+R-LAG             0.867135  0.859552  0.853244  0.843809
+R-NOISE           0.857679  0.849710  0.839392  0.828088
+R-NOISELAG        0.854953  0.844629  0.833429  0.826884
+
+  placebo-free local: A_diag_relative_error_L
+confounding_rho        0.0       0.3       0.6       0.9
+recharge_quality                                        
+R-EXACT           0.108773  0.089871  0.076074  0.050783
+R-LAG             0.187745  0.149153  0.115110  0.092520
+R-NOISE           0.088307  0.071380  0.065637  0.084020
+R-NOISELAG        0.115910  0.095175  0.079699  0.091107
+
+  B_Q_pseudo_true_relative_error_median
+confounding_rho        0.0       0.3       0.6       0.9
+recharge_quality                                        
+R-EXACT           0.514242  0.514602  0.510729  0.502084
+R-LAG             0.489427  0.493251  0.496889  0.509917
+R-NOISE           0.511949  0.514447  0.517496  0.511471
+R-NOISELAG        0.492576  0.498131  0.495343  0.509447
+
+--- mcar_fraction x observed_node_fraction : NIRE h26 L ---
+observed_node_fraction       0.4       0.6       0.8       1.0
+mcar_fraction                                                 
+0.0                     0.905106  0.859421  0.848279  0.841989
+0.1                     0.894068  0.861762  0.830530  0.849710
+0.3                     0.958790  0.873706  0.847440  0.843126
+0.5                     1.000000  0.888566  0.851453  0.843836
+
+--- gamma x snr_head : NIRE h26 L ---
+snr_head      2.0       5.0       10.0      20.0
+gamma                                           
+HIGH      0.957813  0.931303  0.914325  0.902650
+LOW       0.883796  0.815948  0.774017  0.756394
+MED       0.935986  0.885160  0.849710  0.831193
+
+  A_diag_relative_error_L
+snr_head      2.0       5.0       10.0      20.0
+gamma                                           
+HIGH      0.685470  0.143728  0.131331  0.242945
+LOW       0.769406  0.299067  0.065473  0.049811
+MED       0.758448  0.253038  0.071380  0.081558
+
+  realized_snr_head
+snr_head      2.0       5.0        10.0       20.0
+gamma                                             
+HIGH      2.044573  5.111434  10.222867  20.445734
+LOW       2.037866  5.094664  10.189328  20.378655
+MED       2.049877  5.124691  10.249383  20.498765
