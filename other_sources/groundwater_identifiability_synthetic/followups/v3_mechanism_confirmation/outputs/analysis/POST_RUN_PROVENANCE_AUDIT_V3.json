@@ -1,0 +1,93 @@
+{
+  "phase": "PASS_2_POST_RUN_PROVENANCE_AUDIT",
+  "source_code_modified": false,
+  "n_completed": 4200,
+  "n_unique_pairs": 4200,
+  "n_duplicates": 0,
+  "n_missing": 0,
+  "n_extra": 0,
+  "n_wrong_pool": 0,
+  "n_wrong_mode": 0,
+  "contamination_counts": {
+    "V3_DETERMINISM": 0,
+    "V3_SMOKE": 0,
+    "V3_BENCHMARK": 0,
+    "V2_G0": 0,
+    "V2_CALIBRATION": 0,
+    "V2_SMOKE": 0,
+    "V2_ANALYSIS": 0
+  },
+  "hash_verification": {
+    "V3_ANALYSIS_REPLICATES.csv": true,
+    "V3_ANALYSIS_REPLICATES.jsonl": true,
+    "V3_ANALYSIS_SUMMARY.json": true
+  },
+  "live_hashes": {
+    "V3_DESIGN_HASH": "7da1654e7c2729639db8bc1dd5e8a20078ce5750e93a05564f1f6dd9f506da69",
+    "V3_CODE_HASH": "1f1eea435b3c0ecd52153cccc312163528bf126bac2ff1a830b4e7779e43d348",
+    "V3_ANALYSIS_seed_hash": "fff5ff4f3ab7b0e4947540eec815545f82723b4111dab761a55aa44f4d095b3f",
+    "resolved_cell_manifest_hash": "d5836258e55e672f023840b016d97eca61365b0f44d05b08cc8451b27aeb5e72",
+    "observed_analysis_seed_values_hash": "af5a1cb54c3ca97f29bcaf035993e689de594908a51bf18b4835b737bac606a0"
+  },
+  "frozen_hashes": {
+    "V3_DESIGN_HASH": "7da1654e7c2729639db8bc1dd5e8a20078ce5750e93a05564f1f6dd9f506da69",
+    "V3_CODE_HASH": "1f1eea435b3c0ecd52153cccc312163528bf126bac2ff1a830b4e7779e43d348",
+    "V3_ANALYSIS_seed_hash": "fff5ff4f3ab7b0e4947540eec815545f82723b4111dab761a55aa44f4d095b3f",
+    "resolved_cell_manifest_hash": "d5836258e55e672f023840b016d97eca61365b0f44d05b08cc8451b27aeb5e72"
+  },
+  "csv_reload_reproduces_canonical_summary": true,
+  "csv_reload_error": null,
+  "n_bootstrap_across_seeds": 10000,
+  "gates_in_summary": {},
+  "reinterprets_v2": false,
+  "v2_authoritative_status": {
+    "LOCAL_RESPONSE_STATUS": "LOCAL_RESPONSE_NOT_IDENTIFIED",
+    "NETWORK_SUPPORT_FINAL": "NOT_EARNED",
+    "role": "Frozen V2 statuses, reproduced verbatim for provenance. V3 may explain V2; V3 may not overturn V2. This summarizer never recomputes or overrides them."
+  },
+  "checks": {
+    "n_records_4200": true,
+    "n_unique_pairs_4200": true,
+    "n_duplicates_0": true,
+    "n_missing_0": true,
+    "n_extra_0": true,
+    "n_cells_21": true,
+    "every_cell_200_seeds": true,
+    "every_seed_in_analysis_pool": true,
+    "observed_seeds_equal_analysis_pool": true,
+    "observed_seed_hash_matches_frozen_pool": true,
+    "wrong_mode_rows_0": true,
+    "wrong_source_pool_0": true,
+    "no_g0_calibration_smoke_benchmark_contamination": true,
+    "V3_DESIGN_HASH": true,
+    "V3_CODE_HASH": true,
+    "V3_ANALYSIS_seed_hash": true,
+    "resolved_cell_manifest_hash_unchanged": true,
+    "V2_DESIGN_HASH": true,
+    "V2_CODE_HASH": true,
+    "canonical_summary_exists": true,
+    "incomplete_marker_absent": true,
+    "output_hashes_match": true,
+    "csv_reload_reproduces_canonical_summary": true,
+    "official_seed_pool_hash_matched": true
+  },
+  "ok": true,
+  "csv_reload_note": "In-memory CSV-reloaded summarize_analysis equals the on-disk canonical JSON after json.dumps/json.loads round-trip (JSON object keys stringify integers such as pairing_tier_semantics 1/2/3). Official seed_pool_hash uses generation order, not sorted order; live seed_pool_hash matched the freeze. Observed seed SET equals the frozen V3_ANALYSIS pool.",
+  "estimability_overall": {
+    "B0": {
+      "ESTIMATED": 4200
+    },
+    "L": {
+      "ESTIMATED": 4200
+    },
+    "S": {
+      "NOT_ESTIMABLE": 3000,
+      "ESTIMATED": 1200
+    },
+    "N": {
+      "NOT_ESTIMABLE": 3000,
+      "ESTIMATED": 1200
+    }
+  },
+  "single_node_NOT_ESTIMABLE_N_S": "3000 NOT_ESTIMABLE S/N rows are the 15 single-node cells x 200 seeds; all 6 multi-node cells (1200 rows) are ESTIMATED for S and N."
+}

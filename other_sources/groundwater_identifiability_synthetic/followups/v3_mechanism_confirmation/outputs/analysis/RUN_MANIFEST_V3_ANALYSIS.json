@@ -1,0 +1,260 @@
+{
+  "phase": "PASS_2_ANALYSIS",
+  "run_at_utc": "2026-09-07T18:33:34.088004+00:00",
+  "platform": "Linux-5.14.0-687.39.1.el9_8.x86_64-x86_64-with-glibc2.28",
+  "authorized": true,
+  "preflight": {
+    "checked_at_utc": "2026-09-07T18:26:56.507483+00:00",
+    "pool": "V3_ANALYSIS",
+    "rng_mode": "named_substreams",
+    "system_seed_mode": "orthogonal_v3",
+    "n_cells": 21,
+    "n_seeds": 200,
+    "expected_replicates": 4200,
+    "V3_DESIGN_HASH": "7da1654e7c2729639db8bc1dd5e8a20078ce5750e93a05564f1f6dd9f506da69",
+    "V3_CODE_HASH": "1f1eea435b3c0ecd52153cccc312163528bf126bac2ff1a830b4e7779e43d348",
+    "resolved_cell_manifest_hash": "d5836258e55e672f023840b016d97eca61365b0f44d05b08cc8451b27aeb5e72",
+    "V3_ANALYSIS_seed_pool_hash": "fff5ff4f3ab7b0e4947540eec815545f82723b4111dab761a55aa44f4d095b3f",
+    "V2_PARENT_DESIGN_HASH": "b53f5594a444ae4826adfe2c47818080508a4c4b00a38fa25b4ffc483e20a8a5",
+    "V2_PARENT_CODE_HASH": "7cc64809bf240d7afea164c9a24a737c75de88a0b5e8d38f4e85b704f00d863c",
+    "checks": [
+      {
+        "check": "mode_pair_legal",
+        "ok": true,
+        "expected": [
+          "named_substreams",
+          "orthogonal_v3"
+        ],
+        "observed": [
+          "named_substreams",
+          "orthogonal_v3"
+        ]
+      },
+      {
+        "check": "mode_pair_is_substantive",
+        "ok": true,
+        "expected": [
+          "named_substreams",
+          "orthogonal_v3"
+        ],
+        "observed": [
+          "named_substreams",
+          "orthogonal_v3"
+        ]
+      },
+      {
+        "check": "mode_pair_matches_config",
+        "ok": true,
+        "expected": [
+          "named_substreams",
+          "orthogonal_v3"
+        ],
+        "observed": [
+          "named_substreams",
+          "orthogonal_v3"
+        ]
+      },
+      {
+        "check": "no_v3_gates",
+        "ok": true,
+        "expected": {},
+        "observed": {}
+      },
+      {
+        "check": "pool_is_analysis",
+        "ok": true,
+        "expected": "V3_ANALYSIS",
+        "observed": "V3_ANALYSIS"
+      },
+      {
+        "check": "cell_count_21",
+        "ok": true,
+        "expected": 21,
+        "observed": 21
+      },
+      {
+        "check": "cell_ids_match_config",
+        "ok": true,
+        "expected": [
+          "A_PEXACT",
+          "A_S025",
+          "A_S050",
+          "A_S100",
+          "A_S200",
+          "A1_PEXACT_K1",
+          "A1_S100_K1",
+          "B_GNONE",
+          "B_GLOW",
+          "B_GMED",
+          "B_GHIGH",
+          "C_REAL_GMED",
+          "C_REAL_GHIGH",
+          "D_PE_RE_R0",
+          "D_PE_RE_R3",
+          "D_PE_RN_R0",
+          "D_PE_RN_R3",
+          "D_PM_RE_R0",
+          "D_PM_RE_R3",
+          "D_PM_RN_R0",
+          "D_PM_RN_R3"
+        ],
+        "observed": [
+          "A_PEXACT",
+          "A_S025",
+          "A_S050",
+          "A_S100",
+          "A_S200",
+          "A1_PEXACT_K1",
+          "A1_S100_K1",
+          "B_GNONE",
+          "B_GLOW",
+          "B_GMED",
+          "B_GHIGH",
+          "C_REAL_GMED",
+          "C_REAL_GHIGH",
+          "D_PE_RE_R0",
+          "D_PE_RE_R3",
+          "D_PE_RN_R0",
+          "D_PE_RN_R3",
+          "D_PM_RE_R0",
+          "D_PM_RE_R3",
+          "D_PM_RN_R0",
+          "D_PM_RN_R3"
+        ]
+      },
+      {
+        "check": "n_analysis_seeds_per_cell_200",
+        "ok": true,
+        "expected": 200,
+        "observed": 200
+      },
+      {
+        "check": "expected_replicates_4200",
+        "ok": true,
+        "expected": 4200,
+        "observed": 4200
+      },
+      {
+        "check": "seeds_unique",
+        "ok": true,
+        "expected": 200,
+        "observed": 200
+      },
+      {
+        "check": "seeds_uint64_range",
+        "ok": true,
+        "expected": "0 <= seed < 2**64",
+        "observed": null
+      },
+      {
+        "check": "V3_DESIGN_HASH",
+        "ok": true,
+        "expected": "7da1654e7c2729639db8bc1dd5e8a20078ce5750e93a05564f1f6dd9f506da69",
+        "observed": "7da1654e7c2729639db8bc1dd5e8a20078ce5750e93a05564f1f6dd9f506da69"
+      },
+      {
+        "check": "V3_CODE_HASH",
+        "ok": true,
+        "expected": "1f1eea435b3c0ecd52153cccc312163528bf126bac2ff1a830b4e7779e43d348",
+        "observed": "1f1eea435b3c0ecd52153cccc312163528bf126bac2ff1a830b4e7779e43d348"
+      },
+      {
+        "check": "resolved_cell_manifest_hash",
+        "ok": true,
+        "expected": "d5836258e55e672f023840b016d97eca61365b0f44d05b08cc8451b27aeb5e72",
+        "observed": "d5836258e55e672f023840b016d97eca61365b0f44d05b08cc8451b27aeb5e72"
+      },
+      {
+        "check": "V3_ANALYSIS_seed_pool_hash",
+        "ok": true,
+        "expected": "fff5ff4f3ab7b0e4947540eec815545f82723b4111dab761a55aa44f4d095b3f",
+        "observed": "fff5ff4f3ab7b0e4947540eec815545f82723b4111dab761a55aa44f4d095b3f"
+      },
+      {
+        "check": "freeze_resolved_cell_count_21",
+        "ok": true,
+        "expected": 21,
+        "observed": 21
+      },
+      {
+        "check": "V2_DESIGN_HASH_unchanged",
+        "ok": true,
+        "expected": "b53f5594a444ae4826adfe2c47818080508a4c4b00a38fa25b4ffc483e20a8a5",
+        "observed": "b53f5594a444ae4826adfe2c47818080508a4c4b00a38fa25b4ffc483e20a8a5"
+      },
+      {
+        "check": "V2_CODE_HASH_unchanged",
+        "ok": true,
+        "expected": "7cc64809bf240d7afea164c9a24a737c75de88a0b5e8d38f4e85b704f00d863c",
+        "observed": "7cc64809bf240d7afea164c9a24a737c75de88a0b5e8d38f4e85b704f00d863c"
+      },
+      {
+        "check": "seed_pools_pairwise_disjoint",
+        "ok": true,
+        "expected": [],
+        "observed": []
+      },
+      {
+        "check": "no_pre_existing_analysis_replicates",
+        "ok": true,
+        "expected": [],
+        "observed": []
+      }
+    ],
+    "n_checks": 20,
+    "n_failed": 0,
+    "ok": true,
+    "V3_ANALYSIS_REPLICATES_RUN": 0
+  },
+  "execution": {
+    "pool": "V3_ANALYSIS",
+    "rng_mode": "named_substreams",
+    "system_seed_mode": "orthogonal_v3",
+    "n_expected": 4200,
+    "n_completed": 4200,
+    "n_unique_pairs": 4200,
+    "n_duplicate_pairs": 0,
+    "n_attempted_this_invocation": 4200,
+    "n_failures": 0,
+    "failures": [],
+    "elapsed_s": 348.52855801489204,
+    "NOT_ESTIMABLE_L": 0,
+    "FIT_FAILED_L": 0,
+    "NOT_ESTIMABLE_N": 3000,
+    "FIT_FAILED_N": 0,
+    "replicates_csv": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/groundwater_identifiability_synthetic/followups/v3_mechanism_confirmation/outputs/analysis/V3_ANALYSIS_REPLICATES.csv",
+    "replicates_jsonl": "/home/nacevedo/RA/data-center-externalities-modeling/other_sources/groundwater_identifiability_synthetic/followups/v3_mechanism_confirmation/outputs/analysis/V3_ANALYSIS_REPLICATES.jsonl"
+  },
+  "validation": {
+    "ok": true,
+    "ANALYSIS_INCOMPLETE": false,
+    "n_completed": 4200,
+    "n_failures": 0,
+    "n_unique_pairs": 4200,
+    "n_duplicate_pairs": 0,
+    "n_cells": 21,
+    "n_seeds": 200,
+    "n_missing_pairs": 0,
+    "n_extra_pairs": 0,
+    "checks": {
+      "n_failures_zero": true,
+      "n_completed_equals_expected": true,
+      "n_unique_pairs_equals_expected": true,
+      "n_duplicate_pairs_zero": true,
+      "cells_match_plan": true,
+      "n_cells": true,
+      "n_seeds_per_cell": true,
+      "missing_pairs_zero": true,
+      "extra_pairs_zero": true,
+      "analysis_n_cells_21": true,
+      "analysis_n_seeds_200": true,
+      "analysis_n_replicates_4200": true
+    },
+    "canonical_summary_permitted": true
+  },
+  "ANALYSIS_INCOMPLETE": false,
+  "V3_ANALYSIS_POOL_FROZEN": true,
+  "V3_ANALYSIS_REPLICATES_RUN": 4200,
+  "V3_ANALYSIS_OUTCOMES_INSPECTED": true,
+  "canonical_scientific_summary": "WRITTEN"
+}
