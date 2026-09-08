@@ -1,0 +1,10 @@
+# Large native binaries are hashed in AP_E0_SOURCE_PROVENANCE_MANIFEST.csv
+# and kept local. Small metadata/JSON/HTML and selected PDFs may be committed.
+*.nc
+gwl_tel_6_hourly_andhra_pradesh_gw_ap_2021_2025.csv
+gwl_tel_6_hourly_andhra_pradesh_gw_ap_2026_2030.csv
+gwl_manual_quarterly_andhra-pradesh-gw_ap_1991_2020.csv
+gwl_manual_quarterly_andhra_pradesh_gw_ap_2021_2025.csv
+cgwb_aquifer_system_andhra_pradesh.pdf
+cgwb_naquim_ap_ananthapuramu.pdf
+cgwb_naquim_ap_nandyal.pdf
