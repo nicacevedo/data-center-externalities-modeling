@@ -1,6 +1,11 @@
-# Draft Andhra Pradesh planning-data access request
+# Draft Andhra Pradesh planning-data access request (V1, superseded)
 
-Do not submit without project review. Machine-readable records are requested
+**Superseded for E0.** Use
+[AP_PLANNING_DATA_ACCESS_REQUEST_V2.md](AP_PLANNING_DATA_ACCESS_REQUEST_V2.md).
+Do not submit this V1 draft. Gap audit:
+[../e0/AP_E0_ACCESS_REQUEST_GAP_AUDIT.md](../e0/AP_E0_ACCESS_REQUEST_GAP_AUDIT.md).
+
+Historical V1 text follows. Machine-readable records were requested
 in CSV, database export, GeoPackage/shapefile, Parquet, or documented API form,
 with data dictionaries, units, coordinate/vertical datums, QA codes, revision
 history, and licenses.

@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "generated_from": [
+    "other_sources/andhra_pradesh_planning_preflight/outputs/readiness/AP_PLANNING_READINESS.json",
+    "other_sources/andhra_pradesh_planning_preflight/outputs/readiness/AP_GROUNDWATER_COVERAGE_STATUS.json",
+    "other_sources/andhra_pradesh_planning_preflight/outputs/readiness/M0_REPRODUCTION_STATUS.json",
+    "other_sources/andhra_pradesh_planning_preflight/outputs/FINAL_AP_PLANNING_PREFLIGHT_STATUS.json",
+    "other_sources/andhra_pradesh_planning_preflight/e0/AP_E0_EVIDENCE_MATRIX.csv",
+    "EMPIRICAL_GW_QUALIFICATION_PLAN.md"
+  ],
+  "frozen_controls": {
+    "V2_LOCAL_RESPONSE_STATUS": "LOCAL_RESPONSE_NOT_IDENTIFIED",
+    "V2_NETWORK_SUPPORT_FINAL": "NOT_EARNED",
+    "V3_DO_NOT_ATTEMPT_EMPIRICAL_M1N_YET": true,
+    "V3_NEW_SYNTHETIC_STUDY_REQUIRED": "NO",
+    "AP9": "FAIL",
+    "AP10": "FAIL",
+    "AP_SPATIAL_UNIT_STATUS": "UNRESOLVED",
+    "M0_REPRODUCTION_STATUS": "PARTIAL",
+    "M0_PSCC_EXACT": "NOT_RECOVERED"
+  },
+  "scoring_rule": "Domain scores are conservative rollups of AP_E0_EVIDENCE_MATRIX.csv. ADEQUATE requires the domain minimum to be in-hand. Failure to obtain coupling evidence is UNRESOLVED coupling, not weak coupling. No model results.",
+  "allowed_domain_status": ["ADEQUATE", "PARTIAL", "INADEQUATE", "NOT_OBTAINED"],
+  "allowed_e0_decision": ["LOCAL_STUDY_ELIGIBLE", "STATIC_ONLY", "UNRESOLVED"],
+  "domains": {
+    "E0.1": {
+      "name": "spatial identity",
+      "status": "INADEQUATE",
+      "confidence": "high",
+      "summary": "GWRA 2024 PDF reports 679 assessment units and a 2023-24 vintage, but machine-readable polygons, stable IDs, and the 679-versus-667 revenue-mandal crosswalk are not in-hand. AP_SPATIAL_UNIT_STATUS remains UNRESOLVED.",
+      "blocking_items": [
+        "679 assessment-unit polygons",
+        "assessment-unit stable IDs",
+        "679 vs 667 revenue-mandal reconciliation"
+      ]
+    },
+    "E0.2": {
+      "name": "monitoring-well identity",
+      "status": "INADEQUATE",
+      "confidence": "high",
+      "summary": "71,384 spatial-QA-usable OBSERVED quarterly depths exist (1996-01-05 to 2023-08-20) but lack stable station IDs, aquifer/layer, monitoring-versus-pumping flag, QA, and vertical datum/reference elevation. Public heads do not clear the identity blocker.",
+      "blocking_items": [
+        "monitoring-station stable ID",
+        "aquifer / layer",
+        "monitoring versus pumping flag",
+        "vertical datum and reference elevation"
+      ]
+    },
+    "E0.3": {
+      "name": "withdrawal forcing",
+      "status": "INADEQUATE",
+      "confidence": "high",
+      "summary": "Only statewide annual ESTIMATED GWRA extraction (7.88 bcm/y) is in-hand. Annual totals are inadequate for dynamic identification. Target cadence is monthly or finer; scientific minimum is subannual adequacy versus aquifer timescale, head cadence, and analogue. No meter/estimate class table exists. Do not estimate synthetic sigma.",
+      "blocking_items": [
+        "subannual well or node pumping",
+        "meter vs estimate vs proxy class",
+        "missingness convention (missing vs zero)"
+      ]
+    },
+    "E0.4": {
+      "name": "recharge forcing",
+      "status": "INADEQUATE",
+      "confidence": "high",
+      "summary": "Only statewide annual ESTIMATED recharge (27.80 bcm/y) is in-hand. Rainfall is not downloaded. No recharge-component panel independent of pumping exists. GRACE is identified, not downloaded, and is never well-level ground truth.",
+      "blocking_items": [
+        "rainfall",
+        "recharge components independent of pumping"
+      ]
+    },
+    "E0.5": {
+      "name": "hydrogeological coupling evidence",
+      "status": "NOT_OBTAINED",
+      "confidence": "high",
+      "summary": "No pumping tests, interference tests, transmissivity, storage, machine-readable NAQUIM GIS, or documented cross-well effects are in-hand. Yearbook PDF is network/cadence context and is not scored as unit-level coupling. COUPLING_STATUS remains UNRESOLVED. Failure to detect coupling is not weak coupling.",
+      "blocking_items": [
+        "NAQUIM machine-readable GIS",
+        "aquifer boundaries and structural barriers",
+        "transmissivity",
+        "storage / specific yield",
+        "pumping tests",
+        "interference tests",
+        "documented cross-well effects"
+      ]
+    },
+    "E0.6": {
+      "name": "temporal overlap / excitation",
+      "status": "INADEQUATE",
+      "confidence": "high",
+      "summary": "Quarterly heads span 1996-2023 but have no overlapping subannual withdrawal forcing. Aquifer-response timescale is unknown without T/S/tests. No intervention analogue is documented. Head cadence alone does not establish excitation.",
+      "blocking_items": [
+        "head-forcing temporal overlap",
+        "pumping variation / excitation",
+        "head cadence versus aquifer-response timescale"
+      ]
+    }
+  },
+  "coupling": {
+    "COUPLING_STATUS": "UNRESOLVED",
+    "rule": "NOT_DETECTED != WEAK. Evidence of material coupling would invalidate the local all-node family. No path to empirical M1N.",
+    "weak_coupling_assumed": false
+  },
+  "pumping_cadence_rule": {
+    "target": "monthly or finer",
+    "scientific_minimum": "subannual forcing whose cadence is demonstrably adequate relative to aquifer-response timescale, head-observation cadence, and intervention analogue",
+    "annual_totals": "inadequate for dynamic identification"
+  },
+  "intervention_analogue": {
+    "LEVEL_A": "documented intervention",
+    "LEVEL_B": "quasi-intervention",
+    "LEVEL_C": "observational held-out variation; not causal/intervention identification",
+    "current_level": "NONE"
+  },
+  "eligible_units": {
+    "count": 0,
+    "selection_rule_applied": "NOT_APPLICABLE"
+  },
+  "model_complexity": {
+    "CURRENTLY_EARNED_PLANNING_COMPLEXITY": "NONE",
+    "HIGHEST_PLAUSIBLE_NEAR_TERM_COMPLEXITY": "M0S",
+    "M0": "PARTIAL_SEMANTICS_NOT_RUN",
+    "M0S": "NOT_EARNED",
+    "M1L": "NOT_EARNED",
+    "M1N": "NOT_EARNED",
+    "DYNAMIC_MODELING_AUTHORIZED": false,
+    "EMPIRICAL_M1N_AUTHORIZED": false
+  },
+  "CURRENT_E0_DECISION": "UNRESOLVED",
+  "LOCAL_STUDY_ELIGIBLE": false,
+  "STATIC_ONLY_ELIGIBLE": false,
+  "STATIC_ONLY_ELIGIBLE_reason": "M0S still blocked on unit polygons/IDs, unit-level GWRA tables, candidates, and source feasibility. Statewide GWRA aggregates are static context, not a runnable M0S. Dynamics are also not frozen STATIC_ONLY because coupling and forcing absences are missing-data, not a completed hydrogeologic finding.",
+  "BLOCKERS": [
+    "E0.1 679 assessment-unit polygons and stable IDs",
+    "E0.1 679 vs 667 revenue-mandal reconciliation",
+    "E0.2 station master (ID, aquifer, monitoring vs pumping, datum)",
+    "E0.3 subannual well/node pumping with meter/estimate/proxy class",
+    "E0.4 rainfall and recharge components independent of pumping",
+    "E0.5 strong hydrogeologic coupling evidence (tests, T/S, NAQUIM GIS, documented neighbour response)",
+    "E0.6 head-forcing overlap and excitation / analogue"
+  ],
+  "NEXT_EVIDENCE_REQUIRED": [
+    "TRACK I: 679 polygons/IDs/vintage/679-667 crosswalk and monitoring-station master",
+    "TRACK II: subannual pumping with class flags; rainfall and recharge components; corrected/updated heads",
+    "TRACK III: NAQUIM GIS, T/S, pumping and interference tests, documented cross-well effects"
+  ],
+  "existing_data_clears_blocker": false,
+  "notes": [
+    "Public quarterly heads are real OBSERVED measurements and remain valuable after identity repair; they do not currently satisfy E0.2 ADEQUATE.",
+    "No synthetic V2/V3 magnitude is used as an AP estimate.",
+    "GRACE and exploratory IMD/Bhuvan dumps are not E0 substitutes for well-level forcing."
+  ]
+}
