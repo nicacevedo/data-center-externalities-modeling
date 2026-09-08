@@ -19,8 +19,15 @@
     "M0_REPRODUCTION_STATUS": "PARTIAL",
     "M0_PSCC_EXACT": "NOT_RECOVERED"
   },
-  "scoring_rule": "Domain scores are conservative rollups of AP_E0_EVIDENCE_MATRIX.csv. ADEQUATE requires the domain minimum to be in-hand. Failure to obtain coupling evidence is UNRESOLVED coupling, not weak coupling. No model results.",
+  "scoring_rule": "Domain scores are conservative rollups of AP_E0_EVIDENCE_MATRIX.csv. ADEQUATE requires the domain minimum to be in-hand. Failure to obtain coupling evidence is UNRESOLVED coupling, not weak coupling. No model results. Item-level ACCESS_STATUS is independent of SCIENTIFIC_STATUS: obtaining a file never implies ADEQUATE.",
   "allowed_domain_status": ["ADEQUATE", "PARTIAL", "INADEQUATE", "NOT_OBTAINED"],
+  "allowed_access_status": ["NOT_OBTAINED", "OBTAINED", "ACCESS_REQUIRED", "UNAVAILABLE", "ERROR"],
+  "allowed_scientific_status": ["ADEQUATE", "PARTIAL", "INADEQUATE", "NOT_ASSESSABLE"],
+  "status_separation": {
+    "ACCESS_STATUS": "Whether a source/file was obtained. Values: NOT_OBTAINED | OBTAINED | ACCESS_REQUIRED | UNAVAILABLE | ERROR.",
+    "SCIENTIFIC_STATUS": "Whether obtained evidence clears the corresponding frozen E0 blocker. Values: ADEQUATE | PARTIAL | INADEQUATE | NOT_ASSESSABLE. NOT_ASSESSABLE is used when ACCESS_STATUS is not OBTAINED and no in-hand incomplete evidence exists to score against.",
+    "rule": "ACCESS_STATUS=OBTAINED does not imply SCIENTIFIC_STATUS=ADEQUATE."
+  },
   "allowed_e0_decision": ["LOCAL_STUDY_ELIGIBLE", "STATIC_ONLY", "UNRESOLVED"],
   "domains": {
     "E0.1": {
@@ -38,7 +45,7 @@
       "name": "monitoring-well identity",
       "status": "INADEQUATE",
       "confidence": "high",
-      "summary": "71,384 spatial-QA-usable OBSERVED quarterly depths exist (1996-01-05 to 2023-08-20) but lack stable station IDs, aquifer/layer, monitoring-versus-pumping flag, QA, and vertical datum/reference elevation. Public heads do not clear the identity blocker.",
+      "summary": "71,384 spatial-QA-usable OBSERVED quarterly depths exist (1996-01-05 to 2023-08-20). AP GWD telemetry CSVs are now in-hand (six-hourly, 2021-2026) but are name-keyed: no stable station IDs, aquifer/layer, monitoring-versus-pumping flag, QA, or populated RL_MSL. Public heads do not clear the identity blocker.",
       "blocking_items": [
         "monitoring-station stable ID",
         "aquifer / layer",
@@ -61,7 +68,7 @@
       "name": "recharge forcing",
       "status": "INADEQUATE",
       "confidence": "high",
-      "summary": "Only statewide annual ESTIMATED recharge (27.80 bcm/y) is in-hand. Rainfall is not downloaded. No recharge-component panel independent of pumping exists. GRACE is identified, not downloaded, and is never well-level ground truth.",
+      "summary": "IMD 0.25-degree daily rainfall (Pai et al. 2014) is identified; years 1996, 2020, and 2023 were downloaded as product samples. That does not complete the 1996-2023 overlap or join rainfall to 679 units. Statewide annual ESTIMATED recharge (27.80 bcm/y) remains the only recharge total in-hand. No recharge-component panel independent of pumping exists. GRACE was not downloaded and is never well-level ground truth.",
       "blocking_items": [
         "rainfall",
         "recharge components independent of pumping"
@@ -86,7 +93,7 @@
       "name": "temporal overlap / excitation",
       "status": "INADEQUATE",
       "confidence": "high",
-      "summary": "Quarterly heads span 1996-2023 but have no overlapping subannual withdrawal forcing. Aquifer-response timescale is unknown without T/S/tests. No intervention analogue is documented. Head cadence alone does not establish excitation.",
+      "summary": "Quarterly heads span 1996-2023 and AP GWD telemetry heads span 2021-2026, but there is still no overlapping subannual withdrawal forcing. Aquifer-response timescale is unknown without T/S/tests. No intervention analogue is documented. Head cadence alone does not establish excitation.",
       "blocking_items": [
         "head-forcing temporal overlap",
         "pumping variation / excitation",
@@ -139,13 +146,20 @@
   ],
   "NEXT_EVIDENCE_REQUIRED": [
     "TRACK I: 679 polygons/IDs/vintage/679-667 crosswalk and monitoring-station master",
-    "TRACK II: subannual pumping with class flags; rainfall and recharge components; corrected/updated heads",
+    "TRACK II: subannual pumping with class flags; remaining IMD rainfall overlap years plus recharge components; station-master repair of heads",
     "TRACK III: NAQUIM GIS, T/S, pumping and interference tests, documented cross-well effects"
   ],
   "existing_data_clears_blocker": false,
+  "public_acquisition_pass": {
+    "retrieval_date": "2026-09-08T00:15:03Z",
+    "decision_changed": false,
+    "blockers_cleared": [],
+    "note": "Public telemetry heads, IMD rainfall samples, and NAQUIM PDFs were obtained. ACCESS_STATUS=OBTAINED never implies SCIENTIFIC_STATUS=ADEQUATE. No E0 blocker cleared."
+  },
   "notes": [
     "Public quarterly heads are real OBSERVED measurements and remain valuable after identity repair; they do not currently satisfy E0.2 ADEQUATE.",
+    "AP GWD telemetry is now a public machine-readable head source and still fails E0.2 ADEQUATE identity fields.",
     "No synthetic V2/V3 magnitude is used as an AP estimate.",
-    "GRACE and exploratory IMD/Bhuvan dumps are not E0 substitutes for well-level forcing."
+    "GRACE was not downloaded. IMD rainfall samples are not well-level forcing and are not a recharge-component panel."
   ]
 }
