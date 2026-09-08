@@ -1,0 +1,25 @@
+{
+  "service": "https://gis.nwic.in/server/rest/services/NWIC/GWR2024_CGWB/MapServer",
+  "layer_id": 8,
+  "layer_name": "Categorization of Blocks/Talukas/Mandals",
+  "geometry_type": "esriGeometryPolygon",
+  "documented_fields": [
+    "block",
+    "code",
+    "district",
+    "state",
+    "class",
+    "agwd_tot",
+    "agwd_irr",
+    "agwd_dom_i",
+    "ar_gwr_tot",
+    "na_gwa",
+    "sgw_dev_pe",
+    "nat_discharge",
+    "objectid"
+  ],
+  "crs": "WGS_1984_Lambert_Conformal_Conic",
+  "query_status": "Instance not available on server",
+  "note": "Field list transcribed from official MapServer HTML directory; not a geometry download.",
+  "retrieval_date": "2026-09-08T00:15:03Z"
+}

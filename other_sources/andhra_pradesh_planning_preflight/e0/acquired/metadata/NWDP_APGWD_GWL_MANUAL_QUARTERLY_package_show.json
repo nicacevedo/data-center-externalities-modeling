@@ -1,0 +1,615 @@
+{
+  "help": "https://nwdp.nwic.gov.in/api/3/action/help_show?name=package_show",
+  "success": true,
+  "result": {
+    "author": "Andhra Pradesh GW",
+    "author_email": "andhragw@gmail.com",
+    "creator_user_id": "66b36a1d-2b7c-48a6-acac-fb738ea93524",
+    "id": "71e84c44-d36a-4a4e-b0b4-c08d4d6ac67c",
+    "isopen": true,
+    "license_id": "other-open",
+    "license_title": "Other (Open)",
+    "maintainer": "Andhra Pradesh GW",
+    "maintainer_email": "andhragw@gmail.com",
+    "metadata_created": "2025-03-05T04:55:43.760997",
+    "metadata_modified": "2026-09-08T00:05:48.721530",
+    "name": "ground-water-level-manual-quarterly-andhra-pradesh-ground-water-departments",
+    "notes": "Dataset contains Quarterly groundwater level collected from manual monitoring stations established by Andhra Pradesh Ground Water. Each record includes the date, station identifier with geographic hierarchy, and the corresponding groundwater level values in (m).",
+    "num_resources": 3,
+    "num_tags": 58,
+    "organization": {
+      "id": "3a3efcb2-618b-48db-97c3-d6886148bd60",
+      "name": "andhra-pradesh-gw",
+      "title": "Andhra Pradesh GW",
+      "type": "organization",
+      "description": "\"The Ground Water and Water Audit Department in Andhra Pradesh plays a critical role in managing the state's groundwater resources. Established in 1971, it began as a small cell within the State Secretariat and evolved into a multidisciplinary organization modeled after the Central Ground Water Board (CGWB). Its key functions include evaluating and clearing minor irrigation schemes, conducting hydrogeological and geophysical surveys, monitoring groundwater levels, and overseeing water quality through a network of piezometers.\r\n\r\nThe department also assists in implementing the Andhra Pradesh Water, Land, and Trees Act (AP WALTA) and carries out exploratory drilling for bore wells, particularly under Special Component Plans for Scheduled Castes and Tribal Sub-Plans. It provides consulting services for selecting well sites, oversees artificial recharge structures, and supports projects like the World Bank-funded Hydrology Project.\"",
+      "image_url": "2025-01-15-071846.755763Andra-prdesh-GW.jpeg",
+      "created": "2025-01-15T07:18:46.762000",
+      "is_organization": true,
+      "approval_status": "approved",
+      "state": "active"
+    },
+    "owner_org": "3a3efcb2-618b-48db-97c3-d6886148bd60",
+    "private": false,
+    "state": "active",
+    "title": "Ground Water Level (Manual- Quarterly), Andhra Pradesh Ground Water Departments",
+    "type": "dataset",
+    "url": "",
+    "version": "",
+    "extras": [
+      {
+        "key": "Citations",
+        "value": "-"
+      },
+      {
+        "key": "Data Access Control",
+        "value": "Public"
+      },
+      {
+        "key": "Data Error Handling",
+        "value": "-"
+      },
+      {
+        "key": "Data Format",
+        "value": "CSV, API"
+      },
+      {
+        "key": "Data Processing History",
+        "value": "-"
+      },
+      {
+        "key": "Data Quality Rating",
+        "value": "-"
+      },
+      {
+        "key": "Data Security Measures",
+        "value": "-"
+      },
+      {
+        "key": "Data Validation Method",
+        "value": "-"
+      },
+      {
+        "key": "Data Versioning",
+        "value": "v1"
+      },
+      {
+        "key": "Dataset Code",
+        "value": "WQT00033"
+      },
+      {
+        "key": "Dataset Type",
+        "value": "Time series"
+      },
+      {
+        "key": "Frequency",
+        "value": "Quarterly"
+      },
+      {
+        "key": "Keywords",
+        "value": "Groundwater Level , Groundwater Level Time Series, Groundwater Monitoring "
+      },
+      {
+        "key": "LGD Compliance",
+        "value": "Yes"
+      },
+      {
+        "key": "Location ",
+        "value": "Yes"
+      },
+      {
+        "key": "Mode of Acquisition",
+        "value": "Manual"
+      },
+      {
+        "key": "Related Datasets",
+        "value": "-"
+      },
+      {
+        "key": "Unit ",
+        "value": "m"
+      },
+      {
+        "key": "Version",
+        "value": "v1"
+      }
+    ],
+    "groups": [
+      {
+        "description": "Data describing how much water is available, such as measurements of groundwater levels, reservoir levels, aquifer properties, stream flow, rural and urban water bodies such as lakes, ponds and tanks.",
+        "display_name": "Water Quantity",
+        "id": "8f68ba65-a267-428b-ade6-41ec44061839",
+        "image_display_url": "https://nwdp.nwic.gov.in/uploads/group/2025-04-08-091709.933900water-quantity.png",
+        "name": "water-quantity",
+        "title": "Water Quantity"
+      }
+    ],
+    "resources": [
+      {
+        "cache_last_updated": null,
+        "cache_url": null,
+        "ckan_url": "http://172.16.1.177:5000",
+        "created": "2025-03-05T04:59:23.536624",
+        "datastore_active": true,
+        "datastore_contains_all_records_of_source_file": true,
+        "description": "The dataset provides Quarterly groundwater level measurements from shallow wells (SW) across various regions in Andhra Pradesh. These measurements are recorded using automated Manual systems that send real-time data to central databases for further analysis and decision-making. The data spans 1991 to 2020 and includes valuable insights into the region\u2019s groundwater fluctuations, trends, and seasonal variations.",
+        "format": "CSV",
+        "hash": "7cbfda5443baff9102f1af35860d7ae3",
+        "id": "c6d5657b-1342-4dfc-8090-dcea64a7466b",
+        "ignore_hash": false,
+        "last_modified": "2025-03-05T04:59:23.436287",
+        "metadata_modified": "2025-03-05T11:04:22.734113",
+        "mimetype": "text/csv",
+        "mimetype_inner": null,
+        "name": "GWL_Manual_Quarterly_Andhra Pradesh GW_AP_1991_2020.csv",
+        "original_url": "http://172.16.1.177:5000/dataset/71e84c44-d36a-4a4e-b0b4-c08d4d6ac67c/resource/c6d5657b-1342-4dfc-8090-dcea64a7466b/download/gwl_manual_quarterly_andhra-pradesh-gw_ap_1991_2020.csv",
+        "package_id": "71e84c44-d36a-4a4e-b0b4-c08d4d6ac67c",
+        "position": 0,
+        "resource_id": "c6d5657b-1342-4dfc-8090-dcea64a7466b",
+        "resource_type": null,
+        "set_url_type": false,
+        "size": 25161267,
+        "state": "active",
+        "task_created": "2025-03-05 04:59:24.885438",
+        "url": "https://nwdp.nwic.gov.in/dataset/71e84c44-d36a-4a4e-b0b4-c08d4d6ac67c/resource/c6d5657b-1342-4dfc-8090-dcea64a7466b/download/gwl_manual_quarterly_andhra-pradesh-gw_ap_1991_2020.csv",
+        "url_type": "upload"
+      },
+      {
+        "cache_last_updated": null,
+        "cache_url": null,
+        "created": "2025-03-05T05:01:03.003556",
+        "datastore_active": true,
+        "datastore_contains_all_records_of_source_file": false,
+        "description": null,
+        "format": "CSV",
+        "hash": "9724f7be8e5f88af3b84ba252c013e78",
+        "id": "305c8531-759d-4fb9-abf6-7cf4341ec318",
+        "last_modified": "2026-01-24T23:24:08.642868",
+        "metadata_modified": "2026-02-02T16:15:05.351777",
+        "mimetype": "text/csv",
+        "mimetype_inner": null,
+        "name": "Ground Water Level Andhra_Pradesh_GW Andhra Pradesh (2021 - 2025) Manual Quarterly",
+        "package_id": "71e84c44-d36a-4a4e-b0b4-c08d4d6ac67c",
+        "position": 1,
+        "resource_type": null,
+        "size": 6470331,
+        "state": "active",
+        "url": "https://nwdp.nwic.gov.in/dataset/71e84c44-d36a-4a4e-b0b4-c08d4d6ac67c/resource/305c8531-759d-4fb9-abf6-7cf4341ec318/download/gwl_manual_quarterly_andhra_pradesh_gw_ap_2021_2025.csv",
+        "url_type": "upload"
+      },
+      {
+        "cache_last_updated": null,
+        "cache_url": null,
+        "created": "2026-02-02T16:15:05.444885",
+        "datastore_active": true,
+        "datastore_contains_all_records_of_source_file": false,
+        "description": null,
+        "format": "CSV",
+        "hash": "f3a0787d1d1c7a268fd977932feebc8a",
+        "id": "0d8e3ccc-7989-4a45-a905-a20f9bee7239",
+        "last_modified": "2026-09-08T00:05:48.694480",
+        "metadata_modified": "2026-09-08T00:05:48.729091",
+        "mimetype": "text/csv",
+        "mimetype_inner": null,
+        "name": "Ground Water Level Andhra_Pradesh_GW Andhra Pradesh (2026 - 2030) Manual Quarterly",
+        "package_id": "71e84c44-d36a-4a4e-b0b4-c08d4d6ac67c",
+        "position": 2,
+        "resource_type": null,
+        "size": 243,
+        "state": "active",
+        "url": "https://nwdp.nwic.gov.in/dataset/71e84c44-d36a-4a4e-b0b4-c08d4d6ac67c/resource/0d8e3ccc-7989-4a45-a905-a20f9bee7239/download/gwl_manual_quarterly_andhra_pradesh_gw_ap_2026_2030.csv",
+        "url_type": "upload"
+      }
+    ],
+    "tags": [
+      {
+        "display_name": "Aquifer Level",
+        "id": "56441c9e-ac85-48f4-893b-10c4d53e34a7",
+        "name": "Aquifer Level",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Depth Measurements",
+        "id": "8131d378-b7f6-423e-bdf9-50756bfd745b",
+        "name": "Groundwater Depth Measurements",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Depth and Hydrological Forecasting",
+        "id": "dde0d86c-d770-45f7-b548-ebede1ef710d",
+        "name": "Groundwater Depth and Hydrological Forecasting",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Depth and Hydrology",
+        "id": "46b6acde-0d3c-4531-9a9f-0651acc1193a",
+        "name": "Groundwater Depth and Hydrology",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Depth and Precipitation",
+        "id": "a6eaaa31-86f7-4a43-ad60-9bf01b48e0bf",
+        "name": "Groundwater Depth and Precipitation",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level",
+        "id": "c3b26dd3-61fb-4e16-902f-561e489e53dc",
+        "name": "Groundwater Level",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level Fluctuations",
+        "id": "8c1dc830-e0af-4355-bd6e-c97dae0461c8",
+        "name": "Groundwater Level Fluctuations",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level Time Series",
+        "id": "6f96fa46-4630-4a54-83ab-b5675c5a63cc",
+        "name": "Groundwater Level Time Series",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level Trends",
+        "id": "eb3a4536-331c-4e46-bfeb-adc7dbff374c",
+        "name": "Groundwater Level Trends",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Aquifer Recharge",
+        "id": "b4412978-50f8-4349-b3c0-e867ef3997e3",
+        "name": "Groundwater Level and Aquifer Recharge",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Climate",
+        "id": "85f227ee-2f98-43ea-96b3-0143d3af51cd",
+        "name": "Groundwater Level and Climate",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Climate Extremes",
+        "id": "5e9ce746-9124-4586-a45c-de7d70b24726",
+        "name": "Groundwater Level and Climate Extremes",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Discharge",
+        "id": "4e52c59c-645b-44f8-87a8-3241c052d762",
+        "name": "Groundwater Level and Discharge",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Drought Monitoring",
+        "id": "2290bceb-85ee-490f-af89-eeb07707287b",
+        "name": "Groundwater Level and Drought Monitoring",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Energy Balance",
+        "id": "20ad8418-4043-4ecb-81a4-9e5d880198b1",
+        "name": "Groundwater Level and Energy Balance",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Evapotranspiration",
+        "id": "33940338-22b6-4d59-9667-df932e3e5e4d",
+        "name": "Groundwater Level and Evapotranspiration",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Flood Risk",
+        "id": "1fdcef0a-b8c3-4548-b640-d4966d7bb88c",
+        "name": "Groundwater Level and Flood Risk",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Groundwater Flow",
+        "id": "dbac0ddd-3161-43c1-b0fe-2df4787e472d",
+        "name": "Groundwater Level and Groundwater Flow",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Land Use Change",
+        "id": "21450f14-c479-4dfa-841c-f3c1c2ce236e",
+        "name": "Groundwater Level and Land Use Change",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Pumping Rates",
+        "id": "c84b9330-0496-4cb8-901e-d935f69a47fd",
+        "name": "Groundwater Level and Pumping Rates",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Rainfall",
+        "id": "4aee3f45-48f6-4cbc-a242-449a20863b8b",
+        "name": "Groundwater Level and Rainfall",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and River Interaction",
+        "id": "60116451-731c-4113-bd41-cae16c685c44",
+        "name": "Groundwater Level and River Interaction",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Seasonal Changes",
+        "id": "94b4723b-c384-4e15-936a-e3ef11716d7a",
+        "name": "Groundwater Level and Seasonal Changes",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Seasonal Variations",
+        "id": "22aeac96-86f9-4dc0-90dd-2ef1f2cc0312",
+        "name": "Groundwater Level and Seasonal Variations",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Soil Moisture",
+        "id": "b7f92ef0-c4f0-413f-ae48-abc11b2697b0",
+        "name": "Groundwater Level and Soil Moisture",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Soil Properties",
+        "id": "4ee7695f-3029-4095-920a-873856bc40be",
+        "name": "Groundwater Level and Soil Properties",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Surface Water Interaction",
+        "id": "a31c5909-4685-4f9d-ae26-14a7201e0c03",
+        "name": "Groundwater Level and Surface Water Interaction",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Temperature",
+        "id": "a5f821f9-45cb-4f27-8556-b536d9093302",
+        "name": "Groundwater Level and Temperature",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Water Conservation",
+        "id": "8ae5cc4e-c484-444a-8a4b-f86458722c33",
+        "name": "Groundwater Level and Water Conservation",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Water Quality",
+        "id": "3273b393-9833-4d3d-b310-ea7064f800d9",
+        "name": "Groundwater Level and Water Quality",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Water Stress",
+        "id": "c455d850-1a69-4bbc-af8d-b4ff63855552",
+        "name": "Groundwater Level and Water Stress",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Water Supply Monitoring",
+        "id": "32e1859d-3573-451d-87d9-b7a039dade23",
+        "name": "Groundwater Level and Water Supply Monitoring",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Well Capacity",
+        "id": "3c80b29b-cc60-4fa1-a353-5a6e339f3cd2",
+        "name": "Groundwater Level and Well Capacity",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level and Wetlands Studies",
+        "id": "b0a4fefa-f7ad-474c-b33f-22d5cc11ec92",
+        "name": "Groundwater Level and Wetlands Studies",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level for Environmental Monitoring",
+        "id": "a1c00851-1269-482b-a30b-4b14a602908f",
+        "name": "Groundwater Level for Environmental Monitoring",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level for Hydrological Modeling",
+        "id": "c443449a-6e1a-48d9-9329-09909a828790",
+        "name": "Groundwater Level for Hydrological Modeling",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level for Irrigation Management",
+        "id": "d174b9d2-8a03-49cf-8a17-0abc42da5150",
+        "name": "Groundwater Level for Irrigation Management",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level for Water Resource Management",
+        "id": "4b7d9f71-9e42-4bc9-adcb-c40018d395eb",
+        "name": "Groundwater Level for Water Resource Management",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level in Agriculture",
+        "id": "17a70efc-1a7c-49d0-91ec-49fb925464b1",
+        "name": "Groundwater Level in Agriculture",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level in Arid Regions",
+        "id": "77beb4dc-a479-4748-a44c-dfcf29715856",
+        "name": "Groundwater Level in Arid Regions",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Level in Urban Areas",
+        "id": "20b86346-fef2-4a86-acfc-26f2b22be452",
+        "name": "Groundwater Level in Urban Areas",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Monitoring",
+        "id": "cd54b87a-333b-4036-a760-b4cabe9f6a9e",
+        "name": "Groundwater Monitoring",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Monitoring for Flood Forecasting",
+        "id": "75f791d2-2f3a-48c4-9585-245e619a63cf",
+        "name": "Groundwater Monitoring for Flood Forecasting",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Monitoring for Irrigation Studies",
+        "id": "a26ad526-764f-454b-ae4b-1e36c5357fc2",
+        "name": "Groundwater Monitoring for Irrigation Studies",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Recharge and Level Monitoring",
+        "id": "d920b22a-1bf1-4059-ace6-46eeb155b537",
+        "name": "Groundwater Recharge and Level Monitoring",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater Storage and Level",
+        "id": "40a84bcb-5613-4afc-886c-ad868101e0d9",
+        "name": "Groundwater Storage and Level",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater and Contamination Monitoring",
+        "id": "9b3dc5c8-94bd-4eef-8127-9475d620fd6f",
+        "name": "Groundwater and Contamination Monitoring",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater and Hydrological Studies",
+        "id": "8ea51519-33f3-4927-802f-48e483633236",
+        "name": "Groundwater and Hydrological Studies",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater and Surface Water Flow",
+        "id": "3b7a6d3f-9473-45de-bdfe-afae30dc1995",
+        "name": "Groundwater and Surface Water Flow",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater and Water Table Fluctuations",
+        "id": "fcc47f24-5481-409f-9466-af2e2400ace4",
+        "name": "Groundwater and Water Table Fluctuations",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Groundwater and Water Table Monitoring",
+        "id": "fe4f40fa-db02-434d-b7d8-911911719e4d",
+        "name": "Groundwater and Water Table Monitoring",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Real-time Groundwater Depth Monitoring",
+        "id": "ced3343b-d59f-40d6-b7a3-b8483a5038d8",
+        "name": "Real-time Groundwater Depth Monitoring",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Real-time Groundwater Level Measurements",
+        "id": "7e47700b-fb0e-405c-9174-eb5d885c927b",
+        "name": "Real-time Groundwater Level Measurements",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Real-time Groundwater Monitoring Stations",
+        "id": "564aae62-b336-41dd-8765-073f192e5e8d",
+        "name": "Real-time Groundwater Monitoring Stations",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Subsurface Water Level",
+        "id": "35afefc7-37f2-4004-b298-4e2a09c609d7",
+        "name": "Subsurface Water Level",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Water Table",
+        "id": "8c7a4e0f-ee33-4d8b-bb69-71ea7ac016b5",
+        "name": "Water Table",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Well Monitoring for Groundwater Levels",
+        "id": "eef198b2-77cc-4a6f-b3c1-08cb3336126b",
+        "name": "Well Monitoring for Groundwater Levels",
+        "state": "active",
+        "vocabulary_id": null
+      },
+      {
+        "display_name": "Well Water Level",
+        "id": "85d8da2b-95d4-4747-9b4d-e411a758e99a",
+        "name": "Well Water Level",
+        "state": "active",
+        "vocabulary_id": null
+      }
+    ],
+    "relationships_as_subject": [],
+    "relationships_as_object": []
+  }
+}

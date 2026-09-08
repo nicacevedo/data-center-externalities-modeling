@@ -1,0 +1,12 @@
+{
+  "retrieval_date": "2026-09-08T00:15:03Z",
+  "n_log_rows": 28,
+  "n_provenance_rows": 20,
+  "outcomes": {
+    "OFFICIAL_SOURCE_FOUND_BUT_ACCESS_REQUIRED": 5,
+    "ERROR": 1,
+    "PUBLIC_SOURCE_OBTAINED": 11,
+    "NO_AUTHORITATIVE_SOURCE_LOCATED": 8,
+    "SOURCE_EXISTS_BUT_MACHINE_READABLE_DATA_NOT_FOUND": 3
+  }
+}

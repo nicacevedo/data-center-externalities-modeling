@@ -1,0 +1,22 @@
+{
+  "product": "IMD New High Spatial Resolution (0.25 x 0.25 degree) Long Period Daily Gridded Rainfall Data Set Over India",
+  "citation": "Pai et al. (2014), MAUSAM 65(1):1-18",
+  "landing_page": "https://imdpune.gov.in/cmpg/Griddata/Rainfall_25_NetCDF.html",
+  "download_endpoint": "https://imdpune.gov.in/cmpg/Griddata/RF25.php",
+  "years_downloaded_this_pass": [1996, 2020, 2023],
+  "format": "classic NetCDF (CDF-1)",
+  "dimensions": {
+    "LONGITUDE": 135,
+    "LATITUDE": 129,
+    "TIME": "unlimited; 365 layers in 2023 file"
+  },
+  "longitude_range_deg_east": [66.5, 100.0],
+  "latitude_range_deg_north": [6.5, 38.5],
+  "variable": "RAINFALL",
+  "units": "mm",
+  "missing_encoding_observed": -999.0,
+  "independent_of_pumping": true,
+  "joined_to_679_assessment_units": false,
+  "clears_E0_4_rainfall_blocker": false,
+  "why_not_adequate": "Only three years of the 1996-2023 overlap are in-hand; the grid is not joined to versioned assessment-unit polygons; remaining advertised years were not mass-downloaded."
+}

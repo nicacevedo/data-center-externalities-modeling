@@ -1,0 +1,90 @@
+{
+ "currentVersion": 10.91,
+ "serviceDescription": "GWR 2024",
+ "mapName": "Layers",
+ "description": "",
+ "copyrightText": "",
+ "supportsDynamicLayers": true,
+ "layers": [
+  {
+   "id": 0,
+   "name": "Administrative Boundaries",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": [
+    1,
+    2
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer"
+  },
+  {
+   "id": 3,
+   "name": "Assessed  Groundwater Resources ",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": [
+    4,
+    5,
+    6
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer"
+  },
+  {
+   "id": 7,
+   "name": "Categories and Notified Areas",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": [
+    8
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer"
+  }
+ ],
+ "tables": [],
+ "spatialReference": {"wkt": "PROJCS[\"WGS_1984_Lambert_Conformal_Conic\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",4000000.0],PARAMETER[\"False_Northing\",4000000.0],PARAMETER[\"Central_Meridian\",80.0],PARAMETER[\"Standard_Parallel_1\",12.4729444],PARAMETER[\"Standard_Parallel_2\",35.17280555],PARAMETER[\"Latitude_Of_Origin\",24.0],UNIT[\"Meter\",1.0]]"},
+ "singleFusedMapCache": false,
+ "initialExtent": {
+  "xmin": 1541517.70849855,
+  "ymin": 2884352.4415431684,
+  "xmax": 6952919.156301446,
+  "ymax": 5538260.874360035,
+  "spatialReference": {"wkt": "PROJCS[\"WGS_1984_Lambert_Conformal_Conic\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",4000000.0],PARAMETER[\"False_Northing\",4000000.0],PARAMETER[\"Central_Meridian\",80.0],PARAMETER[\"Standard_Parallel_1\",12.4729444],PARAMETER[\"Standard_Parallel_2\",35.17280555],PARAMETER[\"Latitude_Of_Origin\",24.0],UNIT[\"Meter\",1.0]]"}
+ },
+ "fullExtent": {
+  "xmin": "NaN",
+  "ymin": "NaN",
+  "xmax": "NaN",
+  "ymax": "NaN",
+  "spatialReference": {"wkt": "PROJCS[\"WGS_1984_Lambert_Conformal_Conic\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Lambert_Conformal_Conic\"],PARAMETER[\"False_Easting\",4000000.0],PARAMETER[\"False_Northing\",4000000.0],PARAMETER[\"Central_Meridian\",80.0],PARAMETER[\"Standard_Parallel_1\",12.4729444],PARAMETER[\"Standard_Parallel_2\",35.17280555],PARAMETER[\"Latitude_Of_Origin\",24.0],UNIT[\"Meter\",1.0]]"}
+ },
+ "minScale": 0,
+ "maxScale": 0,
+ "units": "esriMeters",
+ "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+ "documentInfo": {
+  "Title": "GWR2020",
+  "Author": "Rashmi Rekha Dutta",
+  "Comments": "GWR 2020",
+  "Subject": "GWR 2020",
+  "Category": "",
+  "AntialiasingMode": "Best",
+  "TextAntialiasingMode": "Force",
+  "Keywords": "CGWB,2024"
+ },
+ "capabilities": "Map,Query,Data",
+ "supportedQueryFormats": "JSON, geoJSON",
+ "exportTilesAllowed": false,
+ "referenceScale": 0,
+ "supportsDatumTransformation": true,
+ "maxRecordCount": 10000,
+ "maxImageHeight": 4096,
+ "maxImageWidth": 4096,
+ "supportedExtensions": "WMSServer",
+ "serviceItemId": "4ebbd4d6674c4d249a0854530ff878f5"
+}

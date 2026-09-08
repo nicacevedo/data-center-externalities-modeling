@@ -1,0 +1,220 @@
+{
+  "help": "https://nwdp.nwic.gov.in/api/3/action/help_show?name=datastore_search",
+  "success": true,
+  "result": {
+    "include_total": true,
+    "limit": 5,
+    "records_format": "objects",
+    "resource_id": "26860918-0d44-4eaa-834b-32ed046e8386",
+    "total_estimation_threshold": null,
+    "records": [
+      {
+        "_id": 1,
+        "SlNo": "1",
+        "Station": "Kurnool_1",
+        "Agency": "Andhra Pradesh GW",
+        "State LGD Code": "28",
+        "State": "Andhra Pradesh",
+        "District LGD Code": "511",
+        "District": "KURNOOL",
+        "Tehsil": "KURNOOL",
+        "Block": "KURNOOL",
+        "Village": "Kurnool",
+        "River": "Pennar",
+        "Basin": "Pennar",
+        "Tributary": "-",
+        "Subtributary": "-",
+        "SubSubtributary": "-",
+        "Local River": "-",
+        "Latitude": "15.75064000",
+        "Longitude": "78.06679800",
+        "Data Acquisition Time": "11-01-2026 04:00",
+        "Telemetry Hourly Rainfall (mm)": "0.5"
+      },
+      {
+        "_id": 2,
+        "SlNo": "2",
+        "Station": "Kurnool_1",
+        "Agency": "Andhra Pradesh GW",
+        "State LGD Code": "28",
+        "State": "Andhra Pradesh",
+        "District LGD Code": "511",
+        "District": "KURNOOL",
+        "Tehsil": "KURNOOL",
+        "Block": "KURNOOL",
+        "Village": "Kurnool",
+        "River": "Pennar",
+        "Basin": "Pennar",
+        "Tributary": "-",
+        "Subtributary": "-",
+        "SubSubtributary": "-",
+        "Local River": "-",
+        "Latitude": "15.75064000",
+        "Longitude": "78.06679800",
+        "Data Acquisition Time": "19-01-2026 15:00",
+        "Telemetry Hourly Rainfall (mm)": "330"
+      },
+      {
+        "_id": 3,
+        "SlNo": "3",
+        "Station": "Kurnool_1",
+        "Agency": "Andhra Pradesh GW",
+        "State LGD Code": "28",
+        "State": "Andhra Pradesh",
+        "District LGD Code": "511",
+        "District": "KURNOOL",
+        "Tehsil": "KURNOOL",
+        "Block": "KURNOOL",
+        "Village": "Kurnool",
+        "River": "Pennar",
+        "Basin": "Pennar",
+        "Tributary": "-",
+        "Subtributary": "-",
+        "SubSubtributary": "-",
+        "Local River": "-",
+        "Latitude": "15.75064000",
+        "Longitude": "78.06679800",
+        "Data Acquisition Time": "18-03-2026 20:00",
+        "Telemetry Hourly Rainfall (mm)": "0.5"
+      },
+      {
+        "_id": 4,
+        "SlNo": "4",
+        "Station": "Kurnool_1",
+        "Agency": "Andhra Pradesh GW",
+        "State LGD Code": "28",
+        "State": "Andhra Pradesh",
+        "District LGD Code": "511",
+        "District": "KURNOOL",
+        "Tehsil": "KURNOOL",
+        "Block": "KURNOOL",
+        "Village": "Kurnool",
+        "River": "Pennar",
+        "Basin": "Pennar",
+        "Tributary": "-",
+        "Subtributary": "-",
+        "SubSubtributary": "-",
+        "Local River": "-",
+        "Latitude": "15.75064000",
+        "Longitude": "78.06679800",
+        "Data Acquisition Time": "19-03-2026 12:00",
+        "Telemetry Hourly Rainfall (mm)": "18"
+      },
+      {
+        "_id": 5,
+        "SlNo": "5",
+        "Station": "Kurnool_1",
+        "Agency": "Andhra Pradesh GW",
+        "State LGD Code": "28",
+        "State": "Andhra Pradesh",
+        "District LGD Code": "511",
+        "District": "KURNOOL",
+        "Tehsil": "KURNOOL",
+        "Block": "KURNOOL",
+        "Village": "Kurnool",
+        "River": "Pennar",
+        "Basin": "Pennar",
+        "Tributary": "-",
+        "Subtributary": "-",
+        "SubSubtributary": "-",
+        "Local River": "-",
+        "Latitude": "15.75064000",
+        "Longitude": "78.06679800",
+        "Data Acquisition Time": "20-03-2026 14:00",
+        "Telemetry Hourly Rainfall (mm)": "149"
+      }
+    ],
+    "fields": [
+      {
+        "id": "_id",
+        "type": "int"
+      },
+      {
+        "id": "SlNo",
+        "type": "text"
+      },
+      {
+        "id": "Station",
+        "type": "text"
+      },
+      {
+        "id": "Agency",
+        "type": "text"
+      },
+      {
+        "id": "State LGD Code",
+        "type": "text"
+      },
+      {
+        "id": "State",
+        "type": "text"
+      },
+      {
+        "id": "District LGD Code",
+        "type": "text"
+      },
+      {
+        "id": "District",
+        "type": "text"
+      },
+      {
+        "id": "Tehsil",
+        "type": "text"
+      },
+      {
+        "id": "Block",
+        "type": "text"
+      },
+      {
+        "id": "Village",
+        "type": "text"
+      },
+      {
+        "id": "River",
+        "type": "text"
+      },
+      {
+        "id": "Basin",
+        "type": "text"
+      },
+      {
+        "id": "Tributary",
+        "type": "text"
+      },
+      {
+        "id": "Subtributary",
+        "type": "text"
+      },
+      {
+        "id": "SubSubtributary",
+        "type": "text"
+      },
+      {
+        "id": "Local River",
+        "type": "text"
+      },
+      {
+        "id": "Latitude",
+        "type": "text"
+      },
+      {
+        "id": "Longitude",
+        "type": "text"
+      },
+      {
+        "id": "Data Acquisition Time",
+        "type": "text"
+      },
+      {
+        "id": "Telemetry Hourly Rainfall (mm)",
+        "type": "text"
+      }
+    ],
+    "_links": {
+      "start": "/api/3/action/datastore_search?resource_id=26860918-0d44-4eaa-834b-32ed046e8386&limit=5",
+      "next": "/api/3/action/datastore_search?resource_id=26860918-0d44-4eaa-834b-32ed046e8386&limit=5&offset=5"
+    },
+    "total": 188,
+    "total_was_estimated": false
+  }
+}
